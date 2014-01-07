@@ -82,11 +82,9 @@
       integer :: itol, itask, istate, iopt, mf
       real(kind=8) :: atol
       real(kind=8) :: T, TOUT, TIN
-      real(kind=8) :: tdeb,tfin
 
       data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
-      call CPU_TIME(tdeb) ! To get computation time if needed
       CALL FILESET
       CALL READINPUT
 
@@ -203,8 +201,6 @@
  
       if (nptmax.eq.1) call writetail
 
-      call CPU_TIME(tfin)
-      print*,'CPU time=',(tfin-tdeb)/60.0 ,'min'
       END
 
 ! ======================================================================
