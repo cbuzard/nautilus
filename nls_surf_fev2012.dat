@@ -239,7 +239,7 @@ JH         JHOOH      JO2H       JH2                    1.90e+03   M84
 JH         JH2S       JH2        JHS                    8.60e+02   TH 8.60E+02 1.35E+03 
 JH         JHC2O      JH2CCO                            0.         AR                    
 JH         JHNO       JNO        JH2                    1.50e+03   M84,Origin=Igl&Silk  
-JH         JO2        JO2H                              1.20e+03   TH                   
+JH         JO2        JO2H                              0.00e+00   TH                   
 JH         JO3        JO2        JOH                    4.50e+02   TH                   
 JH2        JC         JCH2                              2.50e+03  92Summer. Exoth.      
 JH2        JC2        JCCH       JH                     4.20e+03  Our test              

@@ -82,9 +82,11 @@
       integer :: itol, itask, istate, iopt, mf
       real(kind=8) :: atol
       real(kind=8) :: T, TOUT, TIN
+      real(kind=8) :: tdeb,tfin
 
       data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
+      call CPU_TIME(tdeb) ! To get computation time if needed
       CALL FILESET
       CALL READINPUT
 
@@ -201,8 +203,9 @@
  
       if (nptmax.eq.1) call writetail
 
-      STOP 
-      END 
+      call CPU_TIME(tfin)
+      print*,'CPU time=',(tfin-tdeb)/60.0 ,'min'
+      END
 
 ! ======================================================================
 ! ======================================================================
@@ -217,12 +220,12 @@
       OPEN (UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
       OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
       OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
+!      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
       OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
       OPEN (UNIT=NTAI,FILE='nlso_tail.d',STATUS='UNKNOWN')
       OPEN (UNIT=NINI,FILE='nls_init.d',STATUS='OLD') 
       OPEN (UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
       OPEN (UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
-      OPEN (UNIT=20,FILE='essai.d',STATUS='unknown')
 
       RETURN 
       END
@@ -250,15 +253,15 @@
          ENDDO
 ! ------ Check for atomic species
          IF ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
-             (SPEC(J)(:1).NE.'J          ').AND.(SPEC(J)(:1).NE.'X          ')) THEN
+         (SPEC(J)(:1).NE.'J          ').AND.(SPEC(J)(:1).NE.'X          ')) THEN
             IF (ILAB.GT.NEMAX) then
-	    	STOP '***More elements than NEMAX***'
-	    endif	
+                  STOP '***More elements than NEMAX***'
+           endif       
 ! --------- Save species number
             ISPELM(ILAB)=J
             ILAB=ILAB+1
          ENDIF
-	
+       
 ! ------ Check for electron species number
          IF (SPEC(J).EQ.'e-         ') ISPE=J
       ENDDO
@@ -639,16 +642,16 @@
        print *, 'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
        endif
        if (SPEC(ISPELM(K)).eq.YH) then
-       		if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01) print *,'H is too depleted on the grains !!!!'
+                     if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01) print *,'H is too depleted on the grains !!!!'
        endif
        if (SPEC(ISPELM(K)).eq.YHE) then
-       		if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01) print *,'He is too depleted on the grains !!!!'
+                     if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01) print *,'He is too depleted on the grains !!!!'
        endif       
        enddo
 
 ! VW fev 2012 add a test for the helium and H2 abundance in the gas phase
 ! prevent excessive depletion
-	
+       
 
       RETURN
       END
@@ -770,155 +773,197 @@
       integer :: nsta, nfin
       integer :: k, j, w, m, n
       integer, dimension(10) :: indice
+      real(kind=8), dimension(10) :: distmin, distmax
 
       T300=TEMP/300.D+0
       TI=1.0D+00/TEMP
       TSQ=SQRT(TEMP)
-	
+       
 ! ====== Rxn ITYPE 0
 ! ITYPE 0: Gas phase reactions with GRAINS =) 
          DO J=IRXSTA(0),IRXFIN(0)
             XK(J)=A(J)*(T300**B(J))
-!	if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
          ENDDO
-	 
+        
 ! In the case idust eq 0, we still need the formation of H on the grains
 ! this is done with the XH species, reaction types 10 and 11
 
 ! ====== Rxn ITYPE 10 and 11
 ! ITYPE 10 and 11: H2 formation on the grains when idust eq 0
-	if (idust.eq.0) then
-	 	DO J=IRXSTA(10),IRXFIN(10)
-         		XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/XNT
-			if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
-!			print *,'GTODN', GTODN
-		enddo
-		DO J=IRXSTA(11),IRXFIN(11)	
-     	    		XK(J)=A(J)*(T300**B(J))*XNT/GTODN
-		if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
-		enddo	
-	endif
-	
+       if (idust.eq.0) then
+               DO J=IRXSTA(10),IRXFIN(10)
+                       XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/XNT
+!                     print *,'GTODN', GTODN
+              enddo
+              DO J=IRXSTA(11),IRXFIN(11)       
+                              XK(J)=A(J)*(T300**B(J))*XNT/GTODN
+              enddo       
+       endif
+       
 
 ! ====== Rxn ITYPE 1
 ! ITYPE 1: Photodissoc/ionisation with cosmic rays
 ! Add X-rays in case ZETAX is not 0
         DO J=IRXSTA(1),IRXFIN(1)
             XK(J)=A(J)*(ZETA0+ZETAX)
-!       if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J),ITYPE(J),FORMULA(J)
-	ENDDO
+       ENDDO
         DO J=IRXSTA(2),IRXFIN(2)
             XK(J)=A(J)*(ZETA0+ZETAX)
- !       if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J),ITYPE(J),FORMULA(J)
-	ENDDO
+       ENDDO
 
 ! ====== Rxns ITYPE 4 - 8
 ! Bimolecular gas phase reactions - several possible formula 
-           W=1
-	   NSTA=0
-           NFIN=0
+         W=1
+         NSTA=0
+         NFIN=0
+         distmin(:)=9999.
+         distmax(:)=9999.
          DO J=4,8
                 IF ((IRXSTA(J).NE.0).AND.(NSTA.EQ.0)) NSTA=J
                 IF (IRXFIN(J).NE.0) NFIN=J
          ENDDO
          DO J=IRXSTA(NSTA),IRXFIN(NFIN)
-	 
-	 	! kooij formula
-	 	if (FORMULA(J).eq.3) then 
-!		print *,j,'kooij', SYMBOL(:,j), W, NUM(J), NUM(J+1)
-		
-			 XK(J)=A(J)*(T300**B(J))*EXP(-C(J)/TEMP)
+        
+!---------------  KOOIJ FORMULA
+            IF (FORMULA(J).eq.3) THEN
+              
+               XK(J)=A(J)*(T300**B(J))*EXP(-C(J)/TEMP)
 
-!                  Check for temperature bounderies
-			if (TEMP.LT.Tmin(J)) XK(J)=A(J)*((Tmin(J)/300.D0)**B(J))*EXP(-C(J)/Tmin(J))
-			if (TEMP.GT.Tmax(J)) XK(J)=A(J)*((Tmax(J)/300.D0)**B(J))*EXP(-C(J)/Tmax(J))
-		   
-!                  Check for the presence of several rate coefficients present in the network for the 
-!                  the same reaction
-                	IF (NUM(J+1).EQ.NUM(J)) THEN
-				INDICE(W)=J
-				W=W+1
-				if (IT.eq.1) write(*,*) 'Reaction ',NUM(J),' is present more than once in the network'
-			ENDIF
-			IF ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) THEN
-		   		INDICE(W)=J
-	
-		   		DO M=1,W
-					N=INDICE(M)
-					IF (TEMP.LT.Tmin(N)) XK(N)=0.d0
-					IF (TEMP.GT.Tmax(N)) XK(N)=0.d0
-		   		ENDDO
-				W=1
-				INDICE(:)=0
-			ENDIF	
-!		if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J),ITYPE(J),FORMULA(J)
-		endif
-			
-		!	IONPOL1 FORMULA
-		IF (FORMULA(J).EQ.4) 	then
-			
-!			print *,j,'ionpol 1', SYMBOL(:,j), W, NUM(J), NUM(J+1)
-		                            
-     	      	 XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TEMP)**0.5))
+!              Check for temperature bounderies
+               if (TEMP.LT.Tmin(J)) XK(J)=A(J)*((Tmin(J)/300.D0)**B(J))*EXP(-C(J)/Tmin(J))
+               if (TEMP.GT.Tmax(J)) XK(J)=A(J)*((Tmax(J)/300.D0)**B(J))*EXP(-C(J)/Tmax(J))
+                 
+!              Check for the presence of several rate coefficients present in the network for the
+!              the same reaction
+               IF (NUM(J+1).EQ.NUM(J)) THEN
+                  INDICE(W)=J
+                  distmin(w)=tmin(j)-temp
+                  distmax(w)=temp-tmax(j)
+                  W = W + 1
+               ENDIF
 
-!              	    Check for temperature bounderies
-			if (TEMP.LT.Tmin(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/Tmin(J))**0.5)) 
-			if (TEMP.GT.Tmax(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TMAX(J))**0.5)) 
-		   
-!                  Check for the presence of several rate coefficients present in the network for the 
-!                  the same reaction
-               		 IF (NUM(J+1).EQ.NUM(J)) THEN
-				INDICE(W)=J
-				W=W+1
-				if (IT.eq.1) write(*,*) 'Reaction ',NUM(J),' is present more than once in the network'
-			ENDIF
-!		   write (*,*) j,indice
-			IF ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) THEN
-		 	  	INDICE(W)=J
+               IF ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) THEN
 
-		 	  	DO M=1,W
-					N=INDICE(M)
-					IF (TEMP.LT.Tmin(N)) XK(N)=	0.d0
-					IF (TEMP.GT.Tmax(N)) XK(N)=	0.d0
-		   		ENDDO
-				W=1
-				INDICE(:)=0
-			ENDIF	
-!		   if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J),ITYPE(J),FORMULA(J)
+                  INDICE(W)=J
+                  distmin(w)=tmin(j)-temp
+                  distmax(w)=temp-tmax(j)
 
-		ENDIF
+                  DO M=1,W
+                     N=INDICE(M)
+                     !IF(IT==1) PRINT*,N,M, SYMBOL(:,N), tmin(N), tmax(N),distmin(M),distmax(M)
+                     IF (TEMP.LT.Tmin(N)) XK(N)=0.d0
+                     IF (TEMP.GT.Tmax(N)) XK(N)=0.d0
+                  ENDDO
 
-!		IONPOL2 FORMULA
-	   	IF (FORMULA(J).EQ.5) 	then		                            
-     	       XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TEMP)**0.5)+(C(J)**2*300.d0/(10.526*TEMP)))  
+                  IF (maxval(XK(indice(1:w))).lt.1.d-99) THEN
 
-!                  Check for temperature bounderies
-			if (TEMP.LT.Tmin(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*TMIN(J)))) 
-			if (TEMP.GT.Tmax(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*TMAX(J)))) 
-		   
-!                  Check for the presence of several rate coefficients present in the network for the 
-!                  the same reaction
-                	IF (NUM(J+1).EQ.NUM(J)) THEN
-				INDICE(W)=J
-				W=W+1
-				if (IT.eq.1) write(*,*) 'Reaction ',NUM(J),' is present more than once in the network'
-			ENDIF
-!		   write (*,*) j,indice
-			IF ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) THEN
-		  	 	INDICE(W)=J
+                     IF (minval(abs(distmin)).lt.minval(abs(distmax))) THEN
+                        N=indice(minloc(abs(distmin),dim=1))
+                        XK(N)=A(N)*((Tmin(N)/300.D0)**B(N))*EXP(-C(N)/Tmin(N))
+                     ELSE
+                        N=indice(minloc(abs(distmax),dim=1))
+                        XK(N)=A(N)*((Tmax(N)/300.D0)**B(N))*EXP(-C(N)/Tmax(N))
+                     ENDIF
+                  ENDIF
 
-		   		DO M=1,W
-					N=INDICE(M)
-					IF (TEMP.LT.Tmin(N)) XK(N)=	0.d0
-					IF (TEMP.GT.Tmax(N)) XK(N)=	0.d0
-		   		ENDDO
-				W=1
-				INDICE(:)=0
-			ENDIF	
-!		   if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J),ITYPE(J),FORMULA(J)
+                  W=1
+                  INDICE(:)=0
+                  distmin(:)=9999.
+                  distmax(:)=9999.
+               ENDIF
+            ENDIF
+                     
+!---------------  IONPOL1 FORMULA
+            IF (FORMULA(J).EQ.4) THEN
+               XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TEMP)**0.5))
 
-		ENDIF
+!              Check for temperature bounderies
+               IF (TEMP.LT.Tmin(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/Tmin(J))**0.5))
+               IF (TEMP.GT.Tmax(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TMAX(J))**0.5))
+                 
+!              Check for the presence of several rate coefficients present in the network for the
+!              the same reaction
+               IF (NUM(J+1).EQ.NUM(J)) THEN
+                  INDICE(W)=J
+                  distmin(w)=tmin(j)-temp
+                  distmax(w)=temp-tmax(j)
+                  W = W + 1
+               ENDIF
 
+               IF ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) THEN
+
+                  INDICE(W)=J
+                  distmin(w)=tmin(j)-temp
+                  distmax(w)=temp-tmax(j)
+
+                  DO M=1,W
+                     N=INDICE(M)
+                     IF (TEMP.LT.Tmin(N)) XK(N)= 0.d0
+                     IF (TEMP.GT.Tmax(N)) XK(N)= 0.d0
+                  ENDDO
+              
+                  IF (maxval(XK(indice(1:w))).lt.1.d-99) THEN
+                     IF (minval(abs(distmin)).lt.minval(abs(distmax))) THEN
+                        N=indice(minloc(abs(distmin),dim=1))
+                        XK(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/Tmin(N))**0.5))
+                     ELSE
+                        N=indice(minloc(abs(distmax),dim=1))
+                        XK(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/TMAX(N))**0.5))
+                     ENDIF
+                  ENDIF
+
+                  W=1
+                  INDICE(:)=0
+                  distmin(:)=9999.
+                  distmax(:)=9999.
+                ENDIF
+             ENDIF
+
+!---------------  IONPOL2 FORMULA
+             IF (FORMULA(J).EQ.5) then
+                XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TEMP)**0.5)+(C(J)**2*300.d0/(10.526*TEMP)))
+
+!               Check for temperature bounderies
+                IF (TEMP.LT.Tmin(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*TMIN(J))))
+                IF (TEMP.GT.Tmax(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*TMAX(J))))
+                 
+!               Check for the presence of several rate coefficients present in the network for the
+!               the same reaction
+                IF (NUM(J+1).EQ.NUM(J)) THEN
+                   INDICE(W)=J
+                   distmin(w)=tmin(j)-temp
+                   distmax(w)=temp-tmax(j)
+                   W = W + 1
+                ENDIF
+
+                IF ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) THEN
+
+                   INDICE(W)=J
+                   distmin(w)=tmin(j)-temp
+                   distmax(w)=temp-tmax(j)
+
+                   DO M=1,W
+                      N=INDICE(M)
+                      IF (TEMP.LT.Tmin(N)) XK(N)=       0.d0
+                      IF (TEMP.GT.Tmax(N)) XK(N)=       0.d0
+                   ENDDO
+
+                   IF (maxval(XK(indice(1:w))).lt.1.d-99) THEN
+                      IF (minval(abs(distmin)).lt.minval(abs(distmax))) THEN
+                         N=indice(minloc(abs(distmin),dim=1))
+                         XK(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/TMIN(N))**0.5)+(C(N)**2*300.d0/(10.526*TMIN(N))))
+                      ELSE
+                         N=indice(minloc(abs(distmax),dim=1))
+                         XK(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/TMAX(N))**0.5)+(C(N)**2*300.d0/(10.526*TMAX(N))))
+                      ENDIF
+                   ENDIF
+
+                   W=1
+                   INDICE(:)=0
+                   distmin(:)=9999.
+                   distmax(:)=9999.
+                ENDIF
+             ENDIF
          ENDDO
 
 ! === Grain surfaces
@@ -934,15 +979,13 @@
 ! ITYPE 15: Thermal evaporation
             DO J=IRXSTA(15),IRXFIN(15)
                XK(J)=A(J)*XJ(J)*TINEVA(JSP1(J))
-            if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
-	     ENDDO
+            ENDDO
 
 ! ========= Rxn ITYPE 16
 ! ITYPE 16: Cosmic-ray evaporation
             DO J=IRXSTA(16),IRXFIN(16)
                XK(J)=A(J)*XJ(J)*((ZETA0+ZETAX)/1.3D-17)&
                         *CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
-	      if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J) 	
             ENDDO
         
 
@@ -978,18 +1021,16 @@
          DO J=IRXSTA(17),IRXFIN(17)
             XK(J)=A(J)*(ZETA0 + ZETAX)
 !            IF (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
-          if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
-	 ENDDO
+        ENDDO
 
 ! ====== Rxn ITYPE 18
 ! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces
          DO J=IRXSTA(18),IRXFIN(18)
             XK(J)=A(J)*(ZETA0+ZETAX)
 !            IF (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
-          if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
-	 ENDDO
-	
-	 ENDIF
+        ENDDO
+       
+        ENDIF
 
 ! When dust is turned off, zero all dust rates==========================
       IF ((IDUST.EQ.0).AND.(IT.EQ.1)) THEN
@@ -1066,7 +1107,6 @@
          DO J=IRXSTA(3),IRXFIN(3)
             XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
 
-!    	if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J),ITYPE(J),FORMULA(J)
 ! MODIFY THE H2 AND CO PHOTODISSOCIATION IF ISABS EQ 1
          IF (ISABS.EQ.1) THEN 
     
@@ -1132,7 +1172,7 @@
            XK(J)=XK(J)*UVGAS
 
             ENDIF
-	
+       
          ENDIF
 
          ENDDO
@@ -1147,8 +1187,7 @@
             TINACC(JSP1(J))=CONDSP(JSP1(J))*TSQ*Y(JSP1(J))*XNT
             TINACC(JSP2(J))=TINACC(JSP1(J))
             XK(J)=A(J)*XJ(J)*TINACC(JSP1(J))/Y(JSP1(J))/GTODN
-            	if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
-	 ENDDO
+        ENDDO
 
 ! ====== Rxn ITYPE 14
 ! ITYPE 14: Grain surface reactions
@@ -1252,12 +1291,11 @@
             DIFF=RDIF1(J)+RDIF2(J)
 
             XK(J)=A(J)*XJ(J)*BARR*DIFF*GTODN/XNT
-!		XK(J)=0.D0
+!              XK(J)=0.D0
 ! --------- Allow only 1 monolayer of each to react
 ! Not used for the time being
 !            IF (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*TNS/GTODN/Y(JSP1(J))
 !            IF (Y(JSP2(J)).GT.MONLAY) XK(J)=XK(J)*TNS/GTODN/Y(JSP2(J))
-           	if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
 
          ENDDO
 
@@ -1266,7 +1304,6 @@
 ! ITYPE 20: Photodissociations by UV photons on grain surfaces
          DO J=IRXSTA(19),IRXFIN(20)
             XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
-           	if (IT.EQ.1) write(20,*) SYMBOL(:,j),XK(J)
 !            IF (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
          ENDDO
 
@@ -1305,8 +1342,8 @@
       use unitvar
       IMPLICIT none
 
-      REAL(kind=8), dimension(nsmax) :: REA1,REA2,REA3
-      REAL(kind=8), dimension(nkmax) :: REA4,REA5
+      REAL(kind=8), dimension(nsmax) :: REA1,REA2,REA3,REA4
+      REAL(kind=8), dimension(nkmax) :: REA5
       REAL(kind=8), dimension(nsmax) :: SMASS
       real(kind=8) :: SMA,REDMAS,STICK,EVFRAC,DHFSUM,SUM1,SUM2
       INTEGER, dimension(NKMAX) :: INT1
@@ -1364,7 +1401,7 @@
          IF (GSPEC(I).EQ.'           ') EXIT
          NGS=NGS+1
       ENDDO
-	
+       
 
 ! --- Read activation energies into dummy arrays
       READ(NGR,720) NEA
@@ -1392,6 +1429,7 @@
                   (EBFAC.GE.0.0D+0)) EB(I)=EBFAC*ED(I)
             ENDIF
          ENDDO
+         !IF(SPEC(I) == 'JN2O2      ') PRINT*,ED(I)
       ENDDO
 
       DO I=1,NKMAX
@@ -1412,6 +1450,7 @@
                   (SYMBOL(6,I).EQ.GSREAD(5,J)(2:))) EA(I)=REA5(J)
             ENDIF
          ENDDO
+	 !IF(symbol(4,i) == 'JO2H       ') PRINT*, symbol(:,i), Ea(i)
       ENDDO
 
 ! Set up constants, quantum rate info===================================
@@ -1471,11 +1510,11 @@
 ! ------ Factor of 2 for same species reactions
          IF (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
 !        print *,SYMBOL(1,J)
-!	print *,SYMBOL(2,J)
-!	print *,XJ(J)
-	
-!	stop
-	
+!       print *,SYMBOL(2,J)
+!       print *,XJ(J)
+       
+!       stop
+       
 ! ------ Calculate evaporation fraction
          NEVAP=0
          DO K=1,NKMAX
@@ -1507,7 +1546,7 @@
                IF (SYMBOL(6,J).EQ.SPEC(I)) N6=I
             ENDIF
             IF ((SYMBOL(4,J)(:1).NE.'J          ').AND.&
-	    (SYMBOL(4,J)(:1).NE.'X          ')) THEN
+           (SYMBOL(4,J)(:1).NE.'X          ')) THEN
                IF (SYMBOL(4,J).EQ.SPEC(I)(2:)) N4=I
                IF (SYMBOL(5,J).EQ.SPEC(I)(2:)) N5=I
                IF (SYMBOL(6,J).EQ.SPEC(I)(2:)) N6=I
@@ -1586,10 +1625,10 @@
 
          XJ(J)=XJ(J)*EVFRAC
 !        print *,SYMBOL(1,J)
-!	print *,SYMBOL(2,J)
-!	print *,XJ(J)
-	
-!	stop
+!       print *,SYMBOL(2,J)
+!       print *,XJ(J)
+       
+!       stop
 
 ! ------ Calculate quantum activation energy
          REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&

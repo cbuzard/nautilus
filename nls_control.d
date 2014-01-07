@@ -21,7 +21,7 @@ GAS PHASE PARAMETERS
 ---------+--------------+-----------------------------------------------
 XNT0     |    2.000D+04 | initial gas density  3.000D+03  1.000D+07
 TEMP0    |    1.000D+01 | initial gas temp
-TAU0     |    1.000D+02 | initial visual extinction  1.000D+00  2.231D+02
+TAU0     |    1.500D+01 | initial visual extinction  1.000D+00  2.231D+02
 ZETA0    |    1.300D-17 | cosmic ray ionisation rate (1.3e-17 standard value)
 ZETAX    |    0.000D+00 | Ionisation rate due to X-rays (s-1)
 UVGAS    |    1.000D+00 | scale fac for UV radiation field
@@ -49,7 +49,7 @@ OUTPUT TIMES
 ---------+--------------+-----------------------------------------------
 OTPD     |            4 | outputs per decade  2  8  64  128 (Only without diffusion)
 TSTART   |    1.000D+00 | first output time, after zero (yrs)
-TFINAL   |    1.000D+07 | last output time (yrs)  9.380D+05    5.000D+04     2.000D+05    1.000D+06
+TFINAL   |    1.000D+01 | last output time (yrs)  9.380D+05    5.000D+04     2.000D+05    1.000D+06
 WSTEP    |            1 | Outputs every WSTEP timesteps (/=1 only for 1D outputs)
 WSTEPR   |           10 | Outputs every WSTEPR timesteps for the rate coefficients
 IRATEOUT |            1 | Spatial point for the rate output
@@ -61,7 +61,7 @@ NS0      |           14 | number of initial abundances given below
 ---------+--------------+-----------------------------------------------
 He          | 9.000000D-02 | 1.400000D-01  9.000000D-02
 N           | 6.200000D-05 | 2.140000D-05  7.500000D-05
-O           | 3.300000D-04 | 1.760000D-04  1.400000D-04
+O           | 1.400000D-04 | 1.760000D-04  1.400000D-04
 H           | 1.000000D-03 | 5.000000D-05
 H2          | 0.499500D-00 | 0.499975D-00
 C+          | 1.700000D-04 | 7.300000D-05  1.400000D-04

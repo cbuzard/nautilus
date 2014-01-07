@@ -4,7 +4,7 @@ integer, parameter :: NKMAX=8335
 integer, parameter :: NSMAX=684
 integer, parameter :: nptmax=1
 integer, parameter :: IPT=1
-integer, parameter :: NT=29
+integer, parameter :: NT=57
 integer, parameter :: WSTEP=1
 real(kind=8), dimension(NKMAX)::XK
 character (len=11), dimension(7,nkmax) :: SYMBOL
@@ -15,12 +15,28 @@ real(kind=8), dimension(0:nsmax,nptmax) ::  ZXN2
 real(kind=8) :: time
 integer, dimension(NKMAX,7) :: REACT
 real(kind=8) :: destr,prod, XNT
-integer :: i,j,k,l
+integer :: i,j,k,l, istate
 integer :: IT, KIT
 character (len=6) :: charit
 INTEGER, dimension(nkmax):: NUM
+character (len=11) :: USER_SPEC
 
-do KIT=WSTEP,NT,WSTEP
+
+ DO WHILE (istate .NE. 0)
+   PRINT*, 'Select one species:'
+   READ*, USER_SPEC
+   PRINT*, '------------'
+   PRINT*, USER_SPEC
+   PRINT*, '--------------------------------------------------------------------------------', &
+   &'---------------------------------------------------------------------------------'  
+
+   PRINT*, 'REACTION                                                                         ', &
+   & 'RATES                       ', 'FORMATION                   ', 'DESTRUCTION           '  
+   PRINT*, '--------------------------------------------------------------------------------', &
+   &'---------------------------------------------------------------------------------'  
+
+KIT = 41  
+!do KIT=WSTEP,NT,WSTEP
 
 if (KIT.eq.0) then
 IT=1
@@ -71,27 +87,34 @@ XNT=2.*DENS1D(IPT)
 ZXN2(1:nsmax,1:nptmax)=ZXN(1:nsmax,1:nptmax)
 ZXN2(0,1:nptmax)=1.d0/XNT
 
-do j=1,nkmax
-do i=1,3
+   do j=1,nkmax
+      do i=1,3
+        if (TRIM(ADJUSTL(symbol(i,j))).eq.TRIM(ADJUSTL(USER_SPEC))) then
+           destr=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
+        PRINT*,symbol(:,j),'|',XK(j),'|',"                           ",'|', destr,'|'
+        endif
+      enddo
+      do i=4,7
 !if (symbol(i,j).eq.'CO      ') then
-if (symbol(i,j).eq.'JN2        ') then
-destr=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
-write(30,('(7A9,1pd10.3,1pd10.3)')) (symbol(l,j),l=1,7),XK(j), destr
-endif
-enddo
-do i=4,7
-!if (symbol(i,j).eq.'CO      ') then
-if (symbol(i,j).eq.'JN2        ') then
-prod=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
-write(30,('(8A9,1pd10.3,1pd10.3)')) (symbol(l,j),l=1,7), "       ",XK(j),prod
-endif
-enddo
-enddo
+        if (TRIM(ADJUSTL(symbol(i,j))).eq.TRIM(ADJUSTL(USER_SPEC))) then
+           prod=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
+           PRINT*,symbol(:,j),'|',XK(j),'|',prod,'|'
+        endif
+      enddo
+   enddo
 
 close(10)
 close(20)
 close(30)
 
-enddo
+!enddo
+   PRINT*, '--------------------------------------------------------------------------------', &
+   &'---------------------------------------------------------------------------------' 
+   PRINT*,'Continue? :'
+   PRINT*, 'Yes = 1 | No = 0'
+   READ*, istate
 
+   IF(istate == 0) PRINT*,'END'
+   
+ ENDDO
 end
