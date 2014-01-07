@@ -2,8 +2,8 @@
 module header
 implicit none
       integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
-      integer, PARAMETER :: NKMAX=8336,NSMAX=684,NSGAS=485,NSGRAIN=199,NEMAX=13
-      integer, PARAMETER :: NS1=468,NS2=216,NK1=6468,NK2=1868
+      integer, PARAMETER :: NKMAX=8335,NSMAX=684,NSGAS=485,NSGRAIN=199,NEMAX=13
+      integer, PARAMETER :: NS1=468,NS2=216,NK1=6467,NK2=1868
       integer, PARAMETER :: NITYPE=100, NOPMAX=1000
       double precision, parameter :: RXNMIN=1.0D-99
       integer, PARAMETER :: NL1=105,NL2=52,NL3=43
