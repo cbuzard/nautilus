@@ -11,7 +11,7 @@ COMPILATOR = "gfortran"
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunreachable-code -fbacktrace" + \
   " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic"
-OPTIMIZATIONS = "-O3 -march=native -ffast-math -pipe -finit-real=nan"
+OPTIMIZATIONS = "-O0 -march=native -ffast-math -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
 PROFILING_OPTIONS = "-pg"
 
@@ -69,17 +69,17 @@ def run(commande):
   (process_stdout, process_stderr) = process.communicate()
   returnCode = process.poll()
   
-  # If returnCode is not 0, then there was a problem
-  if (returnCode != 0):
-    logname = "compilation.log"
-
-    # We write compilation errors in the following file.
-    f = open(logname,'w')
-    f.write(process_stderr)
-    f.close()
-    
-    print("Compilation error, see '%s'" % logname)
-    sys.exit(1)
+  #~ # If returnCode is not 0, then there was a problem
+  #~ if (returnCode != 0):
+    #~ logname = "compilation.log"
+#~ 
+    #~ # We write compilation errors in the following file.
+    #~ f = open(logname,'w')
+    #~ f.write(process_stderr)
+    #~ f.close()
+    #~ 
+    #~ print("Compilation error, see '%s'" % logname)
+    #~ sys.exit(1)
   
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
   return (process_stdout, process_stderr, returnCode)
