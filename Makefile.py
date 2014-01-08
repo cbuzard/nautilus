@@ -11,7 +11,7 @@ COMPILATOR = "gfortran"
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunreachable-code -fbacktrace" + \
   " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic"
-OPTIMIZATIONS = "-03 -march=native -ffast-math -pipe -finit-real=nan"
+OPTIMIZATIONS = "-O3 -march=native -ffast-math -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
 PROFILING_OPTIONS = "-pg"
 
@@ -70,9 +70,7 @@ def run(commande):
   returnCode = process.poll()
   
   # If returnCode is not 0, then there was a problem
-  if (returnCode==0):
-    return process_stderr
-  else:        
+  if (returnCode != 0):
     logname = "compilation.log"
 
     # We write compilation errors in the following file.
