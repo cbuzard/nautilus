@@ -6,3 +6,4 @@ extract_ab
 filename
 *.log
 *.o
+nlso_tail.d
