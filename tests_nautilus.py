@@ -16,6 +16,36 @@ import subprocess # To launch various process, get outputs et errors, returnCode
 import pdb # To debug
 import glob # to get list of file through a given pattern
 
+# Parameters
+force = False # To force the compilation of every module
+
+isProblem = False
+problem_message = "The script can take various arguments :" + "\n" + \
+"(no spaces between the key and the values, only separated by '=')" + "\n" + \
+" * help : display a little help message on HOW to use various options" + "\n" + \
+" * force : To force generation of outputs for the original program" + "\n" + \
+" Example : " + "\n" + \
+" tests_nautilus.py force"
+
+# We get arguments from the script
+for arg in sys.argv[1:]:
+  try:
+    (key, value) = arg.split("=")
+  except:
+    key = arg
+  if (key == 'force'):
+    force = True
+  elif (key == 'help'):
+    isProblem = True
+  else:
+    print("the key '%s' does not match" % key)
+    isProblem = True
+
+if isProblem:
+  print(problem_message)
+  exit()
+
+
 def run(commande):
   """lance une commande qui sera typiquement soit une liste, soit une 
   commande seule. La fonction renvoit un tuple avec la sortie, 
@@ -103,7 +133,8 @@ def compare2files(ori_files,new_files):
       
     if (no_diff != []):
       print "No differences seen on :",', '.join(no_diff)
-  # We doesn't print anything if no file at all has differences
+  else:
+    print("Everything OK")  
   
   return 0
 
@@ -134,7 +165,8 @@ def compare2Binaries(ori_files, new_files):
       
     if (no_diff != []):
       print("No differences seen on :%s" % ', '.join(no_diff))
-  # We doesn't print anything if no file at all has differences
+  else:
+    print("Everything OK")
   
   return 0
 
@@ -171,22 +203,28 @@ RATES_FILENAMES = glob.glob("rates1D.*")
 os.chdir("..")
 print("Running new binaries ...ok")
 print("##########################################")
-sys.stdout.write("Running original binaries ...\r")
-sys.stdout.flush()
-
-
 os.chdir(ORIGINAL_TEST)
 
-# We clean the output files
-clean()
+if force:
+  # We clean the output files
+  clean()
 
-(naut_or_stdout, naut_or_stderr, returnCode) = run("./nautilus")
+if not(os.path.isfile("output_1D.000001")):
+  sys.stdout.write("Running original binaries ...\r")
+  sys.stdout.flush()
+  (naut_or_stdout, naut_or_stderr, returnCode) = run("./nautilus")
+  print("Running original binaries ...ok")
+else:
+  print("Skipping running original Nautilus, output already exists")
+  # To prevent finding differences in the standard output and error
+  naut_or_stdout = naut_new_stdout
+  naut_or_stderr = naut_new_stderr
 
 ABUNDANCES_FILENAMES_OLD = glob.glob("output_1D.*")
 RATES_FILENAMES_OLD = glob.glob("rates1D.*")
 
 os.chdir("..")
-print("Running original binaries ...ok")
+
 print("##########################################")
 
 # We make the comparison
