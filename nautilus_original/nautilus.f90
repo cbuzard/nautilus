@@ -212,7 +212,7 @@
 
 
       OPEN (UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
-!~       OPEN (UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
+      OPEN (UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
       OPEN (UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
       OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
       OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')

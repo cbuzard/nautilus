@@ -47,7 +47,7 @@ ARRK     |    1.000D-02 | a-coefficient for RRK-style formation-desorption
 ---------+--------------+-----------------------------------------------
 OUTPUT TIMES
 ---------+--------------+-----------------------------------------------
-OTPD     |            4 | outputs per decade  2  8  64  128 (Only without diffusion)
+OTPD     |            2 | outputs per decade  2  8  64  128 (Only without diffusion)
 TSTART   |    1.000D+00 | first output time, after zero (yrs)
 TFINAL   |    1.000D+01 | last output time (yrs)  9.380D+05    5.000D+04     2.000D+05    1.000D+06
 WSTEP    |            1 | Outputs every WSTEP timesteps (/=1 only for 1D outputs)
