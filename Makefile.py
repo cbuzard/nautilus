@@ -69,17 +69,17 @@ def run(commande):
   (process_stdout, process_stderr) = process.communicate()
   returnCode = process.poll()
   
-  #~ # If returnCode is not 0, then there was a problem
-  #~ if (returnCode != 0):
-    #~ logname = "compilation.log"
-#~ 
-    #~ # We write compilation errors in the following file.
-    #~ f = open(logname,'w')
-    #~ f.write(process_stderr)
-    #~ f.close()
-    #~ 
-    #~ print("Compilation error, see '%s'" % logname)
-    #~ sys.exit(1)
+  # If returnCode is not 0, then there was a problem
+  if (returnCode != 0):
+    logname = "compilation.log"
+
+    # We write compilation errors in the following file.
+    f = open(logname,'w')
+    f.write(process_stderr)
+    f.close()
+    
+    print("Compilation error, see '%s'" % logname)
+    sys.exit(1)
   
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
   return (process_stdout, process_stderr, returnCode)
@@ -95,7 +95,7 @@ if gdb:
 if profiling:
   OPTIONS = PROFILING_OPTIONS
 
-command = "%s %s nls_header_mod.f90" % (COMPILATOR, OPTIONS)
+command = "%s %s -c nls_header_mod.f90" % (COMPILATOR, OPTIONS)
 print(command)
 (process_stdout, process_stderr, returncode) = run(command)
 
