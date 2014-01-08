@@ -5,6 +5,7 @@
 import subprocess
 import os
 import sys
+import pdb
 
 COMPILATOR = "gfortran"
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunreachable-code -fbacktrace" + \
@@ -66,9 +67,24 @@ def run(commande):
   else:
     raise TypeError("The command is neither a string nor a list.")
   (process_stdout, process_stderr) = process.communicate()
-  returncode = process.poll()
+  returnCode = process.poll()
+  
+  # If returnCode is not 0, then there was a problem
+  if (returnCode==0):
+    return process_stderr
+  else:        
+    logname = "compilation.log"
+
+    # We write compilation errors in the following file.
+    f = open(logname,'w')
+    f.write(process_stderr)
+    f.close()
+    
+    print("Compilation error, see '%s'" % logname)
+    sys.exit(1)
+  
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
-  return (process_stdout, process_stderr, returncode)
+  return (process_stdout, process_stderr, returnCode)
 
 if debug:
   OPTIONS = DEBUG_OPTIONS
@@ -83,8 +99,12 @@ if profiling:
 
 command = "%s %s nls_header_mod.f90" % (COMPILATOR, OPTIONS)
 print(command)
-run(command)
+(process_stdout, process_stderr, returncode) = run(command)
+
+#~ pdb.set_trace()
 
 command = "%s %s -o nautilus opk*.f nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
 print(command)
-run(command)
+(process_stdout, process_stderr, returncode) = run(command)
+
+#~ pdb.set_trace()
