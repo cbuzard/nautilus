@@ -63,7 +63,6 @@ implicit none
       integer, save :: IDENS,ITEMP,IDUST,IGRQM,ICONS,IMODH,IREAD
       integer, save :: IPOUT,IPMON,IPLOT,IPDET,IPRXN,IPORD,ISABS
 
-      COMMON/RCOEFF/XK
 
 ! Diffusion and 1D variables
 real(kind=8), dimension(nptmax), save :: zspace, zaspace ! space variables
