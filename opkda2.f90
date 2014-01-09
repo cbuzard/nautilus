@@ -1,5 +1,5 @@
-!*DECK DGEFA
-      SUBROUTINE DGEFA (A, LDA, N, IPVT, INFO)
+
+SUBROUTINE DGEFA (A, LDA, N, IPVT, INFO)
 !***BEGIN PROLOGUE  DGEFA
 !***PURPOSE  Factor a matrix using Gaussian elimination.
 !***CATEGORY  D2A1
@@ -57,65 +57,65 @@
 !           (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DGEFA
-      INTEGER LDA,N,IPVT(*),INFO
-      DOUBLE PRECISION A(LDA,*)
+INTEGER LDA,N,IPVT(*),INFO
+DOUBLE PRECISION A(LDA,*)
 !
-      DOUBLE PRECISION T
-      INTEGER IDAMAX,J,K,KP1,L,NM1
+DOUBLE PRECISION T
+INTEGER IDAMAX,J,K,KP1,L,NM1
 !
 !     GAUSSIAN ELIMINATION WITH PARTIAL PIVOTING
 !
 !***FIRST EXECUTABLE STATEMENT  DGEFA
-      INFO = 0
-      NM1 = N - 1
-      IF (NM1 .LT. 1) GO TO 70
-      DO 60 K = 1, NM1
-         KP1 = K + 1
+INFO = 0
+NM1 = N - 1
+IF (NM1 .LT. 1) GO TO 70
+DO 60 K = 1, NM1
+KP1 = K + 1
 !
 !        FIND L = PIVOT INDEX
 !
-         L = IDAMAX(N-K+1,A(K,K),1) + K - 1
-         IPVT(K) = L
+L = IDAMAX(N-K+1,A(K,K),1) + K - 1
+IPVT(K) = L
 !
 !        ZERO PIVOT IMPLIES THIS COLUMN ALREADY TRIANGULARIZED
 !
-         IF (A(L,K) .EQ. 0.0D0) GO TO 40
+IF (A(L,K) .EQ. 0.0D0) GO TO 40
 !
 !           INTERCHANGE IF NECESSARY
 !
-            IF (L .EQ. K) GO TO 10
-               T = A(L,K)
-               A(L,K) = A(K,K)
-               A(K,K) = T
-   10       CONTINUE
+IF (L .EQ. K) GO TO 10
+T = A(L,K)
+A(L,K) = A(K,K)
+A(K,K) = T
+10       CONTINUE
 !
 !           COMPUTE MULTIPLIERS
 !
-            T = -1.0D0/A(K,K)
-            CALL DSCAL(N-K,T,A(K+1,K),1)
+T = -1.0D0/A(K,K)
+CALL DSCAL(N-K,T,A(K+1,K),1)
 !
 !           ROW ELIMINATION WITH COLUMN INDEXING
 !
-            DO 30 J = KP1, N
-               T = A(L,J)
-               IF (L .EQ. K) GO TO 20
-                  A(L,J) = A(K,J)
-                  A(K,J) = T
-   20          CONTINUE
-               CALL DAXPY(N-K,T,A(K+1,K),1,A(K+1,J),1)
-   30       CONTINUE
-         GO TO 50
-   40    CONTINUE
-            INFO = K
-   50    CONTINUE
-   60 CONTINUE
-   70 CONTINUE
-      IPVT(N) = N
-      IF (A(N,N) .EQ. 0.0D0) INFO = N
-      RETURN
-      END
-!*DECK DGESL
-      SUBROUTINE DGESL (A, LDA, N, IPVT, B, JOB)
+DO 30 J = KP1, N
+T = A(L,J)
+IF (L .EQ. K) GO TO 20
+A(L,J) = A(K,J)
+A(K,J) = T
+20          CONTINUE
+CALL DAXPY(N-K,T,A(K+1,K),1,A(K+1,J),1)
+30       CONTINUE
+GO TO 50
+40    CONTINUE
+INFO = K
+50    CONTINUE
+60 CONTINUE
+70 CONTINUE
+IPVT(N) = N
+IF (A(N,N) .EQ. 0.0D0) INFO = N
+RETURN
+END
+
+SUBROUTINE DGESL (A, LDA, N, IPVT, B, JOB)
 !***BEGIN PROLOGUE  DGESL
 !***PURPOSE  Solve the real system A*X=B or TRANS(A)*X=B using the
 !            factors computed by DGECO or DGEFA.
@@ -184,68 +184,68 @@
 !           (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DGESL
-      INTEGER LDA,N,IPVT(*),JOB
-      DOUBLE PRECISION A(LDA,*),B(*)
+INTEGER LDA,N,IPVT(*),JOB
+DOUBLE PRECISION A(LDA,*),B(*)
 !
-      DOUBLE PRECISION DDOT,T
-      INTEGER K,KB,L,NM1
+DOUBLE PRECISION DDOT,T
+INTEGER K,KB,L,NM1
 !***FIRST EXECUTABLE STATEMENT  DGESL
-      NM1 = N - 1
-      IF (JOB .NE. 0) GO TO 50
+NM1 = N - 1
+IF (JOB .NE. 0) GO TO 50
 !
 !        JOB = 0 , SOLVE  A * X = B
 !        FIRST SOLVE  L*Y = B
 !
-         IF (NM1 .LT. 1) GO TO 30
-         DO 20 K = 1, NM1
-            L = IPVT(K)
-            T = B(L)
-            IF (L .EQ. K) GO TO 10
-               B(L) = B(K)
-               B(K) = T
-   10       CONTINUE
-            CALL DAXPY(N-K,T,A(K+1,K),1,B(K+1),1)
-   20    CONTINUE
-   30    CONTINUE
+IF (NM1 .LT. 1) GO TO 30
+DO 20 K = 1, NM1
+L = IPVT(K)
+T = B(L)
+IF (L .EQ. K) GO TO 10
+B(L) = B(K)
+B(K) = T
+10       CONTINUE
+CALL DAXPY(N-K,T,A(K+1,K),1,B(K+1),1)
+20    CONTINUE
+30    CONTINUE
 !
 !        NOW SOLVE  U*X = Y
 !
-         DO 40 KB = 1, N
-            K = N + 1 - KB
-            B(K) = B(K)/A(K,K)
-            T = -B(K)
-            CALL DAXPY(K-1,T,A(1,K),1,B(1),1)
-   40    CONTINUE
-      GO TO 100
-   50 CONTINUE
+DO 40 KB = 1, N
+K = N + 1 - KB
+B(K) = B(K)/A(K,K)
+T = -B(K)
+CALL DAXPY(K-1,T,A(1,K),1,B(1),1)
+40    CONTINUE
+GO TO 100
+50 CONTINUE
 !
 !        JOB = NONZERO, SOLVE  TRANS(A) * X = B
 !        FIRST SOLVE  TRANS(U)*Y = B
 !
-         DO 60 K = 1, N
-            T = DDOT(K-1,A(1,K),1,B(1),1)
-            B(K) = (B(K) - T)/A(K,K)
-   60    CONTINUE
+DO 60 K = 1, N
+T = DDOT(K-1,A(1,K),1,B(1),1)
+B(K) = (B(K) - T)/A(K,K)
+60    CONTINUE
 !
 !        NOW SOLVE TRANS(L)*X = Y
 !
-         IF (NM1 .LT. 1) GO TO 90
-         DO 80 KB = 1, NM1
-            K = N - KB
-            B(K) = B(K) + DDOT(N-K,A(K+1,K),1,B(K+1),1)
-            L = IPVT(K)
-            IF (L .EQ. K) GO TO 70
-               T = B(L)
-               B(L) = B(K)
-               B(K) = T
-   70       CONTINUE
-   80    CONTINUE
-   90    CONTINUE
-  100 CONTINUE
-      RETURN
-      END
-!*DECK DGBFA
-      SUBROUTINE DGBFA (ABD, LDA, N, ML, MU, IPVT, INFO)
+IF (NM1 .LT. 1) GO TO 90
+DO 80 KB = 1, NM1
+K = N - KB
+B(K) = B(K) + DDOT(N-K,A(K+1,K),1,B(K+1),1)
+L = IPVT(K)
+IF (L .EQ. K) GO TO 70
+T = B(L)
+B(L) = B(K)
+B(K) = T
+70       CONTINUE
+80    CONTINUE
+90    CONTINUE
+100 CONTINUE
+RETURN
+END
+
+SUBROUTINE DGBFA (ABD, LDA, N, ML, MU, IPVT, INFO)
 !***BEGIN PROLOGUE  DGBFA
 !***PURPOSE  Factor a band matrix using Gaussian elimination.
 !***CATEGORY  D2A2
@@ -339,99 +339,99 @@
 !           (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DGBFA
-      INTEGER LDA,N,ML,MU,IPVT(*),INFO
-      DOUBLE PRECISION ABD(LDA,*)
+INTEGER LDA,N,ML,MU,IPVT(*),INFO
+DOUBLE PRECISION ABD(LDA,*)
 !
-      DOUBLE PRECISION T
-      INTEGER I,IDAMAX,I0,J,JU,JZ,J0,J1,K,KP1,L,LM,M,MM,NM1
+DOUBLE PRECISION T
+INTEGER I,IDAMAX,I0,J,JU,JZ,J0,J1,K,KP1,L,LM,M,MM,NM1
 !
 !***FIRST EXECUTABLE STATEMENT  DGBFA
-      M = ML + MU + 1
-      INFO = 0
+M = ML + MU + 1
+INFO = 0
 !
 !     ZERO INITIAL FILL-IN COLUMNS
 !
-      J0 = MU + 2
-      J1 = MIN(N,M) - 1
-      IF (J1 .LT. J0) GO TO 30
-      DO 20 JZ = J0, J1
-         I0 = M + 1 - JZ
-         DO 10 I = I0, ML
-            ABD(I,JZ) = 0.0D0
-   10    CONTINUE
-   20 CONTINUE
-   30 CONTINUE
-      JZ = J1
-      JU = 0
+J0 = MU + 2
+J1 = MIN(N,M) - 1
+IF (J1 .LT. J0) GO TO 30
+DO 20 JZ = J0, J1
+I0 = M + 1 - JZ
+DO 10 I = I0, ML
+ABD(I,JZ) = 0.0D0
+10    CONTINUE
+20 CONTINUE
+30 CONTINUE
+JZ = J1
+JU = 0
 !
 !     GAUSSIAN ELIMINATION WITH PARTIAL PIVOTING
 !
-      NM1 = N - 1
-      IF (NM1 .LT. 1) GO TO 130
-      DO 120 K = 1, NM1
-         KP1 = K + 1
+NM1 = N - 1
+IF (NM1 .LT. 1) GO TO 130
+DO 120 K = 1, NM1
+KP1 = K + 1
 !
 !        ZERO NEXT FILL-IN COLUMN
 !
-         JZ = JZ + 1
-         IF (JZ .GT. N) GO TO 50
-         IF (ML .LT. 1) GO TO 50
-            DO 40 I = 1, ML
-               ABD(I,JZ) = 0.0D0
-   40       CONTINUE
-   50    CONTINUE
+JZ = JZ + 1
+IF (JZ .GT. N) GO TO 50
+IF (ML .LT. 1) GO TO 50
+DO 40 I = 1, ML
+ABD(I,JZ) = 0.0D0
+40       CONTINUE
+50    CONTINUE
 !
 !        FIND L = PIVOT INDEX
 !
-         LM = MIN(ML,N-K)
-         L = IDAMAX(LM+1,ABD(M,K),1) + M - 1
-         IPVT(K) = L + K - M
+LM = MIN(ML,N-K)
+L = IDAMAX(LM+1,ABD(M,K),1) + M - 1
+IPVT(K) = L + K - M
 !
 !        ZERO PIVOT IMPLIES THIS COLUMN ALREADY TRIANGULARIZED
 !
-         IF (ABD(L,K) .EQ. 0.0D0) GO TO 100
+IF (ABD(L,K) .EQ. 0.0D0) GO TO 100
 !
 !           INTERCHANGE IF NECESSARY
 !
-            IF (L .EQ. M) GO TO 60
-               T = ABD(L,K)
-               ABD(L,K) = ABD(M,K)
-               ABD(M,K) = T
-   60       CONTINUE
+IF (L .EQ. M) GO TO 60
+T = ABD(L,K)
+ABD(L,K) = ABD(M,K)
+ABD(M,K) = T
+60       CONTINUE
 !
 !           COMPUTE MULTIPLIERS
 !
-            T = -1.0D0/ABD(M,K)
-            CALL DSCAL(LM,T,ABD(M+1,K),1)
+T = -1.0D0/ABD(M,K)
+CALL DSCAL(LM,T,ABD(M+1,K),1)
 !
 !           ROW ELIMINATION WITH COLUMN INDEXING
 !
-            JU = MIN(MAX(JU,MU+IPVT(K)),N)
-            MM = M
-            IF (JU .LT. KP1) GO TO 90
-            DO 80 J = KP1, JU
-               L = L - 1
-               MM = MM - 1
-               T = ABD(L,J)
-               IF (L .EQ. MM) GO TO 70
-                  ABD(L,J) = ABD(MM,J)
-                  ABD(MM,J) = T
-   70          CONTINUE
-               CALL DAXPY(LM,T,ABD(M+1,K),1,ABD(MM+1,J),1)
-   80       CONTINUE
-   90       CONTINUE
-         GO TO 110
-  100    CONTINUE
-            INFO = K
-  110    CONTINUE
-  120 CONTINUE
-  130 CONTINUE
-      IPVT(N) = N
-      IF (ABD(M,N) .EQ. 0.0D0) INFO = N
-      RETURN
-      END
-!*DECK DGBSL
-      SUBROUTINE DGBSL (ABD, LDA, N, ML, MU, IPVT, B, JOB)
+JU = MIN(MAX(JU,MU+IPVT(K)),N)
+MM = M
+IF (JU .LT. KP1) GO TO 90
+DO 80 J = KP1, JU
+L = L - 1
+MM = MM - 1
+T = ABD(L,J)
+IF (L .EQ. MM) GO TO 70
+ABD(L,J) = ABD(MM,J)
+ABD(MM,J) = T
+70          CONTINUE
+CALL DAXPY(LM,T,ABD(M+1,K),1,ABD(MM+1,J),1)
+80       CONTINUE
+90       CONTINUE
+GO TO 110
+100    CONTINUE
+INFO = K
+110    CONTINUE
+120 CONTINUE
+130 CONTINUE
+IPVT(N) = N
+IF (ABD(M,N) .EQ. 0.0D0) INFO = N
+RETURN
+END
+
+SUBROUTINE DGBSL (ABD, LDA, N, ML, MU, IPVT, B, JOB)
 !***BEGIN PROLOGUE  DGBSL
 !***PURPOSE  Solve the real band system A*X=B or TRANS(A)*X=B using
 !            the factors computed by DGBCO or DGBFA.
@@ -507,79 +507,79 @@
 !           (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DGBSL
-      INTEGER LDA,N,ML,MU,IPVT(*),JOB
-      DOUBLE PRECISION ABD(LDA,*),B(*)
+INTEGER LDA,N,ML,MU,IPVT(*),JOB
+DOUBLE PRECISION ABD(LDA,*),B(*)
 !
-      DOUBLE PRECISION DDOT,T
-      INTEGER K,KB,L,LA,LB,LM,M,NM1
+DOUBLE PRECISION DDOT,T
+INTEGER K,KB,L,LA,LB,LM,M,NM1
 !***FIRST EXECUTABLE STATEMENT  DGBSL
-      M = MU + ML + 1
-      NM1 = N - 1
-      IF (JOB .NE. 0) GO TO 50
+M = MU + ML + 1
+NM1 = N - 1
+IF (JOB .NE. 0) GO TO 50
 !
 !        JOB = 0 , SOLVE  A * X = B
 !        FIRST SOLVE L*Y = B
 !
-         IF (ML .EQ. 0) GO TO 30
-         IF (NM1 .LT. 1) GO TO 30
-            DO 20 K = 1, NM1
-               LM = MIN(ML,N-K)
-               L = IPVT(K)
-               T = B(L)
-               IF (L .EQ. K) GO TO 10
-                  B(L) = B(K)
-                  B(K) = T
-   10          CONTINUE
-               CALL DAXPY(LM,T,ABD(M+1,K),1,B(K+1),1)
-   20       CONTINUE
-   30    CONTINUE
+IF (ML .EQ. 0) GO TO 30
+IF (NM1 .LT. 1) GO TO 30
+DO 20 K = 1, NM1
+LM = MIN(ML,N-K)
+L = IPVT(K)
+T = B(L)
+IF (L .EQ. K) GO TO 10
+B(L) = B(K)
+B(K) = T
+10          CONTINUE
+CALL DAXPY(LM,T,ABD(M+1,K),1,B(K+1),1)
+20       CONTINUE
+30    CONTINUE
 !
 !        NOW SOLVE  U*X = Y
 !
-         DO 40 KB = 1, N
-            K = N + 1 - KB
-            B(K) = B(K)/ABD(M,K)
-            LM = MIN(K,M) - 1
-            LA = M - LM
-            LB = K - LM
-            T = -B(K)
-            CALL DAXPY(LM,T,ABD(LA,K),1,B(LB),1)
-   40    CONTINUE
-      GO TO 100
-   50 CONTINUE
+DO 40 KB = 1, N
+K = N + 1 - KB
+B(K) = B(K)/ABD(M,K)
+LM = MIN(K,M) - 1
+LA = M - LM
+LB = K - LM
+T = -B(K)
+CALL DAXPY(LM,T,ABD(LA,K),1,B(LB),1)
+40    CONTINUE
+GO TO 100
+50 CONTINUE
 !
 !        JOB = NONZERO, SOLVE  TRANS(A) * X = B
 !        FIRST SOLVE  TRANS(U)*Y = B
 !
-         DO 60 K = 1, N
-            LM = MIN(K,M) - 1
-            LA = M - LM
-            LB = K - LM
-            T = DDOT(LM,ABD(LA,K),1,B(LB),1)
-            B(K) = (B(K) - T)/ABD(M,K)
-   60    CONTINUE
+DO 60 K = 1, N
+LM = MIN(K,M) - 1
+LA = M - LM
+LB = K - LM
+T = DDOT(LM,ABD(LA,K),1,B(LB),1)
+B(K) = (B(K) - T)/ABD(M,K)
+60    CONTINUE
 !
 !        NOW SOLVE TRANS(L)*X = Y
 !
-         IF (ML .EQ. 0) GO TO 90
-         IF (NM1 .LT. 1) GO TO 90
-            DO 80 KB = 1, NM1
-               K = N - KB
-               LM = MIN(ML,N-K)
-               B(K) = B(K) + DDOT(LM,ABD(M+1,K),1,B(K+1),1)
-               L = IPVT(K)
-               IF (L .EQ. K) GO TO 70
-                  T = B(L)
-                  B(L) = B(K)
-                  B(K) = T
-   70          CONTINUE
-   80       CONTINUE
-   90    CONTINUE
-  100 CONTINUE
-      RETURN
-      END
-!*DECK DAXPY
-      SUBROUTINE DAXPY (N, DA, DX, INCX, DY, INCY)
+IF (ML .EQ. 0) GO TO 90
+IF (NM1 .LT. 1) GO TO 90
+DO 80 KB = 1, NM1
+K = N - KB
+LM = MIN(ML,N-K)
+B(K) = B(K) + DDOT(LM,ABD(M+1,K),1,B(K+1),1)
+L = IPVT(K)
+IF (L .EQ. K) GO TO 70
+T = B(L)
+B(L) = B(K)
+B(K) = T
+70          CONTINUE
+80       CONTINUE
+90    CONTINUE
+100 CONTINUE
+RETURN
+END
+
+SUBROUTINE DAXPY (N, DA, DX, INCX, DY, INCY)
 !***BEGIN PROLOGUE  DAXPY
 !***PURPOSE  Compute a constant times a vector plus a vector.
 !***CATEGORY  D1A7
@@ -624,53 +624,53 @@
 !   920310  Corrected definition of LX in DESCRIPTION.  (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DAXPY
-      DOUBLE PRECISION DX(*), DY(*), DA
+DOUBLE PRECISION DX(*), DY(*), DA
 !***FIRST EXECUTABLE STATEMENT  DAXPY
-      IF (N.LE.0 .OR. DA.EQ.0.0D0) RETURN
-      IF (INCX .EQ. INCY) IF (INCX-1) 5,20,60
+IF (N.LE.0 .OR. DA.EQ.0.0D0) RETURN
+IF (INCX .EQ. INCY) IF (INCX-1) 5,20,60
 !
 !     Code for unequal or nonpositive increments.
 !
-    5 IX = 1
-      IY = 1
-      IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
-      IF (INCY .LT. 0) IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DY(IY) = DY(IY) + DA*DX(IX)
-        IX = IX + INCX
-        IY = IY + INCY
-   10 CONTINUE
-      RETURN
+5 IX = 1
+IY = 1
+IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
+IF (INCY .LT. 0) IY = (-N+1)*INCY + 1
+DO 10 I = 1,N
+DY(IY) = DY(IY) + DA*DX(IX)
+IX = IX + INCX
+IY = IY + INCY
+10 CONTINUE
+RETURN
 !
 !     Code for both increments equal to 1.
 !
 !     Clean-up loop so remaining vector length is a multiple of 4.
 !
-   20 M = MOD(N,4)
-      IF (M .EQ. 0) GO TO 40
-      DO 30 I = 1,M
-        DY(I) = DY(I) + DA*DX(I)
-   30 CONTINUE
-      IF (N .LT. 4) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,4
-        DY(I) = DY(I) + DA*DX(I)
-        DY(I+1) = DY(I+1) + DA*DX(I+1)
-        DY(I+2) = DY(I+2) + DA*DX(I+2)
-        DY(I+3) = DY(I+3) + DA*DX(I+3)
-   50 CONTINUE
-      RETURN
+20 M = MOD(N,4)
+IF (M .EQ. 0) GO TO 40
+DO 30 I = 1,M
+DY(I) = DY(I) + DA*DX(I)
+30 CONTINUE
+IF (N .LT. 4) RETURN
+40 MP1 = M + 1
+DO 50 I = MP1,N,4
+DY(I) = DY(I) + DA*DX(I)
+DY(I+1) = DY(I+1) + DA*DX(I+1)
+DY(I+2) = DY(I+2) + DA*DX(I+2)
+DY(I+3) = DY(I+3) + DA*DX(I+3)
+50 CONTINUE
+RETURN
 !
 !     Code for equal, positive, non-unit increments.
 !
-   60 NS = N*INCX
-      DO 70 I = 1,NS,INCX
-        DY(I) = DA*DX(I) + DY(I)
-   70 CONTINUE
-      RETURN
-      END
-!*DECK DCOPY
-      SUBROUTINE DCOPY (N, DX, INCX, DY, INCY)
+60 NS = N*INCX
+DO 70 I = 1,NS,INCX
+DY(I) = DA*DX(I) + DY(I)
+70 CONTINUE
+RETURN
+END
+
+SUBROUTINE DCOPY (N, DX, INCX, DY, INCY)
 !***BEGIN PROLOGUE  DCOPY
 !***PURPOSE  Copy a vector.
 !***CATEGORY  D1A5
@@ -713,56 +713,56 @@
 !   920310  Corrected definition of LX in DESCRIPTION.  (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DCOPY
-      DOUBLE PRECISION DX(*), DY(*)
+DOUBLE PRECISION DX(*), DY(*)
 !***FIRST EXECUTABLE STATEMENT  DCOPY
-      IF (N .LE. 0) RETURN
-      IF (INCX .EQ. INCY) IF (INCX-1) 5,20,60
+IF (N .LE. 0) RETURN
+IF (INCX .EQ. INCY) IF (INCX-1) 5,20,60
 !
 !     Code for unequal or nonpositive increments.
 !
-    5 IX = 1
-      IY = 1
-      IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
-      IF (INCY .LT. 0) IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DY(IY) = DX(IX)
-        IX = IX + INCX
-        IY = IY + INCY
-   10 CONTINUE
-      RETURN
+5 IX = 1
+IY = 1
+IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
+IF (INCY .LT. 0) IY = (-N+1)*INCY + 1
+DO 10 I = 1,N
+DY(IY) = DX(IX)
+IX = IX + INCX
+IY = IY + INCY
+10 CONTINUE
+RETURN
 !
 !     Code for both increments equal to 1.
 !
 !     Clean-up loop so remaining vector length is a multiple of 7.
 !
-   20 M = MOD(N,7)
-      IF (M .EQ. 0) GO TO 40
-      DO 30 I = 1,M
-        DY(I) = DX(I)
-   30 CONTINUE
-      IF (N .LT. 7) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,7
-        DY(I) = DX(I)
-        DY(I+1) = DX(I+1)
-        DY(I+2) = DX(I+2)
-        DY(I+3) = DX(I+3)
-        DY(I+4) = DX(I+4)
-        DY(I+5) = DX(I+5)
-        DY(I+6) = DX(I+6)
-   50 CONTINUE
-      RETURN
+20 M = MOD(N,7)
+IF (M .EQ. 0) GO TO 40
+DO 30 I = 1,M
+DY(I) = DX(I)
+30 CONTINUE
+IF (N .LT. 7) RETURN
+40 MP1 = M + 1
+DO 50 I = MP1,N,7
+DY(I) = DX(I)
+DY(I+1) = DX(I+1)
+DY(I+2) = DX(I+2)
+DY(I+3) = DX(I+3)
+DY(I+4) = DX(I+4)
+DY(I+5) = DX(I+5)
+DY(I+6) = DX(I+6)
+50 CONTINUE
+RETURN
 !
 !     Code for equal, positive, non-unit increments.
 !
-   60 NS = N*INCX
-      DO 70 I = 1,NS,INCX
-        DY(I) = DX(I)
-   70 CONTINUE
-      RETURN
-      END
-!*DECK DDOT
-      DOUBLE PRECISION FUNCTION DDOT (N, DX, INCX, DY, INCY)
+60 NS = N*INCX
+DO 70 I = 1,NS,INCX
+DY(I) = DX(I)
+70 CONTINUE
+RETURN
+END
+
+DOUBLE PRECISION FUNCTION DDOT (N, DX, INCX, DY, INCY)
 !***BEGIN PROLOGUE  DDOT
 !***PURPOSE  Compute the inner product of two vectors.
 !***CATEGORY  D1A4
@@ -805,51 +805,51 @@
 !   920310  Corrected definition of LX in DESCRIPTION.  (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DDOT
-      DOUBLE PRECISION DX(*), DY(*)
+DOUBLE PRECISION DX(*), DY(*)
 !***FIRST EXECUTABLE STATEMENT  DDOT
-      DDOT = 0.0D0
-      IF (N .LE. 0) RETURN
-      IF (INCX .EQ. INCY) IF (INCX-1) 5,20,60
+DDOT = 0.0D0
+IF (N .LE. 0) RETURN
+IF (INCX .EQ. INCY) IF (INCX-1) 5,20,60
 !
 !     Code for unequal or nonpositive increments.
 !
-    5 IX = 1
-      IY = 1
-      IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
-      IF (INCY .LT. 0) IY = (-N+1)*INCY + 1
-      DO 10 I = 1,N
-        DDOT = DDOT + DX(IX)*DY(IY)
-        IX = IX + INCX
-        IY = IY + INCY
-   10 CONTINUE
-      RETURN
+5 IX = 1
+IY = 1
+IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
+IF (INCY .LT. 0) IY = (-N+1)*INCY + 1
+DO 10 I = 1,N
+DDOT = DDOT + DX(IX)*DY(IY)
+IX = IX + INCX
+IY = IY + INCY
+10 CONTINUE
+RETURN
 !
 !     Code for both increments equal to 1.
 !
 !     Clean-up loop so remaining vector length is a multiple of 5.
 !
-   20 M = MOD(N,5)
-      IF (M .EQ. 0) GO TO 40
-      DO 30 I = 1,M
-         DDOT = DDOT + DX(I)*DY(I)
-   30 CONTINUE
-      IF (N .LT. 5) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,5
-      DDOT = DDOT + DX(I)*DY(I) + DX(I+1)*DY(I+1) + DX(I+2)*DY(I+2) + DX(I+3)*DY(I+3) + DX(I+4)*DY(I+4)
-   50 CONTINUE
-      RETURN
+20 M = MOD(N,5)
+IF (M .EQ. 0) GO TO 40
+DO 30 I = 1,M
+DDOT = DDOT + DX(I)*DY(I)
+30 CONTINUE
+IF (N .LT. 5) RETURN
+40 MP1 = M + 1
+DO 50 I = MP1,N,5
+DDOT = DDOT + DX(I)*DY(I) + DX(I+1)*DY(I+1) + DX(I+2)*DY(I+2) + DX(I+3)*DY(I+3) + DX(I+4)*DY(I+4)
+50 CONTINUE
+RETURN
 !
 !     Code for equal, positive, non-unit increments.
 !
-   60 NS = N*INCX
-      DO 70 I = 1,NS,INCX
-        DDOT = DDOT + DX(I)*DY(I)
-   70 CONTINUE
-      RETURN
-      END
-!*DECK DNRM2
-      DOUBLE PRECISION FUNCTION DNRM2 (N, DX, INCX)
+60 NS = N*INCX
+DO 70 I = 1,NS,INCX
+DDOT = DDOT + DX(I)*DY(I)
+70 CONTINUE
+RETURN
+END
+
+DOUBLE PRECISION FUNCTION DNRM2 (N, DX, INCX)
 !***BEGIN PROLOGUE  DNRM2
 !***PURPOSE  Compute the Euclidean length (L2 norm) of a vector.
 !***CATEGORY  D1A3B
@@ -922,94 +922,94 @@
 !   891214  Prologue converted to Version 4.0 format.  (BAB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DNRM2
-      INTEGER NEXT
-      DOUBLE PRECISION DX(*), CUTLO, CUTHI, HITEST, SUM, XMAX, ZERO, ONE
-      SAVE CUTLO, CUTHI, ZERO, ONE
-      DATA ZERO, ONE /0.0D0, 1.0D0/
+INTEGER NEXT
+DOUBLE PRECISION DX(*), CUTLO, CUTHI, HITEST, SUM, XMAX, ZERO, ONE
+SAVE CUTLO, CUTHI, ZERO, ONE
+DATA ZERO, ONE /0.0D0, 1.0D0/
 !
-      DATA CUTLO, CUTHI /8.232D-11,  1.304D19/
+DATA CUTLO, CUTHI /8.232D-11,  1.304D19/
 !***FIRST EXECUTABLE STATEMENT  DNRM2
-      IF (N .GT. 0) GO TO 10
-         DNRM2  = ZERO
-         GO TO 300
+IF (N .GT. 0) GO TO 10
+DNRM2  = ZERO
+GO TO 300
 !
-   10 ASSIGN 30 TO NEXT
-      SUM = ZERO
-      NN = N * INCX
+10 ASSIGN 30 TO NEXT
+SUM = ZERO
+NN = N * INCX
 !
 !                                                 BEGIN MAIN LOOP
 !
-      I = 1
-   20    GO TO NEXT,(30, 50, 70, 110)
-   30 IF (ABS(DX(I)) .GT. CUTLO) GO TO 85
-      ASSIGN 50 TO NEXT
-      XMAX = ZERO
+I = 1
+20    GO TO NEXT,(30, 50, 70, 110)
+30 IF (ABS(DX(I)) .GT. CUTLO) GO TO 85
+ASSIGN 50 TO NEXT
+XMAX = ZERO
 !
 !                        PHASE 1.  SUM IS ZERO
 !
-   50 IF (DX(I) .EQ. ZERO) GO TO 200
-      IF (ABS(DX(I)) .GT. CUTLO) GO TO 85
+50 IF (DX(I) .EQ. ZERO) GO TO 200
+IF (ABS(DX(I)) .GT. CUTLO) GO TO 85
 !
 !                                PREPARE FOR PHASE 2.
 !
-      ASSIGN 70 TO NEXT
-      GO TO 105
+ASSIGN 70 TO NEXT
+GO TO 105
 !
 !                                PREPARE FOR PHASE 4.
 !
-  100 I = J
-      ASSIGN 110 TO NEXT
-      SUM = (SUM / DX(I)) / DX(I)
-  105 XMAX = ABS(DX(I))
-      GO TO 115
+100 I = J
+ASSIGN 110 TO NEXT
+SUM = (SUM / DX(I)) / DX(I)
+105 XMAX = ABS(DX(I))
+GO TO 115
 !
 !                   PHASE 2.  SUM IS SMALL.
 !                             SCALE TO AVOID DESTRUCTIVE UNDERFLOW.
 !
-   70 IF (ABS(DX(I)) .GT. CUTLO) GO TO 75
+70 IF (ABS(DX(I)) .GT. CUTLO) GO TO 75
 !
 !                     COMMON CODE FOR PHASES 2 AND 4.
 !                     IN PHASE 4 SUM IS LARGE.  SCALE TO AVOID OVERFLOW.
 !
-  110 IF (ABS(DX(I)) .LE. XMAX) GO TO 115
-         SUM = ONE + SUM * (XMAX / DX(I))**2
-         XMAX = ABS(DX(I))
-         GO TO 200
+110 IF (ABS(DX(I)) .LE. XMAX) GO TO 115
+SUM = ONE + SUM * (XMAX / DX(I))**2
+XMAX = ABS(DX(I))
+GO TO 200
 !
-  115 SUM = SUM + (DX(I)/XMAX)**2
-      GO TO 200
+115 SUM = SUM + (DX(I)/XMAX)**2
+GO TO 200
 !
 !                  PREPARE FOR PHASE 3.
 !
-   75 SUM = (SUM * XMAX) * XMAX
+75 SUM = (SUM * XMAX) * XMAX
 !
 !     FOR REAL OR D.P. SET HITEST = CUTHI/N
 !     FOR COMPLEX      SET HITEST = CUTHI/(2*N)
 !
-   85 HITEST = CUTHI / N
+85 HITEST = CUTHI / N
 !
 !                   PHASE 3.  SUM IS MID-RANGE.  NO SCALING.
 !
-      DO 95 J = I,NN,INCX
-      IF (ABS(DX(J)) .GE. HITEST) GO TO 100
-   95    SUM = SUM + DX(J)**2
-      DNRM2 = SQRT(SUM)
-      GO TO 300
+DO 95 J = I,NN,INCX
+IF (ABS(DX(J)) .GE. HITEST) GO TO 100
+95    SUM = SUM + DX(J)**2
+DNRM2 = SQRT(SUM)
+GO TO 300
 !
-  200 CONTINUE
-      I = I + INCX
-      IF (I .LE. NN) GO TO 20
+200 CONTINUE
+I = I + INCX
+IF (I .LE. NN) GO TO 20
 !
 !              END OF MAIN LOOP.
 !
 !              COMPUTE SQUARE ROOT AND ADJUST FOR SCALING.
 !
-      DNRM2 = XMAX * SQRT(SUM)
-  300 CONTINUE
-      RETURN
-      END
-!*DECK DSCAL
-      SUBROUTINE DSCAL (N, DA, DX, INCX)
+DNRM2 = XMAX * SQRT(SUM)
+300 CONTINUE
+RETURN
+END
+
+SUBROUTINE DSCAL (N, DA, DX, INCX)
 !***BEGIN PROLOGUE  DSCAL
 !***PURPOSE  Multiply a vector by a constant.
 !***CATEGORY  D1A6
@@ -1051,44 +1051,44 @@
 !           (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DSCAL
-      DOUBLE PRECISION DA, DX(*)
-      INTEGER I, INCX, IX, M, MP1, N
+DOUBLE PRECISION DA, DX(*)
+INTEGER I, INCX, IX, M, MP1, N
 !***FIRST EXECUTABLE STATEMENT  DSCAL
-      IF (N .LE. 0) RETURN
-      IF (INCX .EQ. 1) GOTO 20
+IF (N .LE. 0) RETURN
+IF (INCX .EQ. 1) GOTO 20
 !
 !     Code for increment not equal to 1.
 !
-      IX = 1
-      IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
-      DO 10 I = 1,N
-        DX(IX) = DA*DX(IX)
-        IX = IX + INCX
-   10 CONTINUE
-      RETURN
+IX = 1
+IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
+DO 10 I = 1,N
+DX(IX) = DA*DX(IX)
+IX = IX + INCX
+10 CONTINUE
+RETURN
 !
 !     Code for increment equal to 1.
 !
 !     Clean-up loop so remaining vector length is a multiple of 5.
 !
-   20 M = MOD(N,5)
-      IF (M .EQ. 0) GOTO 40
-      DO 30 I = 1,M
-        DX(I) = DA*DX(I)
-   30 CONTINUE
-      IF (N .LT. 5) RETURN
-   40 MP1 = M + 1
-      DO 50 I = MP1,N,5
-        DX(I) = DA*DX(I)
-        DX(I+1) = DA*DX(I+1)
-        DX(I+2) = DA*DX(I+2)
-        DX(I+3) = DA*DX(I+3)
-        DX(I+4) = DA*DX(I+4)
-   50 CONTINUE
-      RETURN
-      END
-!*DECK IDAMAX
-      INTEGER FUNCTION IDAMAX (N, DX, INCX)
+20 M = MOD(N,5)
+IF (M .EQ. 0) GOTO 40
+DO 30 I = 1,M
+DX(I) = DA*DX(I)
+30 CONTINUE
+IF (N .LT. 5) RETURN
+40 MP1 = M + 1
+DO 50 I = MP1,N,5
+DX(I) = DA*DX(I)
+DX(I+1) = DA*DX(I+1)
+DX(I+2) = DA*DX(I+2)
+DX(I+3) = DA*DX(I+3)
+DX(I+4) = DA*DX(I+4)
+50 CONTINUE
+RETURN
+END
+
+INTEGER FUNCTION IDAMAX (N, DX, INCX)
 !***BEGIN PROLOGUE  IDAMAX
 !***PURPOSE  Find the smallest index of that component of a vector
 !            having the maximum magnitude.
@@ -1130,46 +1130,46 @@
 !           (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  IDAMAX
-      DOUBLE PRECISION DX(*), DMAX, XMAG
-      INTEGER I, INCX, IX, N
+DOUBLE PRECISION DX(*), DMAX, XMAG
+INTEGER I, INCX, IX, N
 !***FIRST EXECUTABLE STATEMENT  IDAMAX
-      IDAMAX = 0
-      IF (N .LE. 0) RETURN
-      IDAMAX = 1
-      IF (N .EQ. 1) RETURN
+IDAMAX = 0
+IF (N .LE. 0) RETURN
+IDAMAX = 1
+IF (N .EQ. 1) RETURN
 !
-      IF (INCX .EQ. 1) GOTO 20
+IF (INCX .EQ. 1) GOTO 20
 !
 !     Code for increments not equal to 1.
 !
-      IX = 1
-      IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
-      DMAX = ABS(DX(IX))
-      IX = IX + INCX
-      DO 10 I = 2,N
-        XMAG = ABS(DX(IX))
-        IF (XMAG .GT. DMAX) THEN
-          IDAMAX = I
-          DMAX = XMAG
-        ENDIF
-        IX = IX + INCX
-   10 CONTINUE
-      RETURN
+IX = 1
+IF (INCX .LT. 0) IX = (-N+1)*INCX + 1
+DMAX = ABS(DX(IX))
+IX = IX + INCX
+DO 10 I = 2,N
+XMAG = ABS(DX(IX))
+IF (XMAG .GT. DMAX) THEN
+IDAMAX = I
+DMAX = XMAG
+ENDIF
+IX = IX + INCX
+10 CONTINUE
+RETURN
 !
 !     Code for increments equal to 1.
 !
-   20 DMAX = ABS(DX(1))
-      DO 30 I = 2,N
-        XMAG = ABS(DX(I))
-        IF (XMAG .GT. DMAX) THEN
-          IDAMAX = I
-          DMAX = XMAG
-        ENDIF
-   30 CONTINUE
-      RETURN
-      END
-!*DECK XERRWD
-      SUBROUTINE XERRWD (MSG, NMES, NERR, LEVEL, NI, I1, I2, NR, R1, R2)
+20 DMAX = ABS(DX(1))
+DO 30 I = 2,N
+XMAG = ABS(DX(I))
+IF (XMAG .GT. DMAX) THEN
+IDAMAX = I
+DMAX = XMAG
+ENDIF
+30 CONTINUE
+RETURN
+END
+
+SUBROUTINE XERRWD (MSG, NMES, NERR, LEVEL, NI, I1, I2, NR, R1, R2)
 !***BEGIN PROLOGUE  XERRWD
 !***SUBSIDIARY
 !***PURPOSE  Write error message with values.
@@ -1229,42 +1229,42 @@
 !
 !  Declare arguments.
 !
-      DOUBLE PRECISION R1, R2
-      INTEGER NMES, NERR, LEVEL, NI, I1, I2, NR
-      CHARACTER*(*) MSG
+DOUBLE PRECISION R1, R2
+INTEGER NMES, NERR, LEVEL, NI, I1, I2, NR
+CHARACTER*(*) MSG
 !
 !  Declare local variables.
 !
-      INTEGER LUNIT, IXSAV, MESFLG
+INTEGER LUNIT, IXSAV, MESFLG
 !
 !  Get logical unit number and message print flag.
 !
 !***FIRST EXECUTABLE STATEMENT  XERRWD
-      LUNIT = IXSAV (1, 0, .FALSE.)
-      MESFLG = IXSAV (2, 0, .FALSE.)
-      IF (MESFLG .EQ. 0) GO TO 100
+LUNIT = IXSAV (1, 0, .FALSE.)
+MESFLG = IXSAV (2, 0, .FALSE.)
+IF (MESFLG .EQ. 0) GO TO 100
 !
 !  Write the message.
 !
-      WRITE (LUNIT,10)  MSG
- 10   FORMAT(1X,A)
-      IF (NI .EQ. 1) WRITE (LUNIT, 20) I1
- 20   FORMAT(6X,'In above message,  I1 =',I10)
-      IF (NI .EQ. 2) WRITE (LUNIT, 30) I1,I2
- 30   FORMAT(6X,'In above message,  I1 =',I10,3X,'I2 =',I10)
-      IF (NR .EQ. 1) WRITE (LUNIT, 40) R1
- 40   FORMAT(6X,'In above message,  R1 =',D21.13)
-      IF (NR .EQ. 2) WRITE (LUNIT, 50) R1,R2
- 50   FORMAT(6X,'In above,  R1 =',D21.13,3X,'R2 =',D21.13)
+WRITE (LUNIT,10)  MSG
+10   FORMAT(1X,A)
+IF (NI .EQ. 1) WRITE (LUNIT, 20) I1
+20   FORMAT(6X,'In above message,  I1 =',I10)
+IF (NI .EQ. 2) WRITE (LUNIT, 30) I1,I2
+30   FORMAT(6X,'In above message,  I1 =',I10,3X,'I2 =',I10)
+IF (NR .EQ. 1) WRITE (LUNIT, 40) R1
+40   FORMAT(6X,'In above message,  R1 =',D21.13)
+IF (NR .EQ. 2) WRITE (LUNIT, 50) R1,R2
+50   FORMAT(6X,'In above,  R1 =',D21.13,3X,'R2 =',D21.13)
 !
 !  Abort the run if LEVEL = 2.
 !
- 100  IF (LEVEL .NE. 2) RETURN
-      STOP
+100  IF (LEVEL .NE. 2) RETURN
+STOP
 !----------------------- End of Subroutine XERRWD ----------------------
-      END
-!*DECK XSETF
-      SUBROUTINE XSETF (MFLAG)
+END
+
+SUBROUTINE XSETF (MFLAG)
 !***BEGIN PROLOGUE  XSETF
 !***PURPOSE  Reset the error print control flag.
 !***CATEGORY  R3A
@@ -1291,15 +1291,15 @@
 ! Function routine called by XSETF.. IXSAV
 !-----------------------------------------------------------------------
 !**End
-      INTEGER MFLAG, JUNK, IXSAV
+INTEGER MFLAG, JUNK, IXSAV
 !
 !***FIRST EXECUTABLE STATEMENT  XSETF
-      IF (MFLAG .EQ. 0 .OR. MFLAG .EQ. 1) JUNK = IXSAV (2,MFLAG,.TRUE.)
-      RETURN
+IF (MFLAG .EQ. 0 .OR. MFLAG .EQ. 1) JUNK = IXSAV (2,MFLAG,.TRUE.)
+RETURN
 !----------------------- End of Subroutine XSETF -----------------------
-      END
-!*DECK XSETUN
-      SUBROUTINE XSETUN (LUN)
+END
+
+SUBROUTINE XSETUN (LUN)
 !***BEGIN PROLOGUE  XSETUN
 !***PURPOSE  Reset the logical unit number for error messages.
 !***CATEGORY  R3B
@@ -1324,15 +1324,15 @@
 ! Function routine called by XSETUN.. IXSAV
 !-----------------------------------------------------------------------
 !**End
-      INTEGER LUN, JUNK, IXSAV
+INTEGER LUN, JUNK, IXSAV
 !
 !***FIRST EXECUTABLE STATEMENT  XSETUN
-      IF (LUN .GT. 0) JUNK = IXSAV (1,LUN,.TRUE.)
-      RETURN
+IF (LUN .GT. 0) JUNK = IXSAV (1,LUN,.TRUE.)
+RETURN
 !----------------------- End of Subroutine XSETUN ----------------------
-      END
-!*DECK IXSAV
-      INTEGER FUNCTION IXSAV (IPAR, IVALUE, ISET)
+END
+
+INTEGER FUNCTION IXSAV (IPAR, IVALUE, ISET)
 !***BEGIN PROLOGUE  IXSAV
 !***SUBSIDIARY
 !***PURPOSE  Save and recall error message control parameters.
@@ -1378,34 +1378,34 @@
 ! Function routine called by IXSAV.. IUMACH
 !-----------------------------------------------------------------------
 !**End
-      LOGICAL ISET
-      INTEGER IPAR, IVALUE
+LOGICAL ISET
+INTEGER IPAR, IVALUE
 !-----------------------------------------------------------------------
-      INTEGER IUMACH, LUNIT, MESFLG
+INTEGER IUMACH, LUNIT, MESFLG
 !-----------------------------------------------------------------------
 ! The following Fortran-77 declaration is to cause the values of the
 ! listed (local) variables to be saved between calls to this routine.
 !-----------------------------------------------------------------------
-      SAVE LUNIT, MESFLG
-      DATA LUNIT/-1/, MESFLG/1/
+SAVE LUNIT, MESFLG
+DATA LUNIT/-1/, MESFLG/1/
 !
 !***FIRST EXECUTABLE STATEMENT  IXSAV
-      IF (IPAR .EQ. 1) THEN
-        IF (LUNIT .EQ. -1) LUNIT = IUMACH()
-        IXSAV = LUNIT
-        IF (ISET) LUNIT = IVALUE
-        ENDIF
+IF (IPAR .EQ. 1) THEN
+IF (LUNIT .EQ. -1) LUNIT = IUMACH()
+IXSAV = LUNIT
+IF (ISET) LUNIT = IVALUE
+ENDIF
 !
-      IF (IPAR .EQ. 2) THEN
-        IXSAV = MESFLG
-        IF (ISET) MESFLG = IVALUE
-        ENDIF
+IF (IPAR .EQ. 2) THEN
+IXSAV = MESFLG
+IF (ISET) MESFLG = IVALUE
+ENDIF
 !
-      RETURN
+RETURN
 !----------------------- End of Function IXSAV -------------------------
-      END
-!*DECK IUMACH
-      INTEGER FUNCTION IUMACH()
+END
+
+INTEGER FUNCTION IUMACH()
 !***BEGIN PROLOGUE  IUMACH
 !***PURPOSE  Provide standard output unit number.
 !***CATEGORY  R1
@@ -1432,8 +1432,8 @@
 !  systems.  This may be machine-dependent.
 !**End
 !***FIRST EXECUTABLE STATEMENT  IUMACH
-      IUMACH = 6
+IUMACH = 6
 !
-      RETURN
+RETURN
 !----------------------- End of Function IUMACH ------------------------
-      END
+END
