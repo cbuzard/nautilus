@@ -15,6 +15,8 @@ OPTIMIZATIONS = "-O0 -march=native -ffast-math -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
 PROFILING_OPTIONS = "-pg"
 
+LOG_NAME = "compilation.log"
+
 # Parameters
 debug = False
 gdb = False
@@ -71,15 +73,21 @@ def run(commande):
   
   # If returnCode is not 0, then there was a problem
   if (returnCode != 0):
-    logname = "compilation.log"
-
     # We write compilation errors in the following file.
-    f = open(logname,'w')
+    f = open(LOG_NAME,'w')
     f.write(process_stderr)
     f.close()
     
-    print("Compilation error, see '%s'" % logname)
+    print("Compilation error, see '%s'" % LOG_NAME)
     sys.exit(1)
+  else:
+    if (len(process_stderr) != 0):
+      # We write compilation errors in the following file.
+      f = open(LOG_NAME,'a')
+      f.write(process_stderr)
+      f.close()
+    
+    print("Warnings: see '%s'" % LOG_NAME)
   
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
   return (process_stdout, process_stderr, returnCode)
@@ -94,6 +102,11 @@ if gdb:
 
 if profiling:
   OPTIONS = PROFILING_OPTIONS
+
+# Before compiling, we delete the previous compilation log. Indeed, we need to append the several warnings in the same file
+# But we do not want to have infos of the previous compilation in it.
+if os.path.isfile(LOG_NAME):
+  os.remove(LOG_NAME)
 
 command = "%s %s -c nls_header_mod.f90" % (COMPILATOR, OPTIONS)
 print(command)
