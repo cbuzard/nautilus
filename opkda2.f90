@@ -1,4 +1,4 @@
-*DECK DGEFA
+!*DECK DGEFA
       SUBROUTINE DGEFA (A, LDA, N, IPVT, INFO)
 !***BEGIN PROLOGUE  DGEFA
 !***PURPOSE  Factor a matrix using Gaussian elimination.
@@ -114,7 +114,7 @@
       IF (A(N,N) .EQ. 0.0D0) INFO = N
       RETURN
       END
-*DECK DGESL
+!*DECK DGESL
       SUBROUTINE DGESL (A, LDA, N, IPVT, B, JOB)
 !***BEGIN PROLOGUE  DGESL
 !***PURPOSE  Solve the real system A*X=B or TRANS(A)*X=B using the
@@ -244,7 +244,7 @@
   100 CONTINUE
       RETURN
       END
-*DECK DGBFA
+!*DECK DGBFA
       SUBROUTINE DGBFA (ABD, LDA, N, ML, MU, IPVT, INFO)
 !***BEGIN PROLOGUE  DGBFA
 !***PURPOSE  Factor a band matrix using Gaussian elimination.
@@ -430,7 +430,7 @@
       IF (ABD(M,N) .EQ. 0.0D0) INFO = N
       RETURN
       END
-*DECK DGBSL
+!*DECK DGBSL
       SUBROUTINE DGBSL (ABD, LDA, N, ML, MU, IPVT, B, JOB)
 !***BEGIN PROLOGUE  DGBSL
 !***PURPOSE  Solve the real band system A*X=B or TRANS(A)*X=B using
@@ -578,7 +578,7 @@
   100 CONTINUE
       RETURN
       END
-*DECK DAXPY
+!*DECK DAXPY
       SUBROUTINE DAXPY (N, DA, DX, INCX, DY, INCY)
 !***BEGIN PROLOGUE  DAXPY
 !***PURPOSE  Compute a constant times a vector plus a vector.
@@ -669,7 +669,7 @@
    70 CONTINUE
       RETURN
       END
-*DECK DCOPY
+!*DECK DCOPY
       SUBROUTINE DCOPY (N, DX, INCX, DY, INCY)
 !***BEGIN PROLOGUE  DCOPY
 !***PURPOSE  Copy a vector.
@@ -761,7 +761,7 @@
    70 CONTINUE
       RETURN
       END
-*DECK DDOT
+!*DECK DDOT
       DOUBLE PRECISION FUNCTION DDOT (N, DX, INCX, DY, INCY)
 !***BEGIN PROLOGUE  DDOT
 !***PURPOSE  Compute the inner product of two vectors.
@@ -849,7 +849,7 @@
    70 CONTINUE
       RETURN
       END
-*DECK DNRM2
+!*DECK DNRM2
       DOUBLE PRECISION FUNCTION DNRM2 (N, DX, INCX)
 !***BEGIN PROLOGUE  DNRM2
 !***PURPOSE  Compute the Euclidean length (L2 norm) of a vector.
@@ -1010,7 +1010,7 @@
   300 CONTINUE
       RETURN
       END
-*DECK DSCAL
+!*DECK DSCAL
       SUBROUTINE DSCAL (N, DA, DX, INCX)
 !***BEGIN PROLOGUE  DSCAL
 !***PURPOSE  Multiply a vector by a constant.
@@ -1089,7 +1089,7 @@
    50 CONTINUE
       RETURN
       END
-*DECK IDAMAX
+!*DECK IDAMAX
       INTEGER FUNCTION IDAMAX (N, DX, INCX)
 !***BEGIN PROLOGUE  IDAMAX
 !***PURPOSE  Find the smallest index of that component of a vector
@@ -1170,7 +1170,7 @@
    30 CONTINUE
       RETURN
       END
-*DECK XERRWD
+!*DECK XERRWD
       SUBROUTINE XERRWD (MSG, NMES, NERR, LEVEL, NI, I1, I2, NR, R1, R2)
 !***BEGIN PROLOGUE  XERRWD
 !***SUBSIDIARY
@@ -1265,7 +1265,7 @@
       STOP
 !----------------------- End of Subroutine XERRWD ----------------------
       END
-*DECK XSETF
+!*DECK XSETF
       SUBROUTINE XSETF (MFLAG)
 !***BEGIN PROLOGUE  XSETF
 !***PURPOSE  Reset the error print control flag.
@@ -1300,7 +1300,7 @@
       RETURN
 !----------------------- End of Subroutine XSETF -----------------------
       END
-*DECK XSETUN
+!*DECK XSETUN
       SUBROUTINE XSETUN (LUN)
 !***BEGIN PROLOGUE  XSETUN
 !***PURPOSE  Reset the logical unit number for error messages.
@@ -1333,7 +1333,7 @@
       RETURN
 !----------------------- End of Subroutine XSETUN ----------------------
       END
-*DECK IXSAV
+!*DECK IXSAV
       INTEGER FUNCTION IXSAV (IPAR, IVALUE, ISET)
 !***BEGIN PROLOGUE  IXSAV
 !***SUBSIDIARY
@@ -1406,7 +1406,7 @@
       RETURN
 !----------------------- End of Function IXSAV -------------------------
       END
-*DECK IUMACH
+!*DECK IUMACH
       INTEGER FUNCTION IUMACH()
 !***BEGIN PROLOGUE  IUMACH
 !***PURPOSE  Provide standard output unit number.

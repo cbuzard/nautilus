@@ -1,4 +1,4 @@
-*DECK DUMACH
+!*DECK DUMACH
       DOUBLE PRECISION FUNCTION DUMACH ()
 !***BEGIN PROLOGUE  DUMACH
 !***PURPOSE  Compute the unit roundoff of the machine.
@@ -43,7 +43,7 @@
       C = A + B
       RETURN
       END
-*DECK DCFODE
+!*DECK DCFODE
       SUBROUTINE DCFODE (METH, ELCO, TESCO)
 !***BEGIN PROLOGUE  DCFODE
 !***SUBSIDIARY
@@ -89,8 +89,7 @@
       INTEGER METH
       INTEGER I, IB, NQ, NQM1, NQP1
       DOUBLE PRECISION ELCO, TESCO
-      DOUBLE PRECISION AGAMQ, FNQ, FNQM1, PC, PINT, RAGQ,
-     1   RQFAC, RQ1FAC, TSIGN, XPIN
+      DOUBLE PRECISION AGAMQ, FNQ, FNQM1, PC, PINT, RAGQ,RQFAC, RQ1FAC, TSIGN, XPIN
       DIMENSION ELCO(13,12), TESCO(3,12)
       DIMENSION PC(12)
 !
@@ -171,7 +170,7 @@
       RETURN
 !----------------------- END OF SUBROUTINE DCFODE ----------------------
       END
-*DECK DINTDY
+!*DECK DINTDY
       SUBROUTINE DINTDY (T, K, YH, NYH, DKY, IFLAG)
 !***BEGIN PROLOGUE  DINTDY
 !***SUBSIDIARY
@@ -216,18 +215,12 @@
       INTEGER K, NYH, IFLAG
       DOUBLE PRECISION T, YH, DKY
       DIMENSION YH(NYH,*), DKY(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF
+      INTEGER LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS,CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6),&
+              ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,&
+              MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER I, IC, J, JB, JB2, JJ, JJ1, JP1
       DOUBLE PRECISION C, R, S, TP
       CHARACTER*80 MSG
@@ -279,9 +272,8 @@
       RETURN
 !----------------------- END OF SUBROUTINE DINTDY ----------------------
       END
-*DECK DPREPJ
-      SUBROUTINE DPREPJ (NEQ, Y, YH, NYH, EWT, FTEM, SAVF, WM, IWM,
-     1   F, JAC)
+!*DECK DPREPJ
+      SUBROUTINE DPREPJ (NEQ, Y, YH, NYH, EWT, FTEM, SAVF, WM, IWM, F, JAC)
 !***BEGIN PROLOGUE  DPREPJ
 !***SUBSIDIARY
 !***PURPOSE  Compute and process Newton iteration matrix.
@@ -338,24 +330,15 @@
       EXTERNAL F, JAC
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, EWT, FTEM, SAVF, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*),
-     1   WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER I, I1, I2, IER, II, J, J1, JJ, LENP,
-     1   MBA, MBAND, MEB1, MEBAND, ML, ML3, MU, NP1
-      DOUBLE PRECISION CON, DI, FAC, HL0, R, R0, SRUR, YI, YJ, YJJ,
-     1   DVNORM
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*), WM(*), IWM(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR
+      INTEGER LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6),&
+             ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,&
+             MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER I, I1, I2, IER, II, J, J1, JJ, LENP, MBA, MBAND, MEB1, MEBAND, ML, ML3, MU, NP1
+      DOUBLE PRECISION CON, DI, FAC, HL0, R, R0, SRUR, YI, YJ, YJJ, DVNORM
 !
 !***FIRST EXECUTABLE STATEMENT  DPREPJ
       NJE = NJE + 1
@@ -473,7 +456,7 @@
       RETURN
 !----------------------- END OF SUBROUTINE DPREPJ ----------------------
       END
-*DECK DSOLSY
+!*DECK DSOLSY
       SUBROUTINE DSOLSY (WM, IWM, X, TEM)
 !***BEGIN PROLOGUE  DSOLSY
 !***SUBSIDIARY
@@ -521,18 +504,11 @@
       INTEGER IWM
       DOUBLE PRECISION WM, X, TEM
       DIMENSION WM(*), IWM(*), X(*), TEM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, 
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER I, MEBAND, ML, MU
       DOUBLE PRECISION DI, HL0, PHL0, R
 !
@@ -564,7 +540,7 @@
       RETURN
 !----------------------- END OF SUBROUTINE DSOLSY ----------------------
       END
-*DECK DSRCOM
+!*DECK DSRCOM
       SUBROUTINE DSRCOM (RSAV, ISAV, JOB)
 !***BEGIN PROLOGUE  DSRCOM
 !***SUBSIDIARY
@@ -626,9 +602,8 @@
       RETURN
 !----------------------- END OF SUBROUTINE DSRCOM ----------------------
       END
-*DECK DSTODE
-      SUBROUTINE DSTODE (NEQ, Y, YH, NYH, YH1, EWT, SAVF, ACOR,
-     1   WM, IWM, F, JAC, PJAC, SLVS)
+!*DECK DSTODE
+      SUBROUTINE DSTODE (NEQ, Y, YH, NYH, YH1, EWT, SAVF, ACOR, WM, IWM, F, JAC, PJAC, SLVS)
 !***BEGIN PROLOGUE  DSTODE
 !***SUBSIDIARY
 !***PURPOSE  Performs one step of an ODEPACK integration.
@@ -724,24 +699,17 @@
       EXTERNAL F, JAC, PJAC, SLVS
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, ACOR, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),
-     1   ACOR(*), WM(*), IWM(*)
-      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),ACOR(*), WM(*), IWM(*)
+      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
+      INTEGER LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER I, I1, IREDO, IRET, J, JB, M, NCF, NEWQ
-      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO,
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP,
-     1   R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
-      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12),
-     1   HOLD, RMAX, TESCO(3,12),
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     3   IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP, R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
+     
+      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12), HOLD, RMAX, TESCO(3,12), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, &
+      IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, &
+      LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+ 
 !
 !***FIRST EXECUTABLE STATEMENT  DSTODE
       KFLAG = 0
@@ -1124,7 +1092,7 @@
       RETURN
 !----------------------- END OF SUBROUTINE DSTODE ----------------------
       END
-*DECK DEWSET
+!*DECK DEWSET
       SUBROUTINE DEWSET (N, ITOL, RTOL, ATOL, YCUR, EWT)
 !***BEGIN PROLOGUE  DEWSET
 !***SUBSIDIARY
@@ -1172,7 +1140,7 @@
       RETURN
 !----------------------- END OF SUBROUTINE DEWSET ----------------------
       END
-*DECK DVNORM
+!*DECK DVNORM
       DOUBLE PRECISION FUNCTION DVNORM (N, V, W)
 !***BEGIN PROLOGUE  DVNORM
 !***SUBSIDIARY
@@ -1207,34 +1175,22 @@
       RETURN
 !----------------------- END OF FUNCTION DVNORM ------------------------
       END
-*DECK DIPREP
+!*DECK DIPREP
       SUBROUTINE DIPREP (NEQ, Y, RWORK, IA, JA, IPFLAG, F, JAC)
       EXTERNAL F, JAC
       INTEGER NEQ, IA, JA, IPFLAG
       DOUBLE PRECISION Y, RWORK
       DIMENSION NEQ(*), Y(*), RWORK(*), IA(*), JA(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS,CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION RLSS
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ RLSS(6),
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
+      IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
       INTEGER I, IMAX, LEWTN, LYHD, LYHN
 !-----------------------------------------------------------------------
 ! This routine serves as an interface between the driver and
@@ -1251,8 +1207,7 @@
 !-----------------------------------------------------------------------
       IPFLAG = 0
 ! Call DPREP to do matrix preprocessing operations. --------------------
-      CALL DPREP (NEQ, Y, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT),
-     1   RWORK(LACOR), IA, JA, RWORK(LWM), RWORK(LWM), IPFLAG, F, JAC)
+      CALL DPREP (NEQ, Y, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT), RWORK(LACOR), IA, JA, RWORK(LWM), RWORK(LWM), IPFLAG, F, JAC)
       LENWK = MAX(LREQ,LWMIN)
       IF (IPFLAG .LT. 0) RETURN
 ! If DPREP was successful, move YH to end of required space for WM. ----
@@ -1277,38 +1232,24 @@
       RETURN
 !----------------------- End of Subroutine DIPREP ----------------------
       END
-*DECK DPREP
-      SUBROUTINE DPREP (NEQ, Y, YH, SAVF, EWT, FTEM, IA, JA,
-     1                     WK, IWK, IPPER, F, JAC)
+!*DECK DPREP
+      SUBROUTINE DPREP (NEQ, Y, YH, SAVF, EWT, FTEM, IA, JA, WK, IWK, IPPER, F, JAC)
       EXTERNAL F,JAC
       INTEGER NEQ, IA, JA, IWK, IPPER
       DOUBLE PRECISION Y, YH, SAVF, EWT, FTEM, WK
-      DIMENSION NEQ(*), Y(*), YH(*), SAVF(*), EWT(*), FTEM(*),
-     1   IA(*), JA(*), WK(*), IWK(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), YH(*), SAVF(*), EWT(*), FTEM(*), IA(*), JA(*), WK(*), IWK(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH,
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      INTEGER I, IBR, IER, IPIL, IPIU, IPTT1, IPTT2, J, JFOUND, K,
-     1   KNEW, KMAX, KMIN, LDIF, LENIGP, LIWK, MAXG, NP1, NZSUT
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH, IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN,&
+      IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, &
+      NLU, NNZ, NSP, NZL, NZU
+      INTEGER I, IBR, IER, IPIL, IPIU, IPTT1, IPTT2, J, JFOUND, K, KNEW, KMAX, KMIN, LDIF, LENIGP, LIWK, MAXG, NP1, NZSUT
       DOUBLE PRECISION DQ, DYJ, ERWT, FAC, YJ
 !-----------------------------------------------------------------------
 ! This routine performs preprocessing related to the sparse linear
@@ -1461,8 +1402,7 @@
       IPTT2 = IPTT1 + N
       LREQ = IPTT2 + N - 1
       IF (LREQ .GT. LIWK) GO TO 220
-      CALL JGROUP (N, IWK(IPIAN), IWK(IPJAN), MAXG, NGP, IWK(IPIGP),
-     1   IWK(IPJGP), IWK(IPTT1), IWK(IPTT2), IER)
+      CALL JGROUP (N, IWK(IPIAN), IWK(IPJAN), MAXG, NGP, IWK(IPIGP), IWK(IPJGP), IWK(IPTT1), IWK(IPTT2), IER)
       IF (IER .NE. 0) GO TO 220
       LENIGP = NGP + 1
 !
@@ -1478,8 +1418,7 @@
       DO 170 I = 1,N
  170    IWK(IBR+I) = I
       NSP = LIWK + 1 - IPISP
-      CALL ODRV (N, IWK(IPIAN), IWK(IPJAN), WK, IWK(IPR), IWK(IPIC),
-     1   NSP, IWK(IPISP), 1, IYS)
+      CALL ODRV (N, IWK(IPIAN), IWK(IPJAN), WK, IWK(IPR), IWK(IPIC), NSP, IWK(IPISP), 1, IYS)
       IF (IYS .EQ. 11*N+1) GO TO 240
       IF (IYS .NE. 0) GO TO 230
 !
@@ -1493,8 +1432,7 @@
       DO 180 I = 1,NNZ
  180    WK(IBA+I) = 0.0D0
       IPISP = LRAT*(IPRSP - 1) + 1
-      CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1   WK(IPA),WK(IPA),WK(IPA),NSP,IWK(IPISP),WK(IPRSP),IESP,5,IYS)
+      CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),WK(IPA),WK(IPA),NSP,IWK(IPISP),WK(IPRSP),IESP,5,IYS)
       LREQ = LENWK - IESP
       IF (IYS .EQ. 10*N+1) GO TO 250
       IF (IYS .NE. 0) GO TO 260
@@ -1538,7 +1476,7 @@
       RETURN
 !----------------------- End of Subroutine DPREP -----------------------
       END
-*DECK JGROUP
+!*DECK JGROUP
       SUBROUTINE JGROUP (N,IA,JA,MAXG,NGRP,IGP,JGP,INCL,JDONE,IER)
       INTEGER N, IA, JA, MAXG, NGRP, IGP, JGP, INCL, JDONE, IER
       DIMENSION IA(*), JA(*), IGP(*), JGP(*), INCL(*), JDONE(*)
@@ -1602,7 +1540,7 @@
       RETURN
 !----------------------- End of Subroutine JGROUP ----------------------
       END
-*DECK ADJLR
+!*DECK ADJLR
       SUBROUTINE ADJLR (N, ISP, LDIF)
       INTEGER N, ISP, LDIF
       DIMENSION ISP(*)
@@ -1627,7 +1565,7 @@
       RETURN
 !----------------------- End of Subroutine ADJLR -----------------------
       END
-*DECK CNTNZU
+!*DECK CNTNZU
       SUBROUTINE CNTNZU (N, IA, JA, NZSUT)
       INTEGER N, IA, JA, NZSUT
       DIMENSION IA(*), JA(*)
@@ -1661,38 +1599,25 @@
       RETURN
 !----------------------- End of Subroutine CNTNZU ----------------------
       END
-*DECK DPRJS
+!*DECK DPRJS
       SUBROUTINE DPRJS (NEQ,Y,YH,NYH,EWT,FTEM,SAVF,WK,IWK,F,JAC)
       EXTERNAL F,JAC
       INTEGER NEQ, NYH, IWK
       DOUBLE PRECISION Y, YH, EWT, FTEM, SAVF, WK
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*),
-     1   WK(*), IWK(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*), WK(*), IWK(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, &
+      MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH,
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH, IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN,&
+      IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, &
+      NLU, NNZ, NSP, NZL, NZU
       INTEGER I, IMUL, J, JJ, JOK, JMAX, JMIN, K, KMAX, KMIN, NG
-      DOUBLE PRECISION CON, DI, FAC, HL0, PIJ, R, R0, RCON, RCONT,
-     1   SRUR, DVNORM
+      DOUBLE PRECISION CON, DI, FAC, HL0, PIJ, R, R0, RCON, RCONT, SRUR, DVNORM
 !-----------------------------------------------------------------------
 ! DPRJS is called to compute and process the matrix
 ! P = I - H*EL(1)*J , where J is an approximation to the Jacobian.
@@ -1828,8 +1753,7 @@
       IERPJ = 0
       DO 295 I = 1,N
  295    FTEM(I) = 0.0D0
-      CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1   WK(IPA),FTEM,FTEM,NSP,IWK(IPISP),WK(IPRSP),IESP,2,IYS)
+      CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),FTEM,FTEM,NSP,IWK(IPISP),WK(IPRSP),IESP,2,IYS)
       IF (IYS .EQ. 0) RETURN
       IMUL = (IYS - 1)/N
       IERPJ = -2
@@ -1861,33 +1785,21 @@
       RETURN
 !----------------------- End of Subroutine DPRJS -----------------------
       END
-*DECK DSOLSS
+!*DECK DSOLSS
       SUBROUTINE DSOLSS (WK, IWK, X, TEM)
       INTEGER IWK
       DOUBLE PRECISION WK, X, TEM
       DIMENSION WK(*), IWK(*), X(*), TEM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS,CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION RLSS
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ RLSS(6),
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
+      IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
       INTEGER I
       DOUBLE PRECISION DI, HL0, PHL0, R
 !-----------------------------------------------------------------------
@@ -1918,8 +1830,7 @@
 !-----------------------------------------------------------------------
       IERSL = 0
       GO TO (100, 100, 300), MITER
- 100  CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1   WK(IPA),X,X,NSP,IWK(IPISP),WK(IPRSP),IESP,4,IERSL)
+ 100  CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),WK(IPA),X,X,NSP,IWK(IPISP),WK(IPRSP),IESP,4,IERSL)
       IF (IERSL .NE. 0) IERSL = -1
       RETURN
 !
@@ -1940,7 +1851,7 @@
 !
 !----------------------- End of Subroutine DSOLSS ----------------------
       END
-*DECK DSRCMS
+!*DECK DSRCMS
       SUBROUTINE DSRCMS (RSAV, ISAV, JOB)
 !-----------------------------------------------------------------------
 ! This routine saves or restores (depending on JOB) the contents of
@@ -1991,151 +1902,151 @@
       RETURN
 !----------------------- End of Subroutine DSRCMS ----------------------
       END
-*DECK ODRV
+!*DECK ODRV
       subroutine odrv
      *     (n, ia,ja,a, p,ip, nsp,isp, path, flag)
-c                                                                 5/2/83
-c***********************************************************************
-c  odrv -- driver for sparse matrix reordering routines
-c***********************************************************************
-c
-c  description
-c
-c    odrv finds a minimum degree ordering of the rows and columns
-c    of a matrix m stored in (ia,ja,a) format (see below).  for the
-c    reordered matrix, the work and storage required to perform
-c    gaussian elimination is (usually) significantly less.
-c
-c    note.. odrv and its subordinate routines have been modified to
-c    compute orderings for general matrices, not necessarily having any
-c    symmetry.  the miminum degree ordering is computed for the
-c    structure of the symmetric matrix  m + m-transpose.
-c    modifications to the original odrv module have been made in
-c    the coding in subroutine mdi, and in the initial comments in
-c    subroutines odrv and md.
-c
-c    if only the nonzero entries in the upper triangle of m are being
-c    stored, then odrv symmetrically reorders (ia,ja,a), (optionally)
-c    with the diagonal entries placed first in each row.  this is to
-c    ensure that if m(i,j) will be in the upper triangle of m with
-c    respect to the new ordering, then m(i,j) is stored in row i (and
-c    thus m(j,i) is not stored),  whereas if m(i,j) will be in the
-c    strict lower triangle of m, then m(j,i) is stored in row j (and
-c    thus m(i,j) is not stored).
-c
-c
-c  storage of sparse matrices
-c
-c    the nonzero entries of the matrix m are stored row-by-row in the
-c    array a.  to identify the individual nonzero entries in each row,
-c    we need to know in which column each entry lies.  these column
-c    indices are stored in the array ja.  i.e., if  a(k) = m(i,j),  then
-c    ja(k) = j.  to identify the individual rows, we need to know where
-c    each row starts.  these row pointers are stored in the array ia.
-c    i.e., if m(i,j) is the first nonzero entry (stored) in the i-th row
-c    and  a(k) = m(i,j),  then  ia(i) = k.  moreover, ia(n+1) points to
-c    the first location following the last element in the last row.
-c    thus, the number of entries in the i-th row is  ia(i+1) - ia(i),
-c    the nonzero entries in the i-th row are stored consecutively in
-c
-c            a(ia(i)),  a(ia(i)+1),  ..., a(ia(i+1)-1),
-c
-c    and the corresponding column indices are stored consecutively in
-c
-c            ja(ia(i)), ja(ia(i)+1), ..., ja(ia(i+1)-1).
-c
-c    when the coefficient matrix is symmetric, only the nonzero entries
-c    in the upper triangle need be stored.  for example, the matrix
-c
-c             ( 1  0  2  3  0 )
-c             ( 0  4  0  0  0 )
-c         m = ( 2  0  5  6  0 )
-c             ( 3  0  6  7  8 )
-c             ( 0  0  0  8  9 )
-c
-c    could be stored as
-c
-c            - 1  2  3  4  5  6  7  8  9 10 11 12 13
-c         ---+--------------------------------------
-c         ia - 1  4  5  8 12 14
-c         ja - 1  3  4  2  1  3  4  1  3  4  5  4  5
-c          a - 1  2  3  4  2  5  6  3  6  7  8  8  9
-c
-c    or (symmetrically) as
-c
-c            - 1  2  3  4  5  6  7  8  9
-c         ---+--------------------------
-c         ia - 1  4  5  7  9 10
-c         ja - 1  3  4  2  3  4  4  5  5
-c          a - 1  2  3  4  5  6  7  8  9          .
-c
-c
-c  parameters
-c
-c    n    - order of the matrix
-c
-c    ia   - integer one-dimensional array containing pointers to delimit
-c           rows in ja and a.  dimension = n+1
-c
-c    ja   - integer one-dimensional array containing the column indices
-c           corresponding to the elements of a.  dimension = number of
-c           nonzero entries in (the upper triangle of) m
-c
-c    a    - real one-dimensional array containing the nonzero entries in
-c           (the upper triangle of) m, stored by rows.  dimension =
-c           number of nonzero entries in (the upper triangle of) m
-c
-c    p    - integer one-dimensional array used to return the permutation
-c           of the rows and columns of m corresponding to the minimum
-c           degree ordering.  dimension = n
-c
-c    ip   - integer one-dimensional array used to return the inverse of
-c           the permutation returned in p.  dimension = n
-c
-c    nsp  - declared dimension of the one-dimensional array isp.  nsp
-c           must be at least  3n+4k,  where k is the number of nonzeroes
-c           in the strict upper triangle of m
-c
-c    isp  - integer one-dimensional array used for working storage.
-c           dimension = nsp
-c
-c    path - integer path specification.  values and their meanings are -
-c             1  find minimum degree ordering only
-c             2  find minimum degree ordering and reorder symmetrically
-c                  stored matrix (used when only the nonzero entries in
-c                  the upper triangle of m are being stored)
-c             3  reorder symmetrically stored matrix as specified by
-c                  input permutation (used when an ordering has already
-c                  been determined and only the nonzero entries in the
-c                  upper triangle of m are being stored)
-c             4  same as 2 but put diagonal entries at start of each row
-c             5  same as 3 but put diagonal entries at start of each row
-c
-c    flag - integer error flag.  values and their meanings are -
-c               0    no errors detected
-c              9n+k  insufficient storage in md
-c             10n+1  insufficient storage in odrv
-c             11n+1  illegal path specification
-c
-c
-c  conversion from real to double precision
-c
-c    change the real declarations in odrv and sro to double precision
-c    declarations.
-c
-c-----------------------------------------------------------------------
-c
+!                                                                 5/2/83
+!***********************************************************************
+!  odrv -- driver for sparse matrix reordering routines
+!***********************************************************************
+!
+!  description
+!
+!    odrv finds a minimum degree ordering of the rows and columns
+!    of a matrix m stored in (ia,ja,a) format (see below).  for the
+!    reordered matrix, the work and storage required to perform
+!    gaussian elimination is (usually) significantly less.
+!
+!    note.. odrv and its subordinate routines have been modified to
+!    compute orderings for general matrices, not necessarily having any
+!    symmetry.  the miminum degree ordering is computed for the
+!    structure of the symmetric matrix  m + m-transpose.
+!    modifications to the original odrv module have been made in
+!    the coding in subroutine mdi, and in the initial comments in
+!    subroutines odrv and md.
+!
+!    if only the nonzero entries in the upper triangle of m are being
+!    stored, then odrv symmetrically reorders (ia,ja,a), (optionally)
+!    with the diagonal entries placed first in each row.  this is to
+!    ensure that if m(i,j) will be in the upper triangle of m with
+!    respect to the new ordering, then m(i,j) is stored in row i (and
+!    thus m(j,i) is not stored),  whereas if m(i,j) will be in the
+!    strict lower triangle of m, then m(j,i) is stored in row j (and
+!    thus m(i,j) is not stored).
+!
+!
+!  storage of sparse matrices
+!
+!    the nonzero entries of the matrix m are stored row-by-row in the
+!    array a.  to identify the individual nonzero entries in each row,
+!    we need to know in which column each entry lies.  these column
+!    indices are stored in the array ja.  i.e., if  a(k) = m(i,j),  then
+!    ja(k) = j.  to identify the individual rows, we need to know where
+!    each row starts.  these row pointers are stored in the array ia.
+!    i.e., if m(i,j) is the first nonzero entry (stored) in the i-th row
+!    and  a(k) = m(i,j),  then  ia(i) = k.  moreover, ia(n+1) points to
+!    the first location following the last element in the last row.
+!    thus, the number of entries in the i-th row is  ia(i+1) - ia(i),
+!    the nonzero entries in the i-th row are stored consecutively in
+!
+!            a(ia(i)),  a(ia(i)+1),  ..., a(ia(i+1)-1),
+!
+!    and the corresponding column indices are stored consecutively in
+!
+!            ja(ia(i)), ja(ia(i)+1), ..., ja(ia(i+1)-1).
+!
+!    when the coefficient matrix is symmetric, only the nonzero entries
+!    in the upper triangle need be stored.  for example, the matrix
+!
+!             ( 1  0  2  3  0 )
+!             ( 0  4  0  0  0 )
+!         m = ( 2  0  5  6  0 )
+!             ( 3  0  6  7  8 )
+!             ( 0  0  0  8  9 )
+!
+!    could be stored as
+!
+!            - 1  2  3  4  5  6  7  8  9 10 11 12 13
+!         ---+--------------------------------------
+!         ia - 1  4  5  8 12 14
+!         ja - 1  3  4  2  1  3  4  1  3  4  5  4  5
+!          a - 1  2  3  4  2  5  6  3  6  7  8  8  9
+!
+!    or (symmetrically) as
+!
+!            - 1  2  3  4  5  6  7  8  9
+!         ---+--------------------------
+!         ia - 1  4  5  7  9 10
+!         ja - 1  3  4  2  3  4  4  5  5
+!          a - 1  2  3  4  5  6  7  8  9          .
+!
+!
+!  parameters
+!
+!    n    - order of the matrix
+!
+!    ia   - integer one-dimensional array containing pointers to delimit
+!           rows in ja and a.  dimension = n+1
+!
+!    ja   - integer one-dimensional array containing the column indices
+!           corresponding to the elements of a.  dimension = number of
+!           nonzero entries in (the upper triangle of) m
+!
+!    a    - real one-dimensional array containing the nonzero entries in
+!           (the upper triangle of) m, stored by rows.  dimension =
+!           number of nonzero entries in (the upper triangle of) m
+!
+!    p    - integer one-dimensional array used to return the permutation
+!           of the rows and columns of m corresponding to the minimum
+!           degree ordering.  dimension = n
+!
+!    ip   - integer one-dimensional array used to return the inverse of
+!           the permutation returned in p.  dimension = n
+!
+!    nsp  - declared dimension of the one-dimensional array isp.  nsp
+!           must be at least  3n+4k,  where k is the number of nonzeroes
+!           in the strict upper triangle of m
+!
+!    isp  - integer one-dimensional array used for working storage.
+!           dimension = nsp
+!
+!    path - integer path specification.  values and their meanings are -
+!             1  find minimum degree ordering only
+!             2  find minimum degree ordering and reorder symmetrically
+!                  stored matrix (used when only the nonzero entries in
+!                  the upper triangle of m are being stored)
+!             3  reorder symmetrically stored matrix as specified by
+!                  input permutation (used when an ordering has already
+!                  been determined and only the nonzero entries in the
+!                  upper triangle of m are being stored)
+!             4  same as 2 but put diagonal entries at start of each row
+!             5  same as 3 but put diagonal entries at start of each row
+!
+!    flag - integer error flag.  values and their meanings are -
+!               0    no errors detected
+!              9n+k  insufficient storage in md
+!             10n+1  insufficient storage in odrv
+!             11n+1  illegal path specification
+!
+!
+!  conversion from real to double precision
+!
+!    change the real declarations in odrv and sro to double precision
+!    declarations.
+!
+!-----------------------------------------------------------------------
+!
       integer  ia(*), ja(*),  p(*), ip(*),  isp(*),  path,  flag,
      *   v, l, head,  tmp, q
-c...  real  a(*)
+!...  real  a(*)
       double precision  a(*)
       logical  dflag
-c
-c----initialize error flag and validate path specification
+!
+!----initialize error flag and validate path specification
       flag = 0
       if (path.lt.1 .or. 5.lt.path)  go to 111
-c
-c----allocate storage and find minimum degree ordering
+!
+!----allocate storage and find minimum degree ordering
       if ((path-1) * (path-2) * (path-4) .ne. 0)  go to 1
         max = (nsp-n)/2
         v    = 1
@@ -2143,188 +2054,188 @@ c----allocate storage and find minimum degree ordering
         head = l     +  max
         next = head  +  n
         if (max.lt.n)  go to 110
-c
+!
         call  md
      *     (n, ia,ja, max,isp(v),isp(l), isp(head),p,ip, isp(v), flag)
         if (flag.ne.0)  go to 100
-c
-c----allocate storage and symmetrically reorder matrix
+!
+!----allocate storage and symmetrically reorder matrix
    1  if ((path-2) * (path-3) * (path-4) * (path-5) .ne. 0)  go to 2
         tmp = (nsp+1) -      n
         q   = tmp     - (ia(n+1)-1)
         if (q.lt.1)  go to 110
-c
+!
         dflag = path.eq.4 .or. path.eq.5
         call sro
      *     (n,  ip,  ia, ja, a,  isp(tmp),  isp(q),  dflag)
-c
+!
    2  return
-c
-c ** error -- error detected in md
+!
+! ** error -- error detected in md
  100  return
-c ** error -- insufficient storage
+! ** error -- insufficient storage
  110  flag = 10*n + 1
       return
-c ** error -- illegal path specified
+! ** error -- illegal path specified
  111  flag = 11*n + 1
       return
       end
       subroutine md
      *     (n, ia,ja, max, v,l, head,last,next, mark, flag)
-c***********************************************************************
-c  md -- minimum degree algorithm (based on element model)
-c***********************************************************************
-c
-c  description
-c
-c    md finds a minimum degree ordering of the rows and columns of a
-c    general sparse matrix m stored in (ia,ja,a) format.
-c    when the structure of m is nonsymmetric, the ordering is that
-c    obtained for the symmetric matrix  m + m-transpose.
-c
-c
-c  additional parameters
-c
-c    max  - declared dimension of the one-dimensional arrays v and l.
-c           max must be at least  n+2k,  where k is the number of
-c           nonzeroes in the strict upper triangle of m + m-transpose
-c
-c    v    - integer one-dimensional work array.  dimension = max
-c
-c    l    - integer one-dimensional work array.  dimension = max
-c
-c    head - integer one-dimensional work array.  dimension = n
-c
-c    last - integer one-dimensional array used to return the permutation
-c           of the rows and columns of m corresponding to the minimum
-c           degree ordering.  dimension = n
-c
-c    next - integer one-dimensional array used to return the inverse of
-c           the permutation returned in last.  dimension = n
-c
-c    mark - integer one-dimensional work array (may be the same as v).
-c           dimension = n
-c
-c    flag - integer error flag.  values and their meanings are -
-c             0     no errors detected
-c             9n+k  insufficient storage in md
-c
-c
-c  definitions of internal parameters
-c
-c    ---------+---------------------------------------------------------
-c    v(s)     - value field of list entry
-c    ---------+---------------------------------------------------------
-c    l(s)     - link field of list entry  (0 =) end of list)
-c    ---------+---------------------------------------------------------
-c    l(vi)    - pointer to element list of uneliminated vertex vi
-c    ---------+---------------------------------------------------------
-c    l(ej)    - pointer to boundary list of active element ej
-c    ---------+---------------------------------------------------------
-c    head(d)  - vj =) vj head of d-list d
-c             -  0 =) no vertex in d-list d
-c
-c
-c             -                  vi uneliminated vertex
-c             -          vi in ek           -       vi not in ek
-c    ---------+-----------------------------+---------------------------
-c    next(vi) - undefined but nonnegative   - vj =) vj next in d-list
-c             -                             -  0 =) vi tail of d-list
-c    ---------+-----------------------------+---------------------------
-c    last(vi) - (not set until mdp)         - -d =) vi head of d-list d
-c             --vk =) compute degree        - vj =) vj last in d-list
-c             - ej =) vi prototype of ej    -  0 =) vi not in any d-list
-c             -  0 =) do not compute degree -
-c    ---------+-----------------------------+---------------------------
-c    mark(vi) - mark(vk)                    - nonneg. tag .lt. mark(vk)
-c
-c
-c             -                   vi eliminated vertex
-c             -      ei active element      -           otherwise
-c    ---------+-----------------------------+---------------------------
-c    next(vi) - -j =) vi was j-th vertex    - -j =) vi was j-th vertex
-c             -       to be eliminated      -       to be eliminated
-c    ---------+-----------------------------+---------------------------
-c    last(vi) -  m =) size of ei = m        - undefined
-c    ---------+-----------------------------+---------------------------
-c    mark(vi) - -m =) overlap count of ei   - undefined
-c             -       with ek = m           -
-c             - otherwise nonnegative tag   -
-c             -       .lt. mark(vk)         -
-c
-c-----------------------------------------------------------------------
-c
+!***********************************************************************
+!  md -- minimum degree algorithm (based on element model)
+!***********************************************************************
+!
+!  description
+!
+!    md finds a minimum degree ordering of the rows and columns of a
+!    general sparse matrix m stored in (ia,ja,a) format.
+!    when the structure of m is nonsymmetric, the ordering is that
+!    obtained for the symmetric matrix  m + m-transpose.
+!
+!
+!  additional parameters
+!
+!    max  - declared dimension of the one-dimensional arrays v and l.
+!           max must be at least  n+2k,  where k is the number of
+!           nonzeroes in the strict upper triangle of m + m-transpose
+!
+!    v    - integer one-dimensional work array.  dimension = max
+!
+!    l    - integer one-dimensional work array.  dimension = max
+!
+!    head - integer one-dimensional work array.  dimension = n
+!
+!    last - integer one-dimensional array used to return the permutation
+!           of the rows and columns of m corresponding to the minimum
+!           degree ordering.  dimension = n
+!
+!    next - integer one-dimensional array used to return the inverse of
+!           the permutation returned in last.  dimension = n
+!
+!    mark - integer one-dimensional work array (may be the same as v).
+!           dimension = n
+!
+!    flag - integer error flag.  values and their meanings are -
+!             0     no errors detected
+!             9n+k  insufficient storage in md
+!
+!
+!  definitions of internal parameters
+!
+!    ---------+---------------------------------------------------------
+!    v(s)     - value field of list entry
+!    ---------+---------------------------------------------------------
+!    l(s)     - link field of list entry  (0 =) end of list)
+!    ---------+---------------------------------------------------------
+!    l(vi)    - pointer to element list of uneliminated vertex vi
+!    ---------+---------------------------------------------------------
+!    l(ej)    - pointer to boundary list of active element ej
+!    ---------+---------------------------------------------------------
+!    head(d)  - vj =) vj head of d-list d
+!             -  0 =) no vertex in d-list d
+!
+!
+!             -                  vi uneliminated vertex
+!             -          vi in ek           -       vi not in ek
+!    ---------+-----------------------------+---------------------------
+!    next(vi) - undefined but nonnegative   - vj =) vj next in d-list
+!             -                             -  0 =) vi tail of d-list
+!    ---------+-----------------------------+---------------------------
+!    last(vi) - (not set until mdp)         - -d =) vi head of d-list d
+!             --vk =) compute degree        - vj =) vj last in d-list
+!             - ej =) vi prototype of ej    -  0 =) vi not in any d-list
+!             -  0 =) do not compute degree -
+!    ---------+-----------------------------+---------------------------
+!    mark(vi) - mark(vk)                    - nonneg. tag .lt. mark(vk)
+!
+!
+!             -                   vi eliminated vertex
+!             -      ei active element      -           otherwise
+!    ---------+-----------------------------+---------------------------
+!    next(vi) - -j =) vi was j-th vertex    - -j =) vi was j-th vertex
+!             -       to be eliminated      -       to be eliminated
+!    ---------+-----------------------------+---------------------------
+!    last(vi) -  m =) size of ei = m        - undefined
+!    ---------+-----------------------------+---------------------------
+!    mark(vi) - -m =) overlap count of ei   - undefined
+!             -       with ek = m           -
+!             - otherwise nonnegative tag   -
+!             -       .lt. mark(vk)         -
+!
+!-----------------------------------------------------------------------
+!
       integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),
      *   mark(*),  flag,  tag, dmin, vk,ek, tail
       equivalence  (vk,ek)
-c
-c----initialization
+!
+!----initialization
       tag = 0
       call  mdi
      *   (n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
       if (flag.ne.0)  return
-c
+!
       k = 0
       dmin = 1
-c
-c----while  k .lt. n  do
+!
+!----while  k .lt. n  do
    1  if (k.ge.n)  go to 4
-c
-c------search for vertex of minimum degree
+!
+!------search for vertex of minimum degree
    2    if (head(dmin).gt.0)  go to 3
           dmin = dmin + 1
           go to 2
-c
-c------remove vertex vk of minimum degree from degree list
+!
+!------remove vertex vk of minimum degree from degree list
    3    vk = head(dmin)
         head(dmin) = next(vk)
         if (head(dmin).gt.0)  last(head(dmin)) = -dmin
-c
-c------number vertex vk, adjust tag, and tag vk
+!
+!------number vertex vk, adjust tag, and tag vk
         k = k+1
         next(vk) = -k
         last(ek) = dmin - 1
         tag = tag + last(ek)
         mark(vk) = tag
-c
-c------form element ek from uneliminated neighbors of vk
+!
+!------form element ek from uneliminated neighbors of vk
         call  mdm
      *     (vk,tail, v,l, last,next, mark)
-c
-c------purge inactive elements and do mass elimination
+!
+!------purge inactive elements and do mass elimination
         call  mdp
      *     (k,ek,tail, v,l, head,last,next, mark)
-c
-c------update degrees of uneliminated vertices in ek
+!
+!------update degrees of uneliminated vertices in ek
         call  mdu
      *     (ek,dmin, v,l, head,last,next, mark)
-c
+!
         go to 1
-c
-c----generate inverse permutation from permutation
+!
+!----generate inverse permutation from permutation
    4  do 5 k=1,n
         next(k) = -next(k)
    5    last(next(k)) = k
-c
+!
       return
       end
       subroutine mdi
      *     (n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
-c***********************************************************************
-c  mdi -- initialization
-c***********************************************************************
+!***********************************************************************
+!  mdi -- initialization
+!***********************************************************************
       integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),
      *   mark(*), tag,  flag,  sfs, vi,dvi, vj
-c
-c----initialize degrees, element lists, and degree lists
+!
+!----initialize degrees, element lists, and degree lists
       do 1 vi=1,n
         mark(vi) = 1
         l(vi) = 0
    1    head(vi) = 0
       sfs = n+1
-c
-c----create nonzero structure
-c----for each nonzero entry a(vi,vj)
+!
+!----create nonzero structure
+!----for each nonzero entry a(vi,vj)
       do 6 vi=1,n
         jmin = ia(vi)
         jmax = ia(vi+1) - 1
@@ -2332,9 +2243,9 @@ c----for each nonzero entry a(vi,vj)
         do 5 j=jmin,jmax
           vj = ja(j)
           if (vj-vi) 2, 5, 4
-c
-c------if a(vi,vj) is in strict lower triangle
-c------check for previous occurrence of a(vj,vi)
+!
+!------if a(vi,vj) is in strict lower triangle
+!------check for previous occurrence of a(vj,vi)
    2      lvk = vi
           kmax = mark(vi) - 1
           if (kmax .eq. 0) go to 4
@@ -2342,17 +2253,17 @@ c------check for previous occurrence of a(vj,vi)
             lvk = l(lvk)
             if (v(lvk).eq.vj) go to 5
    3        continue
-c----for unentered entries a(vi,vj)
+!----for unentered entries a(vi,vj)
    4        if (sfs.ge.max)  go to 101
-c
-c------enter vj in element list for vi
+!
+!------enter vj in element list for vi
             mark(vi) = mark(vi) + 1
             v(sfs) = vj
             l(sfs) = l(vi)
             l(vi) = sfs
             sfs = sfs+1
-c
-c------enter vi in element list for vj
+!
+!------enter vi in element list for vj
             mark(vj) = mark(vj) + 1
             v(sfs) = vi
             l(sfs) = l(vj)
@@ -2360,8 +2271,8 @@ c------enter vi in element list for vj
             sfs = sfs+1
    5      continue
    6    continue
-c
-c----create degree lists and initialize mark vector
+!
+!----create degree lists and initialize mark vector
       do 7 vi=1,n
         dvi = mark(vi)
         next(vi) = head(dvi)
@@ -2370,80 +2281,80 @@ c----create degree lists and initialize mark vector
         nextvi = next(vi)
         if (nextvi.gt.0)  last(nextvi) = vi
    7    mark(vi) = tag
-c
+!
       return
-c
-c ** error-  insufficient storage
+!
+! ** error-  insufficient storage
  101  flag = 9*n + vi
       return
       end
       subroutine mdm
      *     (vk,tail, v,l, last,next, mark)
-c***********************************************************************
-c  mdm -- form element from uneliminated neighbors of vk
-c***********************************************************************
+!***********************************************************************
+!  mdm -- form element from uneliminated neighbors of vk
+!***********************************************************************
       integer  vk, tail,  v(*), l(*),   last(*), next(*),   mark(*),
      *   tag, s,ls,vs,es, b,lb,vb, blp,blpmax
       equivalence  (vs, es)
-c
-c----initialize tag and list of uneliminated neighbors
+!
+!----initialize tag and list of uneliminated neighbors
       tag = mark(vk)
       tail = vk
-c
-c----for each vertex/element vs/es in element list of vk
+!
+!----for each vertex/element vs/es in element list of vk
       ls = l(vk)
    1  s = ls
       if (s.eq.0)  go to 5
         ls = l(s)
         vs = v(s)
         if (next(vs).lt.0)  go to 2
-c
-c------if vs is uneliminated vertex, then tag and append to list of
-c------uneliminated neighbors
+!
+!------if vs is uneliminated vertex, then tag and append to list of
+!------uneliminated neighbors
           mark(vs) = tag
           l(tail) = s
           tail = s
           go to 4
-c
-c------if es is active element, then ...
-c--------for each vertex vb in boundary list of element es
+!
+!------if es is active element, then ...
+!--------for each vertex vb in boundary list of element es
    2      lb = l(es)
           blpmax = last(es)
           do 3 blp=1,blpmax
             b = lb
             lb = l(b)
             vb = v(b)
-c
-c----------if vb is untagged vertex, then tag and append to list of
-c----------uneliminated neighbors
+!
+!----------if vb is untagged vertex, then tag and append to list of
+!----------uneliminated neighbors
             if (mark(vb).ge.tag)  go to 3
               mark(vb) = tag
               l(tail) = b
               tail = b
    3        continue
-c
-c--------mark es inactive
+!
+!--------mark es inactive
           mark(es) = tag
-c
+!
    4    go to 1
-c
-c----terminate list of uneliminated neighbors
+!
+!----terminate list of uneliminated neighbors
    5  l(tail) = 0
-c
+!
       return
       end
       subroutine mdp
      *     (k,ek,tail, v,l, head,last,next, mark)
-c***********************************************************************
-c  mdp -- purge inactive elements and do mass elimination
-c***********************************************************************
+!***********************************************************************
+!  mdp -- purge inactive elements and do mass elimination
+!***********************************************************************
       integer  ek, tail,  v(*), l(*),  head(*), last(*), next(*),
      *   mark(*),  tag, free, li,vi,lvi,evi, s,ls,es, ilp,ilpmax
-c
-c----initialize tag
+!
+!----initialize tag
       tag = mark(ek)
-c
-c----for each vertex vi in ek
+!
+!----for each vertex vi in ek
       li = ek
       ilpmax = last(ek)
       if (ilpmax.le.0)  go to 12
@@ -2451,16 +2362,16 @@ c----for each vertex vi in ek
         i = li
         li = l(i)
         vi = v(li)
-c
-c------remove vi from degree list
+!
+!------remove vi from degree list
         if (last(vi).eq.0)  go to 3
           if (last(vi).gt.0)  go to 1
             head(-last(vi)) = next(vi)
             go to 2
    1        next(last(vi)) = next(vi)
    2      if (next(vi).gt.0)  last(next(vi)) = last(vi)
-c
-c------remove inactive items from element list of vi
+!
+!------remove inactive items from element list of vi
    3    ls = vi
    4    s = ls
         ls = l(s)
@@ -2471,28 +2382,28 @@ c------remove inactive items from element list of vi
             l(s) = l(ls)
             ls = s
    5      go to 4
-c
-c------if vi is interior vertex, then remove from list and eliminate
+!
+!------if vi is interior vertex, then remove from list and eliminate
    6    lvi = l(vi)
         if (lvi.ne.0)  go to 7
           l(i) = l(li)
           li = i
-c
+!
           k = k+1
           next(vi) = -k
           last(ek) = last(ek) - 1
           go to 11
-c
-c------else ...
-c--------classify vertex vi
+!
+!------else ...
+!--------classify vertex vi
    7      if (l(lvi).ne.0)  go to 9
             evi = v(lvi)
             if (next(evi).ge.0)  go to 9
               if (mark(evi).lt.0)  go to 8
-c
-c----------if vi is prototype vertex, then mark as such, initialize
-c----------overlap count for corresponding element, and move vi to end
-c----------of boundary list
+!
+!----------if vi is prototype vertex, then mark as such, initialize
+!----------overlap count for corresponding element, and move vi to end
+!----------of boundary list
                 last(vi) = evi
                 mark(evi) = -1
                 l(tail) = li
@@ -2500,41 +2411,41 @@ c----------of boundary list
                 l(i) = l(li)
                 li = i
                 go to 10
-c
-c----------else if vi is duplicate vertex, then mark as such and adjust
-c----------overlap count for corresponding element
+!
+!----------else if vi is duplicate vertex, then mark as such and adjust
+!----------overlap count for corresponding element
    8            last(vi) = 0
                 mark(evi) = mark(evi) - 1
                 go to 10
-c
-c----------else mark vi to compute degree
+!
+!----------else mark vi to compute degree
    9            last(vi) = -ek
-c
-c--------insert ek in element list of vi
+!
+!--------insert ek in element list of vi
   10      v(free) = ek
           l(free) = l(vi)
           l(vi) = free
   11    continue
-c
-c----terminate boundary list
+!
+!----terminate boundary list
   12  l(tail) = 0
-c
+!
       return
       end
       subroutine mdu
      *     (ek,dmin, v,l, head,last,next, mark)
-c***********************************************************************
-c  mdu -- update degrees of uneliminated vertices in ek
-c***********************************************************************
+!***********************************************************************
+!  mdu -- update degrees of uneliminated vertices in ek
+!***********************************************************************
       integer  ek, dmin,  v(*), l(*),  head(*), last(*), next(*),
      *   mark(*),  tag, vi,evi,dvi, s,vs,es, b,vb, ilp,ilpmax,
      *   blp,blpmax
       equivalence  (vs, es)
-c
-c----initialize tag
+!
+!----initialize tag
       tag = mark(ek) - last(ek)
-c
-c----for each vertex vi in ek
+!
+!----for each vertex vi in ek
       i = ek
       ilpmax = last(ek)
       if (ilpmax.le.0)  go to 11
@@ -2542,45 +2453,45 @@ c----for each vertex vi in ek
         i = l(i)
         vi = v(i)
         if (last(vi))  1, 10, 8
-c
-c------if vi neither prototype nor duplicate vertex, then merge elements
-c------to compute degree
+!
+!------if vi neither prototype nor duplicate vertex, then merge elements
+!------to compute degree
    1      tag = tag + 1
           dvi = last(ek)
-c
-c--------for each vertex/element vs/es in element list of vi
+!
+!--------for each vertex/element vs/es in element list of vi
           s = l(vi)
    2      s = l(s)
           if (s.eq.0)  go to 9
             vs = v(s)
             if (next(vs).lt.0)  go to 3
-c
-c----------if vs is uneliminated vertex, then tag and adjust degree
+!
+!----------if vs is uneliminated vertex, then tag and adjust degree
               mark(vs) = tag
               dvi = dvi + 1
               go to 5
-c
-c----------if es is active element, then expand
-c------------check for outmatched vertex
+!
+!----------if es is active element, then expand
+!------------check for outmatched vertex
    3          if (mark(es).lt.0)  go to 6
-c
-c------------for each vertex vb in es
+!
+!------------for each vertex vb in es
               b = es
               blpmax = last(es)
               do 4 blp=1,blpmax
                 b = l(b)
                 vb = v(b)
-c
-c--------------if vb is untagged, then tag and adjust degree
+!
+!--------------if vb is untagged, then tag and adjust degree
                 if (mark(vb).ge.tag)  go to 4
                   mark(vb) = tag
                   dvi = dvi + 1
    4            continue
-c
+!
    5        go to 2
-c
-c------else if vi is outmatched vertex, then adjust overlaps but do not
-c------compute degree
+!
+!------else if vi is outmatched vertex, then adjust overlaps but do not
+!------compute degree
    6      last(vi) = 0
           mark(es) = mark(es) - 1
    7      s = l(s)
@@ -2588,93 +2499,93 @@ c------compute degree
             es = v(s)
             if (mark(es).lt.0)  mark(es) = mark(es) - 1
             go to 7
-c
-c------else if vi is prototype vertex, then calculate degree by
-c------inclusion/exclusion and reset overlap count
+!
+!------else if vi is prototype vertex, then calculate degree by
+!------inclusion/exclusion and reset overlap count
    8      evi = last(vi)
           dvi = last(ek) + last(evi) + mark(evi)
           mark(evi) = 0
-c
-c------insert vi in appropriate degree list
+!
+!------insert vi in appropriate degree list
    9    next(vi) = head(dvi)
         head(dvi) = vi
         last(vi) = -dvi
         if (next(vi).gt.0)  last(next(vi)) = vi
         if (dvi.lt.dmin)  dmin = dvi
-c
+!
   10    continue
-c
+!
   11  return
       end
       subroutine sro
      *     (n, ip, ia,ja,a, q, r, dflag)
-c***********************************************************************
-c  sro -- symmetric reordering of sparse symmetric matrix
-c***********************************************************************
-c
-c  description
-c
-c    the nonzero entries of the matrix m are assumed to be stored
-c    symmetrically in (ia,ja,a) format (i.e., not both m(i,j) and m(j,i)
-c    are stored if i ne j).
-c
-c    sro does not rearrange the order of the rows, but does move
-c    nonzeroes from one row to another to ensure that if m(i,j) will be
-c    in the upper triangle of m with respect to the new ordering, then
-c    m(i,j) is stored in row i (and thus m(j,i) is not stored),  whereas
-c    if m(i,j) will be in the strict lower triangle of m, then m(j,i) is
-c    stored in row j (and thus m(i,j) is not stored).
-c
-c
-c  additional parameters
-c
-c    q     - integer one-dimensional work array.  dimension = n
-c
-c    r     - integer one-dimensional work array.  dimension = number of
-c            nonzero entries in the upper triangle of m
-c
-c    dflag - logical variable.  if dflag = .true., then store nonzero
-c            diagonal elements at the beginning of the row
-c
-c-----------------------------------------------------------------------
-c
+!***********************************************************************
+!  sro -- symmetric reordering of sparse symmetric matrix
+!***********************************************************************
+!
+!  description
+!
+!    the nonzero entries of the matrix m are assumed to be stored
+!    symmetrically in (ia,ja,a) format (i.e., not both m(i,j) and m(j,i)
+!    are stored if i ne j).
+!
+!    sro does not rearrange the order of the rows, but does move
+!    nonzeroes from one row to another to ensure that if m(i,j) will be
+!    in the upper triangle of m with respect to the new ordering, then
+!    m(i,j) is stored in row i (and thus m(j,i) is not stored),  whereas
+!    if m(i,j) will be in the strict lower triangle of m, then m(j,i) is
+!    stored in row j (and thus m(i,j) is not stored).
+!
+!
+!  additional parameters
+!
+!    q     - integer one-dimensional work array.  dimension = n
+!
+!    r     - integer one-dimensional work array.  dimension = number of
+!            nonzero entries in the upper triangle of m
+!
+!    dflag - logical variable.  if dflag = .true., then store nonzero
+!            diagonal elements at the beginning of the row
+!
+!-----------------------------------------------------------------------
+!
       integer  ip(*),  ia(*), ja(*),  q(*), r(*)
-c...  real  a(*),  ak
+!...  real  a(*),  ak
       double precision  a(*),  ak
       logical  dflag
-c
-c
-c--phase 1 -- find row in which to store each nonzero
-c----initialize count of nonzeroes to be stored in each row
+!
+!
+!--phase 1 -- find row in which to store each nonzero
+!----initialize count of nonzeroes to be stored in each row
       do 1 i=1,n
   1     q(i) = 0
-c
-c----for each nonzero element a(j)
+!
+!----for each nonzero element a(j)
       do 3 i=1,n
         jmin = ia(i)
         jmax = ia(i+1) - 1
         if (jmin.gt.jmax)  go to 3
         do 2 j=jmin,jmax
-c
-c--------find row (=r(j)) and column (=ja(j)) in which to store a(j) ...
+!
+!--------find row (=r(j)) and column (=ja(j)) in which to store a(j) ...
           k = ja(j)
           if (ip(k).lt.ip(i))  ja(j) = i
           if (ip(k).ge.ip(i))  k = i
           r(j) = k
-c
-c--------... and increment count of nonzeroes (=q(r(j)) in that row
+!
+!--------... and increment count of nonzeroes (=q(r(j)) in that row
   2       q(k) = q(k) + 1
   3     continue
-c
-c
-c--phase 2 -- find new ia and permutation to apply to (ja,a)
-c----determine pointers to delimit rows in permuted (ja,a)
+!
+!
+!--phase 2 -- find new ia and permutation to apply to (ja,a)
+!----determine pointers to delimit rows in permuted (ja,a)
       do 4 i=1,n
         ia(i+1) = ia(i) + q(i)
   4     q(i) = ia(i+1)
-c
-c----determine where each (ja(j),a(j)) is stored in permuted (ja,a)
-c----for each nonzero element (in reverse order)
+!
+!----determine where each (ja(j),a(j)) is stored in permuted (ja,a)
+!----for each nonzero element (in reverse order)
       ilast = 0
       jmin = ia(1)
       jmax = ia(n+1) - 1
@@ -2682,20 +2593,20 @@ c----for each nonzero element (in reverse order)
       do 6 jdummy=jmin,jmax
         i = r(j)
         if (.not.dflag .or. ja(j).ne.i .or. i.eq.ilast)  go to 5
-c
-c------if dflag, then put diagonal nonzero at beginning of row
+!
+!------if dflag, then put diagonal nonzero at beginning of row
           r(j) = ia(i)
           ilast = i
           go to 6
-c
-c------put (off-diagonal) nonzero in last unused location in row
+!
+!------put (off-diagonal) nonzero in last unused location in row
   5       q(i) = q(i) - 1
           r(j) = q(i)
-c
+!
   6     j = j-1
-c
-c
-c--phase 3 -- permute (ja,a) to upper triangular form (wrt new ordering)
+!
+!
+!--phase 3 -- permute (ja,a) to upper triangular form (wrt new ordering)
       do 8 j=jmin,jmax
   7     if (r(j).eq.j)  go to 8
           k = r(j)
@@ -2709,186 +2620,186 @@ c--phase 3 -- permute (ja,a) to upper triangular form (wrt new ordering)
           a(j) = ak
           go to 7
   8     continue
-c
+!
       return
       end
-*DECK CDRV
+!*DECK CDRV
       subroutine cdrv
      *     (n, r,c,ic, ia,ja,a, b, z, nsp,isp,rsp,esp, path, flag)
-c*** subroutine cdrv
-c*** driver for subroutines for solving sparse nonsymmetric systems of
-c       linear equations (compressed pointer storage)
-c
-c
-c    parameters
-c    class abbreviations are--
-c       n - integer variable
-c       f - real variable
-c       v - supplies a value to the driver
-c       r - returns a result from the driver
-c       i - used internally by the driver
-c       a - array
-c
-c class - parameter
-c ------+----------
-c       -
-c         the nonzero entries of the coefficient matrix m are stored
-c    row-by-row in the array a.  to identify the individual nonzero
-c    entries in each row, we need to know in which column each entry
-c    lies.  the column indices which correspond to the nonzero entries
-c    of m are stored in the array ja.  i.e., if  a(k) = m(i,j),  then
-c    ja(k) = j.  in addition, we need to know where each row starts and
-c    how long it is.  the index positions in ja and a where the rows of
-c    m begin are stored in the array ia.  i.e., if m(i,j) is the first
-c    nonzero entry (stored) in the i-th row and a(k) = m(i,j),  then
-c    ia(i) = k.  moreover, the index in ja and a of the first location
-c    following the last element in the last row is stored in ia(n+1).
-c    thus, the number of entries in the i-th row is given by
-c    ia(i+1) - ia(i),  the nonzero entries of the i-th row are stored
-c    consecutively in
-c            a(ia(i)),  a(ia(i)+1),  ..., a(ia(i+1)-1),
-c    and the corresponding column indices are stored consecutively in
-c            ja(ia(i)), ja(ia(i)+1), ..., ja(ia(i+1)-1).
-c    for example, the 5 by 5 matrix
-c                ( 1. 0. 2. 0. 0.)
-c                ( 0. 3. 0. 0. 0.)
-c            m = ( 0. 4. 5. 6. 0.)
-c                ( 0. 0. 0. 7. 0.)
-c                ( 0. 0. 0. 8. 9.)
-c    would be stored as
-c               - 1  2  3  4  5  6  7  8  9
-c            ---+--------------------------
-c            ia - 1  3  4  7  8 10
-c            ja - 1  3  2  2  3  4  4  4  5
-c             a - 1. 2. 3. 4. 5. 6. 7. 8. 9.         .
-c
-c nv    - n     - number of variables/equations.
-c fva   - a     - nonzero entries of the coefficient matrix m, stored
-c       -           by rows.
-c       -           size = number of nonzero entries in m.
-c nva   - ia    - pointers to delimit the rows in a.
-c       -           size = n+1.
-c nva   - ja    - column numbers corresponding to the elements of a.
-c       -           size = size of a.
-c fva   - b     - right-hand side b.  b and z can the same array.
-c       -           size = n.
-c fra   - z     - solution x.  b and z can be the same array.
-c       -           size = n.
-c
-c         the rows and columns of the original matrix m can be
-c    reordered (e.g., to reduce fillin or ensure numerical stability)
-c    before calling the driver.  if no reordering is done, then set
-c    r(i) = c(i) = ic(i) = i  for i=1,...,n.  the solution z is returned
-c    in the original order.
-c         if the columns have been reordered (i.e.,  c(i).ne.i  for some
-c    i), then the driver will call a subroutine (nroc) which rearranges
-c    each row of ja and a, leaving the rows in the original order, but
-c    placing the elements of each row in increasing order with respect
-c    to the new ordering.  if  path.ne.1,  then nroc is assumed to have
-c    been called already.
-c
-c nva   - r     - ordering of the rows of m.
-c       -           size = n.
-c nva   - c     - ordering of the columns of m.
-c       -           size = n.
-c nva   - ic    - inverse of the ordering of the columns of m.  i.e.,
-c       -           ic(c(i)) = i  for i=1,...,n.
-c       -           size = n.
-c
-c         the solution of the system of linear equations is divided into
-c    three stages --
-c      nsfc -- the matrix m is processed symbolically to determine where
-c               fillin will occur during the numeric factorization.
-c      nnfc -- the matrix m is factored numerically into the product ldu
-c               of a unit lower triangular matrix l, a diagonal matrix
-c               d, and a unit upper triangular matrix u, and the system
-c               mx = b  is solved.
-c      nnsc -- the linear system  mx = b  is solved using the ldu
-c  or           factorization from nnfc.
-c      nntc -- the transposed linear system  mt x = b  is solved using
-c               the ldu factorization from nnf.
-c    for several systems whose coefficient matrices have the same
-c    nonzero structure, nsfc need be done only once (for the first
-c    system).  then nnfc is done once for each additional system.  for
-c    several systems with the same coefficient matrix, nsfc and nnfc
-c    need be done only once (for the first system).  then nnsc or nntc
-c    is done once for each additional right-hand side.
-c
-c nv    - path  - path specification.  values and their meanings are --
-c       -           1  perform nroc, nsfc, and nnfc.
-c       -           2  perform nnfc only  (nsfc is assumed to have been
-c       -               done in a manner compatible with the storage
-c       -               allocation used in the driver).
-c       -           3  perform nnsc only  (nsfc and nnfc are assumed to
-c       -               have been done in a manner compatible with the
-c       -               storage allocation used in the driver).
-c       -           4  perform nntc only  (nsfc and nnfc are assumed to
-c       -               have been done in a manner compatible with the
-c       -               storage allocation used in the driver).
-c       -           5  perform nroc and nsfc.
-c
-c         various errors are detected by the driver and the individual
-c    subroutines.
-c
-c nr    - flag  - error flag.  values and their meanings are --
-c       -             0     no errors detected
-c       -             n+k   null row in a  --  row = k
-c       -            2n+k   duplicate entry in a  --  row = k
-c       -            3n+k   insufficient storage in nsfc  --  row = k
-c       -            4n+1   insufficient storage in nnfc
-c       -            5n+k   null pivot  --  row = k
-c       -            6n+k   insufficient storage in nsfc  --  row = k
-c       -            7n+1   insufficient storage in nnfc
-c       -            8n+k   zero pivot  --  row = k
-c       -           10n+1   insufficient storage in cdrv
-c       -           11n+1   illegal path specification
-c
-c         working storage is needed for the factored form of the matrix
-c    m plus various temporary vectors.  the arrays isp and rsp should be
-c    equivalenced.  integer storage is allocated from the beginning of
-c    isp and real storage from the end of rsp.
-c
-c nv    - nsp   - declared dimension of rsp.  nsp generally must
-c       -           be larger than  8n+2 + 2k  (where  k = (number of
-c       -           nonzero entries in m)).
-c nvira - isp   - integer working storage divided up into various arrays
-c       -           needed by the subroutines.  isp and rsp should be
-c       -           equivalenced.
-c       -           size = lratio*nsp.
-c fvira - rsp   - real working storage divided up into various arrays
-c       -           needed by the subroutines.  isp and rsp should be
-c       -           equivalenced.
-c       -           size = nsp.
-c nr    - esp   - if sufficient storage was available to perform the
-c       -           symbolic factorization (nsfc), then esp is set to
-c       -           the amount of excess storage provided (negative if
-c       -           insufficient storage was available to perform the
-c       -           numeric factorization (nnfc)).
-c
-c
-c  conversion to double precision
-c
-c    to convert these routines for double precision arrays..
-c    (1) use the double precision declarations in place of the real
-c    declarations in each subprogram, as given in comment cards.
-c    (2) change the data-loaded value of the integer  lratio
-c    in subroutine cdrv, as indicated below.
-c    (3) change e0 to d0 in the constants in statement number 10
-c    in subroutine nnfc and the line following that.
-c
+!*** subroutine cdrv
+!*** driver for subroutines for solving sparse nonsymmetric systems of
+!       linear equations (compressed pointer storage)
+!
+!
+!    parameters
+!    class abbreviations are--
+!       n - integer variable
+!       f - real variable
+!       v - supplies a value to the driver
+!       r - returns a result from the driver
+!       i - used internally by the driver
+!       a - array
+!
+! class - parameter
+! ------+----------
+!       -
+!         the nonzero entries of the coefficient matrix m are stored
+!    row-by-row in the array a.  to identify the individual nonzero
+!    entries in each row, we need to know in which column each entry
+!    lies.  the column indices which correspond to the nonzero entries
+!    of m are stored in the array ja.  i.e., if  a(k) = m(i,j),  then
+!    ja(k) = j.  in addition, we need to know where each row starts and
+!    how long it is.  the index positions in ja and a where the rows of
+!    m begin are stored in the array ia.  i.e., if m(i,j) is the first
+!    nonzero entry (stored) in the i-th row and a(k) = m(i,j),  then
+!    ia(i) = k.  moreover, the index in ja and a of the first location
+!    following the last element in the last row is stored in ia(n+1).
+!    thus, the number of entries in the i-th row is given by
+!    ia(i+1) - ia(i),  the nonzero entries of the i-th row are stored
+!    consecutively in
+!            a(ia(i)),  a(ia(i)+1),  ..., a(ia(i+1)-1),
+!    and the corresponding column indices are stored consecutively in
+!            ja(ia(i)), ja(ia(i)+1), ..., ja(ia(i+1)-1).
+!    for example, the 5 by 5 matrix
+!                ( 1. 0. 2. 0. 0.)
+!                ( 0. 3. 0. 0. 0.)
+!            m = ( 0. 4. 5. 6. 0.)
+!                ( 0. 0. 0. 7. 0.)
+!                ( 0. 0. 0. 8. 9.)
+!    would be stored as
+!               - 1  2  3  4  5  6  7  8  9
+!            ---+--------------------------
+!            ia - 1  3  4  7  8 10
+!            ja - 1  3  2  2  3  4  4  4  5
+!             a - 1. 2. 3. 4. 5. 6. 7. 8. 9.         .
+!
+! nv    - n     - number of variables/equations.
+! fva   - a     - nonzero entries of the coefficient matrix m, stored
+!       -           by rows.
+!       -           size = number of nonzero entries in m.
+! nva   - ia    - pointers to delimit the rows in a.
+!       -           size = n+1.
+! nva   - ja    - column numbers corresponding to the elements of a.
+!       -           size = size of a.
+! fva   - b     - right-hand side b.  b and z can the same array.
+!       -           size = n.
+! fra   - z     - solution x.  b and z can be the same array.
+!       -           size = n.
+!
+!         the rows and columns of the original matrix m can be
+!    reordered (e.g., to reduce fillin or ensure numerical stability)
+!    before calling the driver.  if no reordering is done, then set
+!    r(i) = c(i) = ic(i) = i  for i=1,...,n.  the solution z is returned
+!    in the original order.
+!         if the columns have been reordered (i.e.,  c(i).ne.i  for some
+!    i), then the driver will call a subroutine (nroc) which rearranges
+!    each row of ja and a, leaving the rows in the original order, but
+!    placing the elements of each row in increasing order with respect
+!    to the new ordering.  if  path.ne.1,  then nroc is assumed to have
+!    been called already.
+!
+! nva   - r     - ordering of the rows of m.
+!       -           size = n.
+! nva   - c     - ordering of the columns of m.
+!       -           size = n.
+! nva   - ic    - inverse of the ordering of the columns of m.  i.e.,
+!       -           ic(c(i)) = i  for i=1,...,n.
+!       -           size = n.
+!
+!         the solution of the system of linear equations is divided into
+!    three stages --
+!      nsfc -- the matrix m is processed symbolically to determine where
+!               fillin will occur during the numeric factorization.
+!      nnfc -- the matrix m is factored numerically into the product ldu
+!               of a unit lower triangular matrix l, a diagonal matrix
+!               d, and a unit upper triangular matrix u, and the system
+!               mx = b  is solved.
+!      nnsc -- the linear system  mx = b  is solved using the ldu
+!  or           factorization from nnfc.
+!      nntc -- the transposed linear system  mt x = b  is solved using
+!               the ldu factorization from nnf.
+!    for several systems whose coefficient matrices have the same
+!    nonzero structure, nsfc need be done only once (for the first
+!    system).  then nnfc is done once for each additional system.  for
+!    several systems with the same coefficient matrix, nsfc and nnfc
+!    need be done only once (for the first system).  then nnsc or nntc
+!    is done once for each additional right-hand side.
+!
+! nv    - path  - path specification.  values and their meanings are --
+!       -           1  perform nroc, nsfc, and nnfc.
+!       -           2  perform nnfc only  (nsfc is assumed to have been
+!       -               done in a manner compatible with the storage
+!       -               allocation used in the driver).
+!       -           3  perform nnsc only  (nsfc and nnfc are assumed to
+!       -               have been done in a manner compatible with the
+!       -               storage allocation used in the driver).
+!       -           4  perform nntc only  (nsfc and nnfc are assumed to
+!       -               have been done in a manner compatible with the
+!       -               storage allocation used in the driver).
+!       -           5  perform nroc and nsfc.
+!
+!         various errors are detected by the driver and the individual
+!    subroutines.
+!
+! nr    - flag  - error flag.  values and their meanings are --
+!       -             0     no errors detected
+!       -             n+k   null row in a  --  row = k
+!       -            2n+k   duplicate entry in a  --  row = k
+!       -            3n+k   insufficient storage in nsfc  --  row = k
+!       -            4n+1   insufficient storage in nnfc
+!       -            5n+k   null pivot  --  row = k
+!       -            6n+k   insufficient storage in nsfc  --  row = k
+!       -            7n+1   insufficient storage in nnfc
+!       -            8n+k   zero pivot  --  row = k
+!       -           10n+1   insufficient storage in cdrv
+!       -           11n+1   illegal path specification
+!
+!         working storage is needed for the factored form of the matrix
+!    m plus various temporary vectors.  the arrays isp and rsp should be
+!    equivalenced.  integer storage is allocated from the beginning of
+!    isp and real storage from the end of rsp.
+!
+! nv    - nsp   - declared dimension of rsp.  nsp generally must
+!       -           be larger than  8n+2 + 2k  (where  k = (number of
+!       -           nonzero entries in m)).
+! nvira - isp   - integer working storage divided up into various arrays
+!       -           needed by the subroutines.  isp and rsp should be
+!       -           equivalenced.
+!       -           size = lratio*nsp.
+! fvira - rsp   - real working storage divided up into various arrays
+!       -           needed by the subroutines.  isp and rsp should be
+!       -           equivalenced.
+!       -           size = nsp.
+! nr    - esp   - if sufficient storage was available to perform the
+!       -           symbolic factorization (nsfc), then esp is set to
+!       -           the amount of excess storage provided (negative if
+!       -           insufficient storage was available to perform the
+!       -           numeric factorization (nnfc)).
+!
+!
+!  conversion to double precision
+!
+!    to convert these routines for double precision arrays..
+!    (1) use the double precision declarations in place of the real
+!    declarations in each subprogram, as given in comment cards.
+!    (2) change the data-loaded value of the integer  lratio
+!    in subroutine cdrv, as indicated below.
+!    (3) change e0 to d0 in the constants in statement number 10
+!    in subroutine nnfc and the line following that.
+!
       integer  r(*), c(*), ic(*),  ia(*), ja(*),  isp(*), esp,  path,
      *   flag,  d, u, q, row, tmp, ar,  umax
-c     real  a(*), b(*), z(*), rsp(*)
+!     real  a(*), b(*), z(*), rsp(*)
       double precision  a(*), b(*), z(*), rsp(*)
-c
-c  set lratio equal to the ratio between the length of floating point
-c  and integer array data.  e. g., lratio = 1 for (real, integer),
-c  lratio = 2 for (double precision, integer)
-c
+!
+!  set lratio equal to the ratio between the length of floating point
+!  and integer array data.  e. g., lratio = 1 for (real, integer),
+!  lratio = 2 for (double precision, integer)
+!
       data lratio/2/
-c
+!
       if (path.lt.1 .or. 5.lt.path)  go to 111
-c******initialize and divide up temporary storage  *******************
+!******initialize and divide up temporary storage  *******************
       il   = 1
       ijl  = il  + (n+1)
       iu   = ijl +   n
@@ -2896,8 +2807,8 @@ c******initialize and divide up temporary storage  *******************
       irl  = iju +   n
       jrl  = irl +   n
       jl   = jrl +   n
-c
-c  ******  reorder a if necessary, call nsfc if flag is set  ***********
+!
+!  ******  reorder a if necessary, call nsfc if flag is set  ***********
       if ((path-1) * (path-5) .ne. 0)  go to 5
         max = (lratio*nsp + 1 - jl) - (n+1) - 5*n
         jlmax = max/2
@@ -2911,7 +2822,7 @@ c  ******  reorder a if necessary, call nsfc if flag is set  ***********
         jumax = lratio*nsp  + 1 - jutmp
         esp = max/lratio
         if (jlmax.le.0 .or. jumax.le.0)  go to 110
-c
+!
         do 1 i=1,n
           if (c(i).ne.i)  go to 2
    1      continue
@@ -2920,7 +2831,7 @@ c
         call  nroc
      *     (n, ic, ia,ja,a, isp(il), rsp(ar), isp(iu), flag)
         if (flag.ne.0)  go to 100
-c
+!
    3    call  nsfc
      *     (n, r, ic, ia,ja,
      *      jlmax, isp(il), isp(jl), isp(ijl),
@@ -2928,15 +2839,15 @@ c
      *      isp(q), isp(ira), isp(jra), isp(irac),
      *      isp(irl), isp(jrl), isp(iru), isp(jru),  flag)
         if(flag .ne. 0)  go to 100
-c  ******  move ju next to jl  *****************************************
+!  ******  move ju next to jl  *****************************************
         jlmax = isp(ijl+n-1)
         ju    = jl + jlmax
         jumax = isp(iju+n-1)
         if (jumax.le.0)  go to 5
         do 4 j=1,jumax
    4      isp(ju+j-1) = isp(jutmp+j-1)
-c
-c  ******  call remaining subroutines  *********************************
+!
+!  ******  call remaining subroutines  *********************************
    5  jlmax = isp(ijl+n-1)
       ju    = jl  + jlmax
       jumax = isp(iju+n-1)
@@ -2948,7 +2859,7 @@ c  ******  call remaining subroutines  *********************************
       tmp   = row - n
       umax  = tmp - u
       esp   = umax - (isp(iu+n) - 1)
-c
+!
       if ((path-1) * (path-2) .ne. 0)  go to 6
         if (umax.lt.0)  go to 110
         call nnfc
@@ -2957,237 +2868,237 @@ c
      *      umax, isp(iu), isp(ju), isp(iju), rsp(u),
      *      rsp(row), rsp(tmp),  isp(irl), isp(jrl),  flag)
         if(flag .ne. 0)  go to 100
-c
+!
    6  if ((path-3) .ne. 0)  go to 7
         call nnsc
      *     (n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),
      *      rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),
      *      z, b,  rsp(tmp))
-c
+!
    7  if ((path-4) .ne. 0)  go to 8
         call nntc
      *     (n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),
      *      rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),
      *      z, b,  rsp(tmp))
    8  return
-c
-c ** error.. error detected in nroc, nsfc, nnfc, or nnsc
+!
+! ** error.. error detected in nroc, nsfc, nnfc, or nnsc
  100  return
-c ** error.. insufficient storage
+! ** error.. insufficient storage
  110  flag = 10*n + 1
       return
-c ** error.. illegal path specification
+! ** error.. illegal path specification
  111  flag = 11*n + 1
       return
       end
       subroutine nroc (n, ic, ia, ja, a, jar, ar, p, flag)
-c
-c       ----------------------------------------------------------------
-c
-c               yale sparse matrix package - nonsymmetric codes
-c                    solving the system of equations mx = b
-c
-c    i.   calling sequences
-c         the coefficient matrix can be processed by an ordering routine
-c    (e.g., to reduce fillin or ensure numerical stability) before using
-c    the remaining subroutines.  if no reordering is done, then set
-c    r(i) = c(i) = ic(i) = i  for i=1,...,n.  if an ordering subroutine
-c    is used, then nroc should be used to reorder the coefficient matrix
-c    the calling sequence is --
-c        (       (matrix ordering))
-c        (nroc   (matrix reordering))
-c         nsfc   (symbolic factorization to determine where fillin will
-c                  occur during numeric factorization)
-c         nnfc   (numeric factorization into product ldu of unit lower
-c                  triangular matrix l, diagonal matrix d, and unit
-c                  upper triangular matrix u, and solution of linear
-c                  system)
-c         nnsc   (solution of linear system for additional right-hand
-c                  side using ldu factorization from nnfc)
-c    (if only one system of equations is to be solved, then the
-c    subroutine trk should be used.)
-c
-c    ii.  storage of sparse matrices
-c         the nonzero entries of the coefficient matrix m are stored
-c    row-by-row in the array a.  to identify the individual nonzero
-c    entries in each row, we need to know in which column each entry
-c    lies.  the column indices which correspond to the nonzero entries
-c    of m are stored in the array ja.  i.e., if  a(k) = m(i,j),  then
-c    ja(k) = j.  in addition, we need to know where each row starts and
-c    how long it is.  the index positions in ja and a where the rows of
-c    m begin are stored in the array ia.  i.e., if m(i,j) is the first
-c    (leftmost) entry in the i-th row and  a(k) = m(i,j),  then
-c    ia(i) = k.  moreover, the index in ja and a of the first location
-c    following the last element in the last row is stored in ia(n+1).
-c    thus, the number of entries in the i-th row is given by
-c    ia(i+1) - ia(i),  the nonzero entries of the i-th row are stored
-c    consecutively in
-c            a(ia(i)),  a(ia(i)+1),  ..., a(ia(i+1)-1),
-c    and the corresponding column indices are stored consecutively in
-c            ja(ia(i)), ja(ia(i)+1), ..., ja(ia(i+1)-1).
-c    for example, the 5 by 5 matrix
-c                ( 1. 0. 2. 0. 0.)
-c                ( 0. 3. 0. 0. 0.)
-c            m = ( 0. 4. 5. 6. 0.)
-c                ( 0. 0. 0. 7. 0.)
-c                ( 0. 0. 0. 8. 9.)
-c    would be stored as
-c               - 1  2  3  4  5  6  7  8  9
-c            ---+--------------------------
-c            ia - 1  3  4  7  8 10
-c            ja - 1  3  2  2  3  4  4  4  5
-c             a - 1. 2. 3. 4. 5. 6. 7. 8. 9.         .
-c
-c         the strict upper (lower) triangular portion of the matrix
-c    u (l) is stored in a similar fashion using the arrays  iu, ju, u
-c    (il, jl, l)  except that an additional array iju (ijl) is used to
-c    compress storage of ju (jl) by allowing some sequences of column
-c    (row) indices to used for more than one row (column)  (n.b., l is
-c    stored by columns).  iju(k) (ijl(k)) points to the starting
-c    location in ju (jl) of entries for the kth row (column).
-c    compression in ju (jl) occurs in two ways.  first, if a row
-c    (column) i was merged into the current row (column) k, and the
-c    number of elements merged in from (the tail portion of) row
-c    (column) i is the same as the final length of row (column) k, then
-c    the kth row (column) and the tail of row (column) i are identical
-c    and iju(k) (ijl(k)) points to the start of the tail.  second, if
-c    some tail portion of the (k-1)st row (column) is identical to the
-c    head of the kth row (column), then iju(k) (ijl(k)) points to the
-c    start of that tail portion.  for example, the nonzero structure of
-c    the strict upper triangular part of the matrix
-c            d 0 x x x
-c            0 d 0 x x
-c            0 0 d x 0
-c            0 0 0 d x
-c            0 0 0 0 d
-c    would be represented as
-c                - 1 2 3 4 5 6
-c            ----+------------
-c             iu - 1 4 6 7 8 8
-c             ju - 3 4 5 4
-c            iju - 1 2 4 3           .
-c    the diagonal entries of l and u are assumed to be equal to one and
-c    are not stored.  the array d contains the reciprocals of the
-c    diagonal entries of the matrix d.
-c
-c    iii. additional storage savings
-c         in nsfc, r and ic can be the same array in the calling
-c    sequence if no reordering of the coefficient matrix has been done.
-c         in nnfc, r, c, and ic can all be the same array if no
-c    reordering has been done.  if only the rows have been reordered,
-c    then c and ic can be the same array.  if the row and column
-c    orderings are the same, then r and c can be the same array.  z and
-c    row can be the same array.
-c         in nnsc or nntc, r and c can be the same array if no
-c    reordering has been done or if the row and column orderings are the
-c    same.  z and b can be the same array.  however, then b will be
-c    destroyed.
-c
-c    iv.  parameters
-c         following is a list of parameters to the programs.  names are
-c    uniform among the various subroutines.  class abbreviations are --
-c       n - integer variable
-c       f - real variable
-c       v - supplies a value to a subroutine
-c       r - returns a result from a subroutine
-c       i - used internally by a subroutine
-c       a - array
-c
-c class - parameter
-c ------+----------
-c fva   - a     - nonzero entries of the coefficient matrix m, stored
-c       -           by rows.
-c       -           size = number of nonzero entries in m.
-c fva   - b     - right-hand side b.
-c       -           size = n.
-c nva   - c     - ordering of the columns of m.
-c       -           size = n.
-c fvra  - d     - reciprocals of the diagonal entries of the matrix d.
-c       -           size = n.
-c nr    - flag  - error flag.  values and their meanings are --
-c       -            0     no errors detected
-c       -            n+k   null row in a  --  row = k
-c       -           2n+k   duplicate entry in a  --  row = k
-c       -           3n+k   insufficient storage for jl  --  row = k
-c       -           4n+1   insufficient storage for l
-c       -           5n+k   null pivot  --  row = k
-c       -           6n+k   insufficient storage for ju  --  row = k
-c       -           7n+1   insufficient storage for u
-c       -           8n+k   zero pivot  --  row = k
-c nva   - ia    - pointers to delimit the rows of a.
-c       -           size = n+1.
-c nvra  - ijl   - pointers to the first element in each column in jl,
-c       -           used to compress storage in jl.
-c       -           size = n.
-c nvra  - iju   - pointers to the first element in each row in ju, used
-c       -           to compress storage in ju.
-c       -           size = n.
-c nvra  - il    - pointers to delimit the columns of l.
-c       -           size = n+1.
-c nvra  - iu    - pointers to delimit the rows of u.
-c       -           size = n+1.
-c nva   - ja    - column numbers corresponding to the elements of a.
-c       -           size = size of a.
-c nvra  - jl    - row numbers corresponding to the elements of l.
-c       -           size = jlmax.
-c nv    - jlmax - declared dimension of jl.  jlmax must be larger than
-c       -           the number of nonzeros in the strict lower triangle
-c       -           of m plus fillin minus compression.
-c nvra  - ju    - column numbers corresponding to the elements of u.
-c       -           size = jumax.
-c nv    - jumax - declared dimension of ju.  jumax must be larger than
-c       -           the number of nonzeros in the strict upper triangle
-c       -           of m plus fillin minus compression.
-c fvra  - l     - nonzero entries in the strict lower triangular portion
-c       -           of the matrix l, stored by columns.
-c       -           size = lmax.
-c nv    - lmax  - declared dimension of l.  lmax must be larger than
-c       -           the number of nonzeros in the strict lower triangle
-c       -           of m plus fillin  (il(n+1)-1 after nsfc).
-c nv    - n     - number of variables/equations.
-c nva   - r     - ordering of the rows of m.
-c       -           size = n.
-c fvra  - u     - nonzero entries in the strict upper triangular portion
-c       -           of the matrix u, stored by rows.
-c       -           size = umax.
-c nv    - umax  - declared dimension of u.  umax must be larger than
-c       -           the number of nonzeros in the strict upper triangle
-c       -           of m plus fillin  (iu(n+1)-1 after nsfc).
-c fra   - z     - solution x.
-c       -           size = n.
-c
-c       ----------------------------------------------------------------
-c
-c*** subroutine nroc
-c*** reorders rows of a, leaving row order unchanged
-c
-c
-c       input parameters.. n, ic, ia, ja, a
-c       output parameters.. ja, a, flag
-c
-c       parameters used internally..
-c nia   - p     - at the kth step, p is a linked list of the reordered
-c       -           column indices of the kth row of a.  p(n+1) points
-c       -           to the first entry in the list.
-c       -           size = n+1.
-c nia   - jar   - at the kth step,jar contains the elements of the
-c       -           reordered column indices of a.
-c       -           size = n.
-c fia   - ar    - at the kth step, ar contains the elements of the
-c       -           reordered row of a.
-c       -           size = n.
-c
+!
+!       ----------------------------------------------------------------
+!
+!               yale sparse matrix package - nonsymmetric codes
+!                    solving the system of equations mx = b
+!
+!    i.   calling sequences
+!         the coefficient matrix can be processed by an ordering routine
+!    (e.g., to reduce fillin or ensure numerical stability) before using
+!    the remaining subroutines.  if no reordering is done, then set
+!    r(i) = c(i) = ic(i) = i  for i=1,...,n.  if an ordering subroutine
+!    is used, then nroc should be used to reorder the coefficient matrix
+!    the calling sequence is --
+!        (       (matrix ordering))
+!        (nroc   (matrix reordering))
+!         nsfc   (symbolic factorization to determine where fillin will
+!                  occur during numeric factorization)
+!         nnfc   (numeric factorization into product ldu of unit lower
+!                  triangular matrix l, diagonal matrix d, and unit
+!                  upper triangular matrix u, and solution of linear
+!                  system)
+!         nnsc   (solution of linear system for additional right-hand
+!                  side using ldu factorization from nnfc)
+!    (if only one system of equations is to be solved, then the
+!    subroutine trk should be used.)
+!
+!    ii.  storage of sparse matrices
+!         the nonzero entries of the coefficient matrix m are stored
+!    row-by-row in the array a.  to identify the individual nonzero
+!    entries in each row, we need to know in which column each entry
+!    lies.  the column indices which correspond to the nonzero entries
+!    of m are stored in the array ja.  i.e., if  a(k) = m(i,j),  then
+!    ja(k) = j.  in addition, we need to know where each row starts and
+!    how long it is.  the index positions in ja and a where the rows of
+!    m begin are stored in the array ia.  i.e., if m(i,j) is the first
+!    (leftmost) entry in the i-th row and  a(k) = m(i,j),  then
+!    ia(i) = k.  moreover, the index in ja and a of the first location
+!    following the last element in the last row is stored in ia(n+1).
+!    thus, the number of entries in the i-th row is given by
+!    ia(i+1) - ia(i),  the nonzero entries of the i-th row are stored
+!    consecutively in
+!            a(ia(i)),  a(ia(i)+1),  ..., a(ia(i+1)-1),
+!    and the corresponding column indices are stored consecutively in
+!            ja(ia(i)), ja(ia(i)+1), ..., ja(ia(i+1)-1).
+!    for example, the 5 by 5 matrix
+!                ( 1. 0. 2. 0. 0.)
+!                ( 0. 3. 0. 0. 0.)
+!            m = ( 0. 4. 5. 6. 0.)
+!                ( 0. 0. 0. 7. 0.)
+!                ( 0. 0. 0. 8. 9.)
+!    would be stored as
+!               - 1  2  3  4  5  6  7  8  9
+!            ---+--------------------------
+!            ia - 1  3  4  7  8 10
+!            ja - 1  3  2  2  3  4  4  4  5
+!             a - 1. 2. 3. 4. 5. 6. 7. 8. 9.         .
+!
+!         the strict upper (lower) triangular portion of the matrix
+!    u (l) is stored in a similar fashion using the arrays  iu, ju, u
+!    (il, jl, l)  except that an additional array iju (ijl) is used to
+!    compress storage of ju (jl) by allowing some sequences of column
+!    (row) indices to used for more than one row (column)  (n.b., l is
+!    stored by columns).  iju(k) (ijl(k)) points to the starting
+!    location in ju (jl) of entries for the kth row (column).
+!    compression in ju (jl) occurs in two ways.  first, if a row
+!    (column) i was merged into the current row (column) k, and the
+!    number of elements merged in from (the tail portion of) row
+!    (column) i is the same as the final length of row (column) k, then
+!    the kth row (column) and the tail of row (column) i are identical
+!    and iju(k) (ijl(k)) points to the start of the tail.  second, if
+!    some tail portion of the (k-1)st row (column) is identical to the
+!    head of the kth row (column), then iju(k) (ijl(k)) points to the
+!    start of that tail portion.  for example, the nonzero structure of
+!    the strict upper triangular part of the matrix
+!            d 0 x x x
+!            0 d 0 x x
+!            0 0 d x 0
+!            0 0 0 d x
+!            0 0 0 0 d
+!    would be represented as
+!                - 1 2 3 4 5 6
+!            ----+------------
+!             iu - 1 4 6 7 8 8
+!             ju - 3 4 5 4
+!            iju - 1 2 4 3           .
+!    the diagonal entries of l and u are assumed to be equal to one and
+!    are not stored.  the array d contains the reciprocals of the
+!    diagonal entries of the matrix d.
+!
+!    iii. additional storage savings
+!         in nsfc, r and ic can be the same array in the calling
+!    sequence if no reordering of the coefficient matrix has been done.
+!         in nnfc, r, c, and ic can all be the same array if no
+!    reordering has been done.  if only the rows have been reordered,
+!    then c and ic can be the same array.  if the row and column
+!    orderings are the same, then r and c can be the same array.  z and
+!    row can be the same array.
+!         in nnsc or nntc, r and c can be the same array if no
+!    reordering has been done or if the row and column orderings are the
+!    same.  z and b can be the same array.  however, then b will be
+!    destroyed.
+!
+!    iv.  parameters
+!         following is a list of parameters to the programs.  names are
+!    uniform among the various subroutines.  class abbreviations are --
+!       n - integer variable
+!       f - real variable
+!       v - supplies a value to a subroutine
+!       r - returns a result from a subroutine
+!       i - used internally by a subroutine
+!       a - array
+!
+! class - parameter
+! ------+----------
+! fva   - a     - nonzero entries of the coefficient matrix m, stored
+!       -           by rows.
+!       -           size = number of nonzero entries in m.
+! fva   - b     - right-hand side b.
+!       -           size = n.
+! nva   - c     - ordering of the columns of m.
+!       -           size = n.
+! fvra  - d     - reciprocals of the diagonal entries of the matrix d.
+!       -           size = n.
+! nr    - flag  - error flag.  values and their meanings are --
+!       -            0     no errors detected
+!       -            n+k   null row in a  --  row = k
+!       -           2n+k   duplicate entry in a  --  row = k
+!       -           3n+k   insufficient storage for jl  --  row = k
+!       -           4n+1   insufficient storage for l
+!       -           5n+k   null pivot  --  row = k
+!       -           6n+k   insufficient storage for ju  --  row = k
+!       -           7n+1   insufficient storage for u
+!       -           8n+k   zero pivot  --  row = k
+! nva   - ia    - pointers to delimit the rows of a.
+!       -           size = n+1.
+! nvra  - ijl   - pointers to the first element in each column in jl,
+!       -           used to compress storage in jl.
+!       -           size = n.
+! nvra  - iju   - pointers to the first element in each row in ju, used
+!       -           to compress storage in ju.
+!       -           size = n.
+! nvra  - il    - pointers to delimit the columns of l.
+!       -           size = n+1.
+! nvra  - iu    - pointers to delimit the rows of u.
+!       -           size = n+1.
+! nva   - ja    - column numbers corresponding to the elements of a.
+!       -           size = size of a.
+! nvra  - jl    - row numbers corresponding to the elements of l.
+!       -           size = jlmax.
+! nv    - jlmax - declared dimension of jl.  jlmax must be larger than
+!       -           the number of nonzeros in the strict lower triangle
+!       -           of m plus fillin minus compression.
+! nvra  - ju    - column numbers corresponding to the elements of u.
+!       -           size = jumax.
+! nv    - jumax - declared dimension of ju.  jumax must be larger than
+!       -           the number of nonzeros in the strict upper triangle
+!       -           of m plus fillin minus compression.
+! fvra  - l     - nonzero entries in the strict lower triangular portion
+!       -           of the matrix l, stored by columns.
+!       -           size = lmax.
+! nv    - lmax  - declared dimension of l.  lmax must be larger than
+!       -           the number of nonzeros in the strict lower triangle
+!       -           of m plus fillin  (il(n+1)-1 after nsfc).
+! nv    - n     - number of variables/equations.
+! nva   - r     - ordering of the rows of m.
+!       -           size = n.
+! fvra  - u     - nonzero entries in the strict upper triangular portion
+!       -           of the matrix u, stored by rows.
+!       -           size = umax.
+! nv    - umax  - declared dimension of u.  umax must be larger than
+!       -           the number of nonzeros in the strict upper triangle
+!       -           of m plus fillin  (iu(n+1)-1 after nsfc).
+! fra   - z     - solution x.
+!       -           size = n.
+!
+!       ----------------------------------------------------------------
+!
+!*** subroutine nroc
+!*** reorders rows of a, leaving row order unchanged
+!
+!
+!       input parameters.. n, ic, ia, ja, a
+!       output parameters.. ja, a, flag
+!
+!       parameters used internally..
+! nia   - p     - at the kth step, p is a linked list of the reordered
+!       -           column indices of the kth row of a.  p(n+1) points
+!       -           to the first entry in the list.
+!       -           size = n+1.
+! nia   - jar   - at the kth step,jar contains the elements of the
+!       -           reordered column indices of a.
+!       -           size = n.
+! fia   - ar    - at the kth step, ar contains the elements of the
+!       -           reordered row of a.
+!       -           size = n.
+!
       integer  ic(*), ia(*), ja(*), jar(*), p(*), flag
-c     real  a(*), ar(*)
+!     real  a(*), ar(*)
       double precision  a(*), ar(*)
-c
-c  ******  for each nonempty row  *******************************
+!
+!  ******  for each nonempty row  *******************************
       do 5 k=1,n
         jmin = ia(k)
         jmax = ia(k+1) - 1
         if(jmin .gt. jmax) go to 5
         p(n+1) = n + 1
-c  ******  insert each element in the list  *********************
+!  ******  insert each element in the list  *********************
         do 3 j=jmin,jmax
           newj = ic(ja(j))
           i = n + 1
@@ -3200,7 +3111,7 @@ c  ******  insert each element in the list  *********************
           jar(newj) = ja(j)
           ar(newj) = a(j)
    3      continue
-c  ******  replace old row in ja and a  *************************
+!  ******  replace old row in ja and a  *************************
         i = n + 1
         do 4 j=jmin,jmax
           i = p(i)
@@ -3209,72 +3120,72 @@ c  ******  replace old row in ja and a  *************************
    5    continue
       flag = 0
       return
-c
-c ** error.. duplicate entry in a
+!
+! ** error.. duplicate entry in a
  102  flag = n + k
       return
       end
       subroutine nsfc
      *      (n, r, ic, ia,ja, jlmax,il,jl,ijl, jumax,iu,ju,iju,
      *       q, ira,jra, irac, irl,jrl, iru,jru, flag)
-c*** subroutine nsfc
-c*** symbolic ldu-factorization of nonsymmetric sparse matrix
-c      (compressed pointer storage)
-c
-c
-c       input variables.. n, r, ic, ia, ja, jlmax, jumax.
-c       output variables.. il, jl, ijl, iu, ju, iju, flag.
-c
-c       parameters used internally..
-c nia   - q     - suppose  m*  is the result of reordering  m.  if
-c       -           processing of the ith row of  m*  (hence the ith
-c       -           row of  u) is being done,  q(j)  is initially
-c       -           nonzero if  m*(i,j) is nonzero (j.ge.i).  since
-c       -           values need not be stored, each entry points to the
-c       -           next nonzero and  q(n+1)  points to the first.  n+1
-c       -           indicates the end of the list.  for example, if n=9
-c       -           and the 5th row of  m*  is
-c       -              0 x x 0 x 0 0 x 0
-c       -           then  q  will initially be
-c       -              a a a a 8 a a 10 5           (a - arbitrary).
-c       -           as the algorithm proceeds, other elements of  q
-c       -           are inserted in the list because of fillin.
-c       -           q  is used in an analogous manner to compute the
-c       -           ith column of  l.
-c       -           size = n+1.
-c nia   - ira,  - vectors used to find the columns of  m.  at the kth
-c nia   - jra,      step of the factorization,  irac(k)  points to the
-c nia   - irac      head of a linked list in  jra  of row indices i
-c       -           such that i .ge. k and  m(i,k)  is nonzero.  zero
-c       -           indicates the end of the list.  ira(i)  (i.ge.k)
-c       -           points to the smallest j such that j .ge. k and
-c       -           m(i,j)  is nonzero.
-c       -           size of each = n.
-c nia   - irl,  - vectors used to find the rows of  l.  at the kth step
-c nia   - jrl       of the factorization,  jrl(k)  points to the head
-c       -           of a linked list in  jrl  of column indices j
-c       -           such j .lt. k and  l(k,j)  is nonzero.  zero
-c       -           indicates the end of the list.  irl(j)  (j.lt.k)
-c       -           points to the smallest i such that i .ge. k and
-c       -           l(i,j)  is nonzero.
-c       -           size of each = n.
-c nia   - iru,  - vectors used in a manner analogous to  irl and jrl
-c nia   - jru       to find the columns of  u.
-c       -           size of each = n.
-c
-c  internal variables..
-c    jlptr - points to the last position used in  jl.
-c    juptr - points to the last position used in  ju.
-c    jmin,jmax - are the indices in  a or u  of the first and last
-c                elements to be examined in a given row.
-c                for example,  jmin=ia(k), jmax=ia(k+1)-1.
-c
+!*** subroutine nsfc
+!*** symbolic ldu-factorization of nonsymmetric sparse matrix
+!      (compressed pointer storage)
+!
+!
+!       input variables.. n, r, ic, ia, ja, jlmax, jumax.
+!       output variables.. il, jl, ijl, iu, ju, iju, flag.
+!
+!       parameters used internally..
+! nia   - q     - suppose  m*  is the result of reordering  m.  if
+!       -           processing of the ith row of  m*  (hence the ith
+!       -           row of  u) is being done,  q(j)  is initially
+!       -           nonzero if  m*(i,j) is nonzero (j.ge.i).  since
+!       -           values need not be stored, each entry points to the
+!       -           next nonzero and  q(n+1)  points to the first.  n+1
+!       -           indicates the end of the list.  for example, if n=9
+!       -           and the 5th row of  m*  is
+!       -              0 x x 0 x 0 0 x 0
+!       -           then  q  will initially be
+!       -              a a a a 8 a a 10 5           (a - arbitrary).
+!       -           as the algorithm proceeds, other elements of  q
+!       -           are inserted in the list because of fillin.
+!       -           q  is used in an analogous manner to compute the
+!       -           ith column of  l.
+!       -           size = n+1.
+! nia   - ira,  - vectors used to find the columns of  m.  at the kth
+! nia   - jra,      step of the factorization,  irac(k)  points to the
+! nia   - irac      head of a linked list in  jra  of row indices i
+!       -           such that i .ge. k and  m(i,k)  is nonzero.  zero
+!       -           indicates the end of the list.  ira(i)  (i.ge.k)
+!       -           points to the smallest j such that j .ge. k and
+!       -           m(i,j)  is nonzero.
+!       -           size of each = n.
+! nia   - irl,  - vectors used to find the rows of  l.  at the kth step
+! nia   - jrl       of the factorization,  jrl(k)  points to the head
+!       -           of a linked list in  jrl  of column indices j
+!       -           such j .lt. k and  l(k,j)  is nonzero.  zero
+!       -           indicates the end of the list.  irl(j)  (j.lt.k)
+!       -           points to the smallest i such that i .ge. k and
+!       -           l(i,j)  is nonzero.
+!       -           size of each = n.
+! nia   - iru,  - vectors used in a manner analogous to  irl and jrl
+! nia   - jru       to find the columns of  u.
+!       -           size of each = n.
+!
+!  internal variables..
+!    jlptr - points to the last position used in  jl.
+!    juptr - points to the last position used in  ju.
+!    jmin,jmax - are the indices in  a or u  of the first and last
+!                elements to be examined in a given row.
+!                for example,  jmin=ia(k), jmax=ia(k+1)-1.
+!
       integer cend, qm, rend, rk, vj
       integer ia(*), ja(*), ira(*), jra(*), il(*), jl(*), ijl(*)
       integer iu(*), ju(*), iju(*), irl(*), jrl(*), iru(*), jru(*)
       integer r(*), ic(*), q(*), irac(*), flag
-c
-c  ******  initialize pointers  ****************************************
+!
+!  ******  initialize pointers  ****************************************
       np1 = n + 1
       jlmin = 1
       jlptr = 0
@@ -3287,7 +3198,7 @@ c  ******  initialize pointers  ****************************************
         jra(k) = 0
         jrl(k) = 0
    1    jru(k) = 0
-c  ******  initialize column pointers for a  ***************************
+!  ******  initialize column pointers for a  ***************************
       do 2 k=1,n
         rk = r(k)
         iak = ia(rk)
@@ -3297,14 +3208,14 @@ c  ******  initialize column pointers for a  ***************************
         jra(k) = irac(jaiak)
         irac(jaiak) = k
    2    ira(k) = iak
-c
-c  ******  for each column of l and row of u  **************************
+!
+!  ******  for each column of l and row of u  **************************
       do 41 k=1,n
-c
-c  ******  initialize q for computing kth column of l  *****************
+!
+!  ******  initialize q for computing kth column of l  *****************
         q(np1) = np1
         luk = -1
-c  ******  by filling in kth column of a  ******************************
+!  ******  by filling in kth column of a  ******************************
         vj = irac(k)
         if (vj .eq. 0)  go to 5
    3      qm = np1
@@ -3317,7 +3228,7 @@ c  ******  by filling in kth column of a  ******************************
             q(vj) = qm
             vj = jra(vj)
             if (vj .ne. 0)  go to 3
-c  ******  link through jru  *******************************************
+!  ******  link through jru  *******************************************
    5    lastid = 0
         lasti = 0
         ijl(k) = jlptr
@@ -3335,7 +3246,7 @@ c  ******  link through jru  *******************************************
           if (lastid .ge. long)  go to 7
             lasti = i
             lastid = long
-c  ******  and merge the corresponding columns into the kth column  ****
+!  ******  and merge the corresponding columns into the kth column  ****
    7      do 9 j=jmin,jmax
             vj = jl(j)
    8        m = qm
@@ -3348,18 +3259,18 @@ c  ******  and merge the corresponding columns into the kth column  ****
               qm = vj
    9        continue
             go to 6
-c  ******  lasti is the longest column merged into the kth  ************
-c  ******  see if it equals the entire kth column  *********************
+!  ******  lasti is the longest column merged into the kth  ************
+!  ******  see if it equals the entire kth column  *********************
   10    qm = q(np1)
         if (qm .ne. k)  go to 105
         if (luk .eq. 0)  go to 17
         if (lastid .ne. luk)  go to 11
-c  ******  if so, jl can be compressed  ********************************
+!  ******  if so, jl can be compressed  ********************************
         irll = irl(lasti)
         ijl(k) = irll + 1
         if (jl(irll) .ne. k)  ijl(k) = ijl(k) - 1
         go to 17
-c  ******  if not, see if kth column can overlap the previous one  *****
+!  ******  if not, see if kth column can overlap the previous one  *****
   11    if (jlmin .gt. jlptr)  go to 15
         qm = q(qm)
         do 12 j=jlmin,jlptr
@@ -3373,7 +3284,7 @@ c  ******  if not, see if kth column can overlap the previous one  *****
           if (qm .gt. n)  go to 17
   14      continue
         jlptr = j - 1
-c  ******  move column indices from q to jl, update vectors  ***********
+!  ******  move column indices from q to jl, update vectors  ***********
   15    jlmin = jlptr + 1
         ijl(k) = jlmin
         if (luk .eq. 0)  go to 17
@@ -3385,11 +3296,11 @@ c  ******  move column indices from q to jl, update vectors  ***********
   16        jl(j) = qm
   17    irl(k) = ijl(k)
         il(k+1) = il(k) + luk
-c
-c  ******  initialize q for computing kth row of u  ********************
+!
+!  ******  initialize q for computing kth row of u  ********************
         q(np1) = np1
         luk = -1
-c  ******  by filling in kth row of reordered a  ***********************
+!  ******  by filling in kth row of reordered a  ***********************
         rk = r(k)
         jmin = ira(k)
         jmax = ia(rk+1) - 1
@@ -3405,7 +3316,7 @@ c  ******  by filling in kth row of reordered a  ***********************
             q(m) = vj
             q(vj) = qm
   19      continue
-c  ******  link through jrl,  ******************************************
+!  ******  link through jrl,  ******************************************
   20    lastid = 0
         lasti = 0
         iju(k) = juptr
@@ -3421,7 +3332,7 @@ c  ******  link through jrl,  ******************************************
           if (long .lt. 0)  go to 21
           jtmp = ju(jmin)
           if (jtmp .eq. k)  go to 22
-c  ******  update irl and jrl, *****************************************
+!  ******  update irl and jrl, *****************************************
             long = long + 1
             cend = ijl(i) + il(i+1) - il(i)
             irl(i) = irl(i) + 1
@@ -3432,7 +3343,7 @@ c  ******  update irl and jrl, *****************************************
   22      if (lastid .ge. long)  go to 23
             lasti = i
             lastid = long
-c  ******  and merge the corresponding rows into the kth row  **********
+!  ******  and merge the corresponding rows into the kth row  **********
   23      do 25 j=jmin,jmax
             vj = ju(j)
   24        m = qm
@@ -3445,23 +3356,23 @@ c  ******  and merge the corresponding rows into the kth row  **********
               qm = vj
   25        continue
           go to 21
-c  ******  update jrl(k) and irl(k)  ***********************************
+!  ******  update jrl(k) and irl(k)  ***********************************
   26    if (il(k+1) .le. il(k))  go to 27
           j = jl(irl(k))
           jrl(k) = jrl(j)
           jrl(j) = k
-c  ******  lasti is the longest row merged into the kth  ***************
-c  ******  see if it equals the entire kth row  ************************
+!  ******  lasti is the longest row merged into the kth  ***************
+!  ******  see if it equals the entire kth row  ************************
   27    qm = q(np1)
         if (qm .ne. k)  go to 105
         if (luk .eq. 0)  go to 34
         if (lastid .ne. luk)  go to 28
-c  ******  if so, ju can be compressed  ********************************
+!  ******  if so, ju can be compressed  ********************************
         irul = iru(lasti)
         iju(k) = irul + 1
         if (ju(irul) .ne. k)  iju(k) = iju(k) - 1
         go to 34
-c  ******  if not, see if kth row can overlap the previous one  ********
+!  ******  if not, see if kth row can overlap the previous one  ********
   28    if (jumin .gt. juptr)  go to 32
         qm = q(qm)
         do 29 j=jumin,juptr
@@ -3475,7 +3386,7 @@ c  ******  if not, see if kth row can overlap the previous one  ********
           if (qm .gt. n)  go to 34
   31      continue
         juptr = j - 1
-c  ******  move row indices from q to ju, update vectors  **************
+!  ******  move row indices from q to ju, update vectors  **************
   32    jumin = juptr + 1
         iju(k) = jumin
         if (luk .eq. 0)  go to 34
@@ -3487,8 +3398,8 @@ c  ******  move row indices from q to ju, update vectors  **************
   33        ju(j) = qm
   34    iru(k) = iju(k)
         iu(k+1) = iu(k) + luk
-c
-c  ******  update iru, jru  ********************************************
+!
+!  ******  update iru, jru  ********************************************
         i = k
   35      i1 = jru(i)
           if (r(i) .lt. 0)  go to 36
@@ -3503,8 +3414,8 @@ c  ******  update iru, jru  ********************************************
           if (i .eq. 0)  go to 38
           iru(i) = iru(i) + 1
           go to 35
-c
-c  ******  update ira, jra, irac  **************************************
+!
+!  ******  update ira, jra, irac  **************************************
   38    i = irac(k)
         if (i .eq. 0)  go to 41
   39      i1 = jra(i)
@@ -3518,25 +3429,25 @@ c  ******  update ira, jra, irac  **************************************
   40      i = i1
           if (i .ne. 0)  go to 39
   41    continue
-c
+!
       ijl(n) = jlptr
       iju(n) = juptr
       flag = 0
       return
-c
-c ** error.. null row in a
+!
+! ** error.. null row in a
  101  flag = n + rk
       return
-c ** error.. duplicate entry in a
+! ** error.. duplicate entry in a
  102  flag = 2*n + rk
       return
-c ** error.. insufficient storage for jl
+! ** error.. insufficient storage for jl
  103  flag = 3*n + k
       return
-c ** error.. null pivot
+! ** error.. null pivot
  105  flag = 5*n + k
       return
-c ** error.. insufficient storage for ju
+! ** error.. insufficient storage for ju
  106  flag = 6*n + k
       return
       end
@@ -3544,55 +3455,55 @@ c ** error.. insufficient storage for ju
      *     (n, r,c,ic, ia,ja,a, z, b,
      *      lmax,il,jl,ijl,l, d, umax,iu,ju,iju,u,
      *      row, tmp, irl,jrl, flag)
-c*** subroutine nnfc
-c*** numerical ldu-factorization of sparse nonsymmetric matrix and
-c      solution of system of linear equations (compressed pointer
-c      storage)
-c
-c
-c       input variables..  n, r, c, ic, ia, ja, a, b,
-c                          il, jl, ijl, lmax, iu, ju, iju, umax
-c       output variables.. z, l, d, u, flag
-c
-c       parameters used internally..
-c nia   - irl,  - vectors used to find the rows of  l.  at the kth step
-c nia   - jrl       of the factorization,  jrl(k)  points to the head
-c       -           of a linked list in  jrl  of column indices j
-c       -           such j .lt. k and  l(k,j)  is nonzero.  zero
-c       -           indicates the end of the list.  irl(j)  (j.lt.k)
-c       -           points to the smallest i such that i .ge. k and
-c       -           l(i,j)  is nonzero.
-c       -           size of each = n.
-c fia   - row   - holds intermediate values in calculation of  u and l.
-c       -           size = n.
-c fia   - tmp   - holds new right-hand side  b*  for solution of the
-c       -           equation ux = b*.
-c       -           size = n.
-c
-c  internal variables..
-c    jmin, jmax - indices of the first and last positions in a row to
-c      be examined.
-c    sum - used in calculating  tmp.
-c
+!*** subroutine nnfc
+!*** numerical ldu-factorization of sparse nonsymmetric matrix and
+!      solution of system of linear equations (compressed pointer
+!      storage)
+!
+!
+!       input variables..  n, r, c, ic, ia, ja, a, b,
+!                          il, jl, ijl, lmax, iu, ju, iju, umax
+!       output variables.. z, l, d, u, flag
+!
+!       parameters used internally..
+! nia   - irl,  - vectors used to find the rows of  l.  at the kth step
+! nia   - jrl       of the factorization,  jrl(k)  points to the head
+!       -           of a linked list in  jrl  of column indices j
+!       -           such j .lt. k and  l(k,j)  is nonzero.  zero
+!       -           indicates the end of the list.  irl(j)  (j.lt.k)
+!       -           points to the smallest i such that i .ge. k and
+!       -           l(i,j)  is nonzero.
+!       -           size of each = n.
+! fia   - row   - holds intermediate values in calculation of  u and l.
+!       -           size = n.
+! fia   - tmp   - holds new right-hand side  b*  for solution of the
+!       -           equation ux = b*.
+!       -           size = n.
+!
+!  internal variables..
+!    jmin, jmax - indices of the first and last positions in a row to
+!      be examined.
+!    sum - used in calculating  tmp.
+!
       integer rk,umax
       integer  r(*), c(*), ic(*), ia(*), ja(*), il(*), jl(*), ijl(*)
       integer  iu(*), ju(*), iju(*), irl(*), jrl(*), flag
-c     real  a(*), l(*), d(*), u(*), z(*), b(*), row(*)
-c     real tmp(*), lki, sum, dk
+!     real  a(*), l(*), d(*), u(*), z(*), b(*), row(*)
+!     real tmp(*), lki, sum, dk
       double precision  a(*), l(*), d(*), u(*), z(*), b(*), row(*)
       double precision  tmp(*), lki, sum, dk
-c
-c  ******  initialize pointers and test storage  ***********************
+!
+!  ******  initialize pointers and test storage  ***********************
       if(il(n+1)-1 .gt. lmax) go to 104
       if(iu(n+1)-1 .gt. umax) go to 107
       do 1 k=1,n
         irl(k) = il(k)
         jrl(k) = 0
    1    continue
-c
-c  ******  for each row  ***********************************************
+!
+!  ******  for each row  ***********************************************
       do 19 k=1,n
-c  ******  reverse jrl and zero row where kth row of l will fill in  ***
+!  ******  reverse jrl and zero row where kth row of l will fill in  ***
         row(k) = 0
         i1 = 0
         if (jrl(k) .eq. 0) go to 3
@@ -3603,26 +3514,26 @@ c  ******  reverse jrl and zero row where kth row of l will fill in  ***
         row(i) = 0
         i = i2
         if (i .ne. 0) go to 2
-c  ******  set row to zero where u will fill in  ***********************
+!  ******  set row to zero where u will fill in  ***********************
    3    jmin = iju(k)
         jmax = jmin + iu(k+1) - iu(k) - 1
         if (jmin .gt. jmax) go to 5
         do 4 j=jmin,jmax
    4      row(ju(j)) = 0
-c  ******  place kth row of a in row  **********************************
+!  ******  place kth row of a in row  **********************************
    5    rk = r(k)
         jmin = ia(rk)
         jmax = ia(rk+1) - 1
         do 6 j=jmin,jmax
           row(ic(ja(j))) = a(j)
    6      continue
-c  ******  initialize sum, and link through jrl  ***********************
+!  ******  initialize sum, and link through jrl  ***********************
         sum = b(rk)
         i = i1
         if (i .eq. 0) go to 10
-c  ******  assign the kth row of l and adjust row, sum  ****************
+!  ******  assign the kth row of l and adjust row, sum  ****************
    7      lki = -row(i)
-c  ******  if l is not required, then comment out the following line  **
+!  ******  if l is not required, then comment out the following line  **
           l(irl(i)) = -lki
           sum = sum + lki * tmp(i)
           jmin = iu(i)
@@ -3633,8 +3544,8 @@ c  ******  if l is not required, then comment out the following line  **
    8        row(ju(mu+j)) = row(ju(mu+j)) + lki * u(j)
    9      i = jrl(i)
           if (i .ne. 0) go to 7
-c
-c  ******  assign kth row of u and diagonal d, set tmp(k)  *************
+!
+!  ******  assign kth row of u and diagonal d, set tmp(k)  *************
   10    if (row(k) .eq. 0.0d0) go to 108
         dk = 1.0d0 / row(k)
         d(k) = dk
@@ -3647,8 +3558,8 @@ c  ******  assign kth row of u and diagonal d, set tmp(k)  *************
         do 11 j=jmin,jmax
   11      u(j) = row(ju(mu+j)) * dk
   12    continue
-c
-c  ******  update irl and jrl, keeping jrl in decreasing order  ********
+!
+!  ******  update irl and jrl, keeping jrl in decreasing order  ********
         i = i1
         if (i .eq. 0) go to 18
   14    irl(i) = irl(i) + 1
@@ -3668,8 +3579,8 @@ c  ******  update irl and jrl, keeping jrl in decreasing order  ********
         jrl(k) = jrl(j)
         jrl(j) = k
   19    continue
-c
-c  ******  solve  ux = tmp  by back substitution  **********************
+!
+!  ******  solve  ux = tmp  by back substitution  **********************
       k = n
       do 22 i=1,n
         sum =  tmp(k)
@@ -3684,43 +3595,43 @@ c  ******  solve  ux = tmp  by back substitution  **********************
   22    k = k-1
       flag = 0
       return
-c
-c ** error.. insufficient storage for l
+!
+! ** error.. insufficient storage for l
  104  flag = 4*n + 1
       return
-c ** error.. insufficient storage for u
+! ** error.. insufficient storage for u
  107  flag = 7*n + 1
       return
-c ** error.. zero pivot
+! ** error.. zero pivot
  108  flag = 8*n + k
       return
       end
       subroutine nnsc
      *     (n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
-c*** subroutine nnsc
-c*** numerical solution of sparse nonsymmetric system of linear
-c      equations given ldu-factorization (compressed pointer storage)
-c
-c
-c       input variables..  n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, b
-c       output variables.. z
-c
-c       parameters used internally..
-c fia   - tmp   - temporary vector which gets result of solving  ly = b.
-c       -           size = n.
-c
-c  internal variables..
-c    jmin, jmax - indices of the first and last positions in a row of
-c      u or l  to be used.
-c
+!*** subroutine nnsc
+!*** numerical solution of sparse nonsymmetric system of linear
+!      equations given ldu-factorization (compressed pointer storage)
+!
+!
+!       input variables..  n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, b
+!       output variables.. z
+!
+!       parameters used internally..
+! fia   - tmp   - temporary vector which gets result of solving  ly = b.
+!       -           size = n.
+!
+!  internal variables..
+!    jmin, jmax - indices of the first and last positions in a row of
+!      u or l  to be used.
+!
       integer r(*), c(*), il(*), jl(*), ijl(*), iu(*), ju(*), iju(*)
-c     real l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk, sum
+!     real l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk, sum
       double precision  l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
-c
-c  ******  set tmp to reordered b  *************************************
+!
+!  ******  set tmp to reordered b  *************************************
       do 1 k=1,n
    1    tmp(k) = b(r(k))
-c  ******  solve  ly = b  by forward substitution  *********************
+!  ******  solve  ly = b  by forward substitution  *********************
       do 3 k=1,n
         jmin = il(k)
         jmax = il(k+1) - 1
@@ -3731,7 +3642,7 @@ c  ******  solve  ly = b  by forward substitution  *********************
         do 2 j=jmin,jmax
    2      tmp(jl(ml+j)) = tmp(jl(ml+j)) + tmpk * l(j)
    3    continue
-c  ******  solve  ux = y  by back substitution  ************************
+!  ******  solve  ux = y  by back substitution  ************************
       k = n
       do 6 i=1,n
         sum = -tmp(k)
@@ -3749,31 +3660,31 @@ c  ******  solve  ux = y  by back substitution  ************************
       end
       subroutine nntc
      *     (n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
-c*** subroutine nntc
-c*** numeric solution of the transpose of a sparse nonsymmetric system
-c      of linear equations given lu-factorization (compressed pointer
-c      storage)
-c
-c
-c       input variables..  n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, b
-c       output variables.. z
-c
-c       parameters used internally..
-c fia   - tmp   - temporary vector which gets result of solving ut y = b
-c       -           size = n.
-c
-c  internal variables..
-c    jmin, jmax - indices of the first and last positions in a row of
-c      u or l  to be used.
-c
+!*** subroutine nntc
+!*** numeric solution of the transpose of a sparse nonsymmetric system
+!      of linear equations given lu-factorization (compressed pointer
+!      storage)
+!
+!
+!       input variables..  n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, b
+!       output variables.. z
+!
+!       parameters used internally..
+! fia   - tmp   - temporary vector which gets result of solving ut y = b
+!       -           size = n.
+!
+!  internal variables..
+!    jmin, jmax - indices of the first and last positions in a row of
+!      u or l  to be used.
+!
       integer r(*), c(*), il(*), jl(*), ijl(*), iu(*), ju(*), iju(*)
-c     real l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
+!     real l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
       double precision l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
-c
-c  ******  set tmp to reordered b  *************************************
+!
+!  ******  set tmp to reordered b  *************************************
       do 1 k=1,n
    1    tmp(k) = b(c(k))
-c  ******  solve  ut y = b  by forward substitution  *******************
+!  ******  solve  ut y = b  by forward substitution  *******************
       do 3 k=1,n
         jmin = iu(k)
         jmax = iu(k+1) - 1
@@ -3783,7 +3694,7 @@ c  ******  solve  ut y = b  by forward substitution  *******************
         do 2 j=jmin,jmax
    2      tmp(ju(mu+j)) = tmp(ju(mu+j)) + tmpk * u(j)
    3    continue
-c  ******  solve  lt x = y  by back substitution  **********************
+!  ******  solve  lt x = y  by back substitution  **********************
       k = n
       do 6 i=1,n
         sum = -tmp(k)
@@ -3799,42 +3710,27 @@ c  ******  solve  lt x = y  by back substitution  **********************
    6    continue
       return
       end
-*DECK DSTODA
-      SUBROUTINE DSTODA (NEQ, Y, YH, NYH, YH1, EWT, SAVF, ACOR,
-     1   WM, IWM, F, JAC, PJAC, SLVS)
+!*DECK DSTODA
+      SUBROUTINE DSTODA (NEQ, Y, YH, NYH, YH1, EWT, SAVF, ACOR, WM, IWM, F, JAC, PJAC, SLVS)
       EXTERNAL F, JAC, PJAC, SLVS
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, ACOR, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),
-     1   ACOR(*), WM(*), IWM(*)
-      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*), ACOR(*), WM(*), IWM(*)
+      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM
+      INTEGER LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER IOWND2, ICOUNT, IRFLAG, JTYP, MUSED, MXORDN, MXORDS
-      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO,
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      DOUBLE PRECISION ROWND2, CM1, CM2, PDEST, PDLAST, RATIO,
-     1   PDNORM
-      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12),
-     1   HOLD, RMAX, TESCO(3,12),
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     3   IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     4   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     5   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     6   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSA01/ ROWND2, CM1(12), CM2(5), PDEST, PDLAST, RATIO,
-     1   PDNORM,
-     2   IOWND2(3), ICOUNT, IRFLAG, JTYP, MUSED, MXORDN, MXORDS
+      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ROWND2, CM1, CM2, PDEST, PDLAST, RATIO, PDNORM
+      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12), HOLD, RMAX, TESCO(3,12), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, &
+      IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, &
+      LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSA01/ ROWND2, CM1(12), CM2(5), PDEST, PDLAST, RATIO, PDNORM, IOWND2(3), ICOUNT, IRFLAG, JTYP, MUSED, MXORDN, MXORDS
       INTEGER I, I1, IREDO, IRET, J, JB, M, NCF, NEWQ
       INTEGER LM1, LM1P1, LM2, LM2P1, NQM1, NQM2
-      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP,
-     1   R, RH, RHDN, RHSM, RHUP, TOLD, DMNORM
-      DOUBLE PRECISION ALPHA, DM1,DM2, EXM1,EXM2,
-     1   PDH, PNORM, RATE, RH1, RH1IT, RH2, RM, SM1(12)
+      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP, R, RH, RHDN, RHSM, RHUP, TOLD, DMNORM
+      DOUBLE PRECISION ALPHA, DM1,DM2, EXM1,EXM2, PDH, PNORM, RATE, RH1, RH1IT, RH2, RM, SM1(12)
       SAVE SM1
-      DATA SM1/0.5D0, 0.575D0, 0.55D0, 0.45D0, 0.35D0, 0.25D0,
-     1   0.20D0, 0.15D0, 0.10D0, 0.075D0, 0.050D0, 0.025D0/
+      DATA SM1/0.5D0, 0.575D0, 0.55D0, 0.45D0, 0.35D0, 0.25D0, 0.20D0, 0.15D0, 0.10D0, 0.075D0, 0.050D0, 0.025D0/
 !-----------------------------------------------------------------------
 ! DSTODA performs one step of the integration of an initial value
 ! problem for a system of ordinary differential equations.
@@ -4213,8 +4109,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! The step size advantage must be at least RATIO = 5 to switch.
 !-----------------------------------------------------------------------
       IF (NQ .GT. 5) GO TO 488
-      IF (DSM .GT. 100.0D0*PNORM*UROUND .AND. PDEST .NE. 0.0D0)
-     1   GO TO 470
+      IF (DSM .GT. 100.0D0*PNORM*UROUND .AND. PDEST .NE. 0.0D0) GO TO 470
       IF (IRFLAG .EQ. 0) GO TO 488
       RH2 = 2.0D0
       NQM2 = MIN(NQ,MXORDS)
@@ -4432,34 +4327,22 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSTODA ----------------------
       END
-*DECK DPRJA
-      SUBROUTINE DPRJA (NEQ, Y, YH, NYH, EWT, FTEM, SAVF, WM, IWM,
-     1   F, JAC)
+!*DECK DPRJA
+      SUBROUTINE DPRJA (NEQ, Y, YH, NYH, EWT, FTEM, SAVF, WM, IWM,F, JAC)
       EXTERNAL F, JAC
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, EWT, FTEM, SAVF, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*),
-     1   WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*),WM(*), IWM(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER IOWND2, IOWNS2, JTYP, MUSED, MXORDN, MXORDS
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION ROWND2, ROWNS2, PDNORM
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSA01/ ROWND2, ROWNS2(20), PDNORM,
-     1   IOWND2(3), IOWNS2(2), JTYP, MUSED, MXORDN, MXORDS
-      INTEGER I, I1, I2, IER, II, J, J1, JJ, LENP,
-     1   MBA, MBAND, MEB1, MEBAND, ML, ML3, MU, NP1
-      DOUBLE PRECISION CON, FAC, HL0, R, R0, SRUR, YI, YJ, YJJ,
-     1   DMNORM, DFNORM, DBNORM
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSA01/ ROWND2, ROWNS2(20), PDNORM, IOWND2(3), IOWNS2(2), JTYP, MUSED, MXORDN, MXORDS
+      INTEGER I, I1, I2, IER, II, J, J1, JJ, LENP, MBA, MBAND, MEB1, MEBAND, ML, ML3, MU, NP1
+      DOUBLE PRECISION CON, FAC, HL0, R, R0, SRUR, YI, YJ, YJJ, DMNORM, DFNORM, DBNORM
 !-----------------------------------------------------------------------
 ! DPRJA is called by DSTODA to compute and process the matrix
 ! P = I - H*EL(1)*J , where J is an approximation to the Jacobian.
@@ -4599,7 +4482,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DPRJA -----------------------
       END
-*DECK DMNORM
+!*DECK DMNORM
       DOUBLE PRECISION FUNCTION DMNORM (N, V, W)
 !-----------------------------------------------------------------------
 ! This function routine computes the weighted max-norm
@@ -4617,7 +4500,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Function DMNORM ------------------------
       END
-*DECK DFNORM
+!*DECK DFNORM
       DOUBLE PRECISION FUNCTION DFNORM (N, A, W)
 !-----------------------------------------------------------------------
 ! This function computes the norm of a full N by N matrix,
@@ -4639,7 +4522,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Function DFNORM ------------------------
       END
-*DECK DBNORM
+!*DECK DBNORM
       DOUBLE PRECISION FUNCTION DBNORM (N, A, NRA, ML, MU, W)
 !-----------------------------------------------------------------------
 ! This function computes the norm of a banded N by N matrix,
@@ -4669,7 +4552,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Function DBNORM ------------------------
       END
-*DECK DSRCMA
+!*DECK DSRCMA
       SUBROUTINE DSRCMA (RSAV, ISAV, JOB)
 !-----------------------------------------------------------------------
 ! This routine saves or restores (depending on JOB) the contents of
@@ -4721,28 +4604,20 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSRCMA ----------------------
       END
-*DECK DRCHEK
+!*DECK DRCHEK
       SUBROUTINE DRCHEK (JOB, G, NEQ, Y, YH,NYH, G0, G1, GX, JROOT, IRT)
       EXTERNAL G
       INTEGER JOB, NEQ, NYH, JROOT, IRT
       DOUBLE PRECISION Y, YH, G0, G1, GX
       DIMENSION NEQ(*), Y(*), YH(NYH,*), G0(*), G1(*), GX(*), JROOT(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER IOWND3, IOWNR3, IRFND, ITASKC, NGC, NGE
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION ROWNR3, T0, TLAST, TOUTC
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSR01/ ROWNR3(2), T0, TLAST, TOUTC,
-     1   IOWND3(3), IOWNR3(2), IRFND, ITASKC, NGC, NGE
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSR01/ ROWNR3(2), T0, TLAST, TOUTC, IOWND3(3), IOWNR3(2), IRFND, ITASKC, NGC, NGE
       INTEGER I, IFLAG, JFLAG
       DOUBLE PRECISION HMING, T1, TEMP1, TEMP2, X
       LOGICAL ZROOT
@@ -4885,15 +4760,14 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DRCHEK ----------------------
       END
-*DECK DROOTS
+!*DECK DROOTS
       SUBROUTINE DROOTS (NG, HMIN, JFLAG, X0, X1, G0, G1, GX, X, JROOT)
       INTEGER NG, JFLAG, JROOT
       DOUBLE PRECISION HMIN, X0, X1, G0, G1, GX, X
       DIMENSION G0(NG), G1(NG), GX(NG), JROOT(NG)
       INTEGER IOWND3, IMAX, LAST, IDUM3
       DOUBLE PRECISION ALPHA, X2, RDUM3
-      COMMON /DLSR01/ ALPHA, X2, RDUM3(3),
-     1   IOWND3(3), IMAX, LAST, IDUM3(4)
+      COMMON /DLSR01/ ALPHA, X2, RDUM3(3), IOWND3(3), IMAX, LAST, IDUM3(4)
 !-----------------------------------------------------------------------
 ! This subroutine finds the leftmost root of a set of arbitrary
 ! functions gi(x) (i = 1,...,NG) in an interval (X0,X1).  Only roots
@@ -5105,7 +4979,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DROOTS ----------------------
       END
-*DECK DSRCAR
+!*DECK DSRCAR
       SUBROUTINE DSRCAR (RSAV, ISAV, JOB)
 !-----------------------------------------------------------------------
 ! This routine saves or restores (depending on JOB) the contents of
@@ -5171,33 +5045,21 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSRCAR ----------------------
       END
-*DECK DSTODPK
-      SUBROUTINE DSTODPK (NEQ, Y, YH, NYH, YH1, EWT, SAVF, SAVX, ACOR,
-     1   WM, IWM, F, JAC, PSOL)
+!*DECK DSTODPK
+      SUBROUTINE DSTODPK (NEQ, Y, YH, NYH, YH1, EWT, SAVF, SAVX, ACOR, WM, IWM, F, JAC, PSOL)
       EXTERNAL F, JAC, PSOL
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, SAVX, ACOR, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),
-     1   SAVX(*), ACOR(*), WM(*), IWM(*)
-      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO,
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*), SAVX(*), ACOR(*), WM(*), IWM(*)
+      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM
+      INTEGER LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12),
-     1   HOLD, RMAX, TESCO(3,12),
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     3   IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12), HOLD, RMAX, TESCO(3,12), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, &
+      IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, &
+      LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !-----------------------------------------------------------------------
 ! DSTODPK performs one step of the integration of an initial value
 ! problem for a system of Ordinary Differential Equations.
@@ -5285,8 +5147,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! N      = the number of first-order differential equations.
 !-----------------------------------------------------------------------
       INTEGER I, I1, IREDO, IRET, J, JB, M, NCF, NEWQ
-      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP,
-     1   R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
+      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP, R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
 !
       KFLAG = 0
       TOLD = TN
@@ -5678,31 +5539,20 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSTODPK ---------------------
       END
-*DECK DPKSET
+!*DECK DPKSET
       SUBROUTINE DPKSET (NEQ, Y, YSV, EWT, FTEM, SAVF, WM, IWM, F, JAC)
       EXTERNAL F, JAC
       INTEGER NEQ, IWM
       DOUBLE PRECISION Y, YSV, EWT, FTEM, SAVF, WM
-      DIMENSION NEQ(*), Y(*), YSV(*), EWT(*), FTEM(*), SAVF(*),
-     1   WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), YSV(*), EWT(*), FTEM(*), SAVF(*), WM(*), IWM(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !-----------------------------------------------------------------------
 ! DPKSET is called by DSTODPK to interface with the user-supplied
 ! routine JAC, to compute and process relevant parts of
@@ -5731,38 +5581,27 @@ c  ******  solve  lt x = y  by back substitution  **********************
       IERPJ = 0
       JCUR = 1
       HL0 = EL0*H
-      CALL JAC (F, NEQ, TN, Y, YSV, EWT, SAVF, FTEM, HL0,
-     1   WM(LOCWP), IWM(LOCIWP), IER)
+      CALL JAC (F, NEQ, TN, Y, YSV, EWT, SAVF, FTEM, HL0, WM(LOCWP), IWM(LOCIWP), IER)
       NJE = NJE + 1
       IF (IER .EQ. 0) RETURN
       IERPJ = 1
       RETURN
 !----------------------- End of Subroutine DPKSET ----------------------
       END
-*DECK DSOLPK
+!*DECK DSOLPK
       SUBROUTINE DSOLPK (NEQ, Y, SAVF, X, EWT, WM, IWM, F, PSOL)
       EXTERNAL F, PSOL
       INTEGER NEQ, IWM
       DOUBLE PRECISION Y, SAVF, X, EWT, WM
       DIMENSION NEQ(*), Y(*), SAVF(*), X(*), EWT(*), WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, 
+      MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !-----------------------------------------------------------------------
 ! This routine interfaces to one of DSPIOM, DSPIGMR, DPCG, DPCGS, or
 ! DUSOL, for the solution of the linear system arising from a Newton
@@ -5788,8 +5627,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! DELT, EPCON, SQRTN, RSQRTN, MAXL, KMP, MNEWT, NNI, NLI, NPS, NCFL,
 ! LOCWP, LOCIWP.
 !-----------------------------------------------------------------------
-      INTEGER IFLAG, LB, LDL, LHES, LIOM, LGMR, LPCG, LP, LQ, LR,
-     1   LV, LW, LWK, LZ, MAXLP1, NPSL
+      INTEGER IFLAG, LB, LDL, LHES, LIOM, LGMR, LPCG, LP, LQ, LR, LV, LW, LWK, LZ, MAXLP1, NPSL
       DOUBLE PRECISION DELTA, HL0
 !
       IERSL = 0
@@ -5806,9 +5644,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
       LWK = LHES + MAXL*MAXL
       CALL DCOPY (N, X, 1, WM(LB), 1)
       CALL DSCAL (N, RSQRTN, EWT, 1)
-      CALL DSPIOM (NEQ, TN, Y, SAVF, WM(LB), EWT, N, MAXL, KMP, DELTA,
-     1   HL0, JPRE, MNEWT, F, PSOL, NPSL, X, WM(LV), WM(LHES), IWM,
-     2   LIOM, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
+      CALL DSPIOM (NEQ, TN, Y, SAVF, WM(LB), EWT, N, MAXL, KMP, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, WM(LV), WM(LHES), IWM,&
+      LIOM, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
       NNI = NNI + 1
       NLI = NLI + LIOM
       NPS = NPS + NPSL
@@ -5830,9 +5667,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
       LDL = LWK + MIN(1,MAXL-KMP)*N
       CALL DCOPY (N, X, 1, WM(LB), 1)
       CALL DSCAL (N, RSQRTN, EWT, 1)
-      CALL DSPIGMR (NEQ, TN, Y, SAVF, WM(LB), EWT, N, MAXL, MAXLP1, KMP,
-     1   DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, WM(LV), WM(LHES),
-     2   WM(LQ), LGMR, WM(LOCWP), IWM(LOCIWP), WM(LWK), WM(LDL), IFLAG)
+      CALL DSPIGMR (NEQ, TN, Y, SAVF, WM(LB), EWT, N, MAXL, MAXLP1, KMP, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, WM(LV), &
+      WM(LHES), WM(LQ), LGMR, WM(LOCWP), IWM(LOCIWP), WM(LWK), WM(LDL), IFLAG)
       NNI = NNI + 1
       NLI = NLI + LGMR
       NPS = NPS + NPSL
@@ -5851,9 +5687,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
       LZ = LW + N
       LWK = LZ + N
       CALL DCOPY (N, X, 1, WM(LR), 1)
-      CALL DPCG (NEQ, TN, Y, SAVF, WM(LR), EWT, N, MAXL, DELTA, HL0,
-     1          JPRE, MNEWT, F, PSOL, NPSL, X, WM(LP), WM(LW), WM(LZ),
-     2          LPCG, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
+      CALL DPCG (NEQ, TN, Y, SAVF, WM(LR), EWT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, WM(LP), WM(LW), WM(LZ), LPCG,&
+      WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
       NNI = NNI + 1
       NLI = NLI + LPCG
       NPS = NPS + NPSL
@@ -5871,9 +5706,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
       LZ = LW + N
       LWK = LZ + N
       CALL DCOPY (N, X, 1, WM(LR), 1)
-      CALL DPCGS (NEQ, TN, Y, SAVF, WM(LR), EWT, N, MAXL, DELTA, HL0,
-     1           JPRE, MNEWT, F, PSOL, NPSL, X, WM(LP), WM(LW), WM(LZ),
-     2           LPCG, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
+      CALL DPCGS (NEQ, TN, Y, SAVF, WM(LR), EWT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, WM(LP), WM(LW), WM(LZ), &
+      LPCG, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
       NNI = NNI + 1
       NLI = NLI + LPCG
       NPS = NPS + NPSL
@@ -5889,8 +5723,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       LB = 1
       LWK = LB + N
       CALL DCOPY (N, X, 1, WM(LB), 1)
-      CALL DUSOL (NEQ, TN, Y, SAVF, WM(LB), EWT, N, DELTA, HL0, MNEWT,
-     1   PSOL, NPSL, X, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
+      CALL DUSOL (NEQ, TN, Y, SAVF, WM(LB), EWT, N, DELTA, HL0, MNEWT, PSOL, NPSL, X, WM(LOCWP), IWM(LOCIWP), WM(LWK), IFLAG)
       NNI = NNI + 1
       NPS = NPS + NPSL
       IF (IFLAG .NE. 0) NCFL = NCFL + 1
@@ -5899,15 +5732,13 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSOLPK ----------------------
       END
-*DECK DSPIOM
-      SUBROUTINE DSPIOM (NEQ, TN, Y, SAVF, B, WGHT, N, MAXL, KMP, DELTA,
-     1            HL0, JPRE, MNEWT, F, PSOL, NPSL, X, V, HES, IPVT,
-     2            LIOM, WP, IWP, WK, IFLAG)
+!*DECK DSPIOM
+      SUBROUTINE DSPIOM (NEQ, TN, Y, SAVF, B, WGHT, N, MAXL, KMP, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, V, HES, IPVT, LIOM, &
+      WP, IWP, WK, IFLAG)
       EXTERNAL F, PSOL
       INTEGER NEQ,N,MAXL,KMP,JPRE,MNEWT,NPSL,IPVT,LIOM,IWP,IFLAG
       DOUBLE PRECISION TN,Y,SAVF,B,WGHT,DELTA,HL0,X,V,HES,WP,WK
-      DIMENSION NEQ(*), Y(*), SAVF(*), B(*), WGHT(*), X(*), V(N,*),
-     1   HES(MAXL,MAXL), IPVT(*), WP(*), IWP(*), WK(*)
+      DIMENSION NEQ(*), Y(*), SAVF(*), B(*), WGHT(*), X(*), V(N,*), HES(MAXL,MAXL), IPVT(*), WP(*), IWP(*), WK(*)
 !-----------------------------------------------------------------------
 ! This routine solves the linear system A * x = b using a scaled
 ! preconditioned version of the Incomplete Orthogonalization Method.
@@ -6040,8 +5871,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! Call routine DORTHOG to orthogonalize the new vector vnew = V(*,l+1).
 ! Call routine DHEFA to update the factors of HES.
 !-----------------------------------------------------------------------
-        CALL DATV (NEQ, Y, SAVF, V(1,LL), WGHT, X, F, PSOL, V(1,LL+1),
-     1        WK, WP, IWP, HL0, JPRE, IER, NPSL)
+        CALL DATV (NEQ, Y, SAVF, V(1,LL), WGHT, X, F, PSOL, V(1,LL+1), WK, WP, IWP, HL0, JPRE, IER, NPSL)
         IF (IER .NE. 0) GO TO 300
         CALL DORTHOG (V(1,LL+1), V, HES, N, LL, MAXL, KMP, SNORMW)
         CALL DHEFA (HES, MAXL, LL, IPVT, INFO, LL)
@@ -6115,26 +5945,17 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSPIOM ----------------------
       END
-*DECK DATV
-      SUBROUTINE DATV (NEQ, Y, SAVF, V, WGHT, FTEM, F, PSOL, Z, VTEM,
-     1                WP, IWP, HL0, JPRE, IER, NPSL)
+!*DECK DATV
+      SUBROUTINE DATV (NEQ, Y, SAVF, V, WGHT, FTEM, F, PSOL, Z, VTEM, WP, IWP, HL0, JPRE, IER, NPSL)
       EXTERNAL F, PSOL
       INTEGER NEQ, IWP, JPRE, IER, NPSL
       DOUBLE PRECISION Y, SAVF, V, WGHT, FTEM, Z, VTEM, WP, HL0
-      DIMENSION NEQ(*), Y(*), SAVF(*), V(*), WGHT(*), FTEM(*), Z(*),
-     1   VTEM(*), WP(*), IWP(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DIMENSION NEQ(*), Y(*), SAVF(*), V(*), WGHT(*), FTEM(*), Z(*), VTEM(*), WP(*), IWP(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 !-----------------------------------------------------------------------
 ! This routine computes the product
 !
@@ -6239,7 +6060,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DATV ------------------------
       END
-*DECK DORTHOG
+!*DECK DORTHOG
       SUBROUTINE DORTHOG (VNEW, V, HES, N, LL, LDHES, KMP, SNORMW)
       INTEGER N, LL, LDHES, KMP
       DOUBLE PRECISION VNEW, V, HES, SNORMW
@@ -6324,15 +6145,13 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DORTHOG ---------------------
       END
-*DECK DSPIGMR
-      SUBROUTINE DSPIGMR (NEQ, TN, Y, SAVF, B, WGHT, N, MAXL, MAXLP1,
-     1  KMP, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, V, HES, Q,
-     2  LGMR, WP, IWP, WK, DL, IFLAG)
+!*DECK DSPIGMR
+      SUBROUTINE DSPIGMR (NEQ, TN, Y, SAVF, B, WGHT, N, MAXL, MAXLP1, KMP, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, V, HES, Q, &
+      LGMR, WP, IWP, WK, DL, IFLAG)
       EXTERNAL F, PSOL
       INTEGER NEQ,N,MAXL,MAXLP1,KMP,JPRE,MNEWT,NPSL,LGMR,IWP,IFLAG
       DOUBLE PRECISION TN,Y,SAVF,B,WGHT,DELTA,HL0,X,V,HES,Q,WP,WK,DL
-      DIMENSION NEQ(*), Y(*), SAVF(*), B(*), WGHT(*), X(*), V(N,*),
-     1    HES(MAXLP1,*), Q(*), WP(*), IWP(*), WK(*), DL(*)
+      DIMENSION NEQ(*), Y(*), SAVF(*), B(*), WGHT(*), X(*), V(N,*), HES(MAXLP1,*), Q(*), WP(*), IWP(*), WK(*), DL(*)
 !-----------------------------------------------------------------------
 ! This routine solves the linear system A * x = b using a scaled
 ! preconditioned version of the Generalized Minimal Residual method.
@@ -6473,8 +6292,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! Call routine DORTHOG to orthogonalize the new vector VNEW = V(*,LL+1).
 ! Call routine DHEQR to update the factors of HES.
 !-----------------------------------------------------------------------
-        CALL DATV (NEQ, Y, SAVF, V(1,LL), WGHT, X, F, PSOL, V(1,LL+1),
-     1        WK, WP, IWP, HL0, JPRE, IER, NPSL)
+        CALL DATV (NEQ, Y, SAVF, V(1,LL), WGHT, X, F, PSOL, V(1,LL+1), WK, WP, IWP, HL0, JPRE, IER, NPSL)
         IF (IER .NE. 0) GO TO 300
         CALL DORTHOG (V(1,LL+1), V, HES, N, LL, MAXLP1, KMP, SNORMW)
         HES(LL+1,LL) = SNORMW
@@ -6561,14 +6379,12 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSPIGMR ---------------------
       END
-*DECK DPCG
-      SUBROUTINE DPCG (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0,
-     1 JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, IWP, WK, IFLAG)
+!*DECK DPCG
+      SUBROUTINE DPCG (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, IWP, WK, IFLAG)
       EXTERNAL F, PSOL
       INTEGER NEQ, N, MAXL, JPRE, MNEWT, NPSL, LPCG, IWP, IFLAG
       DOUBLE PRECISION TN,Y,SAVF,R,WGHT,DELTA,HL0,X,P,W,Z,WP,WK
-      DIMENSION NEQ(*), Y(*), SAVF(*), R(*), WGHT(*), X(*), P(*), W(*),
-     1   Z(*), WP(*), IWP(*), WK(*)
+      DIMENSION NEQ(*), Y(*), SAVF(*), R(*), WGHT(*), X(*), P(*), W(*), Z(*), WP(*), IWP(*), WK(*)
 !-----------------------------------------------------------------------
 ! This routine computes the solution to the system A*x = b using a
 ! preconditioned version of the Conjugate Gradient algorithm.
@@ -6706,14 +6522,12 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DPCG ------------------------
       END
-*DECK DPCGS
-      SUBROUTINE DPCGS (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0,
-     1 JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, IWP, WK, IFLAG)
+!*DECK DPCGS
+      SUBROUTINE DPCGS (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, IWP, WK, IFLAG)
       EXTERNAL F, PSOL
       INTEGER NEQ, N, MAXL, JPRE, MNEWT, NPSL, LPCG, IWP, IFLAG
       DOUBLE PRECISION TN,Y,SAVF,R,WGHT,DELTA,HL0,X,P,W,Z,WP,WK
-      DIMENSION NEQ(*), Y(*), SAVF(*), R(*), WGHT(*), X(*), P(*), W(*),
-     1   Z(*), WP(*), IWP(*), WK(*)
+      DIMENSION NEQ(*), Y(*), SAVF(*), R(*), WGHT(*), X(*), P(*), W(*), Z(*), WP(*), IWP(*), WK(*)
 !-----------------------------------------------------------------------
 ! This routine computes the solution to the system A*x = b using a
 ! scaled preconditioned version of the Conjugate Gradient algorithm.
@@ -6856,24 +6670,17 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DPCGS -----------------------
       END
-*DECK DATP
+!*DECK DATP
       SUBROUTINE DATP (NEQ, Y, SAVF, P, WGHT, HL0, WK, F, W)
       EXTERNAL F
       INTEGER NEQ
       DOUBLE PRECISION Y, SAVF, P, WGHT, HL0, WK, W
       DIMENSION NEQ(*), Y(*), SAVF(*), P(*), WGHT(*), WK(*), W(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, 
+      MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 !-----------------------------------------------------------------------
 ! This routine computes the product
 !
@@ -6922,14 +6729,12 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DATP ------------------------
       END
-*DECK DUSOL
-      SUBROUTINE DUSOL (NEQ, TN, Y, SAVF, B, WGHT, N, DELTA, HL0, MNEWT,
-     1   PSOL, NPSL, X, WP, IWP, WK, IFLAG)
+!*DECK DUSOL
+      SUBROUTINE DUSOL (NEQ, TN, Y, SAVF, B, WGHT, N, DELTA, HL0, MNEWT, PSOL, NPSL, X, WP, IWP, WK, IFLAG)
       EXTERNAL PSOL
       INTEGER NEQ, N, MNEWT, NPSL, IWP, IFLAG
       DOUBLE PRECISION TN, Y, SAVF, B, WGHT, DELTA, HL0, X, WP, WK
-      DIMENSION NEQ(*), Y(*), SAVF(*), B(*), WGHT(*), X(*),
-     1   WP(*), IWP(*), WK(*)
+      DIMENSION NEQ(*), Y(*), SAVF(*), B(*), WGHT(*), X(*), WP(*), IWP(*), WK(*)
 !-----------------------------------------------------------------------
 ! This routine solves the linear system A * x = b using only a call
 ! to the user-supplied routine PSOL (no Krylov iteration).
@@ -7014,7 +6819,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DUSOL -----------------------
       END
-*DECK DSRCPK
+!*DECK DSRCPK
       SUBROUTINE DSRCPK (RSAV, ISAV, JOB)
 !-----------------------------------------------------------------------
 ! This routine saves or restores (depending on JOB) the contents of
@@ -7057,7 +6862,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSRCPK ----------------------
       END
-*DECK DHEFA
+!*DECK DHEFA
       SUBROUTINE DHEFA (A, LDA, N, IPVT, INFO, JOB)
       INTEGER LDA, N, IPVT(*), INFO, JOB
       DOUBLE PRECISION A(LDA,*)
@@ -7237,7 +7042,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DHEFA -----------------------
       END
-*DECK DHESL
+!*DECK DHESL
       SUBROUTINE DHESL (A, LDA, N, IPVT, B)
       INTEGER LDA, N, IPVT(*)
       DOUBLE PRECISION A(LDA,*), B(*)
@@ -7305,7 +7110,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DHESL -----------------------
       END
-*DECK DHEQR
+!*DECK DHEQR
       SUBROUTINE DHEQR (A, LDA, N, Q, INFO, IJOB)
       INTEGER LDA, N, INFO, IJOB
       DOUBLE PRECISION A(LDA,*), Q(*)
@@ -7463,7 +7268,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DHEQR -----------------------
       END
-*DECK DHELS
+!*DECK DHELS
       SUBROUTINE DHELS (A, LDA, N, Q, B)
       INTEGER LDA, N
       DOUBLE PRECISION A(LDA,*), B(*), Q(*)
@@ -7533,12 +7338,10 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DHELS -----------------------
       END
-*DECK DLHIN
-      SUBROUTINE DLHIN (NEQ, N, T0, Y0, YDOT, F, TOUT, UROUND,
-     1   EWT, ITOL, ATOL, Y, TEMP, H0, NITER, IER)
+!*DECK DLHIN
+      SUBROUTINE DLHIN (NEQ, N, T0, Y0, YDOT, F, TOUT, UROUND, EWT, ITOL, ATOL, Y, TEMP, H0, NITER, IER)
       EXTERNAL F
-      DOUBLE PRECISION T0, Y0, YDOT, TOUT, UROUND, EWT, ATOL, Y,
-     1   TEMP, H0
+      DOUBLE PRECISION T0, Y0, YDOT, TOUT, UROUND, EWT, ATOL, Y, TEMP, H0
       INTEGER NEQ, N, ITOL, NITER, IER
       DIMENSION NEQ(*), Y0(*), YDOT(*), EWT(*), ATOL(*), Y(*), TEMP(*)
 !-----------------------------------------------------------------------
@@ -7582,8 +7385,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 !
 ! Type declarations for local variables --------------------------------
 !
-      DOUBLE PRECISION AFI, ATOLI, DELYI, HALF, HG, HLB, HNEW, HRAT,
-     1     HUB, HUN, PT1, T1, TDIST, TROUND, TWO, DVNORM, YDDNRM
+      DOUBLE PRECISION AFI, ATOLI, DELYI, HALF, HG, HLB, HNEW, HRAT, HUB, HUN, PT1, T1, TDIST, TROUND, TWO, DVNORM, YDDNRM
       INTEGER I, ITER
 !-----------------------------------------------------------------------
 ! The following Fortran-77 declaration is to cause the values of the
@@ -7667,36 +7469,24 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DLHIN -----------------------
       END
-*DECK DSTOKA
-      SUBROUTINE DSTOKA (NEQ, Y, YH, NYH, YH1, EWT, SAVF, SAVX, ACOR,
-     1   WM, IWM, F, JAC, PSOL)
+!*DECK DSTOKA
+      SUBROUTINE DSTOKA (NEQ, Y, YH, NYH, YH1, EWT, SAVF, SAVX, ACOR, WM, IWM, F, JAC, PSOL)
       EXTERNAL F, JAC, PSOL
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, SAVX, ACOR, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),
-     1   SAVX(*), ACOR(*), WM(*), IWM(*)
-      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*), SAVX(*), ACOR(*), WM(*), IWM(*)
+      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM
+      INTEGER LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER NEWT, NSFI, NSLJ, NJEV
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO,
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION STIFR
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12),
-     1   HOLD, RMAX, TESCO(3,12),
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     3   IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12), HOLD, RMAX, TESCO(3,12), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,& 
+      IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, &
+      LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       COMMON /DLS002/ STIFR, NEWT, NSFI, NSLJ, NJEV
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !-----------------------------------------------------------------------
 ! DSTOKA performs one step of the integration of an initial value
 ! problem for a system of Ordinary Differential Equations.
@@ -7772,8 +7562,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! N      = the number of first-order differential equations.
 !-----------------------------------------------------------------------
       INTEGER I, I1, IREDO, IRET, J, JB, JOK, M, NCF, NEWQ, NSLOW
-      DOUBLE PRECISION DCON, DDN, DEL, DELP, DRC, DSM, DUP, EXDN, EXSM,
-     1   EXUP, DFNORM, R, RH, RHDN, RHSM, RHUP, ROC, STIFF, TOLD, DVNORM
+      DOUBLE PRECISION DCON, DDN, DEL, DELP, DRC, DSM, DUP, EXDN, EXSM, EXUP, DFNORM, R, RH, RHDN, RHSM, RHUP, ROC, STIFF, TOLD, DVNORM
 !
       KFLAG = 0
       TOLD = TN
@@ -8219,32 +8008,20 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSTOKA ----------------------
       END
-*DECK DSETPK
-      SUBROUTINE DSETPK (NEQ, Y, YSV, EWT, FTEM, SAVF, JOK, WM, IWM,
-     1                  F, JAC)
+!*DECK DSETPK
+      SUBROUTINE DSETPK (NEQ, Y, YSV, EWT, FTEM, SAVF, JOK, WM, IWM, F, JAC)
       EXTERNAL F, JAC
       INTEGER NEQ, JOK, IWM
       DOUBLE PRECISION Y, YSV, EWT, FTEM, SAVF, WM
-      DIMENSION NEQ(*), Y(*), YSV(*), EWT(*), FTEM(*), SAVF(*),
-     1   WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), YSV(*), EWT(*), FTEM(*), SAVF(*), WM(*), IWM(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, 
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !-----------------------------------------------------------------------
 ! DSETPK is called by DSTOKA to interface with the user-supplied
 ! routine JAC, to compute and process relevant parts of
@@ -8277,15 +8054,14 @@ c  ******  solve  lt x = y  by back substitution  **********************
       JCUR = 0
       IF (JOK .EQ. -1) JCUR = 1
       HL0 = EL0*H
-      CALL JAC (F, NEQ, TN, Y, YSV, EWT, SAVF, FTEM, HL0, JOK,
-     1   WM(LOCWP), IWM(LOCIWP), IER)
+      CALL JAC (F, NEQ, TN, Y, YSV, EWT, SAVF, FTEM, HL0, JOK, WM(LOCWP), IWM(LOCIWP), IER)
       NJE = NJE + 1
       IF (IER .EQ. 0) RETURN
       IERPJ = 1
       RETURN
 !----------------------- End of Subroutine DSETPK ----------------------
       END
-*DECK DSRCKR
+!*DECK DSRCKR
       SUBROUTINE DSRCKR (RSAV, ISAV, JOB)
 !-----------------------------------------------------------------------
 ! This routine saves or restores (depending on JOB) the contents of
@@ -8351,9 +8127,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSRCKR ----------------------
       END
-*DECK DAINVG
-      SUBROUTINE DAINVG (RES, ADDA, NEQ, T, Y, YDOT, MITER,
-     1                   ML, MU, PW, IPVT, IER )
+!*DECK DAINVG
+      SUBROUTINE DAINVG (RES, ADDA, NEQ, T, Y, YDOT, MITER, ML, MU, PW, IPVT, IER )
       EXTERNAL RES, ADDA
       INTEGER NEQ, MITER, ML, MU, IPVT, IER
       INTEGER I, LENPW, MLP1, NROWPW
@@ -8413,31 +8188,20 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DAINVG ----------------------
       END
-*DECK DSTODI
-      SUBROUTINE DSTODI (NEQ, Y, YH, NYH, YH1, EWT, SAVF, SAVR,
-     1   ACOR, WM, IWM, RES, ADDA, JAC, PJAC, SLVS )
+!*DECK DSTODI
+      SUBROUTINE DSTODI (NEQ, Y, YH, NYH, YH1, EWT, SAVF, SAVR, ACOR, WM, IWM, RES, ADDA, JAC, PJAC, SLVS )
       EXTERNAL RES, ADDA, JAC, PJAC, SLVS
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, SAVR, ACOR, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),
-     1   SAVR(*), ACOR(*), WM(*), IWM(*)
-      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO,
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12),
-     1   HOLD, RMAX, TESCO(3,12),
-     2   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     3   IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP,
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*), SAVR(*), ACOR(*), WM(*), IWM(*)
+      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM
+      INTEGER LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12), HOLD, RMAX, TESCO(3,12), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, &
+      IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, &
+      LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER I, I1, IREDO, IRES, IRET, J, JB, KGO, M, NCF, NEWQ
-      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP,
-     1   ELJH, EL1H, EXDN, EXSM, EXUP,
-     2   R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
+      DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, ELJH, EL1H, EXDN, EXSM, EXUP, R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
 !-----------------------------------------------------------------------
 ! DSTODI performs one step of the integration of an initial value
 ! problem for a system of Ordinary Differential Equations.
@@ -8660,8 +8424,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
 ! preprocessed before starting the corrector iteration.  IPUP is set
 ! to 0 as an indicator that this has been done.
 !-----------------------------------------------------------------------
-      CALL PJAC (NEQ, Y, YH, NYH, EWT, ACOR, SAVR, SAVF, WM, IWM,
-     1   RES, JAC, ADDA )
+      CALL PJAC (NEQ, Y, YH, NYH, EWT, ACOR, SAVR, SAVF, WM, IWM, RES, JAC, ADDA )
       IPUP = 0
       RC = 1.0D0
       NSLP = NST
@@ -8875,28 +8638,18 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSTODI ----------------------
       END
-*DECK DPREPJI
-      SUBROUTINE DPREPJI (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WM, IWM,
-     1   RES, JAC, ADDA)
+!*DECK DPREPJI
+      SUBROUTINE DPREPJI (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WM, IWM, RES, JAC, ADDA)
       EXTERNAL RES, JAC, ADDA
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, EWT, RTEM, SAVR, S, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), RTEM(*),
-     1   S(*), SAVR(*), WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER I, I1, I2, IER, II, IRES, J, J1, JJ, LENP,
-     1   MBA, MBAND, MEB1, MEBAND, ML, ML3, MU
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), RTEM(*), S(*), SAVR(*), WM(*), IWM(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER I, I1, I2, IER, II, IRES, J, J1, JJ, LENP, MBA, MBAND, MEB1, MEBAND, ML, ML3, MU
       DOUBLE PRECISION CON, FAC, HL0, R, SRUR, YI, YJ, YJJ
 !-----------------------------------------------------------------------
 ! DPREPJI is called by DSTODI to compute and process the matrix
@@ -9054,9 +8807,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DPREPJI ---------------------
       END
-*DECK DAIGBT
-      SUBROUTINE DAIGBT (RES, ADDA, NEQ, T, Y, YDOT,
-     1                   MB, NB, PW, IPVT, IER )
+!*DECK DAIGBT
+      SUBROUTINE DAIGBT (RES, ADDA, NEQ, T, Y, YDOT, MB, NB, PW, IPVT, IER )
       EXTERNAL RES, ADDA
       INTEGER NEQ, MB, NB, IPVT, IER
       INTEGER I, LENPW, LBLOX, LPB, LPC
@@ -9092,28 +8844,18 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DAIGBT ----------------------
       END
-*DECK DPJIBT
-      SUBROUTINE DPJIBT (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WM, IWM,
-     1   RES, JAC, ADDA)
+!*DECK DPJIBT
+      SUBROUTINE DPJIBT (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WM, IWM, RES, JAC, ADDA)
       EXTERNAL RES, JAC, ADDA
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, EWT, RTEM, SAVR, S, WM
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), RTEM(*),
-     1   S(*), SAVR(*), WM(*), IWM(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER I, IER, IIA, IIB, IIC, IPA, IPB, IPC, IRES, J, J1, J2,
-     1   K, K1, LENP, LBLOX, LPB, LPC, MB, MBSQ, MWID, NB
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), RTEM(*), S(*), SAVR(*), WM(*), IWM(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER I, IER, IIA, IIB, IIC, IPA, IPB, IPC, IRES, J, J1, J2, K, K1, LENP, LBLOX, LPB, LPC, MB, MBSQ, MWID, NB
       DOUBLE PRECISION CON, FAC, HL0, R, SRUR
 !-----------------------------------------------------------------------
 ! DPJIBT is called by DSTODI to compute and process the matrix
@@ -9255,7 +8997,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DPJIBT ----------------------
       END
-*DECK DSLSBT
+!*DECK DSLSBT
       SUBROUTINE DSLSBT (WM, IWM, X, TEM)
       INTEGER IWM
       INTEGER LBLOX, LPB, LPC, MB, NB
@@ -9284,7 +9026,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSLSBT ----------------------
       END
-*DECK DDECBT
+!*DECK DDECBT
       SUBROUTINE DDECBT (M, N, A, B, C, IP, IER)
       INTEGER M, N, IP(M,N), IER
       DOUBLE PRECISION A(M,M,N), B(M,M,N), C(M,M,N)
@@ -9391,7 +9133,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DDECBT ----------------------
       END
-*DECK DSOLBT
+!*DECK DSOLBT
       SUBROUTINE DSOLBT (M, N, A, B, C, Y, IP)
       INTEGER M, N, IP(M,N)
       DOUBLE PRECISION A(M,M,N), B(M,M,N), C(M,M,N), Y(M,N)
@@ -9429,8 +9171,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
         CALL DGESL (A(1,1,K), M, M, IP(1,K), Y(1,K), 0)
  30     CONTINUE
       DO 50 I = 1,M
-        DP = DDOT (M, C(I,1,N), M, Y(1,NM1), 1)
-     1     + DDOT (M, B(I,1,N), M, Y(1,NM2), 1)
+        DP = DDOT (M, C(I,1,N), M, Y(1,NM1), 1) + DDOT (M, B(I,1,N), M, Y(1,NM2), 1)
         Y(I,N) = Y(I,N) - DP
  50     CONTINUE
       CALL DGESL (A(1,1,N), M, M, IP(1,N), Y(1,N), 0)
@@ -9450,35 +9191,22 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DSOLBT ----------------------
       END
-*DECK DIPREPI
-      SUBROUTINE DIPREPI (NEQ, Y, S, RWORK, IA, JA, IC, JC, IPFLAG,
-     1   RES, JAC, ADDA)
+!*DECK DIPREPI
+      SUBROUTINE DIPREPI (NEQ, Y, S, RWORK, IA, JA, IC, JC, IPFLAG, RES, JAC, ADDA)
       EXTERNAL RES, JAC, ADDA
       INTEGER NEQ, IA, JA, IC, JC, IPFLAG
       DOUBLE PRECISION Y, S, RWORK
       DIMENSION NEQ(*), Y(*), S(*), RWORK(*), IA(*), JA(*), IC(*), JC(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, &
+      MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION RLSS
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ RLSS(6),
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
+      IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
       INTEGER I, IMAX, LEWTN, LYHD, LYHN
 !-----------------------------------------------------------------------
 ! This routine serves as an interface between the driver and
@@ -9494,9 +9222,8 @@ c  ******  solve  lt x = y  by back substitution  **********************
 !-----------------------------------------------------------------------
       IPFLAG = 0
 ! Call DPREPI to do matrix preprocessing operations. -------------------
-      CALL DPREPI (NEQ, Y, S, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT),
-     1   RWORK(LACOR), IA, JA, IC, JC, RWORK(LWM), RWORK(LWM), IPFLAG,
-     2   RES, JAC, ADDA)
+      CALL DPREPI (NEQ, Y, S, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT), RWORK(LACOR), IA, JA, IC, JC, RWORK(LWM), RWORK(LWM), IPFLAG,&
+      RES, JAC, ADDA)
       LENWK = MAX(LREQ,LWMIN)
       IF (IPFLAG .LT. 0) RETURN
 ! If DPREPI was successful, move YH to end of required space for WM. ---
@@ -9521,39 +9248,24 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DIPREPI ---------------------
       END
-*DECK DPREPI
-      SUBROUTINE DPREPI (NEQ, Y, S, YH, SAVR, EWT, RTEM, IA, JA, IC, JC,
-     1                   WK, IWK, IPPER, RES, JAC, ADDA)
+!*DECK DPREPI
+      SUBROUTINE DPREPI (NEQ, Y, S, YH, SAVR, EWT, RTEM, IA, JA, IC, JC, WK, IWK, IPPER, RES, JAC, ADDA)
       EXTERNAL RES, JAC, ADDA
       INTEGER NEQ, IA, JA, IC, JC, IWK, IPPER
       DOUBLE PRECISION Y, S, YH, SAVR, EWT, RTEM, WK
-      DIMENSION NEQ(*), Y(*), S(*), YH(*), SAVR(*), EWT(*), RTEM(*),
-     1   IA(*), JA(*), IC(*), JC(*), WK(*), IWK(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), S(*), YH(*), SAVR(*), EWT(*), RTEM(*), IA(*), JA(*), IC(*), JC(*), WK(*), IWK(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION RLSS
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ RLSS(6),
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      INTEGER I, IBR, IER, IPIL, IPIU, IPTT1, IPTT2, J, K, KNEW, KAMAX,
-     1   KAMIN, KCMAX, KCMIN, LDIF, LENIGP, LENWK1, LIWK, LJFO, MAXG,
-     2   NP1, NZSUT
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
+      IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      INTEGER I, IBR, IER, IPIL, IPIU, IPTT1, IPTT2, J, K, KNEW, KAMAX, KAMIN, KCMAX, KCMIN, LDIF, LENIGP, LENWK1, LIWK, LJFO, 
+      MAXG, NP1, NZSUT
       DOUBLE PRECISION ERWT, FAC, YJ
 !-----------------------------------------------------------------------
 ! This routine performs preprocessing related to the sparse linear
@@ -9808,8 +9520,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       IPTT2 = IPTT1 + N
       LREQ = IPTT2 + N - 1
       IF (LREQ .GT. LIWK) GO TO 320
-      CALL JGROUP (N, IWK(IPIAN), IWK(IPJAN), MAXG, NGP, IWK(IPIGP),
-     1   IWK(IPJGP), IWK(IPTT1), IWK(IPTT2), IER)
+      CALL JGROUP (N, IWK(IPIAN), IWK(IPJAN), MAXG, NGP, IWK(IPIGP), IWK(IPJGP), IWK(IPTT1), IWK(IPTT2), IER)
       IF (IER .NE. 0) GO TO 320
       LENIGP = NGP + 1
 !
@@ -9825,8 +9536,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       DO 270 I = 1,N
  270    IWK(IBR+I) = I
       NSP = LIWK + 1 - IPISP
-      CALL ODRV(N, IWK(IPIAN), IWK(IPJAN), WK, IWK(IPR), IWK(IPIC), NSP,
-     1   IWK(IPISP), 1, IYS)
+      CALL ODRV(N, IWK(IPIAN), IWK(IPJAN), WK, IWK(IPR), IWK(IPIC), NSP, IWK(IPISP), 1, IYS)
       IF (IYS .EQ. 11*N+1) GO TO 340
       IF (IYS .NE. 0) GO TO 330
 !
@@ -9840,8 +9550,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       DO 280 I = 1,NNZ
  280    WK(IBA+I) = 0.0D0
       IPISP = LRAT*(IPRSP - 1) + 1
-      CALL CDRV(N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1   WK(IPA),WK(IPA),WK(IPA),NSP,IWK(IPISP),WK(IPRSP),IESP,5,IYS)
+      CALL CDRV(N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),WK(IPA),WK(IPA),NSP,IWK(IPISP),WK(IPRSP),IESP,5,IYS)
       LREQ = LENWK - IESP
       IF (IYS .EQ. 10*N+1) GO TO 350
       IF (IYS .NE. 0) GO TO 360
@@ -9889,7 +9598,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DPREPI ----------------------
       END
-*DECK DAINVGS
+!*DECK DAINVGS
       SUBROUTINE DAINVGS (NEQ, T, Y, WK, IWK, TEM, YDOT, IER, RES, ADDA)
       EXTERNAL RES, ADDA
       INTEGER NEQ, IWK, IER
@@ -9979,7 +9688,7 @@ c  ******  solve  lt x = y  by back substitution  **********************
       RETURN
 !----------------------- End of Subroutine DAINVGS ---------------------
       END
-*DECK DPRJIS
+!*DECK DPRJIS
       SUBROUTINE DPRJIS (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WK, IWK,
      1   RES, JAC, ADDA)
       EXTERNAL RES, JAC, ADDA

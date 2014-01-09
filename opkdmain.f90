@@ -1,4 +1,4 @@
-*DECK DLSODE
+!*DECK DLSODE
       SUBROUTINE DLSODE (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1                  ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
       EXTERNAL F, JAC
@@ -1753,7 +1753,7 @@
       RETURN
 !----------------------- END OF SUBROUTINE DLSODE ----------------------
       END
-*DECK DLSODES
+!*DECK DLSODES
       SUBROUTINE DLSODES (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
       EXTERNAL F, JAC
@@ -3732,7 +3732,7 @@
       RETURN
 !----------------------- End of Subroutine DLSODES ---------------------
       END
-*DECK DLSODA
+!*DECK DLSODA
       SUBROUTINE DLSODA (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, JT)
       EXTERNAL F, JAC
@@ -5364,7 +5364,7 @@
       RETURN
 !----------------------- End of Subroutine DLSODA ----------------------
       END
-*DECK DLSODAR
+!*DECK DLSODAR
       SUBROUTINE DLSODAR (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, JT,
      2            G, NG, JROOT)
@@ -7203,7 +7203,7 @@
       RETURN
 !----------------------- End of Subroutine DLSODAR ---------------------
       END
-*DECK DLSODPK
+!*DECK DLSODPK
       SUBROUTINE DLSODPK (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, PSOL, MF)
       EXTERNAL F, JAC, PSOL
@@ -8945,7 +8945,7 @@
       RETURN
 !----------------------- End of Subroutine DLSODPK ---------------------
       END
-*DECK DLSODKR
+!*DECK DLSODKR
       SUBROUTINE DLSODKR (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
      1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, PSOL,
      2            MF, G, NG, JROOT)
@@ -10850,7 +10850,7 @@
       RETURN
 !----------------------- End of Subroutine DLSODKR ---------------------
       END
-*DECK DLSODI
+!*DECK DLSODI
       SUBROUTINE DLSODI (RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL,
      1  RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF )
       EXTERNAL RES, ADDA, JAC
@@ -12617,7 +12617,7 @@
       RETURN
 !----------------------- End of Subroutine DLSODI ----------------------
       END
-*DECK DLSOIBT
+!*DECK DLSOIBT
       SUBROUTINE DLSOIBT (RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL,
      1  RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF )
       EXTERNAL RES, ADDA, JAC
@@ -14416,7 +14416,7 @@
       RETURN
 !----------------------- End of Subroutine DLSOIBT ---------------------
       END
-*DECK DLSODIS
+!*DECK DLSODIS
       SUBROUTINE DLSODIS (RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL,
      1  RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF )
       EXTERNAL RES, ADDA, JAC
