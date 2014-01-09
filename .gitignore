@@ -7,3 +7,5 @@ filename
 *.log
 *.o
 nlso_tail.d
+html
+latex
