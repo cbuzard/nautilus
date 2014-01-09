@@ -4,16 +4,16 @@ use header
 implicit none
 
 do ipts=1,nptmax
-zaspace(ipts) = 1.d0 - 2.*real(ipts-1)/(2*nptmax-1)
+  zaspace(ipts) = 1.d0 - 2.*real(ipts-1)/(2*nptmax-1)
 enddo
 
 zspace(:)=zaspace(:)*Hsize
 
 if (nptmax.ne.1) then
-!zstepsize = abs(zspace(2)-zspace(1))
-zstepsize=2./(2*nptmax-1)*Hsize
+  !zstepsize = abs(zspace(2)-zspace(1))
+  zstepsize=2./(2*nptmax-1)*Hsize
 else
-zstepsize = 0.
+  zstepsize = 0.
 endif
 
 return

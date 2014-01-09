@@ -4,35 +4,35 @@ use header
 
 if (nptmax.eq.1) then
 
-diff1D(:)=diffty
+  diff1D(:)=diffty
 
-! No diffusion in 0D
-if (idiff.ne.0) then
-print *,'No diffusion allowed in 0D. Please change the IDIFF value in nls_control.d'
-stop
-endif
+  ! No diffusion in 0D
+  if (idiff.ne.0) then
+    print *,'No diffusion allowed in 0D. Please change the IDIFF value in nls_control.d'
+    stop
+  endif
 
 else
 
-! No diffusion
-if (idiff.eq.0) diff1D(:)=diffty ! diffty then only defines the timescale
+  ! No diffusion
+  if (idiff.eq.0) diff1D(:)=diffty ! diffty then only defines the timescale
 
-! Constant diffusivity
-if (idiff.eq.1) diff1D(:)=diffty
+  ! Constant diffusivity
+  if (idiff.eq.1) diff1D(:)=diffty
 
-! Alpha diffusivity (for disks)
-if (idiff.eq.2) then
-Omega2 = GRAV * MCENTER / DISTR**3
-do ipts=1,nptmax
-diff1D(ipts)=diffty*boltz*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
-enddo
-endif
+  ! Alpha diffusivity (for disks)
+  if (idiff.eq.2) then
+    Omega2 = GRAV * MCENTER / DISTR**3
+    do ipts=1,nptmax
+      diff1D(ipts)=diffty*boltz*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
+    enddo
+  endif
 
 endif
 
 if ((idiff.lt.0).or.(idiff.gt.2)) then
-print *,'This value for idiff is not implemented: ',IDIFF
-stop
+  print *,'This value for idiff is not implemented: ',IDIFF
+  stop
 endif
 
 return
@@ -45,16 +45,16 @@ real(kind=8), dimension(nptmax) :: Y
 integer :: j
 
 if (idiff.eq.0) then
-call nothinghappens ! the name is explicit enough I guess
-return
+  call nothinghappens ! the name is explicit enough I guess
+  return
 endif
 
 !zstepsize = Hsize/(nptmax-1)
 
 do j = 1, nsmax 
-Y(:)=zxn(j,:)
-call crank(Y, nptmax-1, zdt, zstepsize, diff1D, dens1d, 0, 1.d0)
-zxn(j,:) = Y(:)
+  Y(:)=zxn(j,:)
+  call crank(Y, nptmax-1, zdt, zstepsize, diff1D, dens1d, 0, 1.d0)
+  zxn(j,:) = Y(:)
 enddo
 
 return
@@ -65,17 +65,17 @@ use header
 implicit none
 
 if (idiff.eq.0) then
-! Log spacing of time outputs when there is no diffusion
-if (TIME.gt.1.d-2) then
-zdt = TIME*(10.**(1.d0/OTPD)-1.)
+  ! Log spacing of time outputs when there is no diffusion
+  if (TIME.gt.1.d-2) then
+    zdt = TIME*(10.**(1.d0/OTPD)-1.)
+  else
+    zdt=1.d0*TYEAR
+  endif
 else
-zdt=1.d0*TYEAR
-endif
-else
-! Diffusion controlled timestep
-! Required for the Operator splitting procedure
-zdt = (Hsize/nptmax)**2/maxval(diff1D) ! smallest timescale you can think of
-zdt = zdt/4 ! To ensure a good numerical precision
+  ! Diffusion controlled timestep
+  ! Required for the Operator splitting procedure
+  zdt = (Hsize/nptmax)**2/maxval(diff1D) ! smallest timescale you can think of
+  zdt = zdt/4 ! To ensure a good numerical precision
 endif
 
 return
@@ -107,14 +107,14 @@ Q(:)=rho(:)
 s(:)=0.
 
 do ind = 1, ny-1
-W(ind) = s(ind)*dt + d/4*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/4*(dd1d(ind+1)+2*dd1d(ind) &
-+dd1d(ind-1)))*f(ind)/rho(ind)+d/4*(dd1d(ind)+dd1d(ind-1))*f(ind-1)/rho(ind)
+  W(ind) = s(ind)*dt + d/4*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/4*(dd1d(ind+1)+2*dd1d(ind) &
+  +dd1d(ind-1)))*f(ind)/rho(ind)+d/4*(dd1d(ind)+dd1d(ind-1))*f(ind-1)/rho(ind)
 enddo
 
 do ind = 1,ny-1
-x(ind) = -d/4*(dd1d(ind+1)+dd1d(ind))/rho(ind)
-y(ind) = Q(ind)/rho(ind) + d/4*(dd1d(ind+1)+2*dd1d(ind)+dd1d(ind-1))/rho(ind)
-z(ind) = -d/4*(dd1d(ind)+dd1d(ind-1))/rho(ind)
+  x(ind) = -d/4*(dd1d(ind+1)+dd1d(ind))/rho(ind)
+  y(ind) = Q(ind)/rho(ind) + d/4*(dd1d(ind+1)+2*dd1d(ind)+dd1d(ind-1))/rho(ind)
+  z(ind) = -d/4*(dd1d(ind)+dd1d(ind-1))/rho(ind)
 enddo
 
 ! Boundary conditions
@@ -145,14 +145,14 @@ W(ny) = d/2*dd1d(ny)*f(ny)/rho(ny) + (Q(ny)-d/4*(3*dd1d(ny) &
 +dd1d(ny-1)))*f(ny)/rho(ny)+d/4*(dd1d(ny)+dd1d(ny-1))*f(ny-1)/rho(ny)
 
 do ind = ny, 1, -1
-u(ind-1) = -z(ind)/ (x(ind)*u(ind) + y(ind))
-v(ind-1) = ( W(ind) - x(ind)*v(ind) )/( x(ind)*u(ind) + y(ind) )
+  u(ind-1) = -z(ind)/ (x(ind)*u(ind) + y(ind))
+  v(ind-1) = ( W(ind) - x(ind)*v(ind) )/( x(ind)*u(ind) + y(ind) )
 enddo
 
 if (ibc.eq.0) f(0) =  v(0)/( 1. - u(0) )
 
 do ind = 0, ny-1
-f(ind+1) = u(ind)*f(ind) + v(ind)
+  f(ind+1) = u(ind)*f(ind) + v(ind)
 enddo
 
 return
@@ -173,8 +173,8 @@ d=dt/(dy**2)
 Q(:)=rho(:)
 
 do ind = 1, ny-1
-W(ind) = d/2*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/2*(dd1d(ind+1)+2*dd1d(ind) &
-+dd1d(ind-1)))*f(ind)/rho(ind)+d/2*(dd1d(ind)+dd1d(ind-1))*f(ind-1)/rho(ind)
+  W(ind) = d/2*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/2*(dd1d(ind+1)+2*dd1d(ind) &
+  +dd1d(ind-1)))*f(ind)/rho(ind)+d/2*(dd1d(ind)+dd1d(ind-1))*f(ind-1)/rho(ind)
 enddo
 
 f(1:ny-1)=W(1:ny-1)

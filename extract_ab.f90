@@ -28,7 +28,7 @@ ENDDO
 CLOSE(10)
 
 DO i = 1,nsmax+2
-   comp(i) = i
+  comp(i) = i
 ENDDO
 
 PRINT*, 'Entrez nom de fichier de sorti:'
@@ -41,7 +41,7 @@ WRITE(30,FMT='(I2,9X,I4,685(11x,I5))') comp(:)
 WRITE(30,FMT='(A2,10x,A4,685(7x,A9))') 'I', 'TIME', spec(1,:)
 WRITE(30,*) ' '
 DO i = 1, ntime
-WRITE(30,FMT='(I2,5x,ES14.8,685(2x,ES14.8))') i, time(i), ab(i,:)
+  WRITE(30,FMT='(I2,5x,ES14.8,685(2x,ES14.8))') i, time(i), ab(i,:)
 ENDDO
 CLOSE(30)
 

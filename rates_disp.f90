@@ -22,99 +22,99 @@ INTEGER, dimension(nkmax):: NUM
 character (len=11) :: USER_SPEC
 
 
- DO WHILE (istate .NE. 0)
-   PRINT*, 'Select one species:'
-   READ*, USER_SPEC
-   PRINT*, '------------'
-   PRINT*, USER_SPEC
-   PRINT*, '--------------------------------------------------------------------------------', &
-   &'---------------------------------------------------------------------------------'  
+DO WHILE (istate .NE. 0)
+  PRINT*, 'Select one species:'
+  READ*, USER_SPEC
+  PRINT*, '------------'
+  PRINT*, USER_SPEC
+  PRINT*, '--------------------------------------------------------------------------------', &
+  &'---------------------------------------------------------------------------------'  
 
-   PRINT*, 'REACTION                                                                         ', &
-   & 'RATES                       ', 'FORMATION                   ', 'DESTRUCTION           '  
-   PRINT*, '--------------------------------------------------------------------------------', &
-   &'---------------------------------------------------------------------------------'  
+  PRINT*, 'REACTION                                                                         ', &
+  & 'RATES                       ', 'FORMATION                   ', 'DESTRUCTION           '  
+  PRINT*, '--------------------------------------------------------------------------------', &
+  &'---------------------------------------------------------------------------------'  
 
-KIT = 41  
-!do KIT=WSTEP,NT,WSTEP
+  KIT = 41  
+  !do KIT=WSTEP,NT,WSTEP
 
-if (KIT.eq.0) then
-IT=1
-else
-IT=KIT
-endif
+  if (KIT.eq.0) then
+    IT=1
+  else
+    IT=KIT
+  endif
 
-write(CHARIT,'(I6)') IT
+  write(CHARIT,'(I6)') IT
 
-do i=1,6
-if (CHARIT(i:i).eq." ") CHARIT(i:i)="0"
-enddo
+  do i=1,6
+    if (CHARIT(i:i).eq." ") CHARIT(i:i)="0"
+  enddo
 
-open(10,file='rates1D.'//CHARIT//'',form='unformatted')
-read(10) SPEC
-read(10) SYMBOL
-read(10) XK
-read(10) NUM
+  open(10,file='rates1D.'//CHARIT//'',form='unformatted')
+  read(10) SPEC
+  read(10) SYMBOL
+  read(10) XK
+  read(10) NUM
 
-open(21,file='rate_coeff_modif.dat',form='formatted')
-do i=1,NKMAX
-	write(21,*) (SYMBOL(j,i), j=1,7),XK(i),NUM(i)
-enddo
-close(21)	
+  open(21,file='rate_coeff_modif.dat',form='formatted')
+  do i=1,NKMAX
+    write(21,*) (SYMBOL(j,i), j=1,7),XK(i),NUM(i)
+  enddo
+  close(21)	
 
-open(30,file='rates.d.'//CHARIT//'',form='formatted')
+  open(30,file='rates.d.'//CHARIT//'',form='formatted')
 
-REACT(:,:)=0
+  REACT(:,:)=0
 
-        DO I=1,NKMAX
-                DO J=1,NSMAX
-                DO L=1,3
-                        IF (SYMBOL(L,I).EQ.SPEC(J)) REACT(I,L)=J
-                ENDDO
-                DO L=1,4
-                        IF (SYMBOL(L+3,I).EQ.SPEC(J)) REACT(I,L+3)=J
-                ENDDO
-                ENDDO
-        ENDDO
+  DO I=1,NKMAX
+    DO J=1,NSMAX
+      DO L=1,3
+        IF (SYMBOL(L,I).EQ.SPEC(J)) REACT(I,L)=J
+      ENDDO
+      DO L=1,4
+        IF (SYMBOL(L+3,I).EQ.SPEC(J)) REACT(I,L+3)=J
+      ENDDO
+    ENDDO
+  ENDDO
 
-open(20,file='output_1D.'//CHARIT//'',form='unformatted')
-read(20) TIME
-read(20) TEMP1D, DENS1D, TAU1D
-read(20) ZXN
+  open(20,file='output_1D.'//CHARIT//'',form='unformatted')
+  read(20) TIME
+  read(20) TEMP1D, DENS1D, TAU1D
+  read(20) ZXN
 
-XNT=2.*DENS1D(IPT)
+  XNT=2.*DENS1D(IPT)
 
-ZXN2(1:nsmax,1:nptmax)=ZXN(1:nsmax,1:nptmax)
-ZXN2(0,1:nptmax)=1.d0/XNT
+  ZXN2(1:nsmax,1:nptmax)=ZXN(1:nsmax,1:nptmax)
+  ZXN2(0,1:nptmax)=1.d0/XNT
 
-   do j=1,nkmax
-      do i=1,3
-        if (TRIM(ADJUSTL(symbol(i,j))).eq.TRIM(ADJUSTL(USER_SPEC))) then
-           destr=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
+  do j=1,nkmax
+    do i=1,3
+      if (TRIM(ADJUSTL(symbol(i,j))).eq.TRIM(ADJUSTL(USER_SPEC))) then
+        destr=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
         PRINT*,symbol(:,j),'|',XK(j),'|',"                           ",'|', destr,'|'
-        endif
-      enddo
-      do i=4,7
-!if (symbol(i,j).eq.'CO      ') then
-        if (TRIM(ADJUSTL(symbol(i,j))).eq.TRIM(ADJUSTL(USER_SPEC))) then
-           prod=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
-           PRINT*,symbol(:,j),'|',XK(j),'|',prod,'|'
-        endif
-      enddo
-   enddo
+      endif
+    enddo
+    do i=4,7
+      !if (symbol(i,j).eq.'CO      ') then
+      if (TRIM(ADJUSTL(symbol(i,j))).eq.TRIM(ADJUSTL(USER_SPEC))) then
+        prod=XK(j)*ZXN2(react(j,1),IPT)*ZXN2(react(j,2),IPT)*ZXN2(react(j,3),IPT)*XNT**3
+        PRINT*,symbol(:,j),'|',XK(j),'|',prod,'|'
+      endif
+    enddo
+  enddo
 
-close(10)
-close(20)
-close(30)
+  close(10)
+  close(20)
+  close(30)
 
-!enddo
-   PRINT*, '--------------------------------------------------------------------------------', &
-   &'---------------------------------------------------------------------------------' 
-   PRINT*,'Continue? :'
-   PRINT*, 'Yes = 1 | No = 0'
-   READ*, istate
+  !enddo
+  PRINT*, '--------------------------------------------------------------------------------', &
+  &'---------------------------------------------------------------------------------' 
+  PRINT*,'Continue? :'
+  PRINT*, 'Yes = 1 | No = 0'
+  READ*, istate
 
-   IF(istate == 0) PRINT*,'END'
-   
- ENDDO
+  IF(istate == 0) PRINT*,'END'
+
+ENDDO
 end
