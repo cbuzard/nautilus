@@ -836,8 +836,7 @@
       IF (N .LT. 5) RETURN
    40 MP1 = M + 1
       DO 50 I = MP1,N,5
-      DDOT = DDOT + DX(I)*DY(I) + DX(I+1)*DY(I+1) + DX(I+2)*DY(I+2) +
-     1              DX(I+3)*DY(I+3) + DX(I+4)*DY(I+4)
+      DDOT = DDOT + DX(I)*DY(I) + DX(I+1)*DY(I+1) + DX(I+2)*DY(I+2) + DX(I+3)*DY(I+3) + DX(I+4)*DY(I+4)
    50 CONTINUE
       RETURN
 !
@@ -924,8 +923,7 @@
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DNRM2
       INTEGER NEXT
-      DOUBLE PRECISION DX(*), CUTLO, CUTHI, HITEST, SUM, XMAX, ZERO,
-     +                 ONE
+      DOUBLE PRECISION DX(*), CUTLO, CUTHI, HITEST, SUM, XMAX, ZERO, ONE
       SAVE CUTLO, CUTHI, ZERO, ONE
       DATA ZERO, ONE /0.0D0, 1.0D0/
 !

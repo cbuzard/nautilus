@@ -504,7 +504,7 @@
       INTEGER IWM
       DOUBLE PRECISION WM, X, TEM
       DIMENSION WM(*), IWM(*), X(*), TEM(*)
-      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, 
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
       INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
@@ -700,7 +700,7 @@
       INTEGER NEQ, NYH, IWM
       DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, ACOR, WM
       DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),ACOR(*), WM(*), IWM(*)
-      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
+      INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L
       INTEGER LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER I, I1, IREDO, IRET, J, JB, M, NCF, NEWQ
       DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
@@ -1903,8 +1903,7 @@
 !----------------------- End of Subroutine DSRCMS ----------------------
       END
 !*DECK ODRV
-      subroutine odrv
-     *     (n, ia,ja,a, p,ip, nsp,isp, path, flag)
+      subroutine odrv(n, ia,ja,a, p,ip, nsp,isp, path, flag)
 !                                                                 5/2/83
 !***********************************************************************
 !  odrv -- driver for sparse matrix reordering routines
@@ -2036,8 +2035,7 @@
 !
 !-----------------------------------------------------------------------
 !
-      integer  ia(*), ja(*),  p(*), ip(*),  isp(*),  path,  flag,
-     *   v, l, head,  tmp, q
+      integer  ia(*), ja(*),  p(*), ip(*),  isp(*),  path,  flag,v, l, head,  tmp, q
 !...  real  a(*)
       double precision  a(*)
       logical  dflag
@@ -2055,8 +2053,7 @@
         next = head  +  n
         if (max.lt.n)  go to 110
 !
-        call  md
-     *     (n, ia,ja, max,isp(v),isp(l), isp(head),p,ip, isp(v), flag)
+        call  md(n, ia,ja, max,isp(v),isp(l), isp(head),p,ip, isp(v), flag)
         if (flag.ne.0)  go to 100
 !
 !----allocate storage and symmetrically reorder matrix
@@ -2066,8 +2063,7 @@
         if (q.lt.1)  go to 110
 !
         dflag = path.eq.4 .or. path.eq.5
-        call sro
-     *     (n,  ip,  ia, ja, a,  isp(tmp),  isp(q),  dflag)
+        call sro(n,  ip,  ia, ja, a,  isp(tmp),  isp(q),  dflag)
 !
    2  return
 !
@@ -2080,8 +2076,7 @@
  111  flag = 11*n + 1
       return
       end
-      subroutine md
-     *     (n, ia,ja, max, v,l, head,last,next, mark, flag)
+      subroutine md(n, ia,ja, max, v,l, head,last,next, mark, flag)
 !***********************************************************************
 !  md -- minimum degree algorithm (based on element model)
 !***********************************************************************
@@ -2165,14 +2160,12 @@
 !
 !-----------------------------------------------------------------------
 !
-      integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),
-     *   mark(*),  flag,  tag, dmin, vk,ek, tail
+      integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),mark(*),  flag,  tag, dmin, vk,ek, tail
       equivalence  (vk,ek)
 !
 !----initialization
       tag = 0
-      call  mdi
-     *   (n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
+      call  mdi(n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
       if (flag.ne.0)  return
 !
       k = 0
@@ -2199,16 +2192,13 @@
         mark(vk) = tag
 !
 !------form element ek from uneliminated neighbors of vk
-        call  mdm
-     *     (vk,tail, v,l, last,next, mark)
+        call  mdm(vk,tail, v,l, last,next, mark)
 !
 !------purge inactive elements and do mass elimination
-        call  mdp
-     *     (k,ek,tail, v,l, head,last,next, mark)
+        call  mdp(k,ek,tail, v,l, head,last,next, mark)
 !
 !------update degrees of uneliminated vertices in ek
-        call  mdu
-     *     (ek,dmin, v,l, head,last,next, mark)
+        call  mdu(ek,dmin, v,l, head,last,next, mark)
 !
         go to 1
 !
@@ -2219,13 +2209,11 @@
 !
       return
       end
-      subroutine mdi
-     *     (n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
+      subroutine mdi(n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
 !***********************************************************************
 !  mdi -- initialization
 !***********************************************************************
-      integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),
-     *   mark(*), tag,  flag,  sfs, vi,dvi, vj
+      integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*), mark(*), tag,  flag,  sfs, vi,dvi, vj
 !
 !----initialize degrees, element lists, and degree lists
       do 1 vi=1,n
@@ -2288,13 +2276,11 @@
  101  flag = 9*n + vi
       return
       end
-      subroutine mdm
-     *     (vk,tail, v,l, last,next, mark)
+      subroutine mdm(vk,tail, v,l, last,next, mark)
 !***********************************************************************
 !  mdm -- form element from uneliminated neighbors of vk
 !***********************************************************************
-      integer  vk, tail,  v(*), l(*),   last(*), next(*),   mark(*),
-     *   tag, s,ls,vs,es, b,lb,vb, blp,blpmax
+      integer  vk, tail, v(*), l(*), last(*), next(*), mark(*),tag, s,ls,vs,es, b,lb,vb, blp,blpmax
       equivalence  (vs, es)
 !
 !----initialize tag and list of uneliminated neighbors
@@ -2343,13 +2329,11 @@
 !
       return
       end
-      subroutine mdp
-     *     (k,ek,tail, v,l, head,last,next, mark)
+      subroutine mdp(k,ek,tail, v,l, head,last,next, mark)
 !***********************************************************************
 !  mdp -- purge inactive elements and do mass elimination
 !***********************************************************************
-      integer  ek, tail,  v(*), l(*),  head(*), last(*), next(*),
-     *   mark(*),  tag, free, li,vi,lvi,evi, s,ls,es, ilp,ilpmax
+      integer  ek, tail,  v(*), l(*),  head(*), last(*), next(*),mark(*),  tag, free, li,vi,lvi,evi, s,ls,es, ilp,ilpmax
 !
 !----initialize tag
       tag = mark(ek)
@@ -2432,14 +2416,11 @@
 !
       return
       end
-      subroutine mdu
-     *     (ek,dmin, v,l, head,last,next, mark)
+      subroutine mdu(ek,dmin, v,l, head,last,next, mark)
 !***********************************************************************
 !  mdu -- update degrees of uneliminated vertices in ek
 !***********************************************************************
-      integer  ek, dmin,  v(*), l(*),  head(*), last(*), next(*),
-     *   mark(*),  tag, vi,evi,dvi, s,vs,es, b,vb, ilp,ilpmax,
-     *   blp,blpmax
+      integer  ek, dmin,  v(*), l(*),  head(*), last(*), next(*),mark(*),  tag, vi,evi,dvi, s,vs,es, b,vb, ilp,ilpmax,blp,blpmax
       equivalence  (vs, es)
 !
 !----initialize tag
@@ -2517,8 +2498,7 @@
 !
   11  return
       end
-      subroutine sro
-     *     (n, ip, ia,ja,a, q, r, dflag)
+      subroutine sro(n, ip, ia,ja,a, q, r, dflag)
 !***********************************************************************
 !  sro -- symmetric reordering of sparse symmetric matrix
 !***********************************************************************
@@ -2624,8 +2604,7 @@
       return
       end
 !*DECK CDRV
-      subroutine cdrv
-     *     (n, r,c,ic, ia,ja,a, b, z, nsp,isp,rsp,esp, path, flag)
+      subroutine cdrv(n, r,c,ic, ia,ja,a, b, z, nsp,isp,rsp,esp, path, flag)
 !*** subroutine cdrv
 !*** driver for subroutines for solving sparse nonsymmetric systems of
 !       linear equations (compressed pointer storage)
@@ -2787,8 +2766,7 @@
 !    (3) change e0 to d0 in the constants in statement number 10
 !    in subroutine nnfc and the line following that.
 !
-      integer  r(*), c(*), ic(*),  ia(*), ja(*),  isp(*), esp,  path,
-     *   flag,  d, u, q, row, tmp, ar,  umax
+      integer  r(*), c(*), ic(*),  ia(*), ja(*),  isp(*), esp,  path,flag,  d, u, q, row, tmp, ar,  umax
 !     real  a(*), b(*), z(*), rsp(*)
       double precision  a(*), b(*), z(*), rsp(*)
 !
@@ -2828,16 +2806,11 @@
    1      continue
         go to 3
    2    ar = nsp + 1 - n
-        call  nroc
-     *     (n, ic, ia,ja,a, isp(il), rsp(ar), isp(iu), flag)
+        call  nroc(n, ic, ia,ja,a, isp(il), rsp(ar), isp(iu), flag)
         if (flag.ne.0)  go to 100
 !
-   3    call  nsfc
-     *     (n, r, ic, ia,ja,
-     *      jlmax, isp(il), isp(jl), isp(ijl),
-     *      jumax, isp(iu), isp(jutmp), isp(iju),
-     *      isp(q), isp(ira), isp(jra), isp(irac),
-     *      isp(irl), isp(jrl), isp(iru), isp(jru),  flag)
+   3    call  nsfc(n, r, ic, ia,ja,jlmax, isp(il), isp(jl), isp(ijl),jumax, isp(iu), isp(jutmp), isp(iju),isp(q), isp(ira), &
+   isp(jra), isp(irac),isp(irl), isp(jrl), isp(iru), isp(jru),  flag)
         if(flag .ne. 0)  go to 100
 !  ******  move ju next to jl  *****************************************
         jlmax = isp(ijl+n-1)
@@ -2862,24 +2835,15 @@
 !
       if ((path-1) * (path-2) .ne. 0)  go to 6
         if (umax.lt.0)  go to 110
-        call nnfc
-     *     (n,  r, c, ic,  ia, ja, a, z, b,
-     *      lmax, isp(il), isp(jl), isp(ijl), rsp(l),  rsp(d),
-     *      umax, isp(iu), isp(ju), isp(iju), rsp(u),
-     *      rsp(row), rsp(tmp),  isp(irl), isp(jrl),  flag)
+        call nnfc(n,  r, c, ic,  ia, ja, a, z, b,lmax, isp(il), isp(jl), isp(ijl), rsp(l),  rsp(d),umax, isp(iu), &
+        isp(ju), isp(iju), rsp(u),rsp(row), rsp(tmp),  isp(irl), isp(jrl),  flag)
         if(flag .ne. 0)  go to 100
 !
    6  if ((path-3) .ne. 0)  go to 7
-        call nnsc
-     *     (n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),
-     *      rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),
-     *      z, b,  rsp(tmp))
+        call nnsc(n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),z, b,  rsp(tmp))
 !
    7  if ((path-4) .ne. 0)  go to 8
-        call nntc
-     *     (n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),
-     *      rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),
-     *      z, b,  rsp(tmp))
+        call nntc(n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),z, b,  rsp(tmp))
    8  return
 !
 ! ** error.. error detected in nroc, nsfc, nnfc, or nnsc
@@ -3125,9 +3089,7 @@
  102  flag = n + k
       return
       end
-      subroutine nsfc
-     *      (n, r, ic, ia,ja, jlmax,il,jl,ijl, jumax,iu,ju,iju,
-     *       q, ira,jra, irac, irl,jrl, iru,jru, flag)
+      subroutine nsfc(n, r, ic, ia,ja, jlmax,il,jl,ijl, jumax,iu,ju,iju,q, ira,jra, irac, irl,jrl, iru,jru, flag)
 !*** subroutine nsfc
 !*** symbolic ldu-factorization of nonsymmetric sparse matrix
 !      (compressed pointer storage)
@@ -3451,10 +3413,7 @@
  106  flag = 6*n + k
       return
       end
-      subroutine nnfc
-     *     (n, r,c,ic, ia,ja,a, z, b,
-     *      lmax,il,jl,ijl,l, d, umax,iu,ju,iju,u,
-     *      row, tmp, irl,jrl, flag)
+      subroutine nnfc(n, r,c,ic, ia,ja,a, z, b,lmax,il,jl,ijl,l, d, umax,iu,ju,iju,u,row, tmp, irl,jrl, flag)
 !*** subroutine nnfc
 !*** numerical ldu-factorization of sparse nonsymmetric matrix and
 !      solution of system of linear equations (compressed pointer
@@ -3606,8 +3565,7 @@
  108  flag = 8*n + k
       return
       end
-      subroutine nnsc
-     *     (n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
+      subroutine nnsc(n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
 !*** subroutine nnsc
 !*** numerical solution of sparse nonsymmetric system of linear
 !      equations given ldu-factorization (compressed pointer storage)
@@ -3658,8 +3616,7 @@
    6    continue
       return
       end
-      subroutine nntc
-     *     (n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
+      subroutine nntc(n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
 !*** subroutine nntc
 !*** numeric solution of the transpose of a sparse nonsymmetric system
 !      of linear equations given lu-factorization (compressed pointer
@@ -5594,8 +5551,8 @@
       INTEGER NEQ, IWM
       DOUBLE PRECISION Y, SAVF, X, EWT, WM
       DIMENSION NEQ(*), Y(*), SAVF(*), X(*), EWT(*), WM(*), IWM(*)
-      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, 
-      MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
+      INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
       DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
@@ -6380,7 +6337,8 @@
 !----------------------- End of Subroutine DSPIGMR ---------------------
       END
 !*DECK DPCG
-      SUBROUTINE DPCG (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, IWP, WK, IFLAG)
+      SUBROUTINE DPCG (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, &
+      LPCG, WP, IWP, WK, IFLAG)
       EXTERNAL F, PSOL
       INTEGER NEQ, N, MAXL, JPRE, MNEWT, NPSL, LPCG, IWP, IFLAG
       DOUBLE PRECISION TN,Y,SAVF,R,WGHT,DELTA,HL0,X,P,W,Z,WP,WK
@@ -6523,7 +6481,8 @@
 !----------------------- End of Subroutine DPCG ------------------------
       END
 !*DECK DPCGS
-      SUBROUTINE DPCGS (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, IWP, WK, IFLAG)
+      SUBROUTINE DPCGS (NEQ, TN, Y, SAVF, R, WGHT, N, MAXL, DELTA, HL0, JPRE, MNEWT, F, PSOL, NPSL, X, P, W, Z, LPCG, WP, &
+      IWP, WK, IFLAG)
       EXTERNAL F, PSOL
       INTEGER NEQ, N, MAXL, JPRE, MNEWT, NPSL, LPCG, IWP, IFLAG
       DOUBLE PRECISION TN,Y,SAVF,R,WGHT,DELTA,HL0,X,P,W,Z,WP,WK
@@ -6676,7 +6635,7 @@
       INTEGER NEQ
       DOUBLE PRECISION Y, SAVF, P, WGHT, HL0, WK, W
       DIMENSION NEQ(*), Y(*), SAVF(*), P(*), WGHT(*), WK(*), W(*)
-      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, 
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, &
       MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
@@ -7562,7 +7521,8 @@
 ! N      = the number of first-order differential equations.
 !-----------------------------------------------------------------------
       INTEGER I, I1, IREDO, IRET, J, JB, JOK, M, NCF, NEWQ, NSLOW
-      DOUBLE PRECISION DCON, DDN, DEL, DELP, DRC, DSM, DUP, EXDN, EXSM, EXUP, DFNORM, R, RH, RHDN, RHSM, RHUP, ROC, STIFF, TOLD, DVNORM
+      DOUBLE PRECISION DCON, DDN, DEL, DELP, DRC, DSM, DUP, EXDN, EXSM, EXUP, DFNORM, R, RH
+      DOUBLE PRECISION RHDN, RHSM, RHUP, ROC, STIFF, TOLD, DVNORM
 !
       KFLAG = 0
       TOLD = TN
@@ -8019,7 +7979,7 @@
       INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
       DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, 
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
       JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !-----------------------------------------------------------------------
@@ -9264,8 +9224,8 @@
       JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
       IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      INTEGER I, IBR, IER, IPIL, IPIU, IPTT1, IPTT2, J, K, KNEW, KAMAX, KAMIN, KCMAX, KCMIN, LDIF, LENIGP, LENWK1, LIWK, LJFO, 
-      MAXG, NP1, NZSUT
+      INTEGER I, IBR, IER, IPIL, IPIU, IPTT1, IPTT2, J, K, KNEW, KAMAX, KAMIN, KCMAX, KCMIN, LDIF, LENIGP, LENWK1, LIWK, LJFO
+      INTEGER MAXG, NP1, NZSUT
       DOUBLE PRECISION ERWT, FAC, YJ
 !-----------------------------------------------------------------------
 ! This routine performs preprocessing related to the sparse linear
@@ -9602,19 +9562,14 @@
       SUBROUTINE DAINVGS (NEQ, T, Y, WK, IWK, TEM, YDOT, IER, RES, ADDA)
       EXTERNAL RES, ADDA
       INTEGER NEQ, IWK, IER
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
+      INTEGER LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
       INTEGER I, IMUL, J, K, KMIN, KMAX
       DOUBLE PRECISION T, Y, WK, TEM, YDOT
       DOUBLE PRECISION RLSS
       DIMENSION Y(*), WK(*), IWK(*), TEM(*), YDOT(*)
-      COMMON /DLSS01/ RLSS(6),
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
+      IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
 !-----------------------------------------------------------------------
 ! This subroutine computes the initial value of the vector YDOT
 ! satisfying
@@ -9672,8 +9627,7 @@
  40     TEM(I) = 0.0D0
 !
 ! Numerical factorization of matrix A. ---------------------------------
-      CALL CDRV (NEQ,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1  WK(IPA),TEM,TEM,NSP,IWK(IPISP),WK(IPRSP),IESP,2,IYS)
+      CALL CDRV (NEQ,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),TEM,TEM,NSP,IWK(IPISP),WK(IPRSP),IESP,2,IYS)
       IF (IYS .EQ. 0) GO TO 50
       IMUL = (IYS - 1)/NEQ
       IER = 5
@@ -9682,42 +9636,27 @@
       RETURN
 !
 ! Solution of the linear system. ---------------------------------------
- 50   CALL CDRV (NEQ,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1  WK(IPA),YDOT,YDOT,NSP,IWK(IPISP),WK(IPRSP),IESP,4,IYS)
+ 50   CALL CDRV (NEQ,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),YDOT,YDOT,NSP,IWK(IPISP),WK(IPRSP),IESP,4,IYS)
       IF (IYS .NE. 0) IER = 5
       RETURN
 !----------------------- End of Subroutine DAINVGS ---------------------
       END
 !*DECK DPRJIS
-      SUBROUTINE DPRJIS (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WK, IWK,
-     1   RES, JAC, ADDA)
+      SUBROUTINE DPRJIS (NEQ, Y, YH, NYH, EWT, RTEM, SAVR, S, WK, IWK, RES, JAC, ADDA)
       EXTERNAL RES, JAC, ADDA
       INTEGER NEQ, NYH, IWK
       DOUBLE PRECISION Y, YH, EWT, RTEM, SAVR, S, WK
-      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), RTEM(*),
-     1   S(*), SAVR(*), WK(*), IWK(*)
-      INTEGER IOWND, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), RTEM(*), S(*), SAVR(*), WK(*), IWK(*)
+      INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM
+      INTEGER LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP
+      INTEGER IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION RLSS
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   IOWND(6), IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      COMMON /DLSS01/ RLSS(6),
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, IOWND(6), IOWNS(6), ICF, IERPJ, IERSL, JCUR, &
+      JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLSS01/ RLSS(6), IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, &
+      IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
       INTEGER I, IMUL, IRES, J, JJ, JMAX, JMIN, K, KMAX, KMIN, NG
       DOUBLE PRECISION CON, FAC, HL0, R, SRUR
 !-----------------------------------------------------------------------
@@ -9829,8 +9768,7 @@
       IERPJ = 0
       DO 295 I = 1,N
  295    RTEM(I) = 0.0D0
-      CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),
-     1  WK(IPA),RTEM,RTEM,NSP,IWK(IPISP),WK(IPRSP),IESP,2,IYS)
+      CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),RTEM,RTEM,NSP,IWK(IPISP),WK(IPRSP),IESP,2,IYS)
       IF (IYS .EQ. 0) RETURN
       IMUL = (IYS - 1)/N
       IERPJ = -2

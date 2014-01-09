@@ -1,6 +1,5 @@
 !*DECK DLSODE
-      SUBROUTINE DLSODE (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1                  ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
+      SUBROUTINE DLSODE (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
       EXTERNAL F, JAC
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
       DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
@@ -1207,16 +1206,11 @@
       DOUBLE PRECISION DUMACH, DVNORM
 !
 !  Declare all other variables.
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LF0,
-     1   LENIW, LENRW, LENWM, ML, MORD, MU, MXHNL0, MXSTP0
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH
+      INTEGER LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LF0, LENIW, LENRW, LENWM, ML, MORD, MU, MXHNL0, MXSTP0
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*80 MSG
@@ -1231,12 +1225,9 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, &
+      IOWNS(6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, &
+      MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 !
       DATA  MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -1372,8 +1363,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 110
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  110  JSTART = 0
       IF (MITER .GT. 0) RWORK(LWM) = SQRT(UROUND)
       NHNIL = 0
@@ -1519,9 +1509,8 @@
 !-----------------------------------------------------------------------
 !  CALL DSTODE(NEQ,Y,YH,NYH,YH,EWT,SAVF,ACOR,WM,IWM,F,JAC,DPREPJ,DSOLSY)
 !-----------------------------------------------------------------------
-      CALL DSTODE (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), IWORK(LIWM),
-     2   F, JAC, DPREPJ, DSOLSY)
+      CALL DSTODE (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), &
+      IWORK(LIWM), F, JAC, DPREPJ, DSOLSY)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540), KGO
 !-----------------------------------------------------------------------
@@ -1754,8 +1743,7 @@
 !----------------------- END OF SUBROUTINE DLSODE ----------------------
       END
 !*DECK DLSODES
-      SUBROUTINE DLSODES (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
+      SUBROUTINE DLSODES (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, MF)
       EXTERNAL F, JAC
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
       DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
@@ -3005,22 +2993,15 @@
 !-----------------------------------------------------------------------
       EXTERNAL DPRJS, DSOLSS
       DOUBLE PRECISION DUMACH, DVNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      INTEGER I, I1, I2, IFLAG, IMAX, IMUL, IMXER, IPFLAG, IPGO, IREM,
-     1   J, KGO, LENRAT, LENYHT, LENIW, LENRW, LF0, LIA, LJA,
-     2   LRTEM, LWTEM, LYHD, LYHN, MF1, MORD, MXHNL0, MXSTP0, NCOLM
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT
+      INTEGER LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP
+      INTEGER IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      INTEGER I, I1, I2, IFLAG, IMAX, IMUL, IMXER, IPFLAG, IPGO, IREM, J, KGO, LENRAT, LENYHT, LENIW, LENRW, LF0, LIA
+      INTEGER LJA, LRTEM, LWTEM, LYHD, LYHN, MF1, MORD, MXHNL0, MXSTP0, NCOLM
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*60 MSG
@@ -3037,18 +3018,13 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, & 
+      IOWNS( 6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, & 
+      MSBP, MXNCF , N, NQ, NST, NFE, NJE, NQU
 !
-      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH,
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH, IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, &
+      IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, &
+      NLU, NNZ, NSP, NZL, NZU
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -3166,14 +3142,12 @@
       LENRW = 20 + LWMIN + LREST
       IWORK(17) = LENRW
       LENIW = 30
-      IF (MOSS .EQ. 0 .AND. MITER .NE. 0 .AND. MITER .NE. 3)
-     1   LENIW = LENIW + N + 1
+      IF (MOSS .EQ. 0 .AND. MITER .NE. 0 .AND. MITER .NE. 3) LENIW = LENIW + N + 1
       IWORK(18) = LENIW
       IF (LENRW .GT. LRW) GO TO 617
       IF (LENIW .GT. LIW) GO TO 618
       LIA = 31
-      IF (MOSS .EQ. 0 .AND. MITER .NE. 0 .AND. MITER .NE. 3)
-     1   LENIW = LENIW + IWORK(LIA+N) - 1
+      IF (MOSS .EQ. 0 .AND. MITER .NE. 0 .AND. MITER .NE. 3) LENIW = LENIW + IWORK(LIA+N) - 1
       IWORK(18) = LENIW
       IF (LENIW .GT. LIW) GO TO 618
       LJA = LIA + N + 1
@@ -3299,8 +3273,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 125
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
 ! Initialize all remaining parameters. ---------------------------------
  125  UROUND = DUMACH()
       JSTART = 0
@@ -3441,9 +3414,8 @@
 !-----------------------------------------------------------------------
 !    CALL DSTODE(NEQ,Y,YH,NYH,YH,EWT,SAVF,ACOR,WM,WM,F,JAC,DPRJS,DSOLSS)
 !-----------------------------------------------------------------------
-      CALL DSTODE (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), RWORK(LWM),
-     2   F, JAC, DPRJS, DSOLSS)
+      CALL DSTODE (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), &
+      RWORK(LWM), F, JAC, DPRJS, DSOLSS)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540, 550), KGO
 !-----------------------------------------------------------------------
@@ -3733,8 +3705,7 @@
 !----------------------- End of Subroutine DLSODES ---------------------
       END
 !*DECK DLSODA
-      SUBROUTINE DLSODA (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, JT)
+      SUBROUTINE DLSODA (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, JT)
       EXTERNAL F, JAC
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, JT
       DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
@@ -4720,19 +4691,14 @@
 !-----------------------------------------------------------------------
       EXTERNAL DPRJA, DSOLSY
       DOUBLE PRECISION DUMACH, DMNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH
+      INTEGER LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER INSUFR, INSUFI, IXPR, IOWNS2, JTYP, MUSED, MXORDN, MXORDS
-      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LF0,
-     1   LENIW, LENRW, LENWM, ML, MORD, MU, MXHNL0, MXSTP0
+      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LF0, LENIW, LENRW, LENWM, ML, MORD, MU, MXHNL0, MXSTP0
       INTEGER LEN1, LEN1C, LEN1N, LEN1S, LEN2, LENIWC, LENRWC
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION TSW, ROWNS2, PDNORM
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*60 MSG
@@ -4748,15 +4714,11 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, & 
+      IOWNS( 6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, & 
+      MSBP, MXNCF , N, NQ, NST, NFE, NJE, NQU
 !
-      COMMON /DLSA01/ TSW, ROWNS2(20), PDNORM,
-     1   INSUFR, INSUFI, IXPR, IOWNS2(2), JTYP, MUSED, MXORDN, MXORDS
+      COMMON /DLSA01/ TSW, ROWNS2(20), PDNORM, INSUFR, INSUFI, IXPR, IOWNS2(2), JTYP, MUSED, MXORDN, MXORDS
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -4930,8 +4892,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 110
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  110  JSTART = 0
       NHNIL = 0
       NST = 0
@@ -5086,9 +5047,8 @@
 !-----------------------------------------------------------------------
 !   CALL DSTODA(NEQ,Y,YH,NYH,YH,EWT,SAVF,ACOR,WM,IWM,F,JAC,DPRJA,DSOLSY)
 !-----------------------------------------------------------------------
-      CALL DSTODA (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), IWORK(LIWM),
-     2   F, JAC, DPRJA, DSOLSY)
+      CALL DSTODA (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), &
+      IWORK(LIWM), F, JAC, DPRJA, DSOLSY)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540), KGO
 !-----------------------------------------------------------------------
@@ -5365,15 +5325,11 @@
 !----------------------- End of Subroutine DLSODA ----------------------
       END
 !*DECK DLSODAR
-      SUBROUTINE DLSODAR (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, JT,
-     2            G, NG, JROOT)
+      SUBROUTINE DLSODAR (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, JT, G, NG, JROOT)
       EXTERNAL F, JAC, G
-      INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, JT,
-     1   NG, JROOT
+      INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, JT, NG, JROOT
       DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
-      DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW),
-     1   JROOT(NG)
+      DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW), JROOT(NG)
 !-----------------------------------------------------------------------
 ! This is the 12 November 2003 version of
 ! DLSODAR: Livermore Solver for Ordinary Differential Equations, with
@@ -6474,22 +6430,17 @@
 !-----------------------------------------------------------------------
       EXTERNAL DPRJA, DSOLSY
       DOUBLE PRECISION DUMACH, DMNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT
+      INTEGER LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER INSUFR, INSUFI, IXPR, IOWNS2, JTYP, MUSED, MXORDN, MXORDS
       INTEGER LG0, LG1, LGX, IOWNR3, IRFND, ITASKC, NGC, NGE
-      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LENIW,
-     1   LENRW, LENWM, LF0, ML, MORD, MU, MXHNL0, MXSTP0
+      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LENIW, LENRW, LENWM, LF0, ML, MORD, MU, MXHNL0, MXSTP0
       INTEGER LEN1, LEN1C, LEN1N, LEN1S, LEN2, LENIWC, LENRWC
       INTEGER IRFP, IRT, LENYH, LYHNEW
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION TSW, ROWNS2, PDNORM
       DOUBLE PRECISION ROWNR3, T0, TLAST, TOUTC
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*60 MSG
@@ -6506,18 +6457,13 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, & 
+      IOWNS( 6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, & 
+      MSBP , MXNCF , N, NQ, NST, NFE, NJE, NQU
 !
-      COMMON /DLSA01/ TSW, ROWNS2(20), PDNORM,
-     1   INSUFR, INSUFI, IXPR, IOWNS2(2), JTYP, MUSED, MXORDN, MXORDS
+      COMMON /DLSA01/ TSW, ROWNS2(20), PDNORM, INSUFR, INSUFI, IXPR, IOWNS2(2), JTYP, MUSED, MXORDN, MXORDS
 !
-      COMMON /DLSR01/ ROWNR3(2), T0, TLAST, TOUTC,
-     1   LG0, LG1, LGX, IOWNR3(2), IRFND, ITASKC, NGC, NGE
+      COMMON /DLSR01/ ROWNR3(2), T0, TLAST, TOUTC, LG0, LG1, LGX, IOWNR3(2), IRFND, ITASKC, NGC, NGE
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -6710,8 +6656,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 110
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  110  JSTART = 0
       NHNIL = 0
       NST = 0
@@ -6792,8 +6737,7 @@
       IRFND = 0
       TOUTC = TOUT
       IF (NGC .EQ. 0) GO TO 270
-      CALL DRCHEK (1, G, NEQ, Y, RWORK(LYH), NYH,
-     1   RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
+      CALL DRCHEK (1, G, NEQ, Y, RWORK(LYH), NYH, RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
       IF (IRT .EQ. 0) GO TO 270
       GO TO 632
 !-----------------------------------------------------------------------
@@ -6810,8 +6754,7 @@
       IRFP = IRFND
       IF (NGC .EQ. 0) GO TO 205
       IF (ITASK .EQ. 1 .OR. ITASK .EQ. 4) TOUTC = TOUT
-      CALL DRCHEK (2, G, NEQ, Y, RWORK(LYH), NYH,
-     1   RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
+      CALL DRCHEK (2, G, NEQ, Y, RWORK(LYH), NYH, RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
       IF (IRT .NE. 1) GO TO 205
       IRFND = 1
       ISTATE = 3
@@ -6894,9 +6837,8 @@
 !-----------------------------------------------------------------------
 !   CALL DSTODA(NEQ,Y,YH,NYH,YH,EWT,SAVF,ACOR,WM,IWM,F,JAC,DPRJA,DSOLSY)
 !-----------------------------------------------------------------------
-      CALL DSTODA (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), IWORK(LIWM),
-     2   F, JAC, DPRJA, DSOLSY)
+      CALL DSTODA(NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), &
+      IWORK(LIWM), F, JAC, DPRJA, DSOLSY)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540), KGO
 !-----------------------------------------------------------------------
@@ -6932,8 +6874,7 @@
  310  CONTINUE
 !
       IF (NGC .EQ. 0) GO TO 315
-      CALL DRCHEK (3, G, NEQ, Y, RWORK(LYH), NYH,
-     1   RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
+      CALL DRCHEK (3, G, NEQ, Y, RWORK(LYH), NYH, RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
       IF (IRT .NE. 1) GO TO 315
       IRFND = 1
       ISTATE = 3
@@ -7204,8 +7145,7 @@
 !----------------------- End of Subroutine DLSODAR ---------------------
       END
 !*DECK DLSODPK
-      SUBROUTINE DLSODPK (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, PSOL, MF)
+      SUBROUTINE DLSODPK (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, PSOL, MF)
       EXTERNAL F, JAC, PSOL
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
       DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
@@ -8310,21 +8250,15 @@
 !
 !-----------------------------------------------------------------------
       DOUBLE PRECISION DUMACH, DVNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LF0, LENIW,
-     1   LENIWK, LENRW, LENWM, LENWK, LIWP, LWP, MORD, MXHNL0, MXSTP0,
-     2   NCFN0, NCFL0, NLI0, NNI0, NNID, NSTD, NWARN
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT
+      INTEGER LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      INTEGER I, I1, I2, IFLAG, IMXER, KGO, LF0, LENIW, LENIWK, LENRW, LENWM, LENWK, LIWP, LWP, MORD, MXHNL0, MXSTP0
+      INTEGER NCFN0, NCFL0, NLI0, NNI0, NNID, NSTD, NWARN
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      DOUBLE PRECISION ATOLI, AVDIM, AYI, BIG, EWTI, H0, HMAX, HMX,
-     1   RCFL, RCFN, RH, RTOLI, TCRIT,
-     2   TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      DOUBLE PRECISION ATOLI, AVDIM, AYI, BIG, EWTI, H0, HMAX, HMX, RCFL, RCFN, RH, RTOLI, TCRIT, TDIST, TNEXT
+      DOUBLE PRECISION TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT, LAVD, LCFN, LCFL, LWARN
       CHARACTER*60 MSG
@@ -8341,16 +8275,11 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, & 
+      IOWNS( 6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, & 
+      MSBP , MXNCF , N, NQ, NST, NFE, NJE, NQU
 !
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -8440,8 +8369,7 @@
       LWM = LYH + (MAXORD + 1)*NYH
       IF (MITER .EQ. 0) LENWK = 0
       IF (MITER .EQ. 1) LENWK = N*(MAXL+2) + MAXL*MAXL
-      IF (MITER .EQ. 2)
-     1   LENWK = N*(MAXL+2+MIN(1,MAXL-KMP)) + (MAXL+3)*MAXL + 1
+      IF (MITER .EQ. 2) LENWK = N*(MAXL+2+MIN(1,MAXL-KMP)) + (MAXL+3)*MAXL + 1
       IF (MITER .EQ. 3 .OR. MITER .EQ. 4) LENWK = 5*N
       IF (MITER .EQ. 9) LENWK = 2*N
       LWP = 0
@@ -8505,8 +8433,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 110
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  110  JSTART = 0
       NHNIL = 0
       NST = 0
@@ -8705,9 +8632,8 @@
 !-----------------------------------------------------------------------
 !     CALL DSTODPK(NEQ,Y,YH,NYH,YH,EWT,SAVF,SAVX,ACOR,WM,IWM,F,JAC,PSOL)
 !-----------------------------------------------------------------------
-      CALL DSTODPK (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   RWORK(LSAVF), RWORK(LSAVX), RWORK(LACOR), RWORK(LWM),
-     2   IWORK(LIWM), F, JAC, PSOL)
+      CALL DSTODPK(NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LSAVX), RWORK(LACOR), &
+      RWORK(LWM), IWORK(LIWM), F, JAC, PSOL)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540, 550), KGO
 !-----------------------------------------------------------------------
@@ -8946,15 +8872,12 @@
 !----------------------- End of Subroutine DLSODPK ---------------------
       END
 !*DECK DLSODKR
-      SUBROUTINE DLSODKR (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK,
-     1            ISTATE, IOPT, RWORK, LRW, IWORK, LIW, JAC, PSOL,
-     2            MF, G, NG, JROOT)
+      SUBROUTINE DLSODKR(F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, &
+      JAC, PSOL, MF, G, NG, JROOT)
       EXTERNAL F, JAC, PSOL, G
-      INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF,
-     1        NG, JROOT
+      INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF, NG, JROOT
       DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
-      DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW),
-     1          JROOT(*)
+      DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW), JROOT(*)
 !-----------------------------------------------------------------------
 ! This is the 18 November 2003 version of
 ! DLSODKR: Livermore Solver for Ordinary Differential equations,
@@ -10151,25 +10074,19 @@
 !
 !-----------------------------------------------------------------------
       DOUBLE PRECISION DUMACH, DVNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH
+      INTEGER LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
       INTEGER NEWT, NSFI, NSLJ, NJEV
       INTEGER LG0, LG1, LGX, IOWNR3, IRFND, ITASKC, NGC, NGE
-      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     1   NNI, NLI, NPS, NCFN, NCFL
-      INTEGER I, I1, I2, IER, IFLAG, IMXER, KGO, LF0,
-     1   LENIW, LENIWK, LENRW, LENWM, LENWK, LIWP, LWP, MORD, MXHNL0,
-     2   MXSTP0, NCFN0, NCFL0, NITER, NLI0, NNI0, NNID, NSTD, NWARN
+      INTEGER JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
+      INTEGER I, I1, I2, IER, IFLAG, IMXER, KGO, LF0, LENIW, LENIWK, LENRW, LENWM, LENWK, LIWP, LWP, MORD, MXHNL0
+      INTEGER MXSTP0, NCFN0, NCFL0, NITER, NLI0, NNI0, NNID, NSTD, NWARN
       INTEGER IRFP, IRT, LENYH, LYHNEW
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION STIFR
       DOUBLE PRECISION ROWNR3, T0, TLAST, TOUTC
       DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
-      DOUBLE PRECISION ATOLI, AVDIM, BIG, EWTI, H0, HMAX, HMX, RCFL,
-     1   RCFN, RH, RTOLI, TCRIT, TNEXT, TOLSF, TP, SIZE
+      DOUBLE PRECISION ATOLI, AVDIM, BIG, EWTI, H0, HMAX, HMX, RCFL, RCFN, RH, RTOLI, TCRIT, TNEXT, TOLSF, TP, SIZE
       DIMENSION MORD(2)
       LOGICAL IHIT, LAVD, LCFN, LCFL, LWARN
       CHARACTER*60 MSG
@@ -10188,21 +10105,15 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, & 
+      IOWNS( 6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, &
+      MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 !
       COMMON /DLS002/ STIFR, NEWT, NSFI, NSLJ, NJEV
 !
-      COMMON /DLSR01/ ROWNR3(2), T0, TLAST, TOUTC,
-     1   LG0, LG1, LGX, IOWNR3(2), IRFND, ITASKC, NGC, NGE
+      COMMON /DLSR01/ ROWNR3(2), T0, TLAST, TOUTC, LG0, LG1, LGX, IOWNR3(2), IRFND, ITASKC, NGC, NGE
 !
-      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN,
-     1   JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT,
-     2   NNI, NLI, NPS, NCFN, NCFL
+      COMMON /DLPK01/ DELT, EPCON, SQRTN, RSQRTN, JPRE, JACFLG, LOCWP, LOCIWP, LSAVX, KMP, MAXL, MNEWT, NNI, NLI, NPS, NCFN, NCFL
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -10312,8 +10223,7 @@
       LWM = LYH + (MAXORD + 1)*NYH
       IF (MITER .EQ. 0) LENWK = 0
       IF (MITER .EQ. 1) LENWK = N*(MAXL+2) + MAXL*MAXL
-      IF (MITER .EQ. 2)
-     1   LENWK = N*(MAXL+2+MIN(1,MAXL-KMP)) + (MAXL+3)*MAXL + 1
+      IF (MITER .EQ. 2) LENWK = N*(MAXL+2+MIN(1,MAXL-KMP)) + (MAXL+3)*MAXL + 1
       IF (MITER .EQ. 3 .OR. MITER .EQ. 4) LENWK = 5*N
       IF (MITER .EQ. 9) LENWK = 2*N
       LWP = 0
@@ -10377,8 +10287,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 110
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  110  JSTART = 0
       NHNIL = 0
       NST = 0
@@ -10418,8 +10327,7 @@
  120    RWORK(I+LEWT-1) = 1.0D0/RWORK(I+LEWT-1)
       IF (H0 .NE. 0.0D0) GO TO 180
 ! Call DLHIN to set initial step size H0 to be attempted. --------------
-      CALL DLHIN (NEQ, N, T, RWORK(LYH), RWORK(LF0), F, TOUT, UROUND,
-     1   RWORK(LEWT), ITOL, ATOL, Y, RWORK(LACOR), H0, NITER, IER)
+      CALL DLHIN (NEQ, N, T, RWORK(LYH), RWORK(LF0), F, TOUT, UROUND, RWORK(LEWT), ITOL, ATOL, Y, RWORK(LACOR), H0, NITER, IER)
       NFE = NFE + NITER
       IF (IER .NE. 0) GO TO 622
 ! Adjust H0 if necessary to meet HMAX bound. ---------------------------
@@ -10433,8 +10341,7 @@
       IRFND = 0
       TOUTC = TOUT
       IF (NGC .EQ. 0) GO TO 270
-      CALL DRCHEK (1, G, NEQ, Y, RWORK(LYH), NYH,
-     1   RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
+      CALL DRCHEK (1, G, NEQ, Y, RWORK(LYH), NYH, RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
       IF (IRT .EQ. 0) GO TO 270
       GO TO 632
 !-----------------------------------------------------------------------
@@ -10451,8 +10358,7 @@
       IRFP = IRFND
       IF (NGC .EQ. 0) GO TO 205
       IF (ITASK .EQ. 1 .OR. ITASK .EQ. 4) TOUTC = TOUT
-      CALL DRCHEK (2, G, NEQ, Y, RWORK(LYH), NYH,
-     1   RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
+      CALL DRCHEK (2, G, NEQ, Y, RWORK(LYH), NYH, RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
       IF (IRT .NE. 1) GO TO 205
       IRFND = 1
       ISTATE = 3
@@ -10575,9 +10481,8 @@
 !-----------------------------------------------------------------------
 !     CALL DSTOKA(NEQ,Y,YH,NYH,YH,EWT,SAVF,SAVX,ACOR,WM,IWM,F,JAC,PSOL)
 !-----------------------------------------------------------------------
-      CALL DSTOKA (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   RWORK(LSAVF), RWORK(LSAVX), RWORK(LACOR), RWORK(LWM),
-     2   IWORK(LIWM), F, JAC, PSOL)
+      CALL DSTOKA (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LSAVX), RWORK(LACOR), RWORK(LWM), &
+      IWORK(LIWM), F, JAC, PSOL)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540, 550), KGO
 !-----------------------------------------------------------------------
@@ -10590,8 +10495,7 @@
  300  INIT = 1
 !
       IF (NGC .EQ. 0) GO TO 315
-      CALL DRCHEK (3, G, NEQ, Y, RWORK(LYH), NYH,
-     1   RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
+      CALL DRCHEK (3, G, NEQ, Y, RWORK(LYH), NYH, RWORK(LG0), RWORK(LG1), RWORK(LGX), JROOT, IRT)
       IF (IRT .NE. 1) GO TO 315
       IRFND = 1
       ISTATE = 3
@@ -10851,13 +10755,11 @@
 !----------------------- End of Subroutine DLSODKR ---------------------
       END
 !*DECK DLSODI
-      SUBROUTINE DLSODI (RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL,
-     1  RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF )
+      SUBROUTINE DLSODI(RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF)
       EXTERNAL RES, ADDA, JAC
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
       DOUBLE PRECISION Y, YDOTI, T, TOUT, RTOL, ATOL, RWORK
-      DIMENSION NEQ(*), Y(*), YDOTI(*), RTOL(*), ATOL(*), RWORK(LRW),
-     1          IWORK(LIW)
+      DIMENSION NEQ(*), Y(*), YDOTI(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 !-----------------------------------------------------------------------
 ! This is the 18 November 2003 version of
 ! DLSODI: Livermore Solver for Ordinary Differential Equations
@@ -12024,16 +11926,11 @@
 !-----------------------------------------------------------------------
       EXTERNAL DPREPJI, DSOLSY
       DOUBLE PRECISION DUMACH, DVNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER I, I1, I2, IER, IFLAG, IMXER, IRES, KGO,
-     1   LENIW, LENRW, LENWM, LP, LYD0, ML, MORD, MU, MXHNL0, MXSTP0
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH
+      INTEGER LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER I, I1, I2, IER, IFLAG, IMXER, IRES, KGO, LENIW, LENRW, LENWM, LP, LYD0, ML, MORD, MU, MXHNL0, MXSTP0
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*60 MSG
@@ -12048,12 +11945,9 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, &
+      IOWNS(6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, &
+      MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -12185,8 +12079,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 105
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  105  JSTART = 0
       RWORK(LWM) = SQRT(UROUND)
       NHNIL = 0
@@ -12205,8 +12098,7 @@
       LP = LWM + 1
       IF (ISTATE .EQ. 1) GO TO 120
 ! DLSODI must compute initial dy/dt (LYD0 points to YH(*,2)). ----------
-         CALL DAINVG( RES, ADDA, NEQ, T, Y, RWORK(LYD0), MITER,
-     1                ML, MU, RWORK(LP), IWORK(21), IER )
+         CALL DAINVG( RES, ADDA, NEQ, T, Y, RWORK(LYD0), MITER, ML, MU, RWORK(LP), IWORK(21), IER )
          NFE = NFE + 1
          IF (IER .LT. 0) GO TO 560
          IF (IER .GT. 0) GO TO 565
@@ -12346,9 +12238,8 @@
 !                 ADDA,JAC,DPREPJI,DSOLSY)
 ! Note: SAVF in DSTODI occupies the same space as YDOTI in DLSODI.
 !-----------------------------------------------------------------------
-      CALL DSTODI (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   YDOTI, RWORK(LSAVF), RWORK(LACOR), RWORK(LWM),
-     2   IWORK(LIWM), RES, ADDA, JAC, DPREPJI, DSOLSY )
+      CALL DSTODI(NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), YDOTI, RWORK(LSAVF), RWORK(LACOR), &
+      RWORK(LWM), IWORK(LIWM), RES, ADDA, JAC, DPREPJI, DSOLSY)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540, 400, 550), KGO
 !
@@ -12618,13 +12509,11 @@
 !----------------------- End of Subroutine DLSODI ----------------------
       END
 !*DECK DLSOIBT
-      SUBROUTINE DLSOIBT (RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL,
-     1  RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF )
+      SUBROUTINE DLSOIBT(RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF)
       EXTERNAL RES, ADDA, JAC
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
       DOUBLE PRECISION Y, YDOTI, T, TOUT, RTOL, ATOL, RWORK
-      DIMENSION NEQ(*), Y(*), YDOTI(*), RTOL(*), ATOL(*), RWORK(LRW),
-     1          IWORK(LIW)
+      DIMENSION NEQ(*), Y(*), YDOTI(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 !-----------------------------------------------------------------------
 ! This is the 18 November 2003 version of
 ! DLSOIBT: Livermore Solver for Ordinary differential equations given
@@ -13826,16 +13715,11 @@
 !-----------------------------------------------------------------------
       EXTERNAL DPJIBT, DSLSBT
       DOUBLE PRECISION DUMACH, DVNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER I, I1, I2, IER, IFLAG, IMXER, IRES, KGO,
-     1   LENIW, LENRW, LENWM, LP, LYD0, MB, MORD, MXHNL0, MXSTP0, NB
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF
+      INTEGER LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER I, I1, I2, IER, IFLAG, IMXER, IRES, KGO, LENIW, LENRW, LENWM, LP, LYD0, MB, MORD, MXHNL0, MXSTP0, NB
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*60 MSG
@@ -13850,12 +13734,9 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, &
+      IOWNS(6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, &
+      MXNCF, N, NQ, NST, NFE, NJE, NQU
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -13984,8 +13865,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 105
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
  105  JSTART = 0
       RWORK(LWM) = SQRT(UROUND)
       NHNIL = 0
@@ -14004,8 +13884,7 @@
       LP = LWM + 1
       IF ( ISTATE .EQ. 1 )  GO TO 120
 ! DLSOIBT must compute initial dy/dt (LYD0 points to YH(*,2)). ---------
-         CALL DAIGBT( RES, ADDA, NEQ, T, Y, RWORK(LYD0),
-     1               MB, NB, RWORK(LP), IWORK(21), IER )
+         CALL DAIGBT( RES, ADDA, NEQ, T, Y, RWORK(LYD0), MB, NB, RWORK(LP), IWORK(21), IER )
          NFE = NFE + 1
          IF (IER .LT. 0) GO TO 560
          IF (IER .GT. 0) GO TO 565
@@ -14145,9 +14024,8 @@
 !                 ADDA,JAC,DPJIBT,DSLSBT)
 ! Note: SAVF in DSTODI occupies the same space as YDOTI in DLSOIBT.
 !-----------------------------------------------------------------------
-      CALL DSTODI (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   YDOTI, RWORK(LSAVF), RWORK(LACOR), RWORK(LWM),
-     2   IWORK(LIWM), RES, ADDA, JAC, DPJIBT, DSLSBT )
+      CALL DSTODI(NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), YDOTI, RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), IWORK(LIWM), &
+      RES, ADDA, JAC, DPJIBT, DSLSBT)
       KGO = 1 - KFLAG
       GO TO (300, 530, 540, 400, 550), KGO
 !
@@ -14417,13 +14295,11 @@
 !----------------------- End of Subroutine DLSOIBT ---------------------
       END
 !*DECK DLSODIS
-      SUBROUTINE DLSODIS (RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL,
-     1  RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF )
+      SUBROUTINE DLSODIS(RES, ADDA, JAC, NEQ, Y, YDOTI, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, RWORK, LRW, IWORK, LIW, MF)
       EXTERNAL RES, ADDA, JAC
       INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
       DOUBLE PRECISION Y, YDOTI, T, TOUT, RTOL, ATOL, RWORK
-      DIMENSION NEQ(*), Y(*), YDOTI(*), RTOL(*), ATOL(*), RWORK(LRW),
-     1          IWORK(LIW)
+      DIMENSION NEQ(*), Y(*), YDOTI(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 !-----------------------------------------------------------------------
 ! This is the 18 November 2003 version of
 ! DLSODIS: Livermore Solver for Ordinary Differential equations
@@ -15791,23 +15667,15 @@
 !-----------------------------------------------------------------------
       EXTERNAL DPRJIS, DSOLSS
       DOUBLE PRECISION DUMACH, DVNORM
-      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS,
-     1   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     2   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     3   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
-      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     1   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     2   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     3   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
-      INTEGER I, I1, I2, IER, IGO, IFLAG, IMAX, IMUL, IMXER, IPFLAG,
-     1   IPGO, IREM, IRES, J, KGO, LENRAT, LENYHT, LENIW, LENRW,
-     2   LIA, LIC, LJA, LJC, LRTEM, LWTEM, LYD0, LYHD, LYHN, MF1,
-     3   MORD, MXHNL0, MXSTP0, NCOLM
-      DOUBLE PRECISION ROWNS,
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
+      INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT
+      INTEGER LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP
+      INTEGER IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      INTEGER I, I1, I2, IER, IGO, IFLAG, IMAX, IMUL, IMXER, IPFLAG, IPGO, IREM, IRES, J, KGO, LENRAT, LENYHT, LENIW
+      INTEGER LENRW, LIA, LIC, LJA, LJC, LRTEM, LWTEM, LYD0, LYHD, LYHN, MF1, MORD, MXHNL0, MXSTP0, NCOLM
+      DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
       DOUBLE PRECISION CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH
-      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI,
-     1   TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
+      DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
       DIMENSION MORD(2)
       LOGICAL IHIT
       CHARACTER*60 MSG
@@ -15824,18 +15692,13 @@
 ! Groups of variables are replaced by dummy arrays in the Common
 ! declarations in routines where those variables are not used.
 !-----------------------------------------------------------------------
-      COMMON /DLS001/ ROWNS(209),
-     1   CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND,
-     2   INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS(6),
-     3   ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L,
-     4   LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER,
-     5   MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
+      COMMON /DLS001/ ROWNS(209), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, &
+      IOWNS(6), ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, &
+      MXNCF, N, NQ, NST, NFE, NJE, NQU
 !
-      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH,
-     1   IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP,
-     2   IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA,
-     3   LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ,
-     4   NSLJ, NGP, NLU, NNZ, NSP, NZL, NZU
+      COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH, IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN,&
+      IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, &
+      NLU, NNZ, NSP, NZL, NZU
 !
       DATA MORD(1),MORD(2)/12,5/, MXSTP0/500/, MXHNL0/10/
 !-----------------------------------------------------------------------
@@ -15956,8 +15819,7 @@
       IF (LENRW .GT. LRW) GO TO 617
       IF (LENIW .GT. LIW) GO TO 618
       LIA = 31
-      IF (MOSS .NE. 1 .AND. MOSS .NE. 2)
-     1   LENIW = LENIW + IWORK(LIA+N) - 1
+      IF (MOSS .NE. 1 .AND. MOSS .NE. 2) LENIW = LENIW + IWORK(LIA+N) - 1
       IWORK(18) = LENIW
       IF (LENIW .GT. LIW) GO TO 618
       LJA = LIA + N + 1
@@ -16025,8 +15887,7 @@
       LSAVF = MIN(LSAVF,LRW)
       LEWT = MIN(LEWT,LRW)
       LACOR = MIN(LACOR,LRW)
-      CALL DIPREPI (NEQ, Y, YDOTI, RWORK, IWORK(LIA), IWORK(LJA),
-     1   IWORK(LIC), IWORK(LJC), IPFLAG, RES, JAC, ADDA)
+      CALL DIPREPI (NEQ, Y, YDOTI, RWORK, IWORK(LIA), IWORK(LJA), IWORK(LIC), IWORK(LJC), IPFLAG, RES, JAC, ADDA)
       LENRW = LWM - 1 + LENWK + LREST
       IWORK(17) = LENRW
       IF (IPFLAG .NE. -1) IWORK(23) = IPIAN
@@ -16085,8 +15946,7 @@
  110    RWORK(I+LEWT-1) = 1.0D0/RWORK(I+LEWT-1)
 ! Call DIPREPI and DPREPI to do sparse matrix preprocessing.------------
       LACOR = MIN(LACOR,LRW)
-      CALL DIPREPI (NEQ, Y, YDOTI, RWORK, IWORK(LIA), IWORK(LJA),
-     1   IWORK(LIC), IWORK(LJC), IPFLAG, RES, JAC, ADDA)
+      CALL DIPREPI (NEQ, Y, YDOTI, RWORK, IWORK(LIA), IWORK(LJA), IWORK(LIC), IWORK(LJC), IPFLAG, RES, JAC, ADDA)
       LENRW = LWM - 1 + LENWK + LREST
       IWORK(17) = LENRW
       IF (IPFLAG .NE. -1) IWORK(23) = IPIAN
@@ -16098,8 +15958,7 @@
 ! Compute initial dy/dt, if necessary, and load it into YH.-------------
       LYD0 = LYH + N
       IF (ISTATE .NE. 0) GO TO 120
-      CALL DAINVGS (NEQ, T, Y, RWORK(LWM), RWORK(LWM), RWORK(LACOR),
-     1              RWORK(LYD0), IER, RES, ADDA)
+      CALL DAINVGS (NEQ, T, Y, RWORK(LWM), RWORK(LWM), RWORK(LACOR), RWORK(LYD0), IER, RES, ADDA)
       NFE = NFE + 1
       IGO = IER + 1
       GO TO (120, 565, 560, 560), IGO
@@ -16108,8 +15967,7 @@
       IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 125
       TCRIT = RWORK(1)
       IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
-      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0)
-     1   H0 = TCRIT - T
+      IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
 ! Initialize all remaining parameters. ---------------------------------
  125  UROUND = DUMACH()
       JSTART = 0
@@ -16245,9 +16103,8 @@
 !                 ADDA,JAC,DPRJIS,DSOLSS)
 ! Note: SAVF in DSTODI occupies the same space as YDOTI in DLSODIS.
 !-----------------------------------------------------------------------
-      CALL DSTODI (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT),
-     1   YDOTI, RWORK(LSAVF), RWORK(LACOR), RWORK(LWM),
-     2   RWORK(LWM), RES, ADDA, JAC, DPRJIS, DSOLSS )
+      CALL DSTODI (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), YDOTI, RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), RWORK(LWM), &
+      RES, ADDA, JAC, DPRJIS, DSOLSS )
       KGO = 1 - KFLAG
       GO TO (300, 530, 540, 400, 550, 555), KGO
 !
