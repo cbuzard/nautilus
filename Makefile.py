@@ -115,6 +115,7 @@ print(command)
 #~ pdb.set_trace()
 
 command = "%s %s -o nautilus opk*.f90 nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
+#~ command = "%s %s -o nautilus ode_solve.f90 nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
 print(command)
 (process_stdout, process_stderr, returncode) = run(command)
 
