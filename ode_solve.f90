@@ -1272,8 +1272,6 @@ DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 ! All the others are subroutines.
 !
 !-----------------------------------------------------------------------
-EXTERNAL DPRJS, DSOLSS
-DOUBLE PRECISION DUMACH, DVNORM
 INTEGER INIT, MXSTEP, MXHNIL, NHNIL, NSLAST, NYH, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT
 INTEGER LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP
@@ -1322,6 +1320,8 @@ DATA LENRAT/2/
 ! If ISTATE .gt. 1 but the flag INIT shows that initialization has
 ! not yet been done, an error return occurs.
 ! If ISTATE = 1 and TOUT = T, return immediately.
+!-----------------------------------------------------------------------
+IWORK(1:LWM) = 0
 !-----------------------------------------------------------------------
 IF (ISTATE .LT. 1 .OR. ISTATE .GT. 3) GOTO 601
 IF (ITASK .LT. 1 .OR. ITASK .GT. 5) GOTO 602
@@ -1696,7 +1696,7 @@ CALL XERRWD (MSG, 50, 102, 0, 1, MXHNIL, 0, 0, 0.0D0, 0.0D0)
 !    CALL DSTODE(NEQ,Y,YH,NYH,YH,EWT,SAVF,ACOR,WM,WM,F,JAC,DPRJS,DSOLSS)
 !-----------------------------------------------------------------------
 CALL DSTODE (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), &
-RWORK(LWM), F, JAC, DPRJS, DSOLSS)
+IWORK(LWM), F, JAC, DPRJS, DSOLSS)
 KGO = 1 - KFLAG
 GOTO (300, 530, 540, 550), KGO
 !-----------------------------------------------------------------------
@@ -3138,7 +3138,7 @@ COMMON /DLSS01/ CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH, IPLOST, IESP, ISTATC, I
 IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA, LENYH, LENYHM, LENWK, LREQ, LRAT, LREST, LWMIN, MOSS, MSBJ, NSLJ, NGP, &
 NLU, NNZ, NSP, NZL, NZU
 INTEGER I, IMUL, J, JJ, JOK, JMAX, JMIN, K, KMAX, KMIN, NG
-DOUBLE PRECISION CON, DI, FAC, HL0, PIJ, R, R0, RCON, RCONT, SRUR, DVNORM
+DOUBLE PRECISION CON, DI, FAC, HL0, PIJ, R, R0, RCON, RCONT, SRUR
 !-----------------------------------------------------------------------
 ! DPRJS is called to compute and process the matrix
 ! P = I - H*EL(1)*J , where J is an approximation to the Jacobian.
@@ -3443,7 +3443,7 @@ INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JST
 INTEGER LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER I, I1, IREDO, IRET, J, JB, M, NCF, NEWQ
 DOUBLE PRECISION CONIT, CRATE, EL, ELCO, HOLD, RMAX, TESCO, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
-DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP, R, RH, RHDN, RHSM, RHUP, TOLD, DVNORM
+DOUBLE PRECISION DCON, DDN, DEL, DELP, DSM, DUP, EXDN, EXSM, EXUP, R, RH, RHDN, RHSM, RHUP, TOLD
 
 COMMON /DLS001/ CONIT, CRATE, EL(13), ELCO(13,12), HOLD, RMAX, TESCO(3,12), CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND, &
 IOWND(6), IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, &
@@ -4009,9 +4009,9 @@ END subroutine dewset
 
 SUBROUTINE DIPREP (NEQ, Y, RWORK, IA, JA, IPFLAG, F, JAC)
 EXTERNAL F, JAC
-INTEGER NEQ, IA, JA, IPFLAG
+INTEGER NEQ, IA, JA, IPFLAG, IWORK
 DOUBLE PRECISION Y, RWORK
-DIMENSION NEQ(*), Y(*), RWORK(*), IA(*), JA(*)
+DIMENSION NEQ(*), Y(*), RWORK(*), IA(*), JA(*), IWORK(LWM)
 INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
 INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
@@ -4037,8 +4037,9 @@ INTEGER I, IMAX, LEWTN, LYHD, LYHN
 ! if there was trouble in Subroutine DPREP.
 !-----------------------------------------------------------------------
 IPFLAG = 0
+IWORK(1:LWM) = 0
 ! Call DPREP to do matrix preprocessing operations. --------------------
-CALL DPREP (NEQ, Y, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT), RWORK(LACOR), IA, JA, RWORK(LWM), RWORK(LWM), IPFLAG, F, JAC)
+CALL DPREP (NEQ, Y, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT), RWORK(LACOR), IA, JA, RWORK(LWM), IWORK(LWM), IPFLAG, F, JAC)
 LENWK = MAX(LREQ,LWMIN)
 IF (IPFLAG .LT. 0) RETURN
 ! If DPREP was successful, move YH to end of required space for WM. ----
@@ -5313,7 +5314,7 @@ CHARACTER*(*) MSG
 !
 !  Declare local variables.
 !
-INTEGER LUNIT, IXSAV, MESFLG
+INTEGER LUNIT, MESFLG
 !
 !  Get logical unit number and message print flag.
 !
@@ -5391,7 +5392,7 @@ INTEGER FUNCTION IXSAV (IPAR, IVALUE, ISET)
 LOGICAL ISET
 INTEGER IPAR, IVALUE
 !-----------------------------------------------------------------------
-INTEGER IUMACH, LUNIT, MESFLG
+INTEGER LUNIT, MESFLG
 !-----------------------------------------------------------------------
 ! The following Fortran-77 declaration is to cause the values of the
 ! listed (local) variables to be saved between calls to this routine.

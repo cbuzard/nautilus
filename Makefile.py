@@ -108,14 +108,14 @@ if profiling:
 if os.path.isfile(LOG_NAME):
   os.remove(LOG_NAME)
 
-command = "%s %s -c nls_header_mod.f90" % (COMPILATOR, OPTIONS)
+command = "%s %s -c nls_header_mod.f90 ode_solve.f90" % (COMPILATOR, OPTIONS)
 print(command)
 (process_stdout, process_stderr, returncode) = run(command)
 
 #~ pdb.set_trace()
 
-command = "%s %s -o nautilus opk*.f90 nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
-#~ command = "%s %s -o nautilus ode_solve.f90 nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
+#~ command = "%s %s -o nautilus opk*.f90 nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
+command = "%s %s -o nautilus ode_solve.o nautilus.f90 nls*.f90" % (COMPILATOR, OPTIONS)
 print(command)
 (process_stdout, process_stderr, returncode) = run(command)
 
