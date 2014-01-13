@@ -1393,7 +1393,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       700    CONTINUE
       READ(NGR,705) GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
       705    FORMAT(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)
-      IF (GSPEC(I).EQ.'X          ') GO TO 700
+      IF (GSPEC(I).EQ.'X          ') GOTO 700
       IF (GSPEC(I).EQ.'           ') EXIT
       NGS=NGS+1
     ENDDO

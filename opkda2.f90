@@ -68,7 +68,7 @@ INTEGER IDAMAX,J,K,KP1,L,NM1
 !***FIRST EXECUTABLE STATEMENT  DGEFA
 INFO = 0
 NM1 = N - 1
-IF (NM1 .LT. 1) GO TO 70
+IF (NM1 .LT. 1) GOTO 70
 DO 60 K = 1, NM1
 KP1 = K + 1
 !
@@ -79,11 +79,11 @@ IPVT(K) = L
 !
 !        ZERO PIVOT IMPLIES THIS COLUMN ALREADY TRIANGULARIZED
 !
-IF (A(L,K) .EQ. 0.0D0) GO TO 40
+IF (A(L,K) .EQ. 0.0D0) GOTO 40
 !
 !           INTERCHANGE IF NECESSARY
 !
-IF (L .EQ. K) GO TO 10
+IF (L .EQ. K) GOTO 10
 T = A(L,K)
 A(L,K) = A(K,K)
 A(K,K) = T
@@ -98,13 +98,13 @@ CALL DSCAL(N-K,T,A(K+1,K),1)
 !
 DO 30 J = KP1, N
 T = A(L,J)
-IF (L .EQ. K) GO TO 20
+IF (L .EQ. K) GOTO 20
 A(L,J) = A(K,J)
 A(K,J) = T
 20          CONTINUE
 CALL DAXPY(N-K,T,A(K+1,K),1,A(K+1,J),1)
 30       CONTINUE
-GO TO 50
+GOTO 50
 40    CONTINUE
 INFO = K
 50    CONTINUE
@@ -167,7 +167,7 @@ SUBROUTINE DGESL (A, LDA, N, IPVT, B, JOB)
 !     To compute  INVERSE(A) * C  where  C  is a matrix
 !     with  P  columns
 !           CALL DGECO(A,LDA,N,IPVT,RCOND,Z)
-!           IF (RCOND is too small) GO TO ...
+!           IF (RCOND is too small) GOTO ...
 !           DO 10 J = 1, P
 !              CALL DGESL(A,LDA,N,IPVT,C(1,J),0)
 !        10 CONTINUE
@@ -191,16 +191,16 @@ DOUBLE PRECISION DDOT,T
 INTEGER K,KB,L,NM1
 !***FIRST EXECUTABLE STATEMENT  DGESL
 NM1 = N - 1
-IF (JOB .NE. 0) GO TO 50
+IF (JOB .NE. 0) GOTO 50
 !
 !        JOB = 0 , SOLVE  A * X = B
 !        FIRST SOLVE  L*Y = B
 !
-IF (NM1 .LT. 1) GO TO 30
+IF (NM1 .LT. 1) GOTO 30
 DO 20 K = 1, NM1
 L = IPVT(K)
 T = B(L)
-IF (L .EQ. K) GO TO 10
+IF (L .EQ. K) GOTO 10
 B(L) = B(K)
 B(K) = T
 10       CONTINUE
@@ -216,7 +216,7 @@ B(K) = B(K)/A(K,K)
 T = -B(K)
 CALL DAXPY(K-1,T,A(1,K),1,B(1),1)
 40    CONTINUE
-GO TO 100
+GOTO 100
 50 CONTINUE
 !
 !        JOB = NONZERO, SOLVE  TRANS(A) * X = B
@@ -229,12 +229,12 @@ B(K) = (B(K) - T)/A(K,K)
 !
 !        NOW SOLVE TRANS(L)*X = Y
 !
-IF (NM1 .LT. 1) GO TO 90
+IF (NM1 .LT. 1) GOTO 90
 DO 80 KB = 1, NM1
 K = N - KB
 B(K) = B(K) + DDOT(N-K,A(K+1,K),1,B(K+1),1)
 L = IPVT(K)
-IF (L .EQ. K) GO TO 70
+IF (L .EQ. K) GOTO 70
 T = B(L)
 B(L) = B(K)
 B(K) = T
@@ -353,7 +353,7 @@ INFO = 0
 !
 J0 = MU + 2
 J1 = MIN(N,M) - 1
-IF (J1 .LT. J0) GO TO 30
+IF (J1 .LT. J0) GOTO 30
 DO 20 JZ = J0, J1
 I0 = M + 1 - JZ
 DO 10 I = I0, ML
@@ -367,15 +367,15 @@ JU = 0
 !     GAUSSIAN ELIMINATION WITH PARTIAL PIVOTING
 !
 NM1 = N - 1
-IF (NM1 .LT. 1) GO TO 130
+IF (NM1 .LT. 1) GOTO 130
 DO 120 K = 1, NM1
 KP1 = K + 1
 !
 !        ZERO NEXT FILL-IN COLUMN
 !
 JZ = JZ + 1
-IF (JZ .GT. N) GO TO 50
-IF (ML .LT. 1) GO TO 50
+IF (JZ .GT. N) GOTO 50
+IF (ML .LT. 1) GOTO 50
 DO 40 I = 1, ML
 ABD(I,JZ) = 0.0D0
 40       CONTINUE
@@ -389,11 +389,11 @@ IPVT(K) = L + K - M
 !
 !        ZERO PIVOT IMPLIES THIS COLUMN ALREADY TRIANGULARIZED
 !
-IF (ABD(L,K) .EQ. 0.0D0) GO TO 100
+IF (ABD(L,K) .EQ. 0.0D0) GOTO 100
 !
 !           INTERCHANGE IF NECESSARY
 !
-IF (L .EQ. M) GO TO 60
+IF (L .EQ. M) GOTO 60
 T = ABD(L,K)
 ABD(L,K) = ABD(M,K)
 ABD(M,K) = T
@@ -408,19 +408,19 @@ CALL DSCAL(LM,T,ABD(M+1,K),1)
 !
 JU = MIN(MAX(JU,MU+IPVT(K)),N)
 MM = M
-IF (JU .LT. KP1) GO TO 90
+IF (JU .LT. KP1) GOTO 90
 DO 80 J = KP1, JU
 L = L - 1
 MM = MM - 1
 T = ABD(L,J)
-IF (L .EQ. MM) GO TO 70
+IF (L .EQ. MM) GOTO 70
 ABD(L,J) = ABD(MM,J)
 ABD(MM,J) = T
 70          CONTINUE
 CALL DAXPY(LM,T,ABD(M+1,K),1,ABD(MM+1,J),1)
 80       CONTINUE
 90       CONTINUE
-GO TO 110
+GOTO 110
 100    CONTINUE
 INFO = K
 110    CONTINUE
@@ -489,7 +489,7 @@ SUBROUTINE DGBSL (ABD, LDA, N, ML, MU, IPVT, B, JOB)
 !     To compute  INVERSE(A) * C  where  C  is a matrix
 !     with  P  columns
 !           CALL DGBCO(ABD,LDA,N,ML,MU,IPVT,RCOND,Z)
-!           IF (RCOND is too small) GO TO ...
+!           IF (RCOND is too small) GOTO ...
 !           DO 10 J = 1, P
 !              CALL DGBSL(ABD,LDA,N,ML,MU,IPVT,C(1,J),0)
 !        10 CONTINUE
@@ -515,18 +515,18 @@ INTEGER K,KB,L,LA,LB,LM,M,NM1
 !***FIRST EXECUTABLE STATEMENT  DGBSL
 M = MU + ML + 1
 NM1 = N - 1
-IF (JOB .NE. 0) GO TO 50
+IF (JOB .NE. 0) GOTO 50
 !
 !        JOB = 0 , SOLVE  A * X = B
 !        FIRST SOLVE L*Y = B
 !
-IF (ML .EQ. 0) GO TO 30
-IF (NM1 .LT. 1) GO TO 30
+IF (ML .EQ. 0) GOTO 30
+IF (NM1 .LT. 1) GOTO 30
 DO 20 K = 1, NM1
 LM = MIN(ML,N-K)
 L = IPVT(K)
 T = B(L)
-IF (L .EQ. K) GO TO 10
+IF (L .EQ. K) GOTO 10
 B(L) = B(K)
 B(K) = T
 10          CONTINUE
@@ -545,7 +545,7 @@ LB = K - LM
 T = -B(K)
 CALL DAXPY(LM,T,ABD(LA,K),1,B(LB),1)
 40    CONTINUE
-GO TO 100
+GOTO 100
 50 CONTINUE
 !
 !        JOB = NONZERO, SOLVE  TRANS(A) * X = B
@@ -561,14 +561,14 @@ B(K) = (B(K) - T)/ABD(M,K)
 !
 !        NOW SOLVE TRANS(L)*X = Y
 !
-IF (ML .EQ. 0) GO TO 90
-IF (NM1 .LT. 1) GO TO 90
+IF (ML .EQ. 0) GOTO 90
+IF (NM1 .LT. 1) GOTO 90
 DO 80 KB = 1, NM1
 K = N - KB
 LM = MIN(ML,N-K)
 B(K) = B(K) + DDOT(LM,ABD(M+1,K),1,B(K+1),1)
 L = IPVT(K)
-IF (L .EQ. K) GO TO 70
+IF (L .EQ. K) GOTO 70
 T = B(L)
 B(L) = B(K)
 B(K) = T
@@ -647,7 +647,7 @@ RETURN
 !     Clean-up loop so remaining vector length is a multiple of 4.
 !
 20 M = MOD(N,4)
-IF (M .EQ. 0) GO TO 40
+IF (M .EQ. 0) GOTO 40
 DO 30 I = 1,M
 DY(I) = DY(I) + DA*DX(I)
 30 CONTINUE
@@ -736,7 +736,7 @@ RETURN
 !     Clean-up loop so remaining vector length is a multiple of 7.
 !
 20 M = MOD(N,7)
-IF (M .EQ. 0) GO TO 40
+IF (M .EQ. 0) GOTO 40
 DO 30 I = 1,M
 DY(I) = DX(I)
 30 CONTINUE
@@ -829,7 +829,7 @@ RETURN
 !     Clean-up loop so remaining vector length is a multiple of 5.
 !
 20 M = MOD(N,5)
-IF (M .EQ. 0) GO TO 40
+IF (M .EQ. 0) GOTO 40
 DO 30 I = 1,M
 DDOT = DDOT + DX(I)*DY(I)
 30 CONTINUE
@@ -929,9 +929,9 @@ DATA ZERO, ONE /0.0D0, 1.0D0/
 !
 DATA CUTLO, CUTHI /8.232D-11,  1.304D19/
 !***FIRST EXECUTABLE STATEMENT  DNRM2
-IF (N .GT. 0) GO TO 10
+IF (N .GT. 0) GOTO 10
 DNRM2  = ZERO
-GO TO 300
+GOTO 300
 !
 10 ASSIGN 30 TO NEXT
 SUM = ZERO
@@ -940,20 +940,20 @@ NN = N * INCX
 !                                                 BEGIN MAIN LOOP
 !
 I = 1
-20    GO TO NEXT,(30, 50, 70, 110)
-30 IF (ABS(DX(I)) .GT. CUTLO) GO TO 85
+20    GOTO NEXT,(30, 50, 70, 110)
+30 IF (ABS(DX(I)) .GT. CUTLO) GOTO 85
 ASSIGN 50 TO NEXT
 XMAX = ZERO
 !
 !                        PHASE 1.  SUM IS ZERO
 !
-50 IF (DX(I) .EQ. ZERO) GO TO 200
-IF (ABS(DX(I)) .GT. CUTLO) GO TO 85
+50 IF (DX(I) .EQ. ZERO) GOTO 200
+IF (ABS(DX(I)) .GT. CUTLO) GOTO 85
 !
 !                                PREPARE FOR PHASE 2.
 !
 ASSIGN 70 TO NEXT
-GO TO 105
+GOTO 105
 !
 !                                PREPARE FOR PHASE 4.
 !
@@ -961,23 +961,23 @@ GO TO 105
 ASSIGN 110 TO NEXT
 SUM = (SUM / DX(I)) / DX(I)
 105 XMAX = ABS(DX(I))
-GO TO 115
+GOTO 115
 !
 !                   PHASE 2.  SUM IS SMALL.
 !                             SCALE TO AVOID DESTRUCTIVE UNDERFLOW.
 !
-70 IF (ABS(DX(I)) .GT. CUTLO) GO TO 75
+70 IF (ABS(DX(I)) .GT. CUTLO) GOTO 75
 !
 !                     COMMON CODE FOR PHASES 2 AND 4.
 !                     IN PHASE 4 SUM IS LARGE.  SCALE TO AVOID OVERFLOW.
 !
-110 IF (ABS(DX(I)) .LE. XMAX) GO TO 115
+110 IF (ABS(DX(I)) .LE. XMAX) GOTO 115
 SUM = ONE + SUM * (XMAX / DX(I))**2
 XMAX = ABS(DX(I))
-GO TO 200
+GOTO 200
 !
 115 SUM = SUM + (DX(I)/XMAX)**2
-GO TO 200
+GOTO 200
 !
 !                  PREPARE FOR PHASE 3.
 !
@@ -991,14 +991,14 @@ GO TO 200
 !                   PHASE 3.  SUM IS MID-RANGE.  NO SCALING.
 !
 DO 95 J = I,NN,INCX
-IF (ABS(DX(J)) .GE. HITEST) GO TO 100
+IF (ABS(DX(J)) .GE. HITEST) GOTO 100
 95    SUM = SUM + DX(J)**2
 DNRM2 = SQRT(SUM)
-GO TO 300
+GOTO 300
 !
 200 CONTINUE
 I = I + INCX
-IF (I .LE. NN) GO TO 20
+IF (I .LE. NN) GOTO 20
 !
 !              END OF MAIN LOOP.
 !
@@ -1242,7 +1242,7 @@ INTEGER LUNIT, IXSAV, MESFLG
 !***FIRST EXECUTABLE STATEMENT  XERRWD
 LUNIT = IXSAV (1, 0, .FALSE.)
 MESFLG = IXSAV (2, 0, .FALSE.)
-IF (MESFLG .EQ. 0) GO TO 100
+IF (MESFLG .EQ. 0) GOTO 100
 !
 !  Write the message.
 !

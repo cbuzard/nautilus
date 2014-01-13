@@ -246,7 +246,7 @@ DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 ! 30    FORMAT(//' At t =',D11.3,4X,
 !    1    ' No. steps =',I5,4X,' Last step =',D11.3/
 !    2    '  Y array =  ',4D14.5/13X,4D14.5/13X,4D14.5)
-!       IF (ISTATE .LT. 0) GO TO 80
+!       IF (ISTATE .LT. 0) GOTO 80
 !       TOUT = TOUT*10.0D0
 ! 40    CONTINUE
 !     LENRW = IWORK(17)
@@ -308,7 +308,7 @@ DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 !    2   RK11/50.0D0/, RK12/50.0D0/, RK13/50.0D0/, RK14/30.0D0/,
 !    3   RK15/100.0D0/, RK16/2.5D0/, RK17/100.0D0/, RK18/2.5D0/,
 !    4   RK19/50.0D0/, RK20/50.0D0/
-!     GO TO (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), J
+!     GOTO (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12), J
 ! 1   PDJ(1) = -RK1
 !     PDJ(2) = RK1
 !     RETURN
@@ -1323,12 +1323,12 @@ DATA LENRAT/2/
 ! not yet been done, an error return occurs.
 ! If ISTATE = 1 and TOUT = T, return immediately.
 !-----------------------------------------------------------------------
-IF (ISTATE .LT. 1 .OR. ISTATE .GT. 3) GO TO 601
-IF (ITASK .LT. 1 .OR. ITASK .GT. 5) GO TO 602
-IF (ISTATE .EQ. 1) GO TO 10
-IF (INIT .EQ. 0) GO TO 603
-IF (ISTATE .EQ. 2) GO TO 200
-GO TO 20
+IF (ISTATE .LT. 1 .OR. ISTATE .GT. 3) GOTO 601
+IF (ITASK .LT. 1 .OR. ITASK .GT. 5) GOTO 602
+IF (ISTATE .EQ. 1) GOTO 10
+IF (INIT .EQ. 0) GOTO 603
+IF (ISTATE .EQ. 2) GOTO 200
+GOTO 20
 10   INIT = 0
 IF (TOUT .EQ. T) RETURN
 !-----------------------------------------------------------------------
@@ -1342,22 +1342,22 @@ IF (TOUT .EQ. T) RETURN
 ! First check legality of the non-optional inputs NEQ, ITOL, IOPT,
 ! MF, ML, and MU.
 !-----------------------------------------------------------------------
-20   IF (NEQ(1) .LE. 0) GO TO 604
-IF (ISTATE .EQ. 1) GO TO 25
-IF (NEQ(1) .GT. N) GO TO 605
+20   IF (NEQ(1) .LE. 0) GOTO 604
+IF (ISTATE .EQ. 1) GOTO 25
+IF (NEQ(1) .GT. N) GOTO 605
 25   N = NEQ(1)
-IF (ITOL .LT. 1 .OR. ITOL .GT. 4) GO TO 606
-IF (IOPT .LT. 0 .OR. IOPT .GT. 1) GO TO 607
+IF (ITOL .LT. 1 .OR. ITOL .GT. 4) GOTO 606
+IF (IOPT .LT. 0 .OR. IOPT .GT. 1) GOTO 607
 MOSS = MF/100
 MF1 = MF - 100*MOSS
 METH = MF1/10
 MITER = MF1 - 10*METH
-IF (MOSS .LT. 0 .OR. MOSS .GT. 2) GO TO 608
-IF (METH .LT. 1 .OR. METH .GT. 2) GO TO 608
-IF (MITER .LT. 0 .OR. MITER .GT. 3) GO TO 608
+IF (MOSS .LT. 0 .OR. MOSS .GT. 2) GOTO 608
+IF (METH .LT. 1 .OR. METH .GT. 2) GOTO 608
+IF (MITER .LT. 0 .OR. MITER .GT. 3) GOTO 608
 IF (MITER .EQ. 0 .OR. MITER .EQ. 3) MOSS = 0
 ! Next process and check the optional inputs. --------------------------
-IF (IOPT .EQ. 1) GO TO 40
+IF (IOPT .EQ. 1) GOTO 40
 MAXORD = MORD(METH)
 MXSTEP = MXSTP0
 MXHNIL = MXHNL0
@@ -1365,36 +1365,36 @@ IF (ISTATE .EQ. 1) H0 = 0.0D0
 HMXI = 0.0D0
 HMIN = 0.0D0
 SETH = 0.0D0
-GO TO 60
+GOTO 60
 40   MAXORD = IWORK(5)
-IF (MAXORD .LT. 0) GO TO 611
+IF (MAXORD .LT. 0) GOTO 611
 IF (MAXORD .EQ. 0) MAXORD = 100
 MAXORD = MIN(MAXORD,MORD(METH))
 MXSTEP = IWORK(6)
-IF (MXSTEP .LT. 0) GO TO 612
+IF (MXSTEP .LT. 0) GOTO 612
 IF (MXSTEP .EQ. 0) MXSTEP = MXSTP0
 MXHNIL = IWORK(7)
-IF (MXHNIL .LT. 0) GO TO 613
+IF (MXHNIL .LT. 0) GOTO 613
 IF (MXHNIL .EQ. 0) MXHNIL = MXHNL0
-IF (ISTATE .NE. 1) GO TO 50
+IF (ISTATE .NE. 1) GOTO 50
 H0 = RWORK(5)
-IF ((TOUT - T)*H0 .LT. 0.0D0) GO TO 614
+IF ((TOUT - T)*H0 .LT. 0.0D0) GOTO 614
 50   HMAX = RWORK(6)
-IF (HMAX .LT. 0.0D0) GO TO 615
+IF (HMAX .LT. 0.0D0) GOTO 615
 HMXI = 0.0D0
 IF (HMAX .GT. 0.0D0) HMXI = 1.0D0/HMAX
 HMIN = RWORK(7)
-IF (HMIN .LT. 0.0D0) GO TO 616
+IF (HMIN .LT. 0.0D0) GOTO 616
 SETH = RWORK(8)
-IF (SETH .LT. 0.0D0) GO TO 609
+IF (SETH .LT. 0.0D0) GOTO 609
 ! Check RTOL and ATOL for legality. ------------------------------------
 60   RTOLI = RTOL(1)
 ATOLI = ATOL(1)
 DO 65 I = 1,N
 IF (ITOL .GE. 3) RTOLI = RTOL(I)
 IF (ITOL .EQ. 2 .OR. ITOL .EQ. 4) ATOLI = ATOL(I)
-IF (RTOLI .LT. 0.0D0) GO TO 619
-IF (ATOLI .LT. 0.0D0) GO TO 620
+IF (RTOLI .LT. 0.0D0) GOTO 619
+IF (ATOLI .LT. 0.0D0) GOTO 620
 65     CONTINUE
 !-----------------------------------------------------------------------
 ! Compute required work array lengths, as far as possible, and test
@@ -1425,12 +1425,12 @@ IWORK(17) = LENRW
 LENIW = 30
 IF (MOSS .EQ. 0 .AND. MITER .NE. 0 .AND. MITER .NE. 3) LENIW = LENIW + N + 1
 IWORK(18) = LENIW
-IF (LENRW .GT. LRW) GO TO 617
-IF (LENIW .GT. LIW) GO TO 618
+IF (LENRW .GT. LRW) GOTO 617
+IF (LENIW .GT. LIW) GOTO 618
 LIA = 31
 IF (MOSS .EQ. 0 .AND. MITER .NE. 0 .AND. MITER .NE. 3) LENIW = LENIW + IWORK(LIA+N) - 1
 IWORK(18) = LENIW
-IF (LENIW .GT. LIW) GO TO 618
+IF (LENIW .GT. LIW) GOTO 618
 LJA = LIA + N + 1
 LIA = MIN(LIA,LIW)
 LJA = MIN(LJA,LIW)
@@ -1452,7 +1452,7 @@ LSAVF = LYHN + LENYHT
 LEWT = LSAVF + N
 LACOR = LEWT + N
 ISTATC = ISTATE
-IF (ISTATE .EQ. 1) GO TO 100
+IF (ISTATE .EQ. 1) GOTO 100
 !-----------------------------------------------------------------------
 ! ISTATE = 3.  Move YH to its new location.
 ! Note that only the part of YH needed for the next step, namely
@@ -1476,12 +1476,12 @@ DO 76 I = LYHN,IMAX
 ENDIF
 80   LYH = LYHN
 IWORK(22) = LYH
-IF (MITER .EQ. 0 .OR. MITER .EQ. 3) GO TO 92
-IF (MOSS .NE. 2) GO TO 85
+IF (MITER .EQ. 0 .OR. MITER .EQ. 3) GOTO 92
+IF (MOSS .NE. 2) GOTO 85
 ! Temporarily load EWT if MITER = 1 or 2 and MOSS = 2. -----------------
 CALL DEWSET (N, ITOL, RTOL, ATOL, RWORK(LYH), RWORK(LEWT))
 DO 82 I = 1,N
-IF (RWORK(I+LEWT-1) .LE. 0.0D0) GO TO 621
+IF (RWORK(I+LEWT-1) .LE. 0.0D0) GOTO 621
 82     RWORK(I+LEWT-1) = 1.0D0/RWORK(I+LEWT-1)
 85   CONTINUE
 ! DIPREP and DPREP do sparse matrix preprocessing if MITER = 1 or 2. ---
@@ -1494,19 +1494,19 @@ IWORK(17) = LENRW
 IF (IPFLAG .NE. -1) IWORK(23) = IPIAN
 IF (IPFLAG .NE. -1) IWORK(24) = IPJAN
 IPGO = -IPFLAG + 1
-GO TO (90, 628, 629, 630, 631, 632, 633), IPGO
+GOTO (90, 628, 629, 630, 631, 632, 633), IPGO
 90   IWORK(22) = LYH
-IF (LENRW .GT. LRW) GO TO 617
+IF (LENRW .GT. LRW) GOTO 617
 ! Set flag to signal parameter changes to DSTODE. ----------------------
 92   JSTART = -1
-IF (N .EQ. NYH) GO TO 200
+IF (N .EQ. NYH) GOTO 200
 ! NEQ was reduced.  Zero part of YH to avoid undefined references. -----
 I1 = LYH + L*NYH
 I2 = LYH + (MAXORD + 1)*NYH - 1
-IF (I1 .GT. I2) GO TO 200
+IF (I1 .GT. I2) GOTO 200
 DO 95 I = I1,I2
 95     RWORK(I) = 0.0D0
-GO TO 200
+GOTO 200
 !-----------------------------------------------------------------------
 ! Block C.
 ! The next block is for the initial call only (ISTATE = 1).
@@ -1535,9 +1535,9 @@ NFE = 1
 ! Load and invert the EWT array.  (H is temporarily set to 1.0.) -------
 CALL DEWSET (N, ITOL, RTOL, ATOL, RWORK(LYH), RWORK(LEWT))
 DO 110 I = 1,N
-IF (RWORK(I+LEWT-1) .LE. 0.0D0) GO TO 621
+IF (RWORK(I+LEWT-1) .LE. 0.0D0) GOTO 621
 110    RWORK(I+LEWT-1) = 1.0D0/RWORK(I+LEWT-1)
-IF (MITER .EQ. 0 .OR. MITER .EQ. 3) GO TO 120
+IF (MITER .EQ. 0 .OR. MITER .EQ. 3) GOTO 120
 ! DIPREP and DPREP do sparse matrix preprocessing if MITER = 1 or 2. ---
 LACOR = MIN(LACOR,LRW)
 CALL DIPREP (NEQ, Y, RWORK, IWORK(LIA),IWORK(LJA), IPFLAG, F, JAC)
@@ -1546,14 +1546,14 @@ IWORK(17) = LENRW
 IF (IPFLAG .NE. -1) IWORK(23) = IPIAN
 IF (IPFLAG .NE. -1) IWORK(24) = IPJAN
 IPGO = -IPFLAG + 1
-GO TO (115, 628, 629, 630, 631, 632, 633), IPGO
+GOTO (115, 628, 629, 630, 631, 632, 633), IPGO
 115  IWORK(22) = LYH
-IF (LENRW .GT. LRW) GO TO 617
+IF (LENRW .GT. LRW) GOTO 617
 ! Check TCRIT for legality (ITASK = 4 or 5). ---------------------------
 120  CONTINUE
-IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 125
+IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GOTO 125
 TCRIT = RWORK(1)
-IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GO TO 625
+IF ((TCRIT - TOUT)*(TOUT - T) .LT. 0.0D0) GOTO 625
 IF (H0 .NE. 0.0D0 .AND. (T + H0 - TCRIT)*H0 .GT. 0.0D0) H0 = TCRIT - T
 ! Initialize all remaining parameters. ---------------------------------
 125  UROUND = DUMACH()
@@ -1592,15 +1592,15 @@ MXNCF = 10
 ! ABS(H0) is made .le. ABS(TOUT-T) in any case.
 !-----------------------------------------------------------------------
 LF0 = LYH + NYH
-IF (H0 .NE. 0.0D0) GO TO 180
+IF (H0 .NE. 0.0D0) GOTO 180
 TDIST = ABS(TOUT - T)
 W0 = MAX(ABS(T),ABS(TOUT))
-IF (TDIST .LT. 2.0D0*UROUND*W0) GO TO 622
+IF (TDIST .LT. 2.0D0*UROUND*W0) GOTO 622
 TOL = RTOL(1)
-IF (ITOL .LE. 2) GO TO 140
+IF (ITOL .LE. 2) GOTO 140
 DO 130 I = 1,N
 130    TOL = MAX(TOL,RTOL(I))
-140  IF (TOL .GT. 0.0D0) GO TO 160
+140  IF (TOL .GT. 0.0D0) GOTO 160
 ATOLI = ATOL(1)
 DO 150 I = 1,N
 IF (ITOL .EQ. 2 .OR. ITOL .EQ. 4) ATOLI = ATOL(I)
@@ -1621,38 +1621,38 @@ IF (RH .GT. 1.0D0) H0 = H0/RH
 H = H0
 DO 190 I = 1,N
 190    RWORK(I+LF0-1) = H0*RWORK(I+LF0-1)
-GO TO 270
+GOTO 270
 !-----------------------------------------------------------------------
 ! Block D.
 ! The next code block is for continuation calls only (ISTATE = 2 or 3)
 ! and is to check stop conditions before taking a step.
 !-----------------------------------------------------------------------
 200  NSLAST = NST
-GO TO (210, 250, 220, 230, 240), ITASK
-210  IF ((TN - TOUT)*H .LT. 0.0D0) GO TO 250
+GOTO (210, 250, 220, 230, 240), ITASK
+210  IF ((TN - TOUT)*H .LT. 0.0D0) GOTO 250
 CALL DINTDY (TOUT, 0, RWORK(LYH), NYH, Y, IFLAG)
-IF (IFLAG .NE. 0) GO TO 627
+IF (IFLAG .NE. 0) GOTO 627
 T = TOUT
-GO TO 420
+GOTO 420
 220  TP = TN - HU*(1.0D0 + 100.0D0*UROUND)
-IF ((TP - TOUT)*H .GT. 0.0D0) GO TO 623
-IF ((TN - TOUT)*H .LT. 0.0D0) GO TO 250
-GO TO 400
+IF ((TP - TOUT)*H .GT. 0.0D0) GOTO 623
+IF ((TN - TOUT)*H .LT. 0.0D0) GOTO 250
+GOTO 400
 230  TCRIT = RWORK(1)
-IF ((TN - TCRIT)*H .GT. 0.0D0) GO TO 624
-IF ((TCRIT - TOUT)*H .LT. 0.0D0) GO TO 625
-IF ((TN - TOUT)*H .LT. 0.0D0) GO TO 245
+IF ((TN - TCRIT)*H .GT. 0.0D0) GOTO 624
+IF ((TCRIT - TOUT)*H .LT. 0.0D0) GOTO 625
+IF ((TN - TOUT)*H .LT. 0.0D0) GOTO 245
 CALL DINTDY (TOUT, 0, RWORK(LYH), NYH, Y, IFLAG)
-IF (IFLAG .NE. 0) GO TO 627
+IF (IFLAG .NE. 0) GOTO 627
 T = TOUT
-GO TO 420
+GOTO 420
 240  TCRIT = RWORK(1)
-IF ((TN - TCRIT)*H .GT. 0.0D0) GO TO 624
+IF ((TN - TCRIT)*H .GT. 0.0D0) GOTO 624
 245  HMX = ABS(TN) + ABS(H)
 IHIT = ABS(TN - TCRIT) .LE. 100.0D0*UROUND*HMX
-IF (IHIT) GO TO 400
+IF (IHIT) GOTO 400
 TNEXT = TN + H*(1.0D0 + 4.0D0*UROUND)
-IF ((TNEXT - TCRIT)*H .LE. 0.0D0) GO TO 250
+IF ((TNEXT - TCRIT)*H .LE. 0.0D0) GOTO 250
 H = (TCRIT - TN)*(1.0D0 - 4.0D0*UROUND)
 IF (ISTATE .EQ. 2) JSTART = -2
 !-----------------------------------------------------------------------
@@ -1667,26 +1667,26 @@ IF (ISTATE .EQ. 2) JSTART = -2
 ! check for H below the roundoff level in T.
 !-----------------------------------------------------------------------
 250  CONTINUE
-IF ((NST-NSLAST) .GE. MXSTEP) GO TO 500
+IF ((NST-NSLAST) .GE. MXSTEP) GOTO 500
 CALL DEWSET (N, ITOL, RTOL, ATOL, RWORK(LYH), RWORK(LEWT))
 DO 260 I = 1,N
-IF (RWORK(I+LEWT-1) .LE. 0.0D0) GO TO 510
+IF (RWORK(I+LEWT-1) .LE. 0.0D0) GOTO 510
 260    RWORK(I+LEWT-1) = 1.0D0/RWORK(I+LEWT-1)
 270  TOLSF = UROUND*DVNORM (N, RWORK(LYH), RWORK(LEWT))
-IF (TOLSF .LE. 1.0D0) GO TO 280
+IF (TOLSF .LE. 1.0D0) GOTO 280
 TOLSF = TOLSF*2.0D0
-IF (NST .EQ. 0) GO TO 626
-GO TO 520
-280  IF ((TN + H) .NE. TN) GO TO 290
+IF (NST .EQ. 0) GOTO 626
+GOTO 520
+280  IF ((TN + H) .NE. TN) GOTO 290
 NHNIL = NHNIL + 1
-IF (NHNIL .GT. MXHNIL) GO TO 290
+IF (NHNIL .GT. MXHNIL) GOTO 290
 MSG = 'DLSODES- Warning..Internal T (=R1) and H (=R2) are'
 CALL XERRWD (MSG, 50, 101, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='      such that in the machine, T + H = T on the next step  '
 CALL XERRWD (MSG, 60, 101, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG = '     (H = step size). Solver will continue anyway.'
 CALL XERRWD (MSG, 50, 101, 0, 0, 0, 0, 2, TN, H)
-IF (NHNIL .LT. MXHNIL) GO TO 290
+IF (NHNIL .LT. MXHNIL) GOTO 290
 MSG = 'DLSODES- Above warning has been issued I1 times.  '
 CALL XERRWD (MSG, 50, 102, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG = '     It will not be issued again for this problem.'
@@ -1698,35 +1698,35 @@ CALL XERRWD (MSG, 50, 102, 0, 1, MXHNIL, 0, 0, 0.0D0, 0.0D0)
 CALL DSTODE (NEQ, Y, RWORK(LYH), NYH, RWORK(LYH), RWORK(LEWT), RWORK(LSAVF), RWORK(LACOR), RWORK(LWM), &
 RWORK(LWM), F, JAC, DPRJS, DSOLSS)
 KGO = 1 - KFLAG
-GO TO (300, 530, 540, 550), KGO
+GOTO (300, 530, 540, 550), KGO
 !-----------------------------------------------------------------------
 ! Block F.
 ! The following block handles the case of a successful return from the
 ! core integrator (KFLAG = 0).  Test for stop conditions.
 !-----------------------------------------------------------------------
 300  INIT = 1
-GO TO (310, 400, 330, 340, 350), ITASK
+GOTO (310, 400, 330, 340, 350), ITASK
 ! ITASK = 1.  if TOUT has been reached, interpolate. -------------------
-310  IF ((TN - TOUT)*H .LT. 0.0D0) GO TO 250
+310  IF ((TN - TOUT)*H .LT. 0.0D0) GOTO 250
 CALL DINTDY (TOUT, 0, RWORK(LYH), NYH, Y, IFLAG)
 T = TOUT
-GO TO 420
+GOTO 420
 ! ITASK = 3.  Jump to exit if TOUT was reached. ------------------------
-330  IF ((TN - TOUT)*H .GE. 0.0D0) GO TO 400
-GO TO 250
+330  IF ((TN - TOUT)*H .GE. 0.0D0) GOTO 400
+GOTO 250
 ! ITASK = 4.  See if TOUT or TCRIT was reached.  Adjust H if necessary.
-340  IF ((TN - TOUT)*H .LT. 0.0D0) GO TO 345
+340  IF ((TN - TOUT)*H .LT. 0.0D0) GOTO 345
 CALL DINTDY (TOUT, 0, RWORK(LYH), NYH, Y, IFLAG)
 T = TOUT
-GO TO 420
+GOTO 420
 345  HMX = ABS(TN) + ABS(H)
 IHIT = ABS(TN - TCRIT) .LE. 100.0D0*UROUND*HMX
-IF (IHIT) GO TO 400
+IF (IHIT) GOTO 400
 TNEXT = TN + H*(1.0D0 + 4.0D0*UROUND)
-IF ((TNEXT - TCRIT)*H .LE. 0.0D0) GO TO 250
+IF ((TNEXT - TCRIT)*H .LE. 0.0D0) GOTO 250
 H = (TCRIT - TN)*(1.0D0 - 4.0D0*UROUND)
 JSTART = -2
-GO TO 250
+GOTO 250
 ! ITASK = 5.  See if TCRIT was reached and jump to exit. ---------------
 350  HMX = ABS(TN) + ABS(H)
 IHIT = ABS(TN - TCRIT) .LE. 100.0D0*UROUND*HMX
@@ -1740,7 +1740,7 @@ IHIT = ABS(TN - TCRIT) .LE. 100.0D0*UROUND*HMX
 400  DO 410 I = 1,N
 410    Y(I) = RWORK(I+LYH-1)
 T = TN
-IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GO TO 420
+IF (ITASK .NE. 4 .AND. ITASK .NE. 5) GOTO 420
 IF (IHIT) T = TCRIT
 420  ISTATE = 2
 RWORK(11) = HU
@@ -1771,13 +1771,13 @@ CALL XERRWD (MSG, 50, 201, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG = '      taken on this call before reaching TOUT     '
 CALL XERRWD (MSG, 50, 201, 0, 1, MXSTEP, 0, 1, TN, 0.0D0)
 ISTATE = -1
-GO TO 580
+GOTO 580
 ! EWT(i) .le. 0.0 for some i (not at start of problem). ----------------
 510  EWTI = RWORK(LEWT+I-1)
 MSG = 'DLSODES- At T (=R1), EWT(I1) has become R2 .le. 0.'
 CALL XERRWD (MSG, 50, 202, 0, 1, I, 0, 2, TN, EWTI)
 ISTATE = -6
-GO TO 580
+GOTO 580
 ! Too much accuracy requested for machine precision. -------------------
 520  MSG = 'DLSODES- At T (=R1), too much accuracy requested  '
 CALL XERRWD (MSG, 50, 203, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
@@ -1785,14 +1785,14 @@ MSG = '      for precision of machine..  See TOLSF (=R2) '
 CALL XERRWD (MSG, 50, 203, 0, 0, 0, 0, 2, TN, TOLSF)
 RWORK(14) = TOLSF
 ISTATE = -2
-GO TO 580
+GOTO 580
 ! KFLAG = -1.  Error test failed repeatedly or with ABS(H) = HMIN. -----
 530  MSG = 'DLSODES- At T(=R1) and step size H(=R2), the error'
 CALL XERRWD (MSG, 50, 204, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG = '      test failed repeatedly or with ABS(H) = HMIN'
 CALL XERRWD (MSG, 50, 204, 0, 0, 0, 0, 2, TN, H)
 ISTATE = -4
-GO TO 560
+GOTO 560
 ! KFLAG = -2.  Convergence failed repeatedly or with ABS(H) = HMIN. ----
 540  MSG = 'DLSODES- At T (=R1) and step size H (=R2), the    '
 CALL XERRWD (MSG, 50, 205, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
@@ -1801,7 +1801,7 @@ CALL XERRWD (MSG, 50, 205, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG = '      or with ABS(H) = HMIN   '
 CALL XERRWD (MSG, 30, 205, 0, 0, 0, 0, 2, TN, H)
 ISTATE = -5
-GO TO 560
+GOTO 560
 ! KFLAG = -3.  Fatal error flag returned by DPRJS or DSOLSS (CDRV). ----
 550  MSG = 'DLSODES- At T (=R1) and step size H (=R2), a fatal'
 CALL XERRWD (MSG, 50, 207, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
@@ -1810,13 +1810,13 @@ CALL XERRWD (MSG, 50, 207, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG = '      Subroutine DPRJS or DSOLSS)       '
 CALL XERRWD (MSG, 40, 207, 0, 0, 0, 0, 2, TN, H)
 ISTATE = -7
-GO TO 580
+GOTO 580
 ! Compute IMXER if relevant. -------------------------------------------
 560  BIG = 0.0D0
 IMXER = 1
 DO 570 I = 1,N
 SIZE = ABS(RWORK(I+LACOR-1)*RWORK(I+LEWT-1))
-IF (BIG .GE. SIZE) GO TO 570
+IF (BIG .GE. SIZE) GOTO 570
 BIG = SIZE
 IMXER = I
 570    CONTINUE
@@ -1848,120 +1848,120 @@ RETURN
 !-----------------------------------------------------------------------
 601  MSG = 'DLSODES- ISTATE (=I1) illegal.'
 CALL XERRWD (MSG, 30, 1, 0, 1, ISTATE, 0, 0, 0.0D0, 0.0D0)
-IF (ISTATE .LT. 0) GO TO 800
-GO TO 700
+IF (ISTATE .LT. 0) GOTO 800
+GOTO 700
 602  MSG = 'DLSODES- ITASK (=I1) illegal. '
 CALL XERRWD (MSG, 30, 2, 0, 1, ITASK, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 603  MSG = 'DLSODES- ISTATE.gt.1 but DLSODES not initialized. '
 CALL XERRWD (MSG, 50, 3, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 604  MSG = 'DLSODES- NEQ (=I1) .lt. 1     '
 CALL XERRWD (MSG, 30, 4, 0, 1, NEQ(1), 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 605  MSG = 'DLSODES- ISTATE = 3 and NEQ increased (I1 to I2). '
 CALL XERRWD (MSG, 50, 5, 0, 2, N, NEQ(1), 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 606  MSG = 'DLSODES- ITOL (=I1) illegal.  '
 CALL XERRWD (MSG, 30, 6, 0, 1, ITOL, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 607  MSG = 'DLSODES- IOPT (=I1) illegal.  '
 CALL XERRWD (MSG, 30, 7, 0, 1, IOPT, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 608  MSG = 'DLSODES- MF (=I1) illegal.    '
 CALL XERRWD (MSG, 30, 8, 0, 1, MF, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 609  MSG = 'DLSODES- SETH (=R1) .lt. 0.0  '
 CALL XERRWD (MSG, 30, 9, 0, 0, 0, 0, 1, SETH, 0.0D0)
-GO TO 700
+GOTO 700
 611  MSG = 'DLSODES- MAXORD (=I1) .lt. 0  '
 CALL XERRWD (MSG, 30, 11, 0, 1, MAXORD, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 612  MSG = 'DLSODES- MXSTEP (=I1) .lt. 0  '
 CALL XERRWD (MSG, 30, 12, 0, 1, MXSTEP, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 613  MSG = 'DLSODES- MXHNIL (=I1) .lt. 0  '
 CALL XERRWD (MSG, 30, 13, 0, 1, MXHNIL, 0, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 614  MSG = 'DLSODES- TOUT (=R1) behind T (=R2)      '
 CALL XERRWD (MSG, 40, 14, 0, 0, 0, 0, 2, TOUT, T)
 MSG = '      Integration direction is given by H0 (=R1)  '
 CALL XERRWD (MSG, 50, 14, 0, 0, 0, 0, 1, H0, 0.0D0)
-GO TO 700
+GOTO 700
 615  MSG = 'DLSODES- HMAX (=R1) .lt. 0.0  '
 CALL XERRWD (MSG, 30, 15, 0, 0, 0, 0, 1, HMAX, 0.0D0)
-GO TO 700
+GOTO 700
 616  MSG = 'DLSODES- HMIN (=R1) .lt. 0.0  '
 CALL XERRWD (MSG, 30, 16, 0, 0, 0, 0, 1, HMIN, 0.0D0)
-GO TO 700
+GOTO 700
 617  MSG = 'DLSODES- RWORK length is insufficient to proceed. '
 CALL XERRWD (MSG, 50, 17, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='        Length needed is .ge. LENRW (=I1), exceeds LRW (=I2)'
 CALL XERRWD (MSG, 60, 17, 0, 2, LENRW, LRW, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 618  MSG = 'DLSODES- IWORK length is insufficient to proceed. '
 CALL XERRWD (MSG, 50, 18, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='        Length needed is .ge. LENIW (=I1), exceeds LIW (=I2)'
 CALL XERRWD (MSG, 60, 18, 0, 2, LENIW, LIW, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 619  MSG = 'DLSODES- RTOL(I1) is R1 .lt. 0.0        '
 CALL XERRWD (MSG, 40, 19, 0, 1, I, 0, 1, RTOLI, 0.0D0)
-GO TO 700
+GOTO 700
 620  MSG = 'DLSODES- ATOL(I1) is R1 .lt. 0.0        '
 CALL XERRWD (MSG, 40, 20, 0, 1, I, 0, 1, ATOLI, 0.0D0)
-GO TO 700
+GOTO 700
 621  EWTI = RWORK(LEWT+I-1)
 MSG = 'DLSODES- EWT(I1) is R1 .le. 0.0         '
 CALL XERRWD (MSG, 40, 21, 0, 1, I, 0, 1, EWTI, 0.0D0)
-GO TO 700
+GOTO 700
 622  MSG='DLSODES- TOUT(=R1) too close to T(=R2) to start integration.'
 CALL XERRWD (MSG, 60, 22, 0, 0, 0, 0, 2, TOUT, T)
-GO TO 700
+GOTO 700
 623  MSG='DLSODES- ITASK = I1 and TOUT (=R1) behind TCUR - HU (= R2)  '
 CALL XERRWD (MSG, 60, 23, 0, 1, ITASK, 0, 2, TOUT, TP)
-GO TO 700
+GOTO 700
 624  MSG='DLSODES- ITASK = 4 or 5 and TCRIT (=R1) behind TCUR (=R2)   '
 CALL XERRWD (MSG, 60, 24, 0, 0, 0, 0, 2, TCRIT, TN)
-GO TO 700
+GOTO 700
 625  MSG='DLSODES- ITASK = 4 or 5 and TCRIT (=R1) behind TOUT (=R2)   '
 CALL XERRWD (MSG, 60, 25, 0, 0, 0, 0, 2, TCRIT, TOUT)
-GO TO 700
+GOTO 700
 626  MSG = 'DLSODES- At start of problem, too much accuracy   '
 CALL XERRWD (MSG, 50, 26, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='      requested for precision of machine..  See TOLSF (=R1) '
 CALL XERRWD (MSG, 60, 26, 0, 0, 0, 0, 1, TOLSF, 0.0D0)
 RWORK(14) = TOLSF
-GO TO 700
+GOTO 700
 627  MSG = 'DLSODES- Trouble in DINTDY.  ITASK = I1, TOUT = R1'
 CALL XERRWD (MSG, 50, 27, 0, 1, ITASK, 0, 1, TOUT, 0.0D0)
-GO TO 700
+GOTO 700
 628  MSG='DLSODES- RWORK length insufficient (for Subroutine DPREP).  '
 CALL XERRWD (MSG, 60, 28, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='        Length needed is .ge. LENRW (=I1), exceeds LRW (=I2)'
 CALL XERRWD (MSG, 60, 28, 0, 2, LENRW, LRW, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 629  MSG='DLSODES- RWORK length insufficient (for Subroutine JGROUP). '
 CALL XERRWD (MSG, 60, 29, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='        Length needed is .ge. LENRW (=I1), exceeds LRW (=I2)'
 CALL XERRWD (MSG, 60, 29, 0, 2, LENRW, LRW, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 630  MSG='DLSODES- RWORK length insufficient (for Subroutine ODRV).   '
 CALL XERRWD (MSG, 60, 30, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='        Length needed is .ge. LENRW (=I1), exceeds LRW (=I2)'
 CALL XERRWD (MSG, 60, 30, 0, 2, LENRW, LRW, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 631  MSG='DLSODES- Error from ODRV in Yale Sparse Matrix Package.     '
 CALL XERRWD (MSG, 60, 31, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 IMUL = (IYS - 1)/N
 IREM = IYS - IMUL*N
 MSG='      At T (=R1), ODRV returned error flag = I1*NEQ + I2.   '
 CALL XERRWD (MSG, 60, 31, 0, 2, IMUL, IREM, 1, TN, 0.0D0)
-GO TO 700
+GOTO 700
 632  MSG='DLSODES- RWORK length insufficient (for Subroutine CDRV).   '
 CALL XERRWD (MSG, 60, 32, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 MSG='        Length needed is .ge. LENRW (=I1), exceeds LRW (=I2)'
 CALL XERRWD (MSG, 60, 32, 0, 2, LENRW, LRW, 0, 0.0D0, 0.0D0)
-GO TO 700
+GOTO 700
 633  MSG='DLSODES- Error from CDRV in Yale Sparse Matrix Package.     '
 CALL XERRWD (MSG, 60, 33, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 IMUL = (IYS - 1)/N
@@ -2029,7 +2029,7 @@ DOUBLE PRECISION DI, HL0, PHL0, R
 ! This routine also uses other variables in Common.
 !-----------------------------------------------------------------------
 IERSL = 0
-GO TO (100, 100, 300), MITER
+GOTO (100, 100, 300), MITER
 100  CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN),WK(IPA),X,X,NSP,IWK(IPISP),WK(IPRSP),IESP,4,IERSL)
 IF (IERSL .NE. 0) IERSL = -1
 RETURN
@@ -2037,11 +2037,11 @@ RETURN
 300  PHL0 = WK(2)
 HL0 = H*EL0
 WK(2) = HL0
-IF (HL0 .EQ. PHL0) GO TO 330
+IF (HL0 .EQ. PHL0) GOTO 330
 R = HL0/PHL0
 DO 320 I = 1,N
 DI = 1.0D0 - R*(1.0D0 - 1.0D0/WK(I+2))
-IF (ABS(DI) .EQ. 0.0D0) GO TO 390
+IF (ABS(DI) .EQ. 0.0D0) GOTO 390
 320    WK(I+2) = 1.0D0/DI
 330  DO 340 I = 1,N
 340    X(I) = WK(I+2)*X(I)
@@ -2224,7 +2224,7 @@ double precision  a(*), b(*), z(*), rsp(*)
 !
 data lratio/2/
 !
-if (path.lt.1 .or. 5.lt.path)  go to 111
+if (path.lt.1 .or. 5.lt.path)  GOTO 111
 !******initialize and divide up temporary storage  *******************
 il   = 1
 ijl  = il  + (n+1)
@@ -2235,7 +2235,7 @@ jrl  = irl +   n
 jl   = jrl +   n
 !
 !  ******  reorder a if necessary, call nsfc if flag is set  ***********
-if ((path-1) * (path-5) .ne. 0)  go to 5
+if ((path-1) * (path-5) .ne. 0)  GOTO 5
 max = (lratio*nsp + 1 - jl) - (n+1) - 5*n
 jlmax = max/2
 q     = jl   + jlmax
@@ -2247,24 +2247,24 @@ jru   = iru  +   n
 jutmp = jru  +   n
 jumax = lratio*nsp  + 1 - jutmp
 esp = max/lratio
-if (jlmax.le.0 .or. jumax.le.0)  go to 110
+if (jlmax.le.0 .or. jumax.le.0)  GOTO 110
 !
 do 1 i=1,n
-if (c(i).ne.i)  go to 2
+if (c(i).ne.i)  GOTO 2
 1      continue
-go to 3
+GOTO 3
 2    ar = nsp + 1 - n
 call  nroc(n, ic, ia,ja,a, isp(il), rsp(ar), isp(iu), flag)
-if (flag.ne.0)  go to 100
+if (flag.ne.0)  GOTO 100
 !
 3    call  nsfc(n, r, ic, ia,ja,jlmax, isp(il), isp(jl), isp(ijl),jumax, isp(iu), isp(jutmp), isp(iju),isp(q), isp(ira), &
 isp(jra), isp(irac),isp(irl), isp(jrl), isp(iru), isp(jru),  flag)
-if(flag .ne. 0)  go to 100
+if(flag .ne. 0)  GOTO 100
 !  ******  move ju next to jl  *****************************************
 jlmax = isp(ijl+n-1)
 ju    = jl + jlmax
 jumax = isp(iju+n-1)
-if (jumax.le.0)  go to 5
+if (jumax.le.0)  GOTO 5
 do 4 j=1,jumax
 4      isp(ju+j-1) = isp(jutmp+j-1)
 !
@@ -2281,16 +2281,16 @@ tmp   = row - n
 umax  = tmp - u
 esp   = umax - (isp(iu+n) - 1)
 !
-if ((path-1) * (path-2) .ne. 0)  go to 6
-if (umax.lt.0)  go to 110
+if ((path-1) * (path-2) .ne. 0)  GOTO 6
+if (umax.lt.0)  GOTO 110
 call nnfc(n,  r, c, ic,  ia, ja, a, z, b,lmax, isp(il), isp(jl), isp(ijl), rsp(l),  rsp(d),umax, isp(iu), &
 isp(ju), isp(iju), rsp(u),rsp(row), rsp(tmp),  isp(irl), isp(jrl),  flag)
-if(flag .ne. 0)  go to 100
+if(flag .ne. 0)  GOTO 100
 !
-6  if ((path-3) .ne. 0)  go to 7
+6  if ((path-3) .ne. 0)  GOTO 7
 call nnsc(n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),z, b,  rsp(tmp))
 !
-7  if ((path-4) .ne. 0)  go to 8
+7  if ((path-4) .ne. 0)  GOTO 8
 call nntc(n,  r, c,  isp(il), isp(jl), isp(ijl), rsp(l),rsp(d),    isp(iu), isp(ju), isp(iju), rsp(u),z, b,  rsp(tmp))
 8  return
 !
@@ -2334,7 +2334,7 @@ jmin = il(k)
 jmax = il(k+1) - 1
 tmpk = -d(k) * tmp(k)
 tmp(k) = -tmpk
-if (jmin .gt. jmax) go to 3
+if (jmin .gt. jmax) GOTO 3
 ml = ijl(k) - jmin
 do 2 j=jmin,jmax
 2      tmp(jl(ml+j)) = tmp(jl(ml+j)) + tmpk * l(j)
@@ -2345,7 +2345,7 @@ do 6 i=1,n
 sum = -tmp(k)
 jmin = iu(k)
 jmax = iu(k+1) - 1
-if (jmin .gt. jmax) go to 5
+if (jmin .gt. jmax) GOTO 5
 mu = iju(k) - jmin
 do 4 j=jmin,jmax
 4      sum = sum + u(j) * tmp(ju(mu+j))
@@ -2386,7 +2386,7 @@ do 3 k=1,n
 jmin = iu(k)
 jmax = iu(k+1) - 1
 tmpk = -tmp(k)
-if (jmin .gt. jmax) go to 3
+if (jmin .gt. jmax) GOTO 3
 mu = iju(k) - jmin
 do 2 j=jmin,jmax
 2      tmp(ju(mu+j)) = tmp(ju(mu+j)) + tmpk * u(j)
@@ -2397,7 +2397,7 @@ do 6 i=1,n
 sum = -tmp(k)
 jmin = il(k)
 jmax = il(k+1) - 1
-if (jmin .gt. jmax) go to 5
+if (jmin .gt. jmax) GOTO 5
 ml = ijl(k) - jmin
 do 4 j=jmin,jmax
 4      sum = sum + l(j) * tmp(jl(ml+j))
@@ -2613,16 +2613,16 @@ double precision  a(*), ar(*)
 do 5 k=1,n
 jmin = ia(k)
 jmax = ia(k+1) - 1
-if(jmin .gt. jmax) go to 5
+if(jmin .gt. jmax) GOTO 5
 p(n+1) = n + 1
 !  ******  insert each element in the list  *********************
 do 3 j=jmin,jmax
 newj = ic(ja(j))
 i = n + 1
-1      if(p(i) .ge. newj) go to 2
+1      if(p(i) .ge. newj) GOTO 2
 i = p(i)
-go to 1
-2      if(p(i) .eq. newj) go to 102
+GOTO 1
+2      if(p(i) .eq. newj) GOTO 102
 p(newj) = p(i)
 p(i) = newj
 jar(newj) = ja(j)
@@ -2718,9 +2718,9 @@ jrl(k) = 0
 do 2 k=1,n
 rk = r(k)
 iak = ia(rk)
-if (iak .ge. ia(rk+1))  go to 101
+if (iak .ge. ia(rk+1))  GOTO 101
 jaiak = ic(ja(iak))
-if (jaiak .gt. k)  go to 105
+if (jaiak .gt. k)  GOTO 105
 jra(k) = irac(jaiak)
 irac(jaiak) = k
 2    ira(k) = iak
@@ -2733,33 +2733,33 @@ q(np1) = np1
 luk = -1
 !  ******  by filling in kth column of a  ******************************
 vj = irac(k)
-if (vj .eq. 0)  go to 5
+if (vj .eq. 0)  GOTO 5
 3      qm = np1
 4      m = qm
 qm =  q(m)
-if (qm .lt. vj)  go to 4
-if (qm .eq. vj)  go to 102
+if (qm .lt. vj)  GOTO 4
+if (qm .eq. vj)  GOTO 102
 luk = luk + 1
 q(m) = vj
 q(vj) = qm
 vj = jra(vj)
-if (vj .ne. 0)  go to 3
+if (vj .ne. 0)  GOTO 3
 !  ******  link through jru  *******************************************
 5    lastid = 0
 lasti = 0
 ijl(k) = jlptr
 i = k
 6      i = jru(i)
-if (i .eq. 0)  go to 10
+if (i .eq. 0)  GOTO 10
 qm = np1
 jmin = irl(i)
 jmax = ijl(i) + il(i+1) - il(i) - 1
 long = jmax - jmin
-if (long .lt. 0)  go to 6
+if (long .lt. 0)  GOTO 6
 jtmp = jl(jmin)
 if (jtmp .ne. k)  long = long + 1
 if (jtmp .eq. k)  r(i) = -r(i)
-if (lastid .ge. long)  go to 7
+if (lastid .ge. long)  GOTO 7
 lasti = i
 lastid = long
 !  ******  and merge the corresponding columns into the kth column  ****
@@ -2767,45 +2767,45 @@ lastid = long
 vj = jl(j)
 8        m = qm
 qm = q(m)
-if (qm .lt. vj)  go to 8
-if (qm .eq. vj)  go to 9
+if (qm .lt. vj)  GOTO 8
+if (qm .eq. vj)  GOTO 9
 luk = luk + 1
 q(m) = vj
 q(vj) = qm
 qm = vj
 9        continue
-go to 6
+GOTO 6
 !  ******  lasti is the longest column merged into the kth  ************
 !  ******  see if it equals the entire kth column  *********************
 10    qm = q(np1)
-if (qm .ne. k)  go to 105
-if (luk .eq. 0)  go to 17
-if (lastid .ne. luk)  go to 11
+if (qm .ne. k)  GOTO 105
+if (luk .eq. 0)  GOTO 17
+if (lastid .ne. luk)  GOTO 11
 !  ******  if so, jl can be compressed  ********************************
 irll = irl(lasti)
 ijl(k) = irll + 1
 if (jl(irll) .ne. k)  ijl(k) = ijl(k) - 1
-go to 17
+GOTO 17
 !  ******  if not, see if kth column can overlap the previous one  *****
-11    if (jlmin .gt. jlptr)  go to 15
+11    if (jlmin .gt. jlptr)  GOTO 15
 qm = q(qm)
 do 12 j=jlmin,jlptr
 if (jl(j) - qm)  12, 13, 15
 12      continue
-go to 15
+GOTO 15
 13    ijl(k) = j
 do 14 i=j,jlptr
-if (jl(i) .ne. qm)  go to 15
+if (jl(i) .ne. qm)  GOTO 15
 qm = q(qm)
-if (qm .gt. n)  go to 17
+if (qm .gt. n)  GOTO 17
 14      continue
 jlptr = j - 1
 !  ******  move column indices from q to jl, update vectors  ***********
 15    jlmin = jlptr + 1
 ijl(k) = jlmin
-if (luk .eq. 0)  go to 17
+if (luk .eq. 0)  GOTO 17
 jlptr = jlptr + luk
-if (jlptr .gt. jlmax)  go to 103
+if (jlptr .gt. jlmax)  GOTO 103
 qm = q(np1)
 do 16 j=jlmin,jlptr
 qm = q(qm)
@@ -2820,14 +2820,14 @@ luk = -1
 rk = r(k)
 jmin = ira(k)
 jmax = ia(rk+1) - 1
-if (jmin .gt. jmax)  go to 20
+if (jmin .gt. jmax)  GOTO 20
 do 19 j=jmin,jmax
 vj = ic(ja(j))
 qm = np1
 18      m = qm
 qm = q(m)
-if (qm .lt. vj)  go to 18
-if (qm .eq. vj)  go to 102
+if (qm .lt. vj)  GOTO 18
+if (qm .eq. vj)  GOTO 102
 luk = luk + 1
 q(m) = vj
 q(vj) = qm
@@ -2839,24 +2839,24 @@ iju(k) = juptr
 i = k
 i1 = jrl(k)
 21      i = i1
-if (i .eq. 0)  go to 26
+if (i .eq. 0)  GOTO 26
 i1 = jrl(i)
 qm = np1
 jmin = iru(i)
 jmax = iju(i) + iu(i+1) - iu(i) - 1
 long = jmax - jmin
-if (long .lt. 0)  go to 21
+if (long .lt. 0)  GOTO 21
 jtmp = ju(jmin)
-if (jtmp .eq. k)  go to 22
+if (jtmp .eq. k)  GOTO 22
 !  ******  update irl and jrl, *****************************************
 long = long + 1
 cend = ijl(i) + il(i+1) - il(i)
 irl(i) = irl(i) + 1
-if (irl(i) .ge. cend)  go to 22
+if (irl(i) .ge. cend)  GOTO 22
 j = jl(irl(i))
 jrl(i) = jrl(j)
 jrl(j) = i
-22      if (lastid .ge. long)  go to 23
+22      if (lastid .ge. long)  GOTO 23
 lasti = i
 lastid = long
 !  ******  and merge the corresponding rows into the kth row  **********
@@ -2864,50 +2864,50 @@ lastid = long
 vj = ju(j)
 24        m = qm
 qm = q(m)
-if (qm .lt. vj)  go to 24
-if (qm .eq. vj)  go to 25
+if (qm .lt. vj)  GOTO 24
+if (qm .eq. vj)  GOTO 25
 luk = luk + 1
 q(m) = vj
 q(vj) = qm
 qm = vj
 25        continue
-go to 21
+GOTO 21
 !  ******  update jrl(k) and irl(k)  ***********************************
-26    if (il(k+1) .le. il(k))  go to 27
+26    if (il(k+1) .le. il(k))  GOTO 27
 j = jl(irl(k))
 jrl(k) = jrl(j)
 jrl(j) = k
 !  ******  lasti is the longest row merged into the kth  ***************
 !  ******  see if it equals the entire kth row  ************************
 27    qm = q(np1)
-if (qm .ne. k)  go to 105
-if (luk .eq. 0)  go to 34
-if (lastid .ne. luk)  go to 28
+if (qm .ne. k)  GOTO 105
+if (luk .eq. 0)  GOTO 34
+if (lastid .ne. luk)  GOTO 28
 !  ******  if so, ju can be compressed  ********************************
 irul = iru(lasti)
 iju(k) = irul + 1
 if (ju(irul) .ne. k)  iju(k) = iju(k) - 1
-go to 34
+GOTO 34
 !  ******  if not, see if kth row can overlap the previous one  ********
-28    if (jumin .gt. juptr)  go to 32
+28    if (jumin .gt. juptr)  GOTO 32
 qm = q(qm)
 do 29 j=jumin,juptr
 if (ju(j) - qm)  29, 30, 32
 29      continue
-go to 32
+GOTO 32
 30    iju(k) = j
 do 31 i=j,juptr
-if (ju(i) .ne. qm)  go to 32
+if (ju(i) .ne. qm)  GOTO 32
 qm = q(qm)
-if (qm .gt. n)  go to 34
+if (qm .gt. n)  GOTO 34
 31      continue
 juptr = j - 1
 !  ******  move row indices from q to ju, update vectors  **************
 32    jumin = juptr + 1
 iju(k) = jumin
-if (luk .eq. 0)  go to 34
+if (luk .eq. 0)  GOTO 34
 juptr = juptr + luk
-if (juptr .gt. jumax)  go to 106
+if (juptr .gt. jumax)  GOTO 106
 qm = q(np1)
 do 33 j=jumin,juptr
 qm = q(qm)
@@ -2918,32 +2918,32 @@ iu(k+1) = iu(k) + luk
 !  ******  update iru, jru  ********************************************
 i = k
 35      i1 = jru(i)
-if (r(i) .lt. 0)  go to 36
+if (r(i) .lt. 0)  GOTO 36
 rend = iju(i) + iu(i+1) - iu(i)
-if (iru(i) .ge. rend)  go to 37
+if (iru(i) .ge. rend)  GOTO 37
 j = ju(iru(i))
 jru(i) = jru(j)
 jru(j) = i
-go to 37
+GOTO 37
 36      r(i) = -r(i)
 37      i = i1
-if (i .eq. 0)  go to 38
+if (i .eq. 0)  GOTO 38
 iru(i) = iru(i) + 1
-go to 35
+GOTO 35
 !
 !  ******  update ira, jra, irac  **************************************
 38    i = irac(k)
-if (i .eq. 0)  go to 41
+if (i .eq. 0)  GOTO 41
 39      i1 = jra(i)
 ira(i) = ira(i) + 1
-if (ira(i) .ge. ia(r(i)+1))  go to 40
+if (ira(i) .ge. ia(r(i)+1))  GOTO 40
 irai = ira(i)
 jairai = ic(ja(irai))
-if (jairai .gt. i)  go to 40
+if (jairai .gt. i)  GOTO 40
 jra(i) = irac(jairai)
 irac(jairai) = i
 40      i = i1
-if (i .ne. 0)  go to 39
+if (i .ne. 0)  GOTO 39
 41    continue
 !
 ijl(n) = jlptr
@@ -3008,8 +3008,8 @@ double precision  a(*), l(*), d(*), u(*), z(*), b(*), row(*)
 double precision  tmp(*), lki, sum, dk
 !
 !  ******  initialize pointers and test storage  ***********************
-if(il(n+1)-1 .gt. lmax) go to 104
-if(iu(n+1)-1 .gt. umax) go to 107
+if(il(n+1)-1 .gt. lmax) GOTO 104
+if(iu(n+1)-1 .gt. umax) GOTO 107
 do 1 k=1,n
 irl(k) = il(k)
 jrl(k) = 0
@@ -3020,18 +3020,18 @@ do 19 k=1,n
 !  ******  reverse jrl and zero row where kth row of l will fill in  ***
 row(k) = 0
 i1 = 0
-if (jrl(k) .eq. 0) go to 3
+if (jrl(k) .eq. 0) GOTO 3
 i = jrl(k)
 2    i2 = jrl(i)
 jrl(i) = i1
 i1 = i
 row(i) = 0
 i = i2
-if (i .ne. 0) go to 2
+if (i .ne. 0) GOTO 2
 !  ******  set row to zero where u will fill in  ***********************
 3    jmin = iju(k)
 jmax = jmin + iu(k+1) - iu(k) - 1
-if (jmin .gt. jmax) go to 5
+if (jmin .gt. jmax) GOTO 5
 do 4 j=jmin,jmax
 4      row(ju(j)) = 0
 !  ******  place kth row of a in row  **********************************
@@ -3044,7 +3044,7 @@ row(ic(ja(j))) = a(j)
 !  ******  initialize sum, and link through jrl  ***********************
 sum = b(rk)
 i = i1
-if (i .eq. 0) go to 10
+if (i .eq. 0) GOTO 10
 !  ******  assign the kth row of l and adjust row, sum  ****************
 7      lki = -row(i)
 !  ******  if l is not required, then comment out the following line  **
@@ -3052,22 +3052,22 @@ l(irl(i)) = -lki
 sum = sum + lki * tmp(i)
 jmin = iu(i)
 jmax = iu(i+1) - 1
-if (jmin .gt. jmax) go to 9
+if (jmin .gt. jmax) GOTO 9
 mu = iju(i) - jmin
 do 8 j=jmin,jmax
 8        row(ju(mu+j)) = row(ju(mu+j)) + lki * u(j)
 9      i = jrl(i)
-if (i .ne. 0) go to 7
+if (i .ne. 0) GOTO 7
 !
 !  ******  assign kth row of u and diagonal d, set tmp(k)  *************
-10    if (row(k) .eq. 0.0d0) go to 108
+10    if (row(k) .eq. 0.0d0) GOTO 108
 dk = 1.0d0 / row(k)
 d(k) = dk
 tmp(k) = sum * dk
-if (k .eq. n) go to 19
+if (k .eq. n) GOTO 19
 jmin = iu(k)
 jmax = iu(k+1) - 1
-if (jmin .gt. jmax)  go to 12
+if (jmin .gt. jmax)  GOTO 12
 mu = iju(k) - jmin
 do 11 j=jmin,jmax
 11      u(j) = row(ju(mu+j)) * dk
@@ -3075,20 +3075,20 @@ do 11 j=jmin,jmax
 !
 !  ******  update irl and jrl, keeping jrl in decreasing order  ********
 i = i1
-if (i .eq. 0) go to 18
+if (i .eq. 0) GOTO 18
 14    irl(i) = irl(i) + 1
 i1 = jrl(i)
-if (irl(i) .ge. il(i+1)) go to 17
+if (irl(i) .ge. il(i+1)) GOTO 17
 ijlb = irl(i) - il(i) + ijl(i)
 j = jl(ijlb)
-15    if (i .gt. jrl(j)) go to 16
+15    if (i .gt. jrl(j)) GOTO 16
 j = jrl(j)
-go to 15
+GOTO 15
 16    jrl(i) = jrl(j)
 jrl(j) = i
 17    i = i1
-if (i .ne. 0) go to 14
-18    if (irl(k) .ge. il(k+1)) go to 19
+if (i .ne. 0) GOTO 14
+18    if (irl(k) .ge. il(k+1)) GOTO 19
 j = jl(ijl(k))
 jrl(k) = jrl(j)
 jrl(j) = k
@@ -3100,7 +3100,7 @@ do 22 i=1,n
 sum =  tmp(k)
 jmin = iu(k)
 jmax = iu(k+1) - 1
-if (jmin .gt. jmax)  go to 21
+if (jmin .gt. jmax)  GOTO 21
 mu = iju(k) - jmin
 do 20 j=jmin,jmax
 20      sum = sum - u(j) * tmp(ju(mu+j))
@@ -3180,13 +3180,13 @@ DOUBLE PRECISION CON, DI, FAC, HL0, PIJ, R, R0, RCON, RCONT, SRUR, DVNORM
 !-----------------------------------------------------------------------
 HL0 = H*EL0
 CON = -HL0
-IF (MITER .EQ. 3) GO TO 300
+IF (MITER .EQ. 3) GOTO 300
 ! See whether J should be reevaluated (JOK = 0) or not (JOK = 1). ------
 JOK = 1
 IF (NST .EQ. 0 .OR. NST .GE. NSLJ+MSBJ) JOK = 0
 IF (ICF .EQ. 1 .AND. ABS(RC - 1.0D0) .LT. CCMXJ) JOK = 0
 IF (ICF .EQ. 2) JOK = 0
-IF (JOK .EQ. 1) GO TO 250
+IF (JOK .EQ. 1) GOTO 250
 !
 ! MITER = 1 or 2, and the Jacobian is to be reevaluated. ---------------
 20   JCUR = 1
@@ -3194,7 +3194,7 @@ NJE = NJE + 1
 NSLJ = NST
 IPLOST = 0
 CONMIN = ABS(CON)
-GO TO (100, 200), MITER
+GOTO (100, 200), MITER
 !
 ! If MITER = 1, call JAC, multiply by scalar, and add identity. --------
 100  CONTINUE
@@ -3211,7 +3211,7 @@ IF (I .EQ. J) WK(IBA+K) = WK(IBA+K) + 1.0D0
 120      CONTINUE
 KMIN = KMAX + 1
 130    CONTINUE
-GO TO 290
+GOTO 290
 !
 ! If MITER = 2, make NGP calls to F to approximate J and P. ------------
 200  CONTINUE
@@ -3243,22 +3243,22 @@ IF (I .EQ. JJ) WK(IBA+K) = WK(IBA+K) + 1.0D0
 JMIN = JMAX + 1
 240    CONTINUE
 NFE = NFE + NGP
-GO TO 290
+GOTO 290
 !
 ! If JOK = 1, reconstruct new P from old P. ----------------------------
 250  JCUR = 0
 RCON = CON/CON0
 RCONT = ABS(CON)/CONMIN
-IF (RCONT .GT. RBIG .AND. IPLOST .EQ. 1) GO TO 20
+IF (RCONT .GT. RBIG .AND. IPLOST .EQ. 1) GOTO 20
 KMIN = IWK(IPIAN)
 DO 275 J = 1,N
 KMAX = IWK(IPIAN+J) - 1
 DO 270 K = KMIN,KMAX
 I = IWK(IBJAN+K)
 PIJ = WK(IBA+K)
-IF (I .NE. J) GO TO 260
+IF (I .NE. J) GOTO 260
 PIJ = PIJ - 1.0D0
-IF (ABS(PIJ) .GE. PSMALL) GO TO 260
+IF (ABS(PIJ) .GE. PSMALL) GOTO 260
 IPLOST = 1
 CONMIN = MIN(ABS(CON0),CONMIN)
 260      PIJ = PIJ*RCON
@@ -3297,8 +3297,8 @@ DO 320 I = 1,N
 R0 = H*SAVF(I) - YH(I,2)
 DI = 0.1D0*R0 - H*(WK(I+2) - SAVF(I))
 WK(I+2) = 1.0D0
-IF (ABS(R0) .LT. UROUND/EWT(I)) GO TO 320
-IF (ABS(DI) .EQ. 0.0D0) GO TO 330
+IF (ABS(R0) .LT. UROUND/EWT(I)) GOTO 320
+IF (ABS(DI) .EQ. 0.0D0) GOTO 330
 WK(I+2) = 0.1D0*R0/DI
 320    CONTINUE
 RETURN
@@ -3459,9 +3459,9 @@ IERSL = 0
 JCUR = 0
 ICF = 0
 DELP = 0.0D0
-IF (JSTART .GT. 0) GO TO 200
-IF (JSTART .EQ. -1) GO TO 100
-IF (JSTART .EQ. -2) GO TO 160
+IF (JSTART .GT. 0) GOTO 200
+IF (JSTART .EQ. -1) GOTO 100
+IF (JSTART .EQ. -2) GOTO 160
 !-----------------------------------------------------------------------
 ! On the first call, the order is set to 1, and other variables are
 ! initialized.  RMAX is the maximum ratio by which H can be increased
@@ -3483,7 +3483,7 @@ MEO = METH
 NSLP = 0
 IPUP = MITER
 IRET = 3
-GO TO 140
+GOTO 140
 !-----------------------------------------------------------------------
 ! The following block handles preliminaries needed when JSTART = -1.
 ! IPUP is set to MITER to force a matrix update.
@@ -3500,14 +3500,14 @@ GO TO 140
 100  IPUP = MITER
 LMAX = MAXORD + 1
 IF (IALTH .EQ. 1) IALTH = 2
-IF (METH .EQ. MEO) GO TO 110
+IF (METH .EQ. MEO) GOTO 110
 CALL DCFODE (METH, ELCO, TESCO)
 MEO = METH
-IF (NQ .GT. MAXORD) GO TO 120
+IF (NQ .GT. MAXORD) GOTO 120
 IALTH = L
 IRET = 1
-GO TO 150
-110  IF (NQ .LE. MAXORD) GO TO 160
+GOTO 150
+110  IF (NQ .LE. MAXORD) GOTO 160
 120  NQ = MAXORD
 L = LMAX
 DO 125 I = 1,L
@@ -3521,10 +3521,10 @@ EXDN = 1.0D0/L
 RHDN = 1.0D0/(1.3D0*DDN**EXDN + 0.0000013D0)
 RH = MIN(RHDN,1.0D0)
 IREDO = 3
-IF (H .EQ. HOLD) GO TO 170
+IF (H .EQ. HOLD) GOTO 170
 RH = MIN(RH,ABS(H/HOLD))
 H = HOLD
-GO TO 175
+GOTO 175
 !-----------------------------------------------------------------------
 ! DCFODE is called to get all the integration coefficients for the
 ! current METH.  Then the EL vector and related constants are reset
@@ -3537,18 +3537,18 @@ NQNYH = NQ*NYH
 RC = RC*EL(1)/EL0
 EL0 = EL(1)
 CONIT = 0.5D0/(NQ+2)
-GO TO (160, 170, 200), IRET
+GOTO (160, 170, 200), IRET
 !-----------------------------------------------------------------------
 ! If H is being changed, the H ratio RH is checked against
 ! RMAX, HMIN, and HMXI, and the YH array rescaled.  IALTH is set to
 ! L = NQ + 1 to prevent a change of H for that many steps, unless
 ! forced by a convergence or error test failure.
 !-----------------------------------------------------------------------
-160  IF (H .EQ. HOLD) GO TO 200
+160  IF (H .EQ. HOLD) GOTO 200
 RH = H/HOLD
 H = HOLD
 IREDO = 3
-GO TO 175
+GOTO 175
 170  RH = MAX(RH,HMIN/ABS(H))
 175  RH = MIN(RH,RMAX)
 RH = RH/MAX(1.0D0,ABS(H)*HMXI*RH)
@@ -3560,7 +3560,7 @@ DO 180 I = 1,N
 H = H*RH
 RC = RC*RH
 IALTH = L
-IF (IREDO .EQ. 0) GO TO 690
+IF (IREDO .EQ. 0) GOTO 690
 !-----------------------------------------------------------------------
 ! This section computes the predicted values by effectively
 ! multiplying the YH array by the Pascal Triangle matrix.
@@ -3590,7 +3590,7 @@ DO 230 I = 1,N
 230    Y(I) = YH(I,1)
 CALL F (NEQ, TN, Y, SAVF)
 NFE = NFE + 1
-IF (IPUP .LE. 0) GO TO 250
+IF (IPUP .LE. 0) GOTO 250
 !-----------------------------------------------------------------------
 ! If indicated, the matrix P = I - h*el(1)*J is reevaluated and
 ! preprocessed before starting the corrector iteration.  IPUP is set
@@ -3601,10 +3601,10 @@ IPUP = 0
 RC = 1.0D0
 NSLP = NST
 CRATE = 0.7D0
-IF (IERPJ .NE. 0) GO TO 430
+IF (IERPJ .NE. 0) GOTO 430
 250  DO 260 I = 1,N
 260    ACOR(I) = 0.0D0
-270  IF (MITER .NE. 0) GO TO 350
+270  IF (MITER .NE. 0) GOTO 350
 !-----------------------------------------------------------------------
 ! In the case of functional iteration, update Y directly from
 ! the result of the last function evaluation.
@@ -3616,7 +3616,7 @@ DEL = DVNORM (N, Y, EWT)
 DO 300 I = 1,N
 Y(I) = YH(I,1) + EL(1)*SAVF(I)
 300    ACOR(I) = SAVF(I)
-GO TO 400
+GOTO 400
 !-----------------------------------------------------------------------
 ! In the case of the chord method, compute the corrector error,
 ! and solve the linear system with that as right-hand side and
@@ -3625,8 +3625,8 @@ GO TO 400
 350  DO 360 I = 1,N
 360    Y(I) = H*SAVF(I) - (YH(I,2) + ACOR(I))
 CALL SLVS (WM, IWM, Y, SAVF)
-IF (IERSL .LT. 0) GO TO 430
-IF (IERSL .GT. 0) GO TO 410
+IF (IERSL .LT. 0) GOTO 430
+IF (IERSL .GT. 0) GOTO 410
 DEL = DVNORM (N, Y, EWT)
 DO 380 I = 1,N
 ACOR(I) = ACOR(I) + Y(I)
@@ -3637,14 +3637,14 @@ ACOR(I) = ACOR(I) + Y(I)
 !-----------------------------------------------------------------------
 400  IF (M .NE. 0) CRATE = MAX(0.2D0*CRATE,DEL/DELP)
 DCON = DEL*MIN(1.0D0,1.5D0*CRATE)/(TESCO(2,NQ)*CONIT)
-IF (DCON .LE. 1.0D0) GO TO 450
+IF (DCON .LE. 1.0D0) GOTO 450
 M = M + 1
-IF (M .EQ. MAXCOR) GO TO 410
-IF (M .GE. 2 .AND. DEL .GT. 2.0D0*DELP) GO TO 410
+IF (M .EQ. MAXCOR) GOTO 410
+IF (M .GE. 2 .AND. DEL .GT. 2.0D0*DELP) GOTO 410
 DELP = DEL
 CALL F (NEQ, TN, Y, SAVF)
 NFE = NFE + 1
-GO TO 270
+GOTO 270
 !-----------------------------------------------------------------------
 ! The corrector iteration failed to converge.
 ! If MITER .ne. 0 and the Jacobian is out of date, PJAC is called for
@@ -3652,10 +3652,10 @@ GO TO 270
 ! before prediction, and H is reduced, if possible.  If H cannot be
 ! reduced or MXNCF failures have occurred, exit with KFLAG = -2.
 !-----------------------------------------------------------------------
-410  IF (MITER .EQ. 0 .OR. JCUR .EQ. 1) GO TO 430
+410  IF (MITER .EQ. 0 .OR. JCUR .EQ. 1) GOTO 430
 ICF = 1
 IPUP = MITER
-GO TO 220
+GOTO 220
 430  ICF = 2
 NCF = NCF + 1
 RMAX = 2.0D0
@@ -3667,13 +3667,13 @@ I1 = I1 - NYH
 DO 440 I = I1,NQNYH
 440      YH1(I) = YH1(I) - YH1(I+NYH)
 445    CONTINUE
-IF (IERPJ .LT. 0 .OR. IERSL .LT. 0) GO TO 680
-IF (ABS(H) .LE. HMIN*1.00001D0) GO TO 670
-IF (NCF .EQ. MXNCF) GO TO 670
+IF (IERPJ .LT. 0 .OR. IERSL .LT. 0) GOTO 680
+IF (ABS(H) .LE. HMIN*1.00001D0) GOTO 670
+IF (NCF .EQ. MXNCF) GOTO 670
 RH = 0.25D0
 IPUP = MITER
 IREDO = 1
-GO TO 170
+GOTO 170
 !-----------------------------------------------------------------------
 ! The corrector has converged.  JCUR is set to 0
 ! to signal that the Jacobian involved may need updating later.
@@ -3683,7 +3683,7 @@ GO TO 170
 450  JCUR = 0
 IF (M .EQ. 0) DSM = DEL/TESCO(2,NQ)
 IF (M .GT. 0) DSM = DVNORM (N, ACOR, EWT)/TESCO(2,NQ)
-IF (DSM .GT. 1.0D0) GO TO 500
+IF (DSM .GT. 1.0D0) GOTO 500
 !-----------------------------------------------------------------------
 ! After a successful step, update the YH array.
 ! Consider changing H if IALTH = 1.  Otherwise decrease IALTH by 1.
@@ -3703,12 +3703,12 @@ DO 470 J = 1,L
 DO 470 I = 1,N
 470      YH(I,J) = YH(I,J) + EL(J)*ACOR(I)
 IALTH = IALTH - 1
-IF (IALTH .EQ. 0) GO TO 520
-IF (IALTH .GT. 1) GO TO 700
-IF (L .EQ. LMAX) GO TO 700
+IF (IALTH .EQ. 0) GOTO 520
+IF (IALTH .GT. 1) GOTO 700
+IF (L .EQ. LMAX) GOTO 700
 DO 490 I = 1,N
 490    YH(I,LMAX) = ACOR(I)
-GO TO 700
+GOTO 700
 !-----------------------------------------------------------------------
 ! The error test failed.  KFLAG keeps track of multiple failures.
 ! Restore TN and the YH array to their previous values, and prepare
@@ -3726,11 +3726,11 @@ DO 510 I = I1,NQNYH
 510      YH1(I) = YH1(I) - YH1(I+NYH)
 515    CONTINUE
 RMAX = 2.0D0
-IF (ABS(H) .LE. HMIN*1.00001D0) GO TO 660
-IF (KFLAG .LE. -3) GO TO 640
+IF (ABS(H) .LE. HMIN*1.00001D0) GOTO 660
+IF (KFLAG .LE. -3) GOTO 640
 IREDO = 2
 RHUP = 0.0D0
-GO TO 540
+GOTO 540
 !-----------------------------------------------------------------------
 ! Regardless of the success or failure of the step, factors
 ! RHDN, RHSM, and RHUP are computed, by which H could be multiplied
@@ -3741,7 +3741,7 @@ GO TO 540
 ! additional scaled derivative.
 !-----------------------------------------------------------------------
 520  RHUP = 0.0D0
-IF (L .EQ. LMAX) GO TO 540
+IF (L .EQ. LMAX) GOTO 540
 DO 530 I = 1,N
 530    SAVF(I) = ACOR(I) - YH(I,LMAX)
 DUP = DVNORM (N, SAVF, EWT)/TESCO(3,NQ)
@@ -3750,42 +3750,42 @@ RHUP = 1.0D0/(1.4D0*DUP**EXUP + 0.0000014D0)
 540  EXSM = 1.0D0/L
 RHSM = 1.0D0/(1.2D0*DSM**EXSM + 0.0000012D0)
 RHDN = 0.0D0
-IF (NQ .EQ. 1) GO TO 560
+IF (NQ .EQ. 1) GOTO 560
 DDN = DVNORM (N, YH(1,L), EWT)/TESCO(1,NQ)
 EXDN = 1.0D0/NQ
 RHDN = 1.0D0/(1.3D0*DDN**EXDN + 0.0000013D0)
-560  IF (RHSM .GE. RHUP) GO TO 570
-IF (RHUP .GT. RHDN) GO TO 590
-GO TO 580
-570  IF (RHSM .LT. RHDN) GO TO 580
+560  IF (RHSM .GE. RHUP) GOTO 570
+IF (RHUP .GT. RHDN) GOTO 590
+GOTO 580
+570  IF (RHSM .LT. RHDN) GOTO 580
 NEWQ = NQ
 RH = RHSM
-GO TO 620
+GOTO 620
 580  NEWQ = NQ - 1
 RH = RHDN
 IF (KFLAG .LT. 0 .AND. RH .GT. 1.0D0) RH = 1.0D0
-GO TO 620
+GOTO 620
 590  NEWQ = L
 RH = RHUP
-IF (RH .LT. 1.1D0) GO TO 610
+IF (RH .LT. 1.1D0) GOTO 610
 R = EL(L)/L
 DO 600 I = 1,N
 600    YH(I,NEWQ+1) = ACOR(I)*R
-GO TO 630
+GOTO 630
 610  IALTH = 3
-GO TO 700
-620  IF ((KFLAG .EQ. 0) .AND. (RH .LT. 1.1D0)) GO TO 610
+GOTO 700
+620  IF ((KFLAG .EQ. 0) .AND. (RH .LT. 1.1D0)) GOTO 610
 IF (KFLAG .LE. -2) RH = MIN(RH,0.2D0)
 !-----------------------------------------------------------------------
 ! If there is a change of order, reset NQ, l, and the coefficients.
 ! In any case H is reset according to RH and the YH array is rescaled.
 ! Then exit from 690 if the step was OK, or redo the step otherwise.
 !-----------------------------------------------------------------------
-IF (NEWQ .EQ. NQ) GO TO 170
+IF (NEWQ .EQ. NQ) GOTO 170
 630  NQ = NEWQ
 L = NQ + 1
 IRET = 2
-GO TO 150
+GOTO 150
 !-----------------------------------------------------------------------
 ! Control reaches this section if 3 or more failures have occured.
 ! If 10 failures have occurred, exit with KFLAG = -1.
@@ -3795,7 +3795,7 @@ GO TO 150
 ! H is reduced by a factor of 10, and the step is retried,
 ! until it succeeds or H reaches HMIN.
 !-----------------------------------------------------------------------
-640  IF (KFLAG .EQ. -10) GO TO 660
+640  IF (KFLAG .EQ. -10) GOTO 660
 RH = 0.1D0
 RH = MAX(HMIN/ABS(H),RH)
 H = H*RH
@@ -3807,21 +3807,21 @@ DO 650 I = 1,N
 650    YH(I,2) = H*SAVF(I)
 IPUP = MITER
 IALTH = 5
-IF (NQ .EQ. 1) GO TO 200
+IF (NQ .EQ. 1) GOTO 200
 NQ = 1
 L = 2
 IRET = 3
-GO TO 150
+GOTO 150
 !-----------------------------------------------------------------------
 ! All returns are made through this section.  H is saved in HOLD
 ! to allow the caller to change H on the next step.
 !-----------------------------------------------------------------------
 660  KFLAG = -1
-GO TO 720
+GOTO 720
 670  KFLAG = -2
-GO TO 720
+GOTO 720
 680  KFLAG = -3
-GO TO 720
+GOTO 720
 690  RMAX = 10.0D0
 700  R = 1.0D0/TESCO(2,NQU)
 DO 710 I = 1,N
@@ -3882,7 +3882,7 @@ DIMENSION ELCO(13,12), TESCO(3,12)
 DIMENSION PC(12)
 !
 !***FIRST EXECUTABLE STATEMENT  DCFODE
-GO TO (100, 200), METH
+GOTO (100, 200), METH
 !
 100  ELCO(1,1) = 1.0D0
 ELCO(2,1) = 1.0D0
@@ -3987,7 +3987,7 @@ DOUBLE PRECISION RTOL, ATOL, YCUR, EWT
 DIMENSION RTOL(*), ATOL(*), YCUR(N), EWT(N)
 !
 !***FIRST EXECUTABLE STATEMENT  DEWSET
-GO TO (10, 20, 30, 40), ITOL
+GOTO (10, 20, 30, 40), ITOL
 10   CONTINUE
 DO 15 I = 1,N
 15     EWT(I) = RTOL(1)*ABS(YCUR(I)) + ATOL(1)
@@ -4045,7 +4045,7 @@ IF (IPFLAG .LT. 0) RETURN
 LYHN = LWM + LENWK
 IF (LYHN .GT. LYH) RETURN
 LYHD = LYH - LYHN
-IF (LYHD .EQ. 0) GO TO 20
+IF (LYHD .EQ. 0) GOTO 20
 IMAX = LYHN - 1 + LENYHM
 DO 10 I = LYHN,IMAX
 10     RWORK(I) = RWORK(I+LYHD)
@@ -4054,7 +4054,7 @@ LYH = LYHN
 20   LSAVF = LYH + LENYH
 LEWTN = LSAVF + N
 LACOR = LEWTN + N
-IF (ISTATC .EQ. 3) GO TO 40
+IF (ISTATC .EQ. 3) GOTO 40
 ! If ISTATE = 1, move EWT (left) to its new position. ------------------
 IF (LEWTN .GT. LEWT) RETURN
 DO 30 I = 1,N
@@ -4123,23 +4123,23 @@ NP1 = N + 1
 IPJAN = IPIAN + NP1
 IBJAN = IPJAN - 1
 LIWK = LENWK*LRAT
-IF (IPJAN+N-1 .GT. LIWK) GO TO 210
-IF (MOSS .EQ. 0) GO TO 30
+IF (IPJAN+N-1 .GT. LIWK) GOTO 210
+IF (MOSS .EQ. 0) GOTO 30
 !
-IF (ISTATC .EQ. 3) GO TO 20
+IF (ISTATC .EQ. 3) GOTO 20
 ! ISTATE = 1 and MOSS .ne. 0.  Perturb Y for structure determination. --
 DO 10 I = 1,N
 ERWT = 1.0D0/EWT(I)
 FAC = 1.0D0 + 1.0D0/(I + 1.0D0)
 Y(I) = Y(I) + FAC*SIGN(ERWT,Y(I))
 10     CONTINUE
-GO TO (70, 100), MOSS
+GOTO (70, 100), MOSS
 !
 20   CONTINUE
 ! ISTATE = 3 and MOSS .ne. 0.  Load Y from YH(*,1). --------------------
 DO 25 I = 1,N
 25     Y(I) = YH(I)
-GO TO (70, 100), MOSS
+GOTO (70, 100), MOSS
 !
 ! MOSS = 0.  Process user's IA,JA.  Add diagonal entries if necessary. -
 30   KNEW = IPJAN
@@ -4148,22 +4148,22 @@ IWK(IPIAN) = 1
 DO 60 J = 1,N
 JFOUND = 0
 KMAX = IA(J+1) - 1
-IF (KMIN .GT. KMAX) GO TO 45
+IF (KMIN .GT. KMAX) GOTO 45
 DO 40 K = KMIN,KMAX
 I = JA(K)
 IF (I .EQ. J) JFOUND = 1
-IF (KNEW .GT. LIWK) GO TO 210
+IF (KNEW .GT. LIWK) GOTO 210
 IWK(KNEW) = I
 KNEW = KNEW + 1
 40       CONTINUE
-IF (JFOUND .EQ. 1) GO TO 50
-45     IF (KNEW .GT. LIWK) GO TO 210
+IF (JFOUND .EQ. 1) GOTO 50
+45     IF (KNEW .GT. LIWK) GOTO 210
 IWK(KNEW) = J
 KNEW = KNEW + 1
 50     IWK(IPIAN+J) = KNEW + 1 - IPJAN
 KMIN = KMAX + 1
 60     CONTINUE
-GO TO 140
+GOTO 140
 !
 ! MOSS = 1.  Compute structure from user-supplied Jacobian routine JAC.
 70   CONTINUE
@@ -4172,29 +4172,29 @@ CALL F (NEQ, TN, Y, SAVF)
 K = IPJAN
 IWK(IPIAN) = 1
 DO 90 J = 1,N
-IF (K .GT. LIWK) GO TO 210
+IF (K .GT. LIWK) GOTO 210
 IWK(K) = J
 K = K + 1
 DO 75 I = 1,N
 75       SAVF(I) = 0.0D0
 CALL JAC (NEQ, TN, Y, J, IWK(IPIAN), IWK(IPJAN), SAVF)
 DO 80 I = 1,N
-IF (ABS(SAVF(I)) .LE. SETH) GO TO 80
-IF (I .EQ. J) GO TO 80
-IF (K .GT. LIWK) GO TO 210
+IF (ABS(SAVF(I)) .LE. SETH) GOTO 80
+IF (I .EQ. J) GOTO 80
+IF (K .GT. LIWK) GOTO 210
 IWK(K) = I
 K = K + 1
 80       CONTINUE
 IWK(IPIAN+J) = K + 1 - IPJAN
 90     CONTINUE
-GO TO 140
+GOTO 140
 !
 ! MOSS = 2.  Compute structure from results of N + 1 calls to F. -------
 100  K = IPJAN
 IWK(IPIAN) = 1
 CALL F (NEQ, TN, Y, SAVF)
 DO 120 J = 1,N
-IF (K .GT. LIWK) GO TO 210
+IF (K .GT. LIWK) GOTO 210
 IWK(K) = J
 K = K + 1
 YJ = Y(J)
@@ -4205,9 +4205,9 @@ CALL F (NEQ, TN, Y, FTEM)
 Y(J) = YJ
 DO 110 I = 1,N
 DQ = (FTEM(I) - SAVF(I))/DYJ
-IF (ABS(DQ) .LE. SETH) GO TO 110
-IF (I .EQ. J) GO TO 110
-IF (K .GT. LIWK) GO TO 210
+IF (ABS(DQ) .LE. SETH) GOTO 110
+IF (I .EQ. J) GOTO 110
+IF (K .GT. LIWK) GOTO 210
 IWK(K) = I
 K = K + 1
 110      CONTINUE
@@ -4215,14 +4215,14 @@ IWK(IPIAN+J) = K + 1 - IPJAN
 120    CONTINUE
 !
 140  CONTINUE
-IF (MOSS .EQ. 0 .OR. ISTATC .NE. 1) GO TO 150
+IF (MOSS .EQ. 0 .OR. ISTATC .NE. 1) GOTO 150
 ! If ISTATE = 1 and MOSS .ne. 0, restore Y from YH. --------------------
 DO 145 I = 1,N
 145    Y(I) = YH(I)
 150  NNZ = IWK(IPIAN+N) - 1
 LENIGP = 0
 IPIGP = IPJAN + NNZ
-IF (MITER .NE. 2) GO TO 160
+IF (MITER .NE. 2) GOTO 160
 !
 ! Compute grouping of column indices (MITER = 2). ----------------------
 MAXG = NP1
@@ -4232,9 +4232,9 @@ IPIGP = IPJGP + N
 IPTT1 = IPIGP + NP1
 IPTT2 = IPTT1 + N
 LREQ = IPTT2 + N - 1
-IF (LREQ .GT. LIWK) GO TO 220
+IF (LREQ .GT. LIWK) GOTO 220
 CALL JGROUP (N, IWK(IPIAN), IWK(IPJAN), MAXG, NGP, IWK(IPIGP), IWK(IPJGP), IWK(IPTT1), IWK(IPTT2), IER)
-IF (IER .NE. 0) GO TO 220
+IF (IER .NE. 0) GOTO 220
 LENIGP = NGP + 1
 !
 ! Compute new ordering of rows/columns of Jacobian. --------------------
@@ -4244,34 +4244,34 @@ IPIC = IPC + N
 IPISP = IPIC + N
 IPRSP = (IPISP - 2)/LRAT + 2
 IESP = LENWK + 1 - IPRSP
-IF (IESP .LT. 0) GO TO 230
+IF (IESP .LT. 0) GOTO 230
 IBR = IPR - 1
 DO 170 I = 1,N
 170    IWK(IBR+I) = I
 NSP = LIWK + 1 - IPISP
 CALL ODRV (N, IWK(IPIAN), IWK(IPJAN), WK, IWK(IPR), IWK(IPIC), NSP, IWK(IPISP), 1, IYS)
-IF (IYS .EQ. 11*N+1) GO TO 240
-IF (IYS .NE. 0) GO TO 230
+IF (IYS .EQ. 11*N+1) GOTO 240
+IF (IYS .NE. 0) GOTO 230
 !
 ! Reorder JAN and do symbolic LU factorization of matrix. --------------
 IPA = LENWK + 1 - NNZ
 NSP = IPA - IPRSP
 LREQ = MAX(12*N/LRAT, 6*N/LRAT+2*N+NNZ) + 3
 LREQ = LREQ + IPRSP - 1 + NNZ
-IF (LREQ .GT. LENWK) GO TO 250
+IF (LREQ .GT. LENWK) GOTO 250
 IBA = IPA - 1
 DO 180 I = 1,NNZ
 180    WK(IBA+I) = 0.0D0
 IPISP = LRAT*(IPRSP - 1) + 1
 CALL CDRV (N,IWK(IPR),IWK(IPC),IWK(IPIC),IWK(IPIAN),IWK(IPJAN), WK(IPA),WK(IPA),WK(IPA),NSP,IWK(IPISP),WK(IPRSP),IESP,5,IYS)
 LREQ = LENWK - IESP
-IF (IYS .EQ. 10*N+1) GO TO 250
-IF (IYS .NE. 0) GO TO 260
+IF (IYS .EQ. 10*N+1) GOTO 250
+IF (IYS .NE. 0) GOTO 260
 IPIL = IPISP
 IPIU = IPIL + 2*N + 1
 NZU = IWK(IPIL+N) - IWK(IPIL)
 NZL = IWK(IPIU+N) - IWK(IPIU)
-IF (LRAT .GT. 1) GO TO 190
+IF (LRAT .GT. 1) GOTO 190
 CALL ADJLR (N, IWK(IPISP), LDIF)
 LREQ = LREQ + LDIF
 190  CONTINUE
@@ -4343,13 +4343,13 @@ DO 20 I = 1,N
 20       INCL(I) = 0
 DO 50 J = 1,N
 ! Reject column J if it is already in a group.--------------------------
-IF (JDONE(J) .EQ. 1) GO TO 50
+IF (JDONE(J) .EQ. 1) GOTO 50
 KMIN = IA(J)
 KMAX = IA(J+1) - 1
 DO 30 K = KMIN,KMAX
 ! Reject column J if it overlaps any column already in this group.------
 I = JA(K)
-IF (INCL(I) .EQ. 1) GO TO 50
+IF (INCL(I) .EQ. 1) GOTO 50
 30         CONTINUE
 ! Accept column J into group NG.----------------------------------------
 JGP(NCOL) = J
@@ -4360,10 +4360,10 @@ I = JA(K)
 40         INCL(I) = 1
 50       CONTINUE
 ! Stop if this group is empty (grouping is complete).-------------------
-IF (NCOL .EQ. IGP(NG)) GO TO 70
+IF (NCOL .EQ. IGP(NG)) GOTO 70
 60     CONTINUE
 ! Error return if not all columns were chosen (MAXG too small).---------
-IF (NCOL .LE. N) GO TO 80
+IF (NCOL .LE. N) GOTO 80
 NG = MAXG
 70   NGRP = NG - 1
 RETURN
@@ -4511,25 +4511,25 @@ logical  dflag
 !
 !----initialize error flag and validate path specification
 flag = 0
-if (path.lt.1 .or. 5.lt.path)  go to 111
+if (path.lt.1 .or. 5.lt.path)  GOTO 111
 !
 !----allocate storage and find minimum degree ordering
-if ((path-1) * (path-2) * (path-4) .ne. 0)  go to 1
+if ((path-1) * (path-2) * (path-4) .ne. 0)  GOTO 1
 max = (nsp-n)/2
 v    = 1
 l    = v     +  max
 head = l     +  max
 next = head  +  n
-if (max.lt.n)  go to 110
+if (max.lt.n)  GOTO 110
 !
 call  md(n, ia,ja, max,isp(v),isp(l), isp(head),p,ip, isp(v), flag)
-if (flag.ne.0)  go to 100
+if (flag.ne.0)  GOTO 100
 !
 !----allocate storage and symmetrically reorder matrix
-1  if ((path-2) * (path-3) * (path-4) * (path-5) .ne. 0)  go to 2
+1  if ((path-2) * (path-3) * (path-4) * (path-5) .ne. 0)  GOTO 2
 tmp = (nsp+1) -      n
 q   = tmp     - (ia(n+1)-1)
-if (q.lt.1)  go to 110
+if (q.lt.1)  GOTO 110
 !
 dflag = path.eq.4 .or. path.eq.5
 call sro(n,  ip,  ia, ja, a,  isp(tmp),  isp(q),  dflag)
@@ -4592,7 +4592,7 @@ do 1 i=1,n
 do 3 i=1,n
 jmin = ia(i)
 jmax = ia(i+1) - 1
-if (jmin.gt.jmax)  go to 3
+if (jmin.gt.jmax)  GOTO 3
 do 2 j=jmin,jmax
 !
 !--------find row (=r(j)) and column (=ja(j)) in which to store a(j) ...
@@ -4620,12 +4620,12 @@ jmax = ia(n+1) - 1
 j = jmax
 do 6 jdummy=jmin,jmax
 i = r(j)
-if (.not.dflag .or. ja(j).ne.i .or. i.eq.ilast)  go to 5
+if (.not.dflag .or. ja(j).ne.i .or. i.eq.ilast)  GOTO 5
 !
 !------if dflag, then put diagonal nonzero at beginning of row
 r(j) = ia(i)
 ilast = i
-go to 6
+GOTO 6
 !
 !------put (off-diagonal) nonzero in last unused location in row
 5       q(i) = q(i) - 1
@@ -4636,7 +4636,7 @@ r(j) = q(i)
 !
 !--phase 3 -- permute (ja,a) to upper triangular form (wrt new ordering)
 do 8 j=jmin,jmax
-7     if (r(j).eq.j)  go to 8
+7     if (r(j).eq.j)  GOTO 8
 k = r(j)
 r(j) = r(k)
 r(k) = k
@@ -4646,7 +4646,7 @@ ja(j) = jak
 ak = a(k)
 a(k) = a(j)
 a(j) = ak
-go to 7
+GOTO 7
 8     continue
 !
 return
@@ -4748,12 +4748,12 @@ k = 0
 dmin = 1
 !
 !----while  k .lt. n  do
-1  if (k.ge.n)  go to 4
+1  if (k.ge.n)  GOTO 4
 !
 !------search for vertex of minimum degree
-2    if (head(dmin).gt.0)  go to 3
+2    if (head(dmin).gt.0)  GOTO 3
 dmin = dmin + 1
-go to 2
+GOTO 2
 !
 !------remove vertex vk of minimum degree from degree list
 3    vk = head(dmin)
@@ -4776,7 +4776,7 @@ call  mdp(k,ek,tail, v,l, head,last,next, mark)
 !------update degrees of uneliminated vertices in ek
 call  mdu(ek,dmin, v,l, head,last,next, mark)
 !
-go to 1
+GOTO 1
 !
 !----generate inverse permutation from permutation
 4  do 5 k=1,n
@@ -4804,7 +4804,7 @@ sfs = n+1
 do 6 vi=1,n
 jmin = ia(vi)
 jmax = ia(vi+1) - 1
-if (jmin.gt.jmax)  go to 6
+if (jmin.gt.jmax)  GOTO 6
 do 5 j=jmin,jmax
 vj = ja(j)
 if (vj-vi) 2, 5, 4
@@ -4813,13 +4813,13 @@ if (vj-vi) 2, 5, 4
 !------check for previous occurrence of a(vj,vi)
 2      lvk = vi
 kmax = mark(vi) - 1
-if (kmax .eq. 0) go to 4
+if (kmax .eq. 0) GOTO 4
 do 3 k=1,kmax
 lvk = l(lvk)
-if (v(lvk).eq.vj) go to 5
+if (v(lvk).eq.vj) GOTO 5
 3        continue
 !----for unentered entries a(vi,vj)
-4        if (sfs.ge.max)  go to 101
+4        if (sfs.ge.max)  GOTO 101
 !
 !------enter vj in element list for vi
 mark(vi) = mark(vi) + 1
@@ -4868,17 +4868,17 @@ tail = vk
 !----for each vertex/element vs/es in element list of vk
 ls = l(vk)
 1  s = ls
-if (s.eq.0)  go to 5
+if (s.eq.0)  GOTO 5
 ls = l(s)
 vs = v(s)
-if (next(vs).lt.0)  go to 2
+if (next(vs).lt.0)  GOTO 2
 !
 !------if vs is uneliminated vertex, then tag and append to list of
 !------uneliminated neighbors
 mark(vs) = tag
 l(tail) = s
 tail = s
-go to 4
+GOTO 4
 !
 !------if es is active element, then ...
 !--------for each vertex vb in boundary list of element es
@@ -4891,7 +4891,7 @@ vb = v(b)
 !
 !----------if vb is untagged vertex, then tag and append to list of
 !----------uneliminated neighbors
-if (mark(vb).ge.tag)  go to 3
+if (mark(vb).ge.tag)  GOTO 3
 mark(vb) = tag
 l(tail) = b
 tail = b
@@ -4900,7 +4900,7 @@ tail = b
 !--------mark es inactive
 mark(es) = tag
 !
-4    go to 1
+4    GOTO 1
 !
 !----terminate list of uneliminated neighbors
 5  l(tail) = 0
@@ -4920,17 +4920,17 @@ tag = mark(ek)
 !----for each vertex vi in ek
 li = ek
 ilpmax = last(ek)
-if (ilpmax.le.0)  go to 12
+if (ilpmax.le.0)  GOTO 12
 do 11 ilp=1,ilpmax
 i = li
 li = l(i)
 vi = v(li)
 !
 !------remove vi from degree list
-if (last(vi).eq.0)  go to 3
-if (last(vi).gt.0)  go to 1
+if (last(vi).eq.0)  GOTO 3
+if (last(vi).gt.0)  GOTO 1
 head(-last(vi)) = next(vi)
-go to 2
+GOTO 2
 1        next(last(vi)) = next(vi)
 2      if (next(vi).gt.0)  last(next(vi)) = last(vi)
 !
@@ -4938,31 +4938,31 @@ go to 2
 3    ls = vi
 4    s = ls
 ls = l(s)
-if (ls.eq.0)  go to 6
+if (ls.eq.0)  GOTO 6
 es = v(ls)
-if (mark(es).lt.tag)  go to 5
+if (mark(es).lt.tag)  GOTO 5
 free = ls
 l(s) = l(ls)
 ls = s
-5      go to 4
+5      GOTO 4
 !
 !------if vi is interior vertex, then remove from list and eliminate
 6    lvi = l(vi)
-if (lvi.ne.0)  go to 7
+if (lvi.ne.0)  GOTO 7
 l(i) = l(li)
 li = i
 !
 k = k+1
 next(vi) = -k
 last(ek) = last(ek) - 1
-go to 11
+GOTO 11
 !
 !------else ...
 !--------classify vertex vi
-7      if (l(lvi).ne.0)  go to 9
+7      if (l(lvi).ne.0)  GOTO 9
 evi = v(lvi)
-if (next(evi).ge.0)  go to 9
-if (mark(evi).lt.0)  go to 8
+if (next(evi).ge.0)  GOTO 9
+if (mark(evi).lt.0)  GOTO 8
 !
 !----------if vi is prototype vertex, then mark as such, initialize
 !----------overlap count for corresponding element, and move vi to end
@@ -4973,13 +4973,13 @@ l(tail) = li
 tail = li
 l(i) = l(li)
 li = i
-go to 10
+GOTO 10
 !
 !----------else if vi is duplicate vertex, then mark as such and adjust
 !----------overlap count for corresponding element
 8            last(vi) = 0
 mark(evi) = mark(evi) - 1
-go to 10
+GOTO 10
 !
 !----------else mark vi to compute degree
 9            last(vi) = -ek
@@ -5009,7 +5009,7 @@ tag = mark(ek) - last(ek)
 !----for each vertex vi in ek
 i = ek
 ilpmax = last(ek)
-if (ilpmax.le.0)  go to 11
+if (ilpmax.le.0)  GOTO 11
 do 10 ilp=1,ilpmax
 i = l(i)
 vi = v(i)
@@ -5023,18 +5023,18 @@ dvi = last(ek)
 !--------for each vertex/element vs/es in element list of vi
 s = l(vi)
 2      s = l(s)
-if (s.eq.0)  go to 9
+if (s.eq.0)  GOTO 9
 vs = v(s)
-if (next(vs).lt.0)  go to 3
+if (next(vs).lt.0)  GOTO 3
 !
 !----------if vs is uneliminated vertex, then tag and adjust degree
 mark(vs) = tag
 dvi = dvi + 1
-go to 5
+GOTO 5
 !
 !----------if es is active element, then expand
 !------------check for outmatched vertex
-3          if (mark(es).lt.0)  go to 6
+3          if (mark(es).lt.0)  GOTO 6
 !
 !------------for each vertex vb in es
 b = es
@@ -5044,22 +5044,22 @@ b = l(b)
 vb = v(b)
 !
 !--------------if vb is untagged, then tag and adjust degree
-if (mark(vb).ge.tag)  go to 4
+if (mark(vb).ge.tag)  GOTO 4
 mark(vb) = tag
 dvi = dvi + 1
 4            continue
 !
-5        go to 2
+5        GOTO 2
 !
 !------else if vi is outmatched vertex, then adjust overlaps but do not
 !------compute degree
 6      last(vi) = 0
 mark(es) = mark(es) - 1
 7      s = l(s)
-if (s.eq.0)  go to 10
+if (s.eq.0)  GOTO 10
 es = v(s)
 if (mark(es).lt.0)  mark(es) = mark(es) - 1
-go to 7
+GOTO 7
 !
 !------else if vi is prototype vertex, then calculate degree by
 !------inclusion/exclusion and reset overlap count
@@ -5120,15 +5120,15 @@ NUM = 0
 DO 50 II = 1,N
 JMIN = IA(II)
 JMAX = IA(II+1) - 1
-IF (JMIN .GT. JMAX) GO TO 50
+IF (JMIN .GT. JMAX) GOTO 50
 DO 40 J = JMIN,JMAX
 IF (JA(J) - II) 10, 40, 30
 10       JJ =JA(J)
 KMIN = IA(JJ)
 KMAX = IA(JJ+1) - 1
-IF (KMIN .GT. KMAX) GO TO 30
+IF (KMIN .GT. KMAX) GOTO 30
 DO 20 K = KMIN,KMAX
-IF (JA(K) .EQ. II) GO TO 40
+IF (JA(K) .EQ. II) GOTO 40
 20         CONTINUE
 30       NUM = NUM + 1
 40       CONTINUE
@@ -5201,26 +5201,26 @@ CHARACTER*80 MSG
 !
 !***FIRST EXECUTABLE STATEMENT  DINTDY
 IFLAG = 0
-IF (K .LT. 0 .OR. K .GT. NQ) GO TO 80
+IF (K .LT. 0 .OR. K .GT. NQ) GOTO 80
 TP = TN - HU -  100.0D0*UROUND*SIGN(ABS(TN) + ABS(HU), HU)
-IF ((T-TP)*(T-TN) .GT. 0.0D0) GO TO 90
+IF ((T-TP)*(T-TN) .GT. 0.0D0) GOTO 90
 !
 S = (T - TN)/H
 IC = 1
-IF (K .EQ. 0) GO TO 15
+IF (K .EQ. 0) GOTO 15
 JJ1 = L - K
 DO 10 JJ = JJ1,NQ
 10     IC = IC*JJ
 15   C = IC
 DO 20 I = 1,N
 20     DKY(I) = C*YH(I,L)
-IF (K .EQ. NQ) GO TO 55
+IF (K .EQ. NQ) GOTO 55
 JB2 = NQ - K
 DO 50 JB = 1,JB2
 J = NQ - JB
 JP1 = J + 1
 IC = 1
-IF (K .EQ. 0) GO TO 35
+IF (K .EQ. 0) GOTO 35
 JJ1 = JP1 - K
 DO 30 JJ = JJ1,J
 30       IC = IC*JJ
@@ -5320,7 +5320,7 @@ INTEGER LUNIT, IXSAV, MESFLG
 !***FIRST EXECUTABLE STATEMENT  XERRWD
 LUNIT = IXSAV (1, 0, .FALSE.)
 MESFLG = IXSAV (2, 0, .FALSE.)
-IF (MESFLG .EQ. 0) GO TO 100
+IF (MESFLG .EQ. 0) GOTO 100
 !
 !  Write the message.
 !
@@ -5448,7 +5448,7 @@ DOUBLE PRECISION U, COMP
 U = 1.0D0
 10   U = U*0.5D0
 CALL DUMSUM(1.0D0, U, COMP)
-IF (COMP .NE. 1.0D0) GO TO 10
+IF (COMP .NE. 1.0D0) GOTO 10
 DUMACH = U*2.0D0
 RETURN
 !----------------------- End of Function DUMACH ------------------------
