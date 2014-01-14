@@ -77,11 +77,11 @@ IMPLICIT none
 
 integer :: lrw, liw
 
-real(kind=8), dimension(NSMAX) :: Y
+real(double_precision), dimension(NSMAX) :: Y
 
 integer :: itol, itask, istate, iopt, mf
-real(kind=8) :: atol
-real(kind=8) :: T, TOUT, TIN
+real(double_precision) :: atol
+real(double_precision) :: T, TOUT, TIN
 
 data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
@@ -233,8 +233,8 @@ use header
 use unitvar
 IMPLICIT none
 
-REAL(kind=8), dimension(NEMAX) :: MASS
-real(kind=8) :: MSUM
+real(double_precision), dimension(NEMAX) :: MASS
+real(double_precision) :: MSUM
 integer :: ILAB, KSUM, j, k, i, isptemp
 
 ! Set elements' characteristics=========================================
@@ -360,10 +360,10 @@ use unitvar
 IMPLICIT none
 
 CHARACTER(len=11), dimension(NSMAX) :: SREAD
-REAL(kind=8), dimension(NSMAX) :: Y
+real(double_precision), dimension(NSMAX) :: Y
 
 integer :: i, j, k
-real(kind=8) :: TOUT
+real(double_precision) :: TOUT
 
 ! Initialise times======================================================
 TOUT=0.0D+0
@@ -455,16 +455,16 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   integer :: liw,lrw
 
   INTEGER, dimension(liw) :: IWORK
-  REAL(kind=8), dimension(NSMAX) :: Y
-  REAL(kind=8), dimension(lrw) :: RWORK
-  REAL(KIND=8), dimension(NSMAX) :: DUMMYPDJ, DUMMYY
+  real(double_precision), dimension(NSMAX) :: Y
+  real(double_precision), dimension(lrw) :: RWORK
+  real(double_precision), dimension(NSMAX) :: DUMMYPDJ, DUMMYY
   integer IDUMMY
   integer :: i
   integer :: itol, itask, istate, iopt, mf
-  real(kind=8) :: atol
-  real(kind=8), dimension(nsmax) :: satol
+  real(double_precision) :: atol
+  real(double_precision), dimension(nsmax) :: satol
 
-  real(kind=8) :: T, TOUT, TIN
+  real(double_precision) :: T, TOUT, TIN
 
   integer :: NNZ
 
@@ -554,8 +554,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use unitvar
   IMPLICIT none
 
-  REAL(kind=8), dimension(NSMAX) :: Y,YP
-  real(kind=8) :: T
+  real(double_precision), dimension(NSMAX) :: Y,YP
+  real(double_precision) :: T
   INTEGER :: N
 
   CALL RATCON2(Y)
@@ -571,9 +571,9 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use header
   implicit none
   integer N,J
-  real(kind=8) :: T
-  REAL(KIND=8), dimension(N) :: IAN, JAN
-  REAL(kind=8), dimension(NSMAX) :: Y,PDJ
+  real(double_precision) :: T
+  real(double_precision), dimension(N) :: IAN, JAN
+  real(double_precision), dimension(NSMAX) :: Y,PDJ
 
   !      CALL RATCON2(Y)
 
@@ -589,9 +589,9 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use unitvar
   IMPLICIT none
 
-  REAL(kind=8), dimension(NSMAX) :: Y
-  real(kind=8), dimension(NEMAX) :: ELMSUM
-  real(kind=8) :: CHASUM
+  real(double_precision), dimension(NSMAX) :: Y
+  real(double_precision), dimension(NEMAX) :: ELMSUM
+  real(double_precision) :: CHASUM
 
   integer :: i, k
 
@@ -659,7 +659,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   !      SUBROUTINE DUMMY 
   !      IMPLICIT none
   !      integer :: N,J
-  !      real(kind=8) :: T,Y,IAN, JAN, PDJ 
+  !      real(double_precision) :: T,Y,IAN, JAN, PDJ 
 
   !      entry jac (N,T,Y,ML,MU,PD,NROWPD)
   !      entry jac (N, T, Y, J, IAN, JAN, PDJ)
@@ -675,7 +675,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   IMPLICIT none
 
   integer :: J,IMOD1,IMOD2
-  real(kind=8) :: BARR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
+  real(double_precision) :: BARR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
 
   EX1(J)=0.0D+0
   EX2(J)=0.0D+0
@@ -764,12 +764,12 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use unitvar
   IMPLICIT none
 
-  real(kind=8) :: T300, TI, TSQ
-  REAL(kind=8), dimension(NSMAX) :: Y
+  real(double_precision) :: T300, TI, TSQ
+  real(double_precision), dimension(NSMAX) :: Y
   integer :: nsta, nfin
   integer :: k, j, w, m, n
   integer, dimension(10) :: indice
-  real(kind=8), dimension(10) :: distmin, distmax
+  real(double_precision), dimension(10) :: distmin, distmax
 
   T300=TEMP/300.D+0
   TI=1.0D+00/TEMP
@@ -1050,7 +1050,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   use header
   implicit none
-  real(kind=8) :: XNH2,XNCO
+  real(double_precision) :: XNH2,XNCO
 
   if (iptstore.eq.1) then
     ZNH2(iptstore)=0.
@@ -1075,12 +1075,12 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use unitvar
   IMPLICIT none
 
-  REAL(kind=8) :: ACTIV,BARR,MONLAY,DIFF
-  REAL(kind=8) :: XNH2,XNCO
-  REAL(kind=8) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
-  real(kind=8) :: T300, TI, TSQ
-  REAL(kind=8), dimension(NSMAX) :: Y
-  real(kind=8) :: YMOD1, YMOD2
+  real(double_precision) :: ACTIV,BARR,MONLAY,DIFF
+  real(double_precision) :: XNH2,XNCO
+  real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
+  real(double_precision) :: T300, TI, TSQ
+  real(double_precision), dimension(NSMAX) :: Y
+  real(double_precision) :: YMOD1, YMOD2
   INTEGER IMOD1,IMOD2
   integer :: j, l
 
@@ -1338,16 +1338,16 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     use unitvar
     IMPLICIT none
 
-    REAL(kind=8), dimension(nsmax) :: REA1,REA2,REA3,REA4
-    REAL(kind=8), dimension(nkmax) :: REA5
-    REAL(kind=8), dimension(nsmax) :: SMASS
-    real(kind=8) :: SMA,REDMAS,STICK,EVFRAC,DHFSUM,SUM1,SUM2
+    real(double_precision), dimension(nsmax) :: REA1,REA2,REA3,REA4
+    real(double_precision), dimension(nkmax) :: REA5
+    real(double_precision), dimension(nsmax) :: SMASS
+    real(double_precision) :: SMA,REDMAS,STICK,EVFRAC,DHFSUM,SUM1,SUM2
     INTEGER, dimension(NKMAX) :: INT1
     integer :: NGS,NEA,NPATH,NEVAP,BADFLAG,ATOMS
     CHARACTER(len=11), dimension(5,NKMAX) :: GSREAD
     character(len=11), dimension(nsmax) :: GSPEC
 
-    real(kind=8) :: cond
+    real(double_precision) :: cond
     integer :: i, j,k,l,n4, n5, n6
 
     ! Set accretion rate====================================================

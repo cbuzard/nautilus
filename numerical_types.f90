@@ -15,7 +15,7 @@ module numerical_types
 
   implicit none
   
-  integer, parameter :: sp = selected_real_kind(6,37) !< @param simple precision parameter (used with real(sp) :: arg)
-  integer, parameter :: dp = selected_real_kind(15,307) !< @param double precision parameter (used with real(dp) :: arg)
+  integer, parameter :: simple_precision = selected_real_kind(6,37) !< @param simple precision parameter (used with real(sp) :: arg)
+  integer, parameter :: double_precision = selected_real_kind(15,307) !< @param double precision parameter (used with real(dp) :: arg)
 
 end module numerical_types

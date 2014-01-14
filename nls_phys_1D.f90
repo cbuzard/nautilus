@@ -5,11 +5,11 @@ subroutine phys_1D
 use header
 implicit none
 integer, parameter :: nfilelines=81
-real(kind=8) :: KFACTOR  
-real(kind=8) :: HTAU, TAUEST, NHEST, Hcold
-real(kind=8), dimension(nptmax) :: ld1d
-real(kind=8) :: TCOLD , TWARM, T100, UV100
-real(kind=8) :: ZETAZERO, KTXR, Nsec, LXR, RXR, COLDENS 
+real(double_precision) :: KFACTOR  
+real(double_precision) :: HTAU, TAUEST, NHEST, Hcold
+real(double_precision), dimension(nptmax) :: ld1d
+real(double_precision) :: TCOLD , TWARM, T100, UV100
+real(double_precision) :: ZETAZERO, KTXR, Nsec, LXR, RXR, COLDENS 
 
 TEMP1D(:)=TEMP0
 DTEMP1D(:)=DTEMP0

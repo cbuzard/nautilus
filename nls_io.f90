@@ -10,13 +10,13 @@ integer :: i,k,j, jk
 CHARACTER (len=11), dimension(ns1) :: SPECUO1
 CHARACTER (len=11), dimension(ns2) :: SPECUO2
 character (len=11), dimension(7,nkmax) :: SYMBOLUO
-REAL(kind=8), dimension(nkmax) :: AUO,BUO,CUO
+real(double_precision), dimension(nkmax) :: AUO,BUO,CUO
 INTEGER, dimension(nkmax) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 character (len=11), dimension(7,nk1) :: SYMBOLUO1
-REAL(kind=8), dimension(nk1) :: AUO1,BUO1,CUO1
+real(double_precision), dimension(nk1) :: AUO1,BUO1,CUO1
 INTEGER, dimension(nk1) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1
 character (len=11), dimension(7,nk2) :: SYMBOLUO2
-REAL(kind=8), dimension(nk2) :: AUO2,BUO2,CUO2
+real(double_precision), dimension(nk2) :: AUO2,BUO2,CUO2
 INTEGER, dimension(nk2) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2
 INTEGER, dimension(ns1) :: ICG1
 INTEGER, dimension(ns2) :: ICG2

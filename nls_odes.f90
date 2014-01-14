@@ -33,12 +33,12 @@ subroutine FCHEMVW(N,Y,YDOT)
 use header
 implicit none
 integer :: N, NSP1
-REAL(KIND=8), dimension(NSMAX) :: Y, YDOT
-REAL(KIND=8), dimension(NSMAX+1) :: YD2
+real(double_precision), dimension(NSMAX) :: Y, YDOT
+real(double_precision), dimension(NSMAX+1) :: YD2
 !REAL(KIND=16), dimension(NSMAX+1) :: YD2
 integer :: i
 integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
-real(kind=8) :: rate
+real(double_precision) :: rate
 
 NSP1=NSMAX+1
 
@@ -89,8 +89,8 @@ use header
 implicit none
 integer :: N, NSP1
 integer J
-REAL(KIND=8), dimension(NSMAX) :: Y, PDJ
-REAL(KIND=8), dimension(NSMAX+1) :: PDJ2
+real(double_precision), dimension(NSMAX) :: Y, PDJ
+real(double_precision), dimension(NSMAX+1) :: PDJ2
 !REAL(KIND=16), dimension(NSMAX+1) :: PDJ2
 integer :: i
 integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
@@ -200,7 +200,7 @@ subroutine computeIAJA(Y)
 use header
 implicit none
 integer :: i,j,k
-real(kind=8), dimension(nsmax) :: Y, PDJ
+real(double_precision), dimension(nsmax) :: Y, PDJ
 
 call ratcon(Y)
 call ratcon2(Y)
