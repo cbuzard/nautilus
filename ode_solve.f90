@@ -28,7 +28,7 @@ SUBROUTINE DLSODES (F, NEQ, Y, T, TOUT, ITOL, RTOL, ATOL, ITASK, ISTATE, IOPT, R
 EXTERNAL F, JAC
 INTEGER NEQ, ITOL, ITASK, ISTATE, IOPT, LRW, IWORK, LIW, MF
 DOUBLE PRECISION Y, T, TOUT, RTOL, ATOL, RWORK
-DIMENSION NEQ(*), Y(*), RTOL(*), ATOL(*), RWORK(LRW), IWORK(LIW)
+DIMENSION Y(*), ATOL(*), RWORK(LRW), IWORK(LIW)
 !-----------------------------------------------------------------------
 ! This is the 12 November 2003 version of
 ! DLSODES: Livermore Solver for Ordinary Differential Equations
@@ -1342,10 +1342,10 @@ IF (TOUT .EQ. T) RETURN
 ! First check legality of the non-optional inputs NEQ, ITOL, IOPT,
 ! MF, ML, and MU.
 !-----------------------------------------------------------------------
-20   IF (NEQ(1) .LE. 0) GOTO 604
+20   IF (NEQ .LE. 0) GOTO 604
 IF (ISTATE .EQ. 1) GOTO 25
-IF (NEQ(1) .GT. N) GOTO 605
-25   N = NEQ(1)
+IF (NEQ .GT. N) GOTO 605
+25   N = NEQ
 IF (ITOL .LT. 1 .OR. ITOL .GT. 4) GOTO 606
 IF (IOPT .LT. 0 .OR. IOPT .GT. 1) GOTO 607
 MOSS = MF/100
@@ -1388,10 +1388,10 @@ IF (HMIN .LT. 0.0D0) GOTO 616
 SETH = RWORK(8)
 IF (SETH .LT. 0.0D0) GOTO 609
 ! Check RTOL and ATOL for legality. ------------------------------------
-60   RTOLI = RTOL(1)
+60   RTOLI = RTOL
 ATOLI = ATOL(1)
 DO 65 I = 1,N
-IF (ITOL .GE. 3) RTOLI = RTOL(I)
+IF (ITOL .GE. 3) RTOLI = RTOL
 IF (ITOL .EQ. 2 .OR. ITOL .EQ. 4) ATOLI = ATOL(I)
 IF (RTOLI .LT. 0.0D0) GOTO 619
 IF (ATOLI .LT. 0.0D0) GOTO 620
@@ -1596,10 +1596,10 @@ IF (H0 .NE. 0.0D0) GOTO 180
 TDIST = ABS(TOUT - T)
 W0 = MAX(ABS(T),ABS(TOUT))
 IF (TDIST .LT. 2.0D0*UROUND*W0) GOTO 622
-TOL = RTOL(1)
+TOL = RTOL
 IF (ITOL .LE. 2) GOTO 140
 DO 130 I = 1,N
-130    TOL = MAX(TOL,RTOL(I))
+130    TOL = MAX(TOL,RTOL)
 140  IF (TOL .GT. 0.0D0) GOTO 160
 ATOLI = ATOL(1)
 DO 150 I = 1,N
@@ -1857,10 +1857,10 @@ GOTO 700
 CALL XERRWD (MSG, 50, 3, 0, 0, 0, 0, 0, 0.0D0, 0.0D0)
 GOTO 700
 604  MSG = 'DLSODES- NEQ (=I1) .lt. 1     '
-CALL XERRWD (MSG, 30, 4, 0, 1, NEQ(1), 0, 0, 0.0D0, 0.0D0)
+CALL XERRWD (MSG, 30, 4, 0, 1, NEQ, 0, 0, 0.0D0, 0.0D0)
 GOTO 700
 605  MSG = 'DLSODES- ISTATE = 3 and NEQ increased (I1 to I2). '
-CALL XERRWD (MSG, 50, 5, 0, 2, N, NEQ(1), 0, 0.0D0, 0.0D0)
+CALL XERRWD (MSG, 50, 5, 0, 2, N, NEQ, 0, 0.0D0, 0.0D0)
 GOTO 700
 606  MSG = 'DLSODES- ITOL (=I1) illegal.  '
 CALL XERRWD (MSG, 30, 6, 0, 1, ITOL, 0, 0, 0.0D0, 0.0D0)
@@ -3125,7 +3125,7 @@ SUBROUTINE DPRJS (NEQ,Y,YH,NYH,EWT,FTEM,SAVF,WK,IWK,F,JAC)
 EXTERNAL F,JAC
 INTEGER NEQ, NYH, IWK
 DOUBLE PRECISION Y, YH, EWT, FTEM, SAVF, WK
-DIMENSION NEQ(*), Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*), WK(*), IWK(*)
+DIMENSION Y(*), YH(NYH,*), EWT(*), FTEM(*), SAVF(*), WK(*), IWK(*)
 INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, &
 MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
@@ -3438,7 +3438,7 @@ SUBROUTINE DSTODE (NEQ, Y, YH, NYH, YH1, EWT, SAVF, ACOR, WM, IWM, F, JAC, PJAC,
 EXTERNAL F, JAC, PJAC, SLVS
 INTEGER NEQ, NYH, IWM
 DOUBLE PRECISION Y, YH, YH1, EWT, SAVF, ACOR, WM
-DIMENSION NEQ(*), Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),ACOR(*), WM(*), IWM(*)
+DIMENSION Y(*), YH(NYH,*), YH1(*), EWT(*), SAVF(*),ACOR(*), WM(*), IWM(*)
 INTEGER IOWND, IALTH, IPUP, LMAX, MEO, NQNYH, NSLP, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L
 INTEGER LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD, MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER I, I1, IREDO, IRET, J, JB, M, NCF, NEWQ
@@ -3984,25 +3984,25 @@ SUBROUTINE DEWSET (N, ITOL, RTOL, ATOL, YCUR, EWT)
 INTEGER N, ITOL
 INTEGER I
 DOUBLE PRECISION RTOL, ATOL, YCUR, EWT
-DIMENSION RTOL(*), ATOL(*), YCUR(N), EWT(N)
+DIMENSION ATOL(*), YCUR(N), EWT(N)
 !
 !***FIRST EXECUTABLE STATEMENT  DEWSET
 GOTO (10, 20, 30, 40), ITOL
 10   CONTINUE
 DO 15 I = 1,N
-15     EWT(I) = RTOL(1)*ABS(YCUR(I)) + ATOL(1)
+15     EWT(I) = RTOL*ABS(YCUR(I)) + ATOL(1)
 RETURN
 20   CONTINUE
 DO 25 I = 1,N
-25     EWT(I) = RTOL(1)*ABS(YCUR(I)) + ATOL(I)
+25     EWT(I) = RTOL*ABS(YCUR(I)) + ATOL(I)
 RETURN
 30   CONTINUE
 DO 35 I = 1,N
-35     EWT(I) = RTOL(I)*ABS(YCUR(I)) + ATOL(1)
+35     EWT(I) = RTOL*ABS(YCUR(I)) + ATOL(1)
 RETURN
 40   CONTINUE
 DO 45 I = 1,N
-45     EWT(I) = RTOL(I)*ABS(YCUR(I)) + ATOL(I)
+45     EWT(I) = RTOL*ABS(YCUR(I)) + ATOL(I)
 RETURN
 !----------------------- END OF SUBROUTINE DEWSET ----------------------
 END subroutine dewset
@@ -4011,7 +4011,7 @@ SUBROUTINE DIPREP (NEQ, Y, RWORK, IA, JA, IPFLAG, F, JAC)
 EXTERNAL F, JAC
 INTEGER NEQ, IA, JA, IPFLAG, IWORK
 DOUBLE PRECISION Y, RWORK
-DIMENSION NEQ(*), Y(*), RWORK(*), IA(*), JA(*), IWORK(LWM)
+DIMENSION Y(*), RWORK(*), IA(*), JA(*), IWORK(LWM)
 INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
 INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
@@ -4069,7 +4069,7 @@ SUBROUTINE DPREP (NEQ, Y, YH, SAVF, EWT, FTEM, IA, JA, WK, IWK, IPPER, F, JAC)
 EXTERNAL F,JAC
 INTEGER NEQ, IA, JA, IWK, IPPER
 DOUBLE PRECISION Y, YH, SAVF, EWT, FTEM, WK
-DIMENSION NEQ(*), Y(*), YH(*), SAVF(*), EWT(*), FTEM(*), IA(*), JA(*), WK(*), IWK(*)
+DIMENSION Y(*), YH(*), SAVF(*), EWT(*), FTEM(*), IA(*), JA(*), WK(*), IWK(*)
 INTEGER IOWND, IOWNS, ICF, IERPJ, IERSL, JCUR, JSTART, KFLAG, L, LYH, LEWT, LACOR, LSAVF, LWM, LIWM, METH, MITER, MAXORD
 INTEGER MAXCOR, MSBP, MXNCF, N, NQ, NST, NFE, NJE, NQU
 INTEGER IPLOST, IESP, ISTATC, IYS, IBA, IBIAN, IBJAN, IBJGP, IPIAN, IPJAN, IPJGP, IPIGP, IPR, IPC, IPIC, IPISP, IPRSP, IPA
@@ -4506,6 +4506,7 @@ subroutine odrv(n, ia,ja,a, p,ip, nsp,isp, path, flag)
 !-----------------------------------------------------------------------
 !
 integer  ia(*), ja(*),  p(*), ip(*),  isp(*),  path,  flag,v, l, head,  tmp, q
+integer n
 !...  real  a(*)
 double precision  a(*)
 logical  dflag
@@ -4738,6 +4739,7 @@ subroutine md(n, ia,ja, max, v,l, head,last,next, mark, flag)
 !-----------------------------------------------------------------------
 !
 integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),mark(*),  flag,  tag, dmin, vk,ek, tail
+integer n
 equivalence  (vk,ek)
 !
 !----initialization
@@ -4792,6 +4794,7 @@ subroutine mdi(n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
 !  mdi -- initialization
 !***********************************************************************
 integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*), mark(*), tag,  flag,  sfs, vi,dvi, vj
+integer n
 !
 !----initialize degrees, element lists, and degree lists
 do 1 vi=1,n
