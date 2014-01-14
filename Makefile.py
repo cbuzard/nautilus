@@ -9,7 +9,7 @@ import pdb
 
 COMPILATOR = "gfortran"
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunreachable-code -fbacktrace" + \
-  " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
+  " -ffpe-trap=invalid,zero,overflow -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic"
 OPTIMIZATIONS = "-O0 -march=native -ffast-math -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
