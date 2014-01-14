@@ -450,7 +450,6 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   use header
   use unitvar
-  use ode_solve
   IMPLICIT none
 
   integer :: liw,lrw
