@@ -933,16 +933,16 @@ IF (N .GT. 0) GOTO 10
 DNRM2  = ZERO
 GOTO 300
 !
-10 ASSIGN 30 TO NEXT
+10 NEXT = 30
 SUM = ZERO
 NN = N * INCX
 !
 !                                                 BEGIN MAIN LOOP
 !
 I = 1
-20    GOTO NEXT,(30, 50, 70, 110)
+20    GOTO (30, 50, 70, 110) NEXT
 30 IF (ABS(DX(I)) .GT. CUTLO) GOTO 85
-ASSIGN 50 TO NEXT
+NEXT = 50
 XMAX = ZERO
 !
 !                        PHASE 1.  SUM IS ZERO
@@ -952,13 +952,13 @@ IF (ABS(DX(I)) .GT. CUTLO) GOTO 85
 !
 !                                PREPARE FOR PHASE 2.
 !
-ASSIGN 70 TO NEXT
+NEXT = 70
 GOTO 105
 !
 !                                PREPARE FOR PHASE 4.
 !
 100 I = J
-ASSIGN 110 TO NEXT
+NEXT = 110
 SUM = (SUM / DX(I)) / DX(I)
 105 XMAX = ABS(DX(I))
 GOTO 115
