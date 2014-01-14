@@ -277,20 +277,20 @@ ENDDO
 
 ! --- Set elements' masses
 DO I=1,NEMAX
-  IF (SPEC(ISPELM(I)).EQ.'H          ') MASS(I)=1
-  IF (SPEC(ISPELM(I)).EQ.'D          ') MASS(I)=2
-  IF (SPEC(ISPELM(I)).EQ.'He         ') MASS(I)=4
-  IF (SPEC(ISPELM(I)).EQ.'C          ') MASS(I)=12
-  IF (SPEC(ISPELM(I)).EQ.'N          ') MASS(I)=14
-  IF (SPEC(ISPELM(I)).EQ.'O          ') MASS(I)=16
-  IF (SPEC(ISPELM(I)).EQ.'Na         ') MASS(I)=23
-  IF (SPEC(ISPELM(I)).EQ.'Mg         ') MASS(I)=24
-  IF (SPEC(ISPELM(I)).EQ.'Si         ') MASS(I)=28
-  IF (SPEC(ISPELM(I)).EQ.'P          ') MASS(I)=31
-  IF (SPEC(ISPELM(I)).EQ.'S          ') MASS(I)=32
-  IF (SPEC(ISPELM(I)).EQ.'Cl         ') MASS(I)=35
-  IF (SPEC(ISPELM(I)).EQ.'Fe         ') MASS(I)=56
-  IF (SPEC(ISPELM(I)).EQ.'F          ') MASS(I)=19
+  IF (SPEC(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
+  IF (SPEC(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
+  IF (SPEC(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
+  IF (SPEC(ISPELM(I)).EQ.'C          ') MASS(I)=12.d0
+  IF (SPEC(ISPELM(I)).EQ.'N          ') MASS(I)=14.d0
+  IF (SPEC(ISPELM(I)).EQ.'O          ') MASS(I)=16.d0
+  IF (SPEC(ISPELM(I)).EQ.'Na         ') MASS(I)=23.d0
+  IF (SPEC(ISPELM(I)).EQ.'Mg         ') MASS(I)=24.d0
+  IF (SPEC(ISPELM(I)).EQ.'Si         ') MASS(I)=28.d0
+  IF (SPEC(ISPELM(I)).EQ.'P          ') MASS(I)=31.d0
+  IF (SPEC(ISPELM(I)).EQ.'S          ') MASS(I)=32.d0
+  IF (SPEC(ISPELM(I)).EQ.'Cl         ') MASS(I)=35.d0
+  IF (SPEC(ISPELM(I)).EQ.'Fe         ') MASS(I)=56.d0
+  IF (SPEC(ISPELM(I)).EQ.'F          ') MASS(I)=19.d0
 ENDDO
 
 ! Set species' characteristics==========================================
@@ -308,7 +308,7 @@ YCO    = 'CO         '
 ! --- Set reference species
 DO I=1,NSMAX 
   ! ------ Calculate masses
-  MSUM=0
+  MSUM=0.d0
   DO K=1,NEMAX 
     MSUM=MSUM+MASS(K)*IELM(K,I) 
   ENDDO 
@@ -474,7 +474,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! Initialize work arrays
 
   iwork(:) = 0
-  rwork(:) = 0.
+  rwork(:) = 0.d0
   IWORK(5) = 5
   RWORK(6) = 3.154D14
   IWORK(6) = 10000
@@ -633,15 +633,15 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ENDDO
 
   do k=1,nemax
-    if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01) then 
+    if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01d0) then 
       print *, 'CAUTION : Element ',SPEC(ISPELM(K)), 'is not conserved'
       print *, 'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
     endif
     if (SPEC(ISPELM(K)).eq.YH) then
-      if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01) print *,'H is too depleted on the grains !!!!'
+      if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) print *,'H is too depleted on the grains !!!!'
     endif
     if (SPEC(ISPELM(K)).eq.YHE) then
-      if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01) print *,'He is too depleted on the grains !!!!'
+      if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01d0) print *,'He is too depleted on the grains !!!!'
     endif       
   enddo
 
@@ -715,7 +715,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   ! --- Species rate to compare chosen by fastest diffusion rate
   IF (BARR.NE.1.0D+0) THEN
-    PICK=0
+    PICK=0.d0
 
     TESTREF1=TINACC(JSP1(J))
     IF (EX1(J).GE.1.0D+0) TESTREF1=TINEVA(JSP1(J))
@@ -725,12 +725,12 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     IF (RDIF1(J).GE.RDIF2(J)) THEN
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD2*GTODN
       IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
-      IF (TESTNUM.GT.TESTREF1) PICK=1
+      IF (TESTNUM.GT.TESTREF1) PICK=1.d0
     ENDIF
     IF (RDIF2(J).GT.RDIF1(J)) THEN
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD1*GTODN
       IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
-      IF (TESTNUM.GT.TESTREF2) PICK=2
+      IF (TESTNUM.GT.TESTREF2) PICK=2.d0
     ENDIF
 
     IF (PICK.EQ.1) THEN
@@ -812,8 +812,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   W=1
   NSTA=0
   NFIN=0
-  distmin(:)=9999.
-  distmax(:)=9999.
+  distmin(:)=9999.d0
+  distmax(:)=9999.d0
   DO J=4,8
     IF ((IRXSTA(J).NE.0).AND.(NSTA.EQ.0)) NSTA=J
     IF (IRXFIN(J).NE.0) NFIN=J
@@ -864,8 +864,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
         W=1
         INDICE(:)=0
-        distmin(:)=9999.
-        distmax(:)=9999.
+        distmin(:)=9999.d0
+        distmax(:)=9999.d0
       ENDIF
     ENDIF
 
@@ -910,8 +910,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
         W=1
         INDICE(:)=0
-        distmin(:)=9999.
-        distmax(:)=9999.
+        distmin(:)=9999.d0
+        distmax(:)=9999.d0
       ENDIF
     ENDIF
 
@@ -956,8 +956,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
         W=1
         INDICE(:)=0
-        distmin(:)=9999.
-        distmax(:)=9999.
+        distmin(:)=9999.d0
+        distmax(:)=9999.d0
       ENDIF
     ENDIF
   ENDDO
@@ -1053,8 +1053,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   real(double_precision) :: XNH2,XNCO
 
   if (iptstore.eq.1) then
-    ZNH2(iptstore)=0.
-    ZNCO(iptstore)=0.
+    ZNH2(iptstore)=0.d0
+    ZNCO(iptstore)=0.d0
   else
 
     XNH2=ZXN(indH2,iptstore-1)
