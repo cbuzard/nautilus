@@ -254,21 +254,18 @@ use global_variables
 use constants
 implicit none
 character (len=6) :: charit
+character(len=80) :: filename_output
 integer :: i
 
-write(CHARIT,'(I6)') IT
+write(filename_output, '(a,i0.6,a)') 'output_1D.',IT
 
-do i=1,6
-  if (CHARIT(i:i).eq." ") CHARIT(i:i)="0"
-enddo
 
-open(UNIT=NOUT2,file='output_1D.'//CHARIT//'', form='unformatted')
+open(UNIT=35,file=filename_output, form='unformatted')
 
-write(NOUT2) TIME, zspace, SPEC
-write(NOUT2) TEMP1D, DENS1D, TAU1D, ZETAX1D
-write(NOUT2) ZXN
-
-close(NOUT2)
+write(35) TIME, zspace, SPEC
+write(35) TEMP1D, DENS1D, TAU1D, ZETAX1D
+write(35) ZXN
+close(35)
 
 return
 end subroutine write_outputs
