@@ -1,14 +1,42 @@
+!******************************************************************************
+! MODULE: input_output
+!******************************************************************************
+!
+! DESCRIPTION: 
+!> @brief Module that contains all the routines linked to reading input files
+!! or writing output files. \n\n
+!!
+!! Input files tends to be named *.in
+!! Output files tends to be named *.out
+!! Temporary files that are overwritten at each timestep are named *.tmp
+!
+!******************************************************************************
+
 module input_output
 
 implicit none
 
 contains
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Read all the simulation parameters in a file named 
+!! 'parameters.in'
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 SUBROUTINE read_parameters()
-! Reads the main chemical control file nls_control.d
+
 use global_variables
 use constants
+
 implicit none
+
+! Locals
 integer :: i,k,j, jk
 
 ! Variables for the unordered reaction file
@@ -31,7 +59,6 @@ integer, dimension(nemax,ns2) :: IELM2
 
 open(5, file='parameters.in')
 
-! Read parameters from 'gg_control.d'===================================
 READ(5,10)
 READ(5,14) RTOL
 READ(5,11)
@@ -228,13 +255,24 @@ ENDDO
 RETURN
 END SUBROUTINE read_parameters
 
-! ======================================================================
-! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Write the list of species and the corresponding index in an
+!! output file.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 SUBROUTINE write_species()
 use global_variables
 use constants
+
 implicit none
 
+! Locals
 integer :: i
 
 open(4, file='species.out')
@@ -246,8 +284,18 @@ close(4)
 RETURN
 END SUBROUTINE write_species
 
-! ======================================================================
-! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Write all abundances for all species in an output file at each
+!! output time. The total number of output files related to abundances 
+!! will be equal to the number of timestep, not equally spaced in time.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine write_outputs()
 ! Writes 1D outputs
 use global_variables
@@ -269,13 +317,26 @@ close(35)
 return
 end subroutine write_outputs
 
-! ======================================================================
-! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Write rates of all chemical reactions for the current timestep.
+!! The total number of files will be equal to the total number of timesteps, the
+!! routine being called at the end of each timestep.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine write_rates()
-! Writes rate coefficient for a particular mesh point
+
 use global_variables
 use constants
+
 implicit none
+
+! Locals
 character(len=80) :: filename_output
 integer :: i
 
@@ -293,16 +354,29 @@ close(45)
 return 
 end subroutine write_rates
 
-! ======================================================================
-! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Write the total chemical composition of the actual timestep in 
+!! a file whose name is given as an input parameter. This allow to use the
+!! same routine to write input, temporary and output files
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine write_abundances(filename)
-! Writes the final output for 0D runs in readable format
+
 use global_variables
 use constants
+
 implicit none
 
-character(len=*), intent(in) :: filename
+! Input
+character(len=*), intent(in) :: filename !< [in] the name of the output file
 
+! Locals
 integer :: i
 
 open(13, file=filename)
@@ -318,8 +392,5 @@ close(13)
 
 RETURN
 END subroutine write_abundances
-
-! ======================================================================
-! ======================================================================
 
 end module input_output
