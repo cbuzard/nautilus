@@ -208,7 +208,7 @@ implicit none
 integer :: i,j,k
 real(double_precision), dimension(nsmax) :: Y, PDJ
 
-call ratcon(Y)
+call ratcon()
 call ratcon2(Y)
 
 k=1
@@ -268,7 +268,7 @@ end subroutine computeIAJA
 
   ! ======================================================================
   ! ======================================================================
-  SUBROUTINE RATCON(Y)
+  SUBROUTINE RATCON()
 
   ! Reactions coefficient formally dependent on the abundances Y are 
   ! computed in a companion subroutine: RATCON2
@@ -281,7 +281,6 @@ end subroutine computeIAJA
   implicit none
 
   real(double_precision) :: T300, TI, TSQ
-  real(double_precision), dimension(NSMAX) :: Y
   integer :: nsta, nfin
   integer :: k, j, w, m, n
   integer, dimension(10) :: indice

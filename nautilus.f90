@@ -504,7 +504,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   if (TESTJAC.eq.1) then
     DUMMYY=1.d-5
-    call ratcon(DUMMYY)
+    call ratcon()
     do IDUMMY=1,NSMAX
       call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
     enddo
