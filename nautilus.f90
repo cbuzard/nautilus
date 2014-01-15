@@ -98,10 +98,10 @@ CALL READINPUT
 ! NJAC should be around the largest printed value
 
 if (testjac.eq.1) then
-  print *,'--------------------------------------------'
-  print *,'Dummy run to check'
-  print *,'the number of non zero elements per column !'
-  print *,'--------------------------------------------'
+  write(*,*) '--------------------------------------------'
+  write(*,*) 'Dummy run to check'
+  write(*,*) 'the number of non zero elements per column !'
+  write(*,*) '--------------------------------------------'
   lrw = 20 + 9*NSMAX*NPTMAX + 10000*NSMAX*NPTMAX
   liw = 31 + NSMAX*NPTMAX + 10000*NSMAX*NPTMAX
 else
@@ -540,7 +540,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
-    if (istate.ne.2) print *, 'IPTS = ', ipts, 'ISTATE = ', ISTATE
+    if (istate.ne.2) write(*,*)  'IPTS = ', ipts, 'ISTATE = ', ISTATE
 
     CALL CONSERVE(Y)
 
@@ -609,14 +609,14 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   do k=1,nemax
     if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01d0) then 
-      print *, 'CAUTION : Element ',SPEC(ISPELM(K)), 'is not conserved'
-      print *, 'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
+      write(*,*)  'CAUTION : Element ',SPEC(ISPELM(K)), 'is not conserved'
+      write(*,*)  'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
     endif
     if (SPEC(ISPELM(K)).eq.YH) then
-      if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) print *,'H is too depleted on the grains !!!!'
+      if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) write(*,*) 'H is too depleted on the grains !!!!'
     endif
     if (SPEC(ISPELM(K)).eq.YHE) then
-      if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01d0) print *,'He is too depleted on the grains !!!!'
+      if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01d0) write(*,*) 'He is too depleted on the grains !!!!'
     endif       
   enddo
 
@@ -767,7 +767,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
           (EBFAC.GE.0.0D+0)) EB(I)=EBFAC*ED(I)
         ENDIF
       ENDDO
-      !IF(SPEC(I) == 'JN2O2      ') PRINT*,ED(I)
+      !IF(SPEC(I) == 'JN2O2      ') write(*,*) ED(I)
     ENDDO
 
     DO I=1,NKMAX
@@ -788,7 +788,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
           (SYMBOL(6,I).EQ.GSREAD(5,J)(2:))) EA(I)=REA5(J)
         ENDIF
       ENDDO
-      !IF(symbol(4,i) == 'JO2H       ') PRINT*, symbol(:,i), Ea(i)
+      !IF(symbol(4,i) == 'JO2H       ') write(*,*)  symbol(:,i), Ea(i)
     ENDDO
 
     ! Set up constants, quantum rate info===================================
@@ -847,9 +847,9 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
       ! ------ Factor of 2 for same species reactions
       IF (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
-      !        print *,SYMBOL(1,J)
-      !       print *,SYMBOL(2,J)
-      !       print *,XJ(J)
+      !        write(*,*) SYMBOL(1,J)
+      !       write(*,*) SYMBOL(2,J)
+      !       write(*,*) XJ(J)
 
       !       stop
 
@@ -962,9 +962,9 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     !         ENDIF
 
     XJ(J)=XJ(J)*EVFRAC
-    !        print *,SYMBOL(1,J)
-    !       print *,SYMBOL(2,J)
-    !       print *,XJ(J)
+    !        write(*,*) SYMBOL(1,J)
+    !       write(*,*) SYMBOL(2,J)
+    !       write(*,*) XJ(J)
 
     !       stop
 

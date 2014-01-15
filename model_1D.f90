@@ -81,9 +81,9 @@ if (nptmax.ne.1) then
   ! Estimated DENSMAX using the inner gaussian (considered to be dominant in the sigma) and 
   ! and the observed sigma (0.8 g cm-2 at 100 AU with a 1.5 power law)
 
-  print *,'Cold height scale (AU) = ',Hcold/AU
-  print *,'Computing half box size (AU) = ',Hsize/AU
-  print *,'Estimated DENSMAX = ',0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
+  write(*,*) 'Cold height scale (AU) = ',Hcold/AU
+  write(*,*) 'Computing half box size (AU) = ',Hsize/AU
+  write(*,*) 'Estimated DENSMAX = ',0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
 
   ! Overwrite DENSMAX with this estimate
   DENSMAX = 0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
@@ -91,7 +91,7 @@ if (nptmax.ne.1) then
   do ipts=1, nptmax
     !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
     TEMP1D(ipts) = TCOLD + (TWARM-TCOLD) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
-    !print *,zspace(ipts)/AU,Temp1d(ipts)
+    !write(*,*) zspace(ipts)/AU,Temp1d(ipts)
   enddo
 
   ! Temperature for dust is the same as gas (FH)
@@ -138,8 +138,8 @@ if (nptmax.ne.1) then
   ! Overwrite TAUBC
   TAUBC=TAUEST
 
-  print *,'Estimated TAUBC = ',TAUEST
-  print *,'Used TAUBC = ', TAUBC
+  write(*,*) 'Estimated TAUBC = ',TAUEST
+  write(*,*) 'Used TAUBC = ', TAUBC
 
   TAU1D(1)=TAUBC
   do ipts=2,nptmax

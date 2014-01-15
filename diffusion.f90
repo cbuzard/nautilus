@@ -16,7 +16,7 @@ if (nptmax.eq.1) then
 
   ! No diffusion in 0D
   if (idiff.ne.0) then
-    print *,'No diffusion allowed in 0D. Please change the IDIFF value in nls_control.d'
+    write(*,*) 'No diffusion allowed in 0D. Please change the IDIFF value in nls_control.d'
     stop
   endif
 
@@ -39,7 +39,7 @@ else
 endif
 
 if ((idiff.lt.0).or.(idiff.gt.2)) then
-  print *,'This value for idiff is not implemented: ',IDIFF
+  write(*,*) 'This value for idiff is not implemented: ',IDIFF
   stop
 endif
 
@@ -137,7 +137,7 @@ enddo
 !u(ny-1) = 0.
 !v(ny-1) = bc
 !else
-!print *, '**** Error: ibc must be either 0 or 1 *****'
+!write(*,*)  '**** Error: ibc must be either 0 or 1 *****'
 !stop
 !endif
 !endif

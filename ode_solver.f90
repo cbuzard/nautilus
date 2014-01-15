@@ -195,7 +195,7 @@ IF (TESTJAC.EQ.1) THEN
   do i=1,NSMAX
     if (PDJ(i).ne.0.d0) NUMBERJAC=NUMBERJAC+1
   enddo
-  PRINT *, 'Number of non-zero values in JAC: ', NUMBERJAC
+  write(*,*)  'Number of non-zero values in JAC: ', NUMBERJAC
   RETURN
 ENDIF
 
@@ -304,7 +304,7 @@ end subroutine computeIAJA
   if (idust.eq.0) then
     DO J=IRXSTA(10),IRXFIN(10)
       XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/XNT
-      !                     print *,'GTODN', GTODN
+      !                     write(*,*) 'GTODN', GTODN
     enddo
     DO J=IRXSTA(11),IRXFIN(11)       
       XK(J)=A(J)*(T300**B(J))*XNT/GTODN
@@ -361,7 +361,7 @@ end subroutine computeIAJA
 
         DO M=1,W
           N=INDICE(M)
-          !IF(IT==1) PRINT*,N,M, SYMBOL(:,N), tmin(N), tmax(N),distmin(M),distmax(M)
+          !IF(IT==1) write(*,*) N,M, SYMBOL(:,N), tmin(N), tmax(N),distmin(M),distmax(M)
           IF (TEMP.LT.Tmin(N)) XK(N)=0.d0
           IF (TEMP.GT.Tmax(N)) XK(N)=0.d0
         ENDDO

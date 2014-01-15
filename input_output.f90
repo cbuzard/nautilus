@@ -205,8 +205,8 @@ enddo
 
 
 if (jk.ne.nkmax+1) then
-  print *,'Some reaction was not found by the reorder process'
-  print *,jk,'=/',nkmax+1 
+  write(*,*) 'Some reaction was not found by the reorder process'
+  write(*,*) jk,'=/',nkmax+1 
   stop
 endif
 
