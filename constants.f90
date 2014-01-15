@@ -1,7 +1,7 @@
 module constants
 implicit none
 !~ integer, parameter :: NSP=4
-integer, parameter :: NCON=5
+!~ integer, parameter :: NCON=5
 integer, parameter :: NERR=6
 integer, parameter :: NMOD=8
 integer, parameter :: NJR=9

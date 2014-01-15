@@ -4,7 +4,7 @@ implicit none
 
 contains
 
-SUBROUTINE READINPUT
+SUBROUTINE read_parameters()
 ! Reads the main chemical control file nls_control.d
 use global_variables
 use constants
@@ -29,53 +29,54 @@ integer, dimension(ns2) :: ICG2
 integer, dimension(nemax,ns1) :: IELM1
 integer, dimension(nemax,ns2) :: IELM2
 
+open(5, file='parameters.in')
 
 ! Read parameters from 'gg_control.d'===================================
-READ (NCON,10)
-READ (NCON,14) RTOL
-READ (NCON,11)
-READ (NCON,12) IDUST
-READ (NCON,12) ISABS
-READ (NCON,12) IGRQM
-READ (NCON,12) IMODH
-READ (NCON,12) ICONS
-READ (NCON,12) IREAD
-READ (NCON,11)
-READ (NCON,14) XNT0
-READ (NCON,14) TEMP0
-READ (NCON,14) TAU0
-READ (NCON,14) ZETA0
-READ (NCON,14) ZETAX
-READ (NCON,14) UVGAS
-READ (NCON,11)
-READ (NCON,14) DTEMP0
-READ (NCON,14) DTOGM
-READ (NCON,14) STICK0
-READ (NCON,14) STICKP
-READ (NCON,14) STICKN
-READ (NCON,14) RHOD
-READ (NCON,14) RD
-READ (NCON,14) ACM
-READ (NCON,14) SNS
-READ (NCON,14) EBFAC
-READ (NCON,14) ACT
-READ (NCON,14) TSMAX
-READ (NCON,14) CRT
-READ (NCON,14) CRFE
-READ (NCON,14) LAYERS
-READ (NCON,14) ARRK
-READ (NCON,11)
-READ (NCON,13) OTPD
-READ (NCON,14) TSTART
-READ (NCON,14) TFINAL
-read(NCON,'(18X,I5)') WSTEP
-read(NCON,'(18X,I5)') WSTEPR
-read(NCON,'(18X,I5)') IRATEOUT
-READ (NCON,11) 
-READ (NCON,14) XNMIN
-READ (NCON,13) NS0
-READ (NCON,*) 
-READ (NCON,15) (XS0(I),XN0(I),I=1,NS0)
+READ(5,10)
+READ(5,14) RTOL
+READ(5,11)
+READ(5,12) IDUST
+READ(5,12) ISABS
+READ(5,12) IGRQM
+READ(5,12) IMODH
+READ(5,12) ICONS
+READ(5,12) IREAD
+READ(5,11)
+READ(5,14) XNT0
+READ(5,14) TEMP0
+READ(5,14) TAU0
+READ(5,14) ZETA0
+READ(5,14) ZETAX
+READ(5,14) UVGAS
+READ(5,11)
+READ(5,14) DTEMP0
+READ(5,14) DTOGM
+READ(5,14) STICK0
+READ(5,14) STICKP
+READ(5,14) STICKN
+READ(5,14) RHOD
+READ(5,14) RD
+READ(5,14) ACM
+READ(5,14) SNS
+READ(5,14) EBFAC
+READ(5,14) ACT
+READ(5,14) TSMAX
+READ(5,14) CRT
+READ(5,14) CRFE
+READ(5,14) LAYERS
+READ(5,14) ARRK
+READ(5,11)
+READ(5,13) OTPD
+READ(5,14) TSTART
+READ(5,14) TFINAL
+read(5,'(18X,I5)') WSTEP
+read(5,'(18X,I5)') WSTEPR
+read(5,'(18X,I5)') IRATEOUT
+READ(5,11) 
+READ(5,14) XNMIN
+READ(5,13) NS0
+READ(5,*) 
+READ(5,15) (XS0(I),XN0(I),I=1,NS0)
 10 FORMAT (///////)
 11 FORMAT (//)
 12 FORMAT (21X,I2)
@@ -88,14 +89,16 @@ TFINAL=TFINAL*TYEAR
 
 ! read 1D and jacobian parameters
 
-read(NCON,'(///)')
-read(NCON,'(18X,I5)') IDIFF
-read(NCON,'(11X,D12.6)') DIFFTY
-read(NCON,'(11X,D12.6)') HSIZE
-read(NCON,'(11X,D12.6)') MCENTER
-read(NCON,'(11X,D12.6)') DISTR
-read(NCON,'(18X,I5)') TESTJAC
-read(NCON,'(18X,I5)') NJAC
+read(5,'(///)')
+read(5,'(18X,I5)') IDIFF
+read(5,'(11X,D12.6)') DIFFTY
+read(5,'(11X,D12.6)') HSIZE
+read(5,'(11X,D12.6)') MCENTER
+read(5,'(11X,D12.6)') DISTR
+read(5,'(18X,I5)') TESTJAC
+read(5,'(18X,I5)') NJAC
+
+close(5)
 
 ! Read CO and H2 shielding factors=====================
 
@@ -223,7 +226,7 @@ ENDDO
 
 
 RETURN
-END SUBROUTINE READINPUT
+END SUBROUTINE read_parameters
 
 ! ======================================================================
 ! ======================================================================

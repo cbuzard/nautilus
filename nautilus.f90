@@ -91,7 +91,7 @@ real(double_precision) :: T, TOUT, TIN
 data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
 CALL FILESET
-CALL READINPUT
+CALL read_parameters()
 
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag
@@ -218,7 +218,7 @@ use global_variables
 implicit none
 
 
-OPEN (UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
+!~ OPEN (UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
 !~       OPEN (UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
 !~ OPEN (UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
 OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
