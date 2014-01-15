@@ -69,7 +69,7 @@ if (nptmax.ne.1) then
   ! DM Tau parametric model
 
   TCOLD = 10.D0
-  T100 = 30.D0	!Temperature at 100 AU
+  T100 = 30.D0 !Temperature at 100 AU
   TWARM = T100*(DISTR/(100.*AU))**(-0.5)
 
   Hcold = sqrt(boltz*TCOLD/(meanw*amu*Omega2))
