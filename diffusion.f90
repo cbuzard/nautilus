@@ -59,7 +59,7 @@ endif
 
 do j = 1, nsmax 
   Y(:)=zxn(j,:)
-  call crank(Y, nptmax-1, zdt, zstepsize, diff1D, dens1d, 0, 1.d0)
+  call crank(Y, nptmax-1, zdt, zstepsize, diff1D, dens1d, 0)
   zxn(j,:) = Y(:)
 enddo
 
@@ -92,7 +92,7 @@ subroutine nothinghappens
 return 
 end subroutine nothinghappens
 
-subroutine crank(f,ny,dt,dy,nu,rho, ibc, bc)
+subroutine crank(f,ny,dt,dy,nu,rho, ibc)
 ! A Crank-Nicholson scheme
 ! ibc is a flag for boundary conditions
 ! ibc = 0 -> no flux boundaries (bc is not used then)
@@ -103,7 +103,6 @@ integer :: ny,ind
 real(kind=8), dimension(0:ny) :: f,s,Q,W,x,y,z,u,v,nu, rho, dd1d
 real(kind=8) :: dt, dy, d !, nu
 integer :: ibc
-real(kind=8) :: bc
 
 dd1d(:)=nu(:)*rho(:)
 
