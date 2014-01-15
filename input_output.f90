@@ -212,20 +212,12 @@ endif
 
 !       replace the species names by blanks for non chemical species                                                                        
 do j=1,nkmax-1
-  if ((SYMBOL(1,J).eq.'CR         ').or.(SYMBOL(1,J).eq.'CRP        ').or.&
-  & (SYMBOL(1,J).eq.'Photon     ')) SYMBOL(1,J)='            '
-  if ((SYMBOL(2,J).eq.'CR         ').or.(SYMBOL(2,J).eq.'CRP        ').or.&
-  & (SYMBOL(2,J).eq.'Photon     ')) SYMBOL(2,J)='           '
-  if ((SYMBOL(3,J).eq.'CR         ').or.(SYMBOL(3,J).eq.'CRP        ').or.&
-  & (SYMBOL(3,J).eq.'Photon     ')) SYMBOL(3,J)='           '
-  if ((SYMBOL(4,J).eq.'CR         ').or.(SYMBOL(4,J).eq.'CRP        ').or.&
-  & (SYMBOL(4,J).eq.'Photon     ')) SYMBOL(4,J)='           '
-  if ((SYMBOL(5,J).eq.'CR         ').or.(SYMBOL(5,J).eq.'CRP        ').or.&
-  & (SYMBOL(5,J).eq.'Photon     ')) SYMBOL(5,J)='           '
-  if ((SYMBOL(6,J).eq.'CR         ').or.(SYMBOL(6,J).eq.'CRP        ').or.&
-  & (SYMBOL(6,J).eq.'Photon     ')) SYMBOL(6,J)='           '
-  if ((SYMBOL(7,J).eq.'CR         ').or.(SYMBOL(7,J).eq.'CRP        ').or.&
-  & (SYMBOL(7,J).eq.'Photon     ')) SYMBOL(7,J)='           '
+  do i=1,7
+    select case(symbol(i,j))
+      case ('CR', 'CRP', 'Photon')
+        symbol(i,j) = '           '
+    end select
+  enddo
 
 ENDDO 
 
