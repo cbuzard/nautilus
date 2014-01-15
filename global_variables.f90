@@ -51,16 +51,16 @@ real(double_precision), dimension(nl2), save :: N2CO,T2CO
 real(double_precision), dimension(nl3), save :: N2H2
 real(double_precision), dimension(nl3), save :: T2H2,AV2,T2AV
 
-INTEGER, dimension(4,nopmax), save :: IEQP
+integer, dimension(4,nopmax), save :: IEQP
 integer, dimension(nopmax), save :: IORDTM
-INTEGER, dimension(nkmax), save :: INUM, itype, jsp1, jsp2, FORMULA,NUM
+integer, dimension(nkmax), save :: INUM, itype, jsp1, jsp2, FORMULA,NUM
 integer, dimension(nsmax,nkmax), save :: ICRTBL,ICROCC
-INTEGER, dimension(nsmax), save :: ICRNUM,ORDSP, icg
-INTEGER, dimension(nemax,nsmax), save :: IELM
+integer, dimension(nsmax), save :: ICRNUM,ORDSP, icg
+integer, dimension(nemax,nsmax), save :: IELM
 integer, dimension(nemax), save :: ISPELM
-INTEGER, save :: ISPE
-INTEGER, dimension(0:nitype-1), save :: IRXSTA,IRXFIN
-INTEGER, save :: IT,NT,ITFLAG,OTPD,DP,NDP,NS0,IODR,IREFSP, ISORD
+integer, save :: ISPE
+integer, dimension(0:nitype-1), save :: IRXSTA,IRXFIN
+integer, save :: IT,NT,ITFLAG,OTPD,DP,NDP,NS0,IODR,IREFSP, ISORD
 
 integer, save :: IDENS,ITEMP,IDUST,IGRQM,ICONS,IMODH,IREAD
 integer, save :: IPOUT,IPMON,IPLOT,IPDET,IPRXN,IPORD,ISABS
@@ -90,7 +90,7 @@ integer :: ipts
 
 ! For FCHEMVW
 
-CHARACTER(len=11), dimension(nsmax+1) :: SPEC2
+character(len=11), dimension(nsmax+1) :: SPEC2
 integer, dimension(NKMAX,7) :: REACT
 
 ! For IA and JA

@@ -8,7 +8,7 @@ SUBROUTINE READINPUT
 ! Reads the main chemical control file nls_control.d
 use global_variables
 use constants
-IMPLICIT none
+implicit none
 integer :: i,k,j, jk
 
 ! Variables for the unordered reaction file
@@ -17,17 +17,17 @@ CHARACTER (len=11), dimension(ns1) :: SPECUO1
 CHARACTER (len=11), dimension(ns2) :: SPECUO2
 character (len=11), dimension(7,nkmax) :: SYMBOLUO
 real(double_precision), dimension(nkmax) :: AUO,BUO,CUO
-INTEGER, dimension(nkmax) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
+integer, dimension(nkmax) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 character (len=11), dimension(7,nk1) :: SYMBOLUO1
 real(double_precision), dimension(nk1) :: AUO1,BUO1,CUO1
-INTEGER, dimension(nk1) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1
+integer, dimension(nk1) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1
 character (len=11), dimension(7,nk2) :: SYMBOLUO2
 real(double_precision), dimension(nk2) :: AUO2,BUO2,CUO2
-INTEGER, dimension(nk2) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2
-INTEGER, dimension(ns1) :: ICG1
-INTEGER, dimension(ns2) :: ICG2
-INTEGER, dimension(nemax,ns1) :: IELM1
-INTEGER, dimension(nemax,ns2) :: IELM2
+integer, dimension(nk2) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2
+integer, dimension(ns1) :: ICG1
+integer, dimension(ns2) :: ICG2
+integer, dimension(nemax,ns1) :: IELM1
+integer, dimension(nemax,ns2) :: IELM2
 
 
 ! Read parameters from 'gg_control.d'===================================
@@ -154,7 +154,7 @@ DO I=1,NS2
   ICG(NS1+I)=ICG2(I)
   do k=1,NEMAX
     IELM(K,NS1+I)=IELM2(K,I)
-  enddo	 
+  enddo
 ENDDO
 
 DO I=1,NK1 
@@ -215,19 +215,19 @@ endif
 !       replace the species names by blanks for non chemical species                                                                        
 do j=1,nkmax-1
   if ((SYMBOL(1,J).eq.'CR         ').or.(SYMBOL(1,J).eq.'CRP        ').or.&
-  &		(SYMBOL(1,J).eq.'Photon     ')) SYMBOL(1,J)='            '
+  & (SYMBOL(1,J).eq.'Photon     ')) SYMBOL(1,J)='            '
   if ((SYMBOL(2,J).eq.'CR         ').or.(SYMBOL(2,J).eq.'CRP        ').or.&
-  &		(SYMBOL(2,J).eq.'Photon     ')) SYMBOL(2,J)='           '
+  & (SYMBOL(2,J).eq.'Photon     ')) SYMBOL(2,J)='           '
   if ((SYMBOL(3,J).eq.'CR         ').or.(SYMBOL(3,J).eq.'CRP        ').or.&
-  &		(SYMBOL(3,J).eq.'Photon     ')) SYMBOL(3,J)='           '
+  & (SYMBOL(3,J).eq.'Photon     ')) SYMBOL(3,J)='           '
   if ((SYMBOL(4,J).eq.'CR         ').or.(SYMBOL(4,J).eq.'CRP        ').or.&
-  &		(SYMBOL(4,J).eq.'Photon     ')) SYMBOL(4,J)='           '
+  & (SYMBOL(4,J).eq.'Photon     ')) SYMBOL(4,J)='           '
   if ((SYMBOL(5,J).eq.'CR         ').or.(SYMBOL(5,J).eq.'CRP        ').or.&
-  &		(SYMBOL(5,J).eq.'Photon     ')) SYMBOL(5,J)='           '
+  & (SYMBOL(5,J).eq.'Photon     ')) SYMBOL(5,J)='           '
   if ((SYMBOL(6,J).eq.'CR         ').or.(SYMBOL(6,J).eq.'CRP        ').or.&
-  &		(SYMBOL(6,J).eq.'Photon     ')) SYMBOL(6,J)='           '
+  & (SYMBOL(6,J).eq.'Photon     ')) SYMBOL(6,J)='           '
   if ((SYMBOL(7,J).eq.'CR         ').or.(SYMBOL(7,J).eq.'CRP        ').or.&
-  &		(SYMBOL(7,J).eq.'Photon     ')) SYMBOL(7,J)='           '
+  & (SYMBOL(7,J).eq.'Photon     ')) SYMBOL(7,J)='           '
 
 ENDDO 
 
@@ -240,7 +240,7 @@ END SUBROUTINE READINPUT
 SUBROUTINE WRITESPEC
 use global_variables
 use constants
-IMPLICIT none
+implicit none
 
 integer :: i
 

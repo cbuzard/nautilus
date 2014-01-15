@@ -78,7 +78,7 @@ use input_output
 use model_1D
 use ode_solver
 
-IMPLICIT none
+implicit none
 
 integer :: lrw, liw
 
@@ -238,7 +238,7 @@ END subroutine FILESET
 SUBROUTINE INITIAL
 use global_variables
 use constants
-IMPLICIT none
+implicit none
 
 real(double_precision), dimension(NEMAX) :: MASS
 real(double_precision) :: MSUM
@@ -364,9 +364,9 @@ SUBROUTINE START(TOUT)
 
 use global_variables
 use constants
-IMPLICIT none
+implicit none
 
-CHARACTER(len=11), dimension(NSMAX) :: SREAD
+character(len=11), dimension(NSMAX) :: SREAD
 real(double_precision), dimension(NSMAX) :: Y
 
 integer :: i, j, k
@@ -457,11 +457,11 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   use global_variables
   use constants
-  IMPLICIT none
+  implicit none
 
   integer :: liw,lrw
 
-  INTEGER, dimension(liw) :: IWORK
+  integer, dimension(liw) :: IWORK
   real(double_precision), dimension(NSMAX) :: Y
   real(double_precision), dimension(lrw) :: RWORK
   real(double_precision), dimension(NSMAX) :: DUMMYPDJ, DUMMYY
@@ -562,7 +562,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   SUBROUTINE CONSERVE(Y)
   use global_variables
   use constants
-  IMPLICIT none
+  implicit none
 
   real(double_precision), dimension(NSMAX) :: Y
   real(double_precision), dimension(NEMAX) :: ELMSUM
@@ -632,7 +632,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! Not to use unless, the solver has big problems converging
   ! ======================================================================
   !      SUBROUTINE DUMMY 
-  !      IMPLICIT none
+  !      implicit none
   !      integer :: N,J
   !      real(double_precision) :: T,Y,IAN, JAN, PDJ 
 
@@ -678,15 +678,15 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     SUBROUTINE GRAINRATE
     use global_variables
     use constants
-    IMPLICIT none
+    implicit none
 
     real(double_precision), dimension(nsmax) :: REA1,REA2,REA3,REA4
     real(double_precision), dimension(nkmax) :: REA5
     real(double_precision), dimension(nsmax) :: SMASS
     real(double_precision) :: SMA,REDMAS,STICK,EVFRAC,DHFSUM,SUM1,SUM2
-    INTEGER, dimension(NKMAX) :: INT1
+    integer, dimension(NKMAX) :: INT1
     integer :: NGS,NEA,NPATH,NEVAP,BADFLAG,ATOMS
-    CHARACTER(len=11), dimension(5,NKMAX) :: GSREAD
+    character(len=11), dimension(5,NKMAX) :: GSREAD
     character(len=11), dimension(nsmax) :: GSPEC
 
     real(double_precision) :: cond

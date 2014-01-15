@@ -254,11 +254,11 @@ end subroutine computeIAJA
   SUBROUTINE FCHEM (N,T,Y,YP)
   use global_variables
   use constants
-  IMPLICIT none
+  implicit none
 
   real(double_precision), dimension(NSMAX) :: Y,YP
   real(double_precision) :: T
-  INTEGER :: N
+  integer :: N
 
   CALL RATCON2(Y)
   CALL FCHEMVW(N,Y,YP) 
@@ -278,7 +278,7 @@ end subroutine computeIAJA
 
   use global_variables 
   use constants
-  IMPLICIT none
+  implicit none
 
   real(double_precision) :: T300, TI, TSQ
   real(double_precision), dimension(NSMAX) :: Y
@@ -562,7 +562,7 @@ end subroutine computeIAJA
 
   use global_variables 
   use constants
-  IMPLICIT none
+  implicit none
 
   real(double_precision) :: ACTIV,BARR,MONLAY,DIFF
   real(double_precision) :: XNH2,XNCO
@@ -570,7 +570,7 @@ end subroutine computeIAJA
   real(double_precision) :: T300, TI, TSQ
   real(double_precision), dimension(NSMAX) :: Y
   real(double_precision) :: YMOD1, YMOD2
-  INTEGER IMOD1,IMOD2
+  integer IMOD1,IMOD2
   integer :: j, l
 
   T300=TEMP/300.D+0
@@ -825,7 +825,7 @@ end subroutine computeIAJA
   SUBROUTINE MODIF(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
   use global_variables
   use constants
-  IMPLICIT none
+  implicit none
 
   integer :: J,IMOD1,IMOD2
   real(double_precision) :: BARR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
