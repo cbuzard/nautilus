@@ -243,7 +243,7 @@ END SUBROUTINE WRITESPEC
 
 ! ======================================================================
 ! ======================================================================
-subroutine write1D
+subroutine write_outputs()
 ! Writes 1D outputs
 use global_variables
 use constants
@@ -266,11 +266,11 @@ write(NOUT2) ZXN
 close(NOUT2)
 
 return
-end subroutine write1D
+end subroutine write_outputs
 
 ! ======================================================================
 ! ======================================================================
-subroutine writeRates()
+subroutine write_rates()
 ! Writes rate coefficient for a particular mesh point
 use global_variables
 use constants
@@ -294,7 +294,7 @@ write(NORD2) NUM
 close(NORD2)
 
 return 
-end subroutine writeRates
+end subroutine write_rates
 
 ! ======================================================================
 ! ======================================================================
