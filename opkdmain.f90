@@ -1213,7 +1213,7 @@ DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*80 MSG
+character(len=80) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following internal Common block contains
@@ -3004,7 +3004,7 @@ DOUBLE PRECISION CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE LENRAT, MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following two internal Common blocks contain
@@ -4701,7 +4701,7 @@ DOUBLE PRECISION TSW, ROWNS2, PDNORM
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following two internal Common blocks contain
@@ -6443,7 +6443,7 @@ DOUBLE PRECISION ROWNR3, T0, TLAST, TOUTC
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following three internal Common blocks contain
@@ -8261,7 +8261,7 @@ DOUBLE PRECISION ATOLI, AVDIM, AYI, BIG, EWTI, H0, HMAX, HMX, RCFL, RCFN, RH, RT
 DOUBLE PRECISION TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT, LAVD, LCFN, LCFL, LWARN
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following two internal Common blocks contain
@@ -10089,7 +10089,7 @@ DOUBLE PRECISION DELT, EPCON, SQRTN, RSQRTN
 DOUBLE PRECISION ATOLI, AVDIM, BIG, EWTI, H0, HMAX, HMX, RCFL, RCFN, RH, RTOLI, TCRIT, TNEXT, TOLSF, TP, SIZE
 DIMENSION MORD(2)
 LOGICAL IHIT, LAVD, LCFN, LCFL, LWARN
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following four internal Common blocks contain
@@ -11933,7 +11933,7 @@ DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following internal Common block contains
@@ -13722,7 +13722,7 @@ DOUBLE PRECISION ROWNS, CCMAX, EL0, H, HMIN, HMXI, HU, RC, TN, UROUND
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following internal Common block contains
@@ -15678,7 +15678,7 @@ DOUBLE PRECISION CON0, CONMIN, CCMXJ, PSMALL, RBIG, SETH
 DOUBLE PRECISION ATOLI, AYI, BIG, EWTI, H0, HMAX, HMX, RH, RTOLI, TCRIT, TDIST, TNEXT, TOL, TOLSF, TP, SIZE, SUM, W0
 DIMENSION MORD(2)
 LOGICAL IHIT
-CHARACTER*60 MSG
+character(len=60) MSG
 SAVE LENRAT, MORD, MXSTP0, MXHNL0
 !-----------------------------------------------------------------------
 ! The following two internal Common blocks contain
