@@ -227,19 +227,21 @@ END SUBROUTINE READINPUT
 
 ! ======================================================================
 ! ======================================================================
-SUBROUTINE WRITESPEC
+SUBROUTINE write_species()
 use global_variables
 use constants
 implicit none
 
 integer :: i
 
+open(4, file='species.out')
 ! Write 'ggo_spec.d': 5 columns of numbered species=====================
-WRITE (NSP,270) (I,SPEC(I),I=1,NSMAX)
+WRITE (4,270) (I,SPEC(I),I=1,NSMAX)
 270 FORMAT (5(I4,')',1X,A11,1X))
+close(4)
 
 RETURN
-END SUBROUTINE WRITESPEC
+END SUBROUTINE write_species
 
 ! ======================================================================
 ! ======================================================================

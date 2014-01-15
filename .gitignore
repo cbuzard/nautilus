@@ -10,3 +10,4 @@ nlso_tail.d
 html
 latex
 *.tmp
+*.out
