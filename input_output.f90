@@ -263,7 +263,7 @@ END SUBROUTINE read_parameters
 !
 ! DESCRIPTION: 
 !> @brief Write the list of species and the corresponding index in an
-!! output file.
+!! output file 'species.out'.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 SUBROUTINE write_species()
@@ -293,10 +293,11 @@ END SUBROUTINE write_species
 ! DESCRIPTION: 
 !> @brief Write all abundances for all species in an output file at each
 !! output time. The total number of output files related to abundances 
-!! will be equal to the number of timestep, not equally spaced in time.
+!! will be equal to the number of timestep, not equally spaced in time.\n\n
+!! Output filename is of the form : abundances.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_outputs()
+subroutine write_abundances()
 ! Writes 1D outputs
 use global_variables
 use constants
@@ -304,7 +305,7 @@ implicit none
 character(len=80) :: filename_output
 integer :: i
 
-write(filename_output, '(a,i0.6)') 'output_1D.',IT
+write(filename_output, '(a,i0.6,a)') 'abundances.',IT,'.out'
 
 
 open(UNIT=35, file=filename_output, form='unformatted')
@@ -315,7 +316,7 @@ write(35) ZXN
 close(35)
 
 return
-end subroutine write_outputs
+end subroutine write_abundances
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -326,7 +327,8 @@ end subroutine write_outputs
 ! DESCRIPTION: 
 !> @brief Write rates of all chemical reactions for the current timestep.
 !! The total number of files will be equal to the total number of timesteps, the
-!! routine being called at the end of each timestep.
+!! routine being called at the end of each timestep.\n\n
+!! Output filename is of the form : rates.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine write_rates()
@@ -340,7 +342,7 @@ implicit none
 character(len=80) :: filename_output
 integer :: i
 
-write(filename_output, '(a,i0.6)') 'rates1D.',IT
+write(filename_output, '(a,i0.6,a)') 'rates.',IT,'.out'
 
 open(45, file=filename_output, form='unformatted')
 
@@ -366,7 +368,7 @@ end subroutine write_rates
 !! same routine to write input, temporary and output files
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_abundances(filename)
+subroutine write_chemical_composition(filename)
 
 use global_variables
 use constants
@@ -391,6 +393,6 @@ WRITE (13,*)
 close(13)
 
 RETURN
-END subroutine write_abundances
+END subroutine write_chemical_composition
 
 end module input_output

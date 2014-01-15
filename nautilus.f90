@@ -199,12 +199,12 @@ do while (t.lt.0.9*tfinal)
   call zdiffusion ! diffusion 
 
   if (mod(it,wstep).eq.0) then
-    call write_outputs()
+    call write_abundances()
   endif
 
 ENDDO
 
-if (nptmax.eq.1) call write_abundances('abundances.tmp')
+if (nptmax.eq.1) call write_chemical_composition('chemical_composition.tmp')
 
 stop
 
@@ -226,7 +226,7 @@ OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
 !      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
 OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
 !~ OPEN (UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
-OPEN (UNIT=NINI,FILE='abundances.in',STATUS='OLD') 
+OPEN (UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
 OPEN (UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
 OPEN (UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
 

@@ -16,6 +16,9 @@ import subprocess # To launch various process, get outputs et errors, returnCode
 import pdb # To debug
 import glob # to get list of file through a given pattern
 
+NEW_TEST = "example_simulation"
+ORIGINAL_TEST = "nautilus_original"
+
 # Parameters
 force = False # To force the compilation of every module
 
@@ -63,8 +66,8 @@ def run(commande):
 
 def clean():
   """Delete all outputs files for a given nautilus simulation"""
-  run("rm output_1D.*")
-  run("rm rates1D.*")
+  run("rm *.tmp")
+  run("rm *.out")
 
 def ASCIICompare(original, new):
   """function that compare and print differences between to strings that are compared line by line."""
@@ -170,17 +173,6 @@ def compare2Binaries(ori_files, new_files):
   
   return 0
 
-ABUNDANCES_FILENAMES = glob.glob("output_1D.*")
-RATES_FILENAMES = glob.glob("rates1D.*")
-
-EXTENTION_ORIGINAL = ".ori"
-
-ABUNDANCES_FILENAMES_OLD = ["%s%s" % (name, EXTENTION_ORIGINAL) for name in ABUNDANCES_FILENAMES]
-RATES_FILENAMES_OLD = ["%s%s" % (name, EXTENTION_ORIGINAL) for name in RATES_FILENAMES]
-
-NEW_TEST = "example_simulation"
-ORIGINAL_TEST = "nautilus_original"
-
 ##################
 # Outputs of various binaries and tests to compare with the actual ones. 
 # Theses outputs are those of the original version of mercury, that is, mercury6_2.for
@@ -197,8 +189,10 @@ sys.stdout.flush()
 
 (naut_new_stdout, naut_new_stderr, returnCode) = run("../nautilus")
 
-ABUNDANCES_FILENAMES = glob.glob("output_1D.*")
-RATES_FILENAMES = glob.glob("rates1D.*")
+ABUNDANCES_FILENAMES = glob.glob("abundances.*.out")
+RATES_FILENAMES = glob.glob("rates.*.out")
+ABUNDANCES_FILENAMES.sort()
+RATES_FILENAMES.sort()
 
 os.chdir("..")
 print("Running new binaries ...ok")
@@ -222,6 +216,8 @@ else:
 
 ABUNDANCES_FILENAMES_OLD = glob.glob("output_1D.*")
 RATES_FILENAMES_OLD = glob.glob("rates1D.*")
+ABUNDANCES_FILENAMES_OLD.sort()
+RATES_FILENAMES_OLD.sort()
 
 os.chdir("..")
 
@@ -256,7 +252,7 @@ print("comparing rates outputs:")
 compare2Binaries(RATES_FILENAMES_OLD, RATES_FILENAMES)
 
 ASCII_OLD = ['nlso_tail.d', 'nlso_spec.d']
-ASCII_NEW = ['abundances.tmp', 'species.out']
+ASCII_NEW = ['chemical_composition.tmp', 'species.out']
 
 # We include the folder name because we are in the parent folder.
 ASCII_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in ASCII_OLD]
