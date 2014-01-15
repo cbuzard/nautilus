@@ -165,13 +165,11 @@ return
 end subroutine crank
 
 
-subroutine euler(f,ny,dt,dy,nu,rho, ibc, bc)
+subroutine euler(f,ny,dt,dy,nu,rho)
 implicit none
 integer :: ny,ind
 real(kind=8), dimension(0:ny) :: f,Q,W,nu, rho, dd1d
 real(kind=8) :: dt, dy, d !, nu
-integer :: ibc
-real(kind=8) :: bc
 
 dd1d(:)=nu(:)*rho(:)
 
