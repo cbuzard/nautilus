@@ -108,7 +108,8 @@ if profiling:
 if os.path.isfile(LOG_NAME):
   os.remove(LOG_NAME)
 
-compilation_order = ["-c numerical_types.f90", "-c nls_header_mod.f90", "-o nautilus opk*.f90 nautilus.f90 nls*.f90"]
+compilation_order = ["-c numerical_types.f90", "-c global_variables.f90 constants.f90", "-c diffusion.f90 input_output.f90 model_1D.f90 ode_solver.f90", 
+"-o nautilus nautilus.f90 opk*.f90 *.o"]
 
 for order in compilation_order:
   command = "%s %s %s" % (COMPILATOR, OPTIONS, order)

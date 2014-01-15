@@ -1,7 +1,13 @@
+module input_output
+
+implicit none
+
+contains
+
 SUBROUTINE READINPUT
 ! Reads the main chemical control file nls_control.d
-use header
-use unitvar
+use global_variables
+use constants
 IMPLICIT none
 integer :: i,k,j, jk
 
@@ -227,13 +233,13 @@ ENDDO
 
 
 RETURN
-END
+END SUBROUTINE READINPUT
 
 ! ======================================================================
 ! ======================================================================
 SUBROUTINE WRITESPEC
-use header
-use unitvar
+use global_variables
+use constants
 IMPLICIT none
 
 integer :: i
@@ -243,14 +249,14 @@ WRITE (NSP,270) (I,SPEC(I),I=1,NSMAX)
 270 FORMAT (5(I4,')',1X,A11,1X))
 
 RETURN
-END
+END SUBROUTINE WRITESPEC
 
 ! ======================================================================
 ! ======================================================================
 subroutine write1D
 ! Writes 1D outputs
-use header
-use unitvar
+use global_variables
+use constants
 implicit none
 character (len=6) :: charit
 integer :: i
@@ -270,14 +276,14 @@ write(NOUT2) ZXN
 close(NOUT2)
 
 return
-end
+end subroutine write1D
 
 ! ======================================================================
 ! ======================================================================
 subroutine rates1D
 ! Writes rate coefficient for a particular mesh point
-use header
-use unitvar
+use global_variables
+use constants
 implicit none
 character (len=6) :: charit
 integer :: i
@@ -298,14 +304,14 @@ write(NORD2) NUM
 close(NORD2)
 
 return 
-end
+end subroutine rates1D
 
 ! ======================================================================
 ! ======================================================================
 subroutine writetail
 ! Writes the final output for 0D runs in readable format
-use header
-use unitvar
+use global_variables
+use constants
 implicit none
 integer :: i
 
@@ -319,7 +325,9 @@ WRITE (NTAI,700) (SPEC(I),XN(I),I=1,NSMAX)
 WRITE (NTAI,*)
 
 RETURN
-END
+END subroutine writetail
 
 ! ======================================================================
 ! ======================================================================
+
+end module input_output

@@ -1,9 +1,39 @@
+module model_1D
+
+implicit none
+
+contains
+
+subroutine mesh
+! Gives the spatial mesh of 1D integrations
+use global_variables
+implicit none
+
+do ipts=1,nptmax
+  zaspace(ipts) = 1.d0 - 2.*real(ipts-1)/(2*nptmax-1)
+enddo
+
+zspace(:)=zaspace(:)*Hsize
+
+if (nptmax.ne.1) then
+  !zstepsize = abs(zspace(2)-zspace(1))
+  zstepsize=2./(2*nptmax-1)*Hsize
+else
+  zstepsize = 0.
+endif
+
+return
+end subroutine mesh
+
 ! Warning !!!
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
 ! HSIZE, DENSMAX, UVGAS, UVGRA, TAUBC
 subroutine phys_1D
-use header
+use global_variables
+use diffusion
+
 implicit none
+
 integer, parameter :: nfilelines=81
 real(double_precision) :: KFACTOR  
 real(double_precision) :: HTAU, TAUEST, NHEST, Hcold
@@ -161,4 +191,6 @@ endif
 call diffusion_setup
 
 return
-end
+end subroutine phys_1D
+
+end module model_1D

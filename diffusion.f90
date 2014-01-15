@@ -1,5 +1,11 @@
+module diffusion
+
+implicit none
+
+contains
+
 subroutine diffusion_setup
-use header
+use global_variables
 ! Computes the value of the diffusion coefficient (and its variations in space)
 
 if (nptmax.eq.1) then
@@ -36,10 +42,10 @@ if ((idiff.lt.0).or.(idiff.gt.2)) then
 endif
 
 return
-end
+end subroutine diffusion_setup
 
 subroutine zdiffusion
-use header
+use global_variables
 implicit none
 real(kind=8), dimension(nptmax) :: Y
 integer :: j
@@ -58,10 +64,10 @@ do j = 1, nsmax
 enddo
 
 return
-end
+end subroutine zdiffusion
 
-subroutine ztimestep
-use header
+subroutine ztimestep()
+use global_variables
 implicit none
 
 if (idiff.eq.0) then
@@ -79,12 +85,12 @@ else
 endif
 
 return
-end
+end subroutine ztimestep
 
 subroutine nothinghappens
 ! dummy subroutine to disable diffusion in a readable way
 return 
-end
+end subroutine nothinghappens
 
 subroutine crank(f,ny,dt,dy,nu,rho, ibc, bc)
 ! A Crank-Nicholson scheme
@@ -156,7 +162,7 @@ do ind = 0, ny-1
 enddo
 
 return
-end
+end subroutine crank
 
 
 subroutine euler(f,ny,dt,dy,nu,rho, ibc, bc)
@@ -180,4 +186,6 @@ enddo
 f(1:ny-1)=W(1:ny-1)
 
 return
-end
+end subroutine euler
+
+end module diffusion
