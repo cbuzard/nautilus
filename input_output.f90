@@ -270,7 +270,7 @@ end subroutine write1D
 
 ! ======================================================================
 ! ======================================================================
-subroutine rates1D
+subroutine writeRates()
 ! Writes rate coefficient for a particular mesh point
 use global_variables
 use constants
@@ -294,7 +294,7 @@ write(NORD2) NUM
 close(NORD2)
 
 return 
-end subroutine rates1D
+end subroutine writeRates
 
 ! ======================================================================
 ! ======================================================================

@@ -186,7 +186,7 @@ do while (t.lt.0.9*tfinal)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
-    call rates1D
+    call writeRates()
     !      endif
 
     if (istate.eq.-3) stop
