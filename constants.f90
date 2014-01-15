@@ -15,5 +15,5 @@ integer, parameter :: CODIS=16
 integer, parameter :: H2DIS=17
 integer, parameter :: NCON2=25
 !~ integer, parameter :: NOUT2=35
-integer, parameter :: NORD2=45
+!~ integer, parameter :: NORD2=45
 end module constants
