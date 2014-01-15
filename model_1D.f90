@@ -34,12 +34,11 @@ use diffusion
 
 implicit none
 
-integer, parameter :: nfilelines=81
 real(double_precision) :: KFACTOR  
 real(double_precision) :: HTAU, TAUEST, NHEST, Hcold
 real(double_precision), dimension(nptmax) :: ld1d
 real(double_precision) :: TCOLD , TWARM, T100, UV100
-real(double_precision) :: ZETAZERO, KTXR, Nsec, LXR, RXR, COLDENS 
+real(double_precision) :: ZETAZERO, Nsec, LXR, RXR, COLDENS 
 
 TEMP1D(:)=TEMP0
 DTEMP1D(:)=DTEMP0

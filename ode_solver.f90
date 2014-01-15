@@ -93,7 +93,7 @@ subroutine JACVW(Y,J,PDJ)
 ! Computes columns of the chemical jacobian
 use global_variables
 implicit none
-integer :: N, NSP1
+integer :: NSP1
 integer J
 real(double_precision), dimension(NSMAX) :: Y, PDJ
 real(double_precision), dimension(NSMAX+1) :: PDJ2
