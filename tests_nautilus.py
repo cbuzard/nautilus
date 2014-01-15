@@ -191,6 +191,8 @@ sys.stdout.flush()
 
 ABUNDANCES_FILENAMES = glob.glob("abundances.*.out")
 RATES_FILENAMES = glob.glob("rates.*.out")
+
+# list are sorted to ensure we compare the right files between actual and original outputs
 ABUNDANCES_FILENAMES.sort()
 RATES_FILENAMES.sort()
 
@@ -216,6 +218,8 @@ else:
 
 ABUNDANCES_FILENAMES_OLD = glob.glob("output_1D.*")
 RATES_FILENAMES_OLD = glob.glob("rates1D.*")
+
+# list are sorted to ensure we compare the right files between actual and original outputs
 ABUNDANCES_FILENAMES_OLD.sort()
 RATES_FILENAMES_OLD.sort()
 
