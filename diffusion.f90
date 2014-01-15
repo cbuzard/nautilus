@@ -1,5 +1,7 @@
 module diffusion
 
+use numerical_types
+
 implicit none
 
 contains
@@ -47,7 +49,7 @@ end subroutine diffusion_setup
 subroutine zdiffusion
 use global_variables
 implicit none
-real(kind=8), dimension(nptmax) :: Y
+real(double_precision), dimension(nptmax) :: Y
 integer :: j
 
 if (idiff.eq.0) then
@@ -100,8 +102,8 @@ subroutine crank(f,ny,dt,dy,nu,rho, ibc)
 ! ibc > 1 -> stops the code, insulting the user
 implicit none
 integer :: ny,ind
-real(kind=8), dimension(0:ny) :: f,s,Q,W,x,y,z,u,v,nu, rho, dd1d
-real(kind=8) :: dt, dy, d !, nu
+real(double_precision), dimension(0:ny) :: f,s,Q,W,x,y,z,u,v,nu, rho, dd1d
+real(double_precision) :: dt, dy, d !, nu
 integer :: ibc
 
 dd1d(:)=nu(:)*rho(:)
@@ -167,8 +169,8 @@ end subroutine crank
 subroutine euler(f,ny,dt,dy,nu,rho)
 implicit none
 integer :: ny,ind
-real(kind=8), dimension(0:ny) :: f,Q,W,nu, rho, dd1d
-real(kind=8) :: dt, dy, d !, nu
+real(double_precision), dimension(0:ny) :: f,Q,W,nu, rho, dd1d
+real(double_precision) :: dt, dy, d !, nu
 
 dd1d(:)=nu(:)*rho(:)
 
