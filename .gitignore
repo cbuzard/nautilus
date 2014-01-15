@@ -9,3 +9,4 @@ filename
 nlso_tail.d
 html
 latex
+*.tmp

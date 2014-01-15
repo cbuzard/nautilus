@@ -119,7 +119,7 @@ def compare2files(ori_files,new_files):
     f_new.close()
     
     
-    difference = compare(''.join(old_lines), ''.join(new_lines))
+    difference = ASCIICompare(''.join(old_lines), ''.join(new_lines))
     if (difference == None):
       no_diff.append(new)
     else:
@@ -242,13 +242,26 @@ if (diff != None):
   print diff
 
 # We create names including the folder in which they are
-RATES_FILENAMES = [os.path.join(NEW_TEST, rate) for rate in RATES_FILENAMES]
-ABUNDANCES_FILENAMES = [os.path.join(NEW_TEST, abundance) for abundance in ABUNDANCES_FILENAMES]
+RATES_FILENAMES = [os.path.join(NEW_TEST, filename) for filename in RATES_FILENAMES]
+ABUNDANCES_FILENAMES = [os.path.join(NEW_TEST, filename) for filename in ABUNDANCES_FILENAMES]
 
 # We create names including the folder in which they are
-RATES_FILENAMES_OLD = [os.path.join(ORIGINAL_TEST, rate) for rate in RATES_FILENAMES_OLD]
-ABUNDANCES_FILENAMES_OLD = [os.path.join(ORIGINAL_TEST, abundance) for abundance in ABUNDANCES_FILENAMES_OLD]
+RATES_FILENAMES_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in RATES_FILENAMES_OLD]
+ABUNDANCES_FILENAMES_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in ABUNDANCES_FILENAMES_OLD]
 
+print("comparing abundances outputs:")
 compare2Binaries(ABUNDANCES_FILENAMES_OLD, ABUNDANCES_FILENAMES)
 
+print("comparing rates outputs:")
 compare2Binaries(RATES_FILENAMES_OLD, RATES_FILENAMES)
+
+ASCII_OLD = ['nlso_tail.d']
+ASCII_NEW = ['abundances.tmp']
+
+# We include the folder name because we are in the parent folder.
+ASCII_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in ASCII_OLD]
+ASCII_NEW = [os.path.join(NEW_TEST, filename) for filename in ASCII_NEW]
+
+#~ pdb.set_trace()
+print("comparing chemical composition:")
+compare2files(ASCII_OLD, ASCII_NEW)
