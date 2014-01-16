@@ -253,7 +253,7 @@ end subroutine computeIAJA
   ! ======================================================================
   subroutine FCHEM (N,T,Y,YP)
   use global_variables
-  use constants
+  
   implicit none
 
   real(double_precision), dimension(NSMAX) :: Y,YP
@@ -277,7 +277,7 @@ end subroutine computeIAJA
   ! Fev 2012
 
   use global_variables 
-  use constants
+  
   implicit none
 
   real(double_precision) :: T300, TI, TSQ
@@ -560,7 +560,7 @@ end subroutine computeIAJA
   subroutine RATCON2(Y)
 
   use global_variables 
-  use constants
+  
   implicit none
 
   real(double_precision) :: ACTIV,BARR,MONLAY,DIFF
@@ -823,7 +823,7 @@ end subroutine computeIAJA
   ! ======================================================================
   subroutine MODIF(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
   use global_variables
-  use constants
+  
   implicit none
 
   integer :: J,IMOD1,IMOD2

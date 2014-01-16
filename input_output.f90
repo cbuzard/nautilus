@@ -35,7 +35,7 @@ contains
 subroutine read_parameters()
 
 use global_variables
-use constants
+
 
 implicit none
 
@@ -131,11 +131,12 @@ read(5,'(18X,I5)') NJAC
 close(5)
 
 ! Read CO and H2 shielding factors=====================
-
+open(unit=17, file='gg_H2_Photodiss.d', status='OLD')
 do I=1,NL1
-  read(H2DIS,81) N1H2(I),T1H2(I)
+  read(17,81) N1H2(I),T1H2(I)
 enddo
 81        format(E9.3,3X,E9.3)
+close(17)
 
 open(UNIT=16,FILE='gg_CO_Photodiss.d',STATUS='OLD')
 do I=1,NL3
@@ -276,7 +277,7 @@ end subroutine read_parameters
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine write_species()
 use global_variables
-use constants
+
 
 implicit none
 
@@ -308,7 +309,7 @@ end subroutine write_species
 subroutine write_abundances()
 ! Writes 1D outputs
 use global_variables
-use constants
+
 implicit none
 character(len=80) :: filename_output
 integer :: i
@@ -342,7 +343,7 @@ end subroutine write_abundances
 subroutine write_rates()
 
 use global_variables
-use constants
+
 
 implicit none
 
@@ -379,7 +380,7 @@ end subroutine write_rates
 subroutine write_chemical_composition(filename)
 
 use global_variables
-use constants
+
 
 implicit none
 

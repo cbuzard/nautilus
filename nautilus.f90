@@ -72,7 +72,7 @@
 PROGRAM Gasgrain
 
 use global_variables
-use constants
+
 use diffusion
 use input_output
 use model_1D
@@ -91,7 +91,6 @@ real(double_precision) :: T, TOUT, TIN
 
 data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
-call FILESET
 call read_parameters()
 
 ! Dimension of the work arrays for the solver 
@@ -157,7 +156,7 @@ do while (t.lt.0.9*tfinal)
   ! Store the current time in TIN (for 1D calculation)
   TIN = T
 
-  WRITE(NERR,5) 'IT=',IT,', TIME=',TIME/TYEAR,' yrs'
+  WRITE(Output_Unit,5) 'IT=',IT,', TIME=',TIME/TYEAR,' yrs'
   5    format(A3,I5,A7,1PD10.3,A4)
 
   do ipts=1,nptmax ! Start of the spatial loop for chemistry
@@ -213,32 +212,9 @@ contains
 
 ! ======================================================================
 ! ======================================================================
-subroutine FILESET
-use constants
-use global_variables
-implicit none
-
-
-!~ open(UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
-!~       open(UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
-!~ open(UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
-!~ open(UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
-!~ open(UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
-!      open(UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
-!~ open(UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
-!~ open(UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
-!~ open(UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
-!~ open(UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
-open(UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
-
-return 
-end subroutine FILESET
-
-! ======================================================================
-! ======================================================================
 subroutine INITIAL
 use global_variables
-use constants
+
 implicit none
 
 real(double_precision), dimension(NEMAX) :: MASS
@@ -364,7 +340,7 @@ end subroutine INITIAL
 subroutine START(TOUT)
 
 use global_variables
-use constants
+
 implicit none
 
 character(len=11), dimension(NSMAX) :: SREAD
@@ -441,8 +417,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! ------ Check if species in nls_init.d correspond to the reaction file
     do I=1,NSMAX
       if (Sread(I).NE.SPEC(I)) then
-        write(NERR,*) 'Input species in init file ',&
-        'do not match those in reaction file'
+        write(Error_Unit,*) 'Input species in init file do not match those in reaction file'
         STOP
       endif
     enddo
@@ -466,7 +441,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   subroutine EVOLVE (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
-  use constants
+  
   implicit none
 
   integer :: liw,lrw
@@ -571,7 +546,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! ======================================================================
   subroutine CONSERVE(Y)
   use global_variables
-  use constants
+  
   implicit none
 
   real(double_precision), dimension(NSMAX) :: Y
@@ -687,7 +662,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! ======================================================================
     subroutine GRAINRATE
     use global_variables
-    use constants
+    
     implicit none
 
     real(double_precision), dimension(nsmax) :: REA1,REA2,REA3,REA4
