@@ -159,9 +159,8 @@ enddo
 close(9)
 
 open(unit=9, file='gas_reactions.in',status='OLD')
-read(9,90) ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
+read(9,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
 ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,NK1) 
-90 format(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)
 close(9)
 
 ! Reading the grain network
@@ -172,7 +171,7 @@ enddo
 close(19)
 
 open(unit=19, file='grain_reactions.in', status='OLD')
-read(19,90) ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
+read(19,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
 ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,NK2) 
 close(19)
 
