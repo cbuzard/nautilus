@@ -392,8 +392,7 @@ write(13,'("DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
 &", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,ZETA0
 
-write(13,700) (SPEC(I),XN(I),I=1,NSMAX)
-700 format(5(A11,':',1X,1PE12.5,2X)) 
+write(13,'(5(A11,":",1X,1PE12.5,2X)) ') (SPEC(I),XN(I),I=1,NSMAX)
 write(13,*)
 close(13)
 
