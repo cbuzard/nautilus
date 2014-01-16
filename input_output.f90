@@ -154,8 +154,7 @@ close(16)
 ! Reading the gas phase network
 open(unit=9, file='gas_species.in',status='OLD')
 do I=1,NS1
-  read(9,80) SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
-  80    format(A11,i3,13(I3)) 
+  read(9,'(A11,i3,13(I3))') SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
 enddo
 close(9)
 
@@ -168,7 +167,7 @@ close(9)
 ! Reading the grain network
 open(unit=19, file='grain_species.in', status='OLD')
 do I=1,NS2
-  read(19,80) SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
+  read(19,'(A11,i3,13(I3))') SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
 enddo
 close(19)
 
