@@ -133,20 +133,17 @@ close(5)
 ! Read CO and H2 shielding factors=====================
 open(unit=17, file='gg_H2_Photodiss.d', status='OLD')
 do I=1,NL1
-  read(17,81) N1H2(I),T1H2(I)
+  read(17,'(E9.3,3X,E9.3)') N1H2(I),T1H2(I)
 enddo
-81        format(E9.3,3X,E9.3)
 close(17)
 
 open(UNIT=16,FILE='gg_CO_Photodiss.d',STATUS='OLD')
 do I=1,NL3
-  read(16,82) N2CO(I),T2CO(I),N2H2(I),T2H2(I),&
-  AV2(I),T2AV(I)              
+  read(16,'(6(E9.3,3X))') N2CO(I),T2CO(I),N2H2(I),T2H2(I),AV2(I),T2AV(I)              
 enddo
-82        format(6(E9.3,3X))
 
 do I=NL3+1,NL2
-  read(16,81) N2CO(I),T2CO(I)
+  read(16,'(E9.3,3X,E9.3)') N2CO(I),T2CO(I)
 enddo
 close(16)
 
