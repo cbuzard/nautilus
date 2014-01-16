@@ -71,7 +71,7 @@ def run(commande):
   (process_stdout, process_stderr) = process.communicate()
   returnCode = process.poll()
   
-  # If returnCode is not 0, then there was a problem
+  # if returnCode is not 0, then there was a problem
   if (returnCode != 0):
     # We write compilation errors in the following file.
     f = open(LOG_NAME,'w')

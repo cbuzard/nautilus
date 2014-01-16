@@ -91,8 +91,8 @@ real(double_precision) :: T, TOUT, TIN
 
 data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
-CALL FILESET
-CALL read_parameters()
+call FILESET
+call read_parameters()
 
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag
@@ -115,16 +115,16 @@ call mesh
 
 ! Initialization of elemental/chemical quantities
 
-CALL INITIAL
+call INITIAL
 
 IT=0
-CALL START(TOUT)
+call START(TOUT)
 
 ! 1D physical structure (nls_phys_1D)
 call phys_1D
 
 ! Write species name/index correspondance
-CALL write_species()
+call write_species()
 
 ! Global variable for the current spatial point
 iptstore=1
@@ -158,7 +158,7 @@ do while (t.lt.0.9*tfinal)
   TIN = T
 
   WRITE(NERR,5) 'IT=',IT,', TIME=',TIME/TYEAR,' yrs'
-  5    FORMAT (A3,I5,A7,1PD10.3,A4)
+  5    format(A3,I5,A7,1PD10.3,A4)
 
   do ipts=1,nptmax ! Start of the spatial loop for chemistry
 
@@ -203,7 +203,7 @@ do while (t.lt.0.9*tfinal)
     call write_abundances()
   endif
 
-ENDDO
+enddo
 
 if (nptmax.eq.1) call write_chemical_composition('chemical_composition.tmp')
 
@@ -213,30 +213,30 @@ contains
 
 ! ======================================================================
 ! ======================================================================
-SUBROUTINE FILESET
+subroutine FILESET
 use constants
 use global_variables
 implicit none
 
 
-!~ OPEN (UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
-!~       OPEN (UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
-!~ OPEN (UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
-!~ OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
-!~ OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
-!      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
-!~ OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
-!~ OPEN (UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
-!~ OPEN (UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
-OPEN (UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
-OPEN (UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
+!~ open(UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
+!~       open(UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
+!~ open(UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
+!~ open(UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
+!~ open(UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
+!      open(UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
+!~ open(UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
+!~ open(UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
+!~ open(UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
+open(UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
+open(UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
 
-RETURN 
-END subroutine FILESET
+return 
+end subroutine FILESET
 
 ! ======================================================================
 ! ======================================================================
-SUBROUTINE INITIAL
+subroutine INITIAL
 use global_variables
 use constants
 implicit none
@@ -252,54 +252,54 @@ ILAB=1
 DO J=1,NSMAX
   KSUM=0
   ! ------ Calculate species' mass
-  DO K=1,NEMAX
+  do K=1,NEMAX
     KSUM=KSUM+IELM(K,J)
-  ENDDO
+  enddo
   ! ------ Check for atomic species
-  IF ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
-  (SPEC(J)(:1).NE.'J          ').AND.(SPEC(J)(:1).NE.'X          ')) THEN
-  IF (ILAB.GT.NEMAX) then
+  if ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
+  (SPEC(J)(:1).NE.'J          ').AND.(SPEC(J)(:1).NE.'X          ')) then
+  if (ILAB.GT.NEMAX) then
     STOP '***More elements than NEMAX***'
   endif       
   ! --------- Save species number
   ISPELM(ILAB)=J
   ILAB=ILAB+1
-ENDIF
+endif
 
 ! ------ Check for electron species number
 IF (SPEC(J).EQ.'e-         ') ISPE=J
-ENDDO
+enddo
 
 ! --- Re-arrange order of elements to match IELM columns (reactions file)
 DO J=1,NEMAX-1
-  IF (IELM(J,ISPELM(J)).NE.1) THEN
-    DO K=J+1,NEMAX
-      IF (IELM(J,ISPELM(K)).EQ.1) THEN
+  if (IELM(J,ISPELM(J)).NE.1) then
+    do K=J+1,NEMAX
+      if (IELM(J,ISPELM(K)).EQ.1) then
         ISPTEMP=ISPELM(K)
         ISPELM(K)=ISPELM(J)
         ISPELM(J)=ISPTEMP
-      ENDIF
-    ENDDO
-  ENDIF
-ENDDO
+      endif
+    enddo
+  endif
+enddo
 
 ! --- Set elements' masses
 DO I=1,NEMAX
-  IF (SPEC(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
-  IF (SPEC(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
-  IF (SPEC(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
-  IF (SPEC(ISPELM(I)).EQ.'C          ') MASS(I)=12.d0
-  IF (SPEC(ISPELM(I)).EQ.'N          ') MASS(I)=14.d0
-  IF (SPEC(ISPELM(I)).EQ.'O          ') MASS(I)=16.d0
-  IF (SPEC(ISPELM(I)).EQ.'Na         ') MASS(I)=23.d0
-  IF (SPEC(ISPELM(I)).EQ.'Mg         ') MASS(I)=24.d0
-  IF (SPEC(ISPELM(I)).EQ.'Si         ') MASS(I)=28.d0
-  IF (SPEC(ISPELM(I)).EQ.'P          ') MASS(I)=31.d0
-  IF (SPEC(ISPELM(I)).EQ.'S          ') MASS(I)=32.d0
-  IF (SPEC(ISPELM(I)).EQ.'Cl         ') MASS(I)=35.d0
-  IF (SPEC(ISPELM(I)).EQ.'Fe         ') MASS(I)=56.d0
-  IF (SPEC(ISPELM(I)).EQ.'F          ') MASS(I)=19.d0
-ENDDO
+  if (SPEC(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
+  if (SPEC(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
+  if (SPEC(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
+  if (SPEC(ISPELM(I)).EQ.'C          ') MASS(I)=12.d0
+  if (SPEC(ISPELM(I)).EQ.'N          ') MASS(I)=14.d0
+  if (SPEC(ISPELM(I)).EQ.'O          ') MASS(I)=16.d0
+  if (SPEC(ISPELM(I)).EQ.'Na         ') MASS(I)=23.d0
+  if (SPEC(ISPELM(I)).EQ.'Mg         ') MASS(I)=24.d0
+  if (SPEC(ISPELM(I)).EQ.'Si         ') MASS(I)=28.d0
+  if (SPEC(ISPELM(I)).EQ.'P          ') MASS(I)=31.d0
+  if (SPEC(ISPELM(I)).EQ.'S          ') MASS(I)=32.d0
+  if (SPEC(ISPELM(I)).EQ.'Cl         ') MASS(I)=35.d0
+  if (SPEC(ISPELM(I)).EQ.'Fe         ') MASS(I)=56.d0
+  if (SPEC(ISPELM(I)).EQ.'F          ') MASS(I)=19.d0
+enddo
 
 ! Set species' characteristics==========================================
 ! --- Set special species labels
@@ -317,14 +317,14 @@ YCO    = 'CO         '
 DO I=1,NSMAX 
   ! ------ Calculate masses
   MSUM=0.d0
-  DO K=1,NEMAX 
+  do K=1,NEMAX 
     MSUM=MSUM+MASS(K)*IELM(K,I) 
-  ENDDO 
+  enddo 
   AWT(I)=MSUM
-  IF (SPEC(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
-  IF (SPEC(I).EQ.YGRAIN .OR. SPEC(I).EQ.'GRAIN-      ')&
+  if (SPEC(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
+  if (SPEC(I).EQ.YGRAIN .OR. SPEC(I).EQ.'GRAIN-      ')&
   AWT(I)=4.0*PI*RD*RD*RD*RHOD/3.0/AMU
-ENDDO
+enddo
 
 ! Initialize the Av/NH ratio
 ! Can be scaled for different dust/gas ratios
@@ -337,11 +337,11 @@ RAVNH=5.34d-22*(DTOGM/1.d-2)
 DO I=0,NITYPE-1
   IRXSTA(I)=0
   IRXFIN(I)=0
-  DO J=1,NKMAX
-    IF ((ITYPE(J).EQ.I).AND.(IRXSTA(I).EQ.0)) IRXSTA(I)=J
-    IF (ITYPE(J).EQ.I) IRXFIN(I)=J
-  ENDDO
-ENDDO
+  do J=1,NKMAX
+    if ((ITYPE(J).EQ.I).AND.(IRXSTA(I).EQ.0)) IRXSTA(I)=J
+    if (ITYPE(J).EQ.I) IRXFIN(I)=J
+  enddo
+enddo
 
 ! Find the index of CO and H2
 do i=1,nsmax
@@ -354,14 +354,14 @@ enddo
 TNS = SNS*4.d0*PI*RD**2
 
 ! Initialise reaction rates=============================================
-CALL GRAINRATE
+call GRAINRATE
 
-RETURN 
-END SUBROUTINE INITIAL
+return 
+end subroutine INITIAL
 
 ! ======================================================================
 ! ======================================================================
-SUBROUTINE START(TOUT)
+subroutine START(TOUT)
 
 use global_variables
 use constants
@@ -388,12 +388,12 @@ TIME=0.0D+0
 ! Set initial abundances================================================
 DO I=1,NSMAX
   XN(I)=XNMIN
-  DO K=1,NS0
-    IF (SPEC(I).EQ.XS0(K)) THEN
+  do K=1,NS0
+    if (SPEC(I).EQ.XS0(K)) then
       XN(I)=XN0(K)
-    ENDIF
-  ENDDO
-ENDDO
+    endif
+  enddo
+enddo
 
 
 
@@ -401,17 +401,17 @@ ENDDO
 
 DO J=1,NEMAX
   ELEMS(J)=0.0D+0
-ENDDO
+enddo
 DO I=1,NSMAX 
-  DO J=1,NEMAX
+  do J=1,NEMAX
     ELEMS(J)=ELEMS(J)+IELM(J,I)*XN(I)
-  ENDDO
-ENDDO
+  enddo
+enddo
 
 ! Recompute DTOGM to remove He
 ! In the following, DTOGM is used as a H/dust mass ratio
 do i=1,nemax
-  IF (SPEC(ISPELM(I)).EQ.YHE) then
+  if (SPEC(ISPELM(I)).EQ.YHE) then
     DTOGM = DTOGM*(1.d0+4*ELEMS(I))
     ! Mean molecular weight (cgs) 
     ! Approximated here (the exact calculus would require a sume over AWT
@@ -428,25 +428,25 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
 
   ! Read initial abundances if IREAD is switched on=======================
-  IF (IREAD.NE.0) THEN
+  if (IREAD.NE.0) then
     open(unit=14,file='chemical_composition.in', status='OLD') 
     ! Skip the first line on nls_init.d
     read(14,*) 
 
     ! ------ Read species and abundances
-    read(14,110) (SREAD(I),XN(I),I=1,NSMAX)
-    110 FORMAT (5(A11,2X,1PE12.5,2X))
+    read(14,110) (Sread(I),XN(I),I=1,NSMAX)
+    110 format(5(A11,2X,1PE12.5,2X))
     read(14,*)
     close(14)
     ! ------ Check if species in nls_init.d correspond to the reaction file
-    DO I=1,NSMAX
-      IF (SREAD(I).NE.SPEC(I)) THEN
-        WRITE (NERR,*) 'Input species in init file ',&
+    do I=1,NSMAX
+      if (Sread(I).NE.SPEC(I)) then
+        write(NERR,*) 'Input species in init file ',&
         'do not match those in reaction file'
         STOP
-      ENDIF
-    ENDDO
-  ENDIF
+      endif
+    enddo
+  endif
 
 
   ! Set the electron abundance via conservation===========
@@ -454,16 +454,16 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! as nls_control
 
   Y(:)=XN(:)
-  CALL CONSERVE(Y)
+  call CONSERVE(Y)
   XN(:)=Y(:) 
 
-  RETURN 
-  END subroutine start
+  return 
+  end subroutine start
 
   ! ======================================================================
   ! ======================================================================
 
-  SUBROUTINE EVOLVE (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+  subroutine EVOLVE (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
   use constants
@@ -509,7 +509,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   Y(:) = XN(:)
 
-  ! If testjac is 1, print non zero elements per column of the Jacobian
+  ! if testjac is 1, print non zero elements per column of the Jacobian
   ! Done in odes/JACVW
 
   if (TESTJAC.eq.1) then
@@ -552,7 +552,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! cf odpkdmain.f for translation
     if (istate.ne.2) write(*,*)  'IPTS = ', ipts, 'ISTATE = ', ISTATE
 
-    CALL CONSERVE(Y)
+    call CONSERVE(Y)
 
     ! Stop, Forrest
   enddo
@@ -561,15 +561,15 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   XN=Y
 
-  RETURN 
-  END SUBROUTINE EVOLVE
+  return 
+  end subroutine EVOLVE
 
 
 
 
   ! ======================================================================
   ! ======================================================================
-  SUBROUTINE CONSERVE(Y)
+  subroutine CONSERVE(Y)
   use global_variables
   use constants
   implicit none
@@ -587,35 +587,35 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   ! --- Conserve electrons
   CHASUM=0.0D+0
-  DO I=1,NSMAX
-    IF (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*Y(I)
-  ENDDO
-  IF (CHASUM.LE.0.0D+0) CHASUM=XNMIN
+  do I=1,NSMAX
+    if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*Y(I)
+  enddo
+  if (CHASUM.LE.0.0D+0) CHASUM=XNMIN
   Y(ISPE)=CHASUM
 
   ! --- Conserve other elements if selected
-  IF (ICONS.GT.0) THEN
-    DO K=1,ICONS
+  if (ICONS.GT.0) then
+    do K=1,ICONS
       ELMSUM(K)=0.0D+0
-    ENDDO
-    DO I=1,NSMAX
-      DO K=1,ICONS
-        IF (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
-      ENDDO
-    ENDDO
-    DO K=1,ICONS
+    enddo
+    do I=1,NSMAX
+      do K=1,ICONS
+        if (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
+      enddo
+    enddo
+    do K=1,ICONS
       Y(ISPELM(K))=ELEMS(K)-ELMSUM(K)
-      IF (Y(ISPELM(K)).LE.0.0D+0) Y(ISPELM(K))=XNMIN
-    ENDDO
-  ENDIF
+      if (Y(ISPELM(K)).LE.0.0D+0) Y(ISPELM(K))=XNMIN
+    enddo
+  endif
 
   ! Check for conservation
   ELMSUM(:)=0.0D+0
-  DO I=1,NSMAX
-    DO K=1,NEMAX
+  do I=1,NSMAX
+    do K=1,NEMAX
       ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
-    ENDDO
-  ENDDO
+    enddo
+  enddo
 
   do k=1,nemax
     if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01d0) then 
@@ -634,14 +634,14 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! prevent excessive depletion
 
 
-  RETURN
-  END SUBROUTINE CONSERVE
+  return
+  end subroutine CONSERVE
 
   ! ======================================================================
   ! Dummy jacobians when the code is run with mf=222
   ! Not to use unless, the solver has big problems converging
   ! ======================================================================
-  !      SUBROUTINE DUMMY 
+  !      subroutine DUMMY 
   !      implicit none
   !      integer :: N,J
   !      real(double_precision) :: T,Y,IAN, JAN, PDJ 
@@ -660,7 +660,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! from the results for NH2 and NCO computed by RATCON2 the spatial step before
   ! NB: ZN is shifted with respect to N
   ! ======================================================================
-  SUBROUTINE SHIELDINGSETUP
+  subroutine SHIELDINGSETUP
 
   use global_variables
   implicit none
@@ -679,13 +679,13 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   endif
 
   return
-  end SUBROUTINE SHIELDINGSETUP
+  end subroutine SHIELDINGSETUP
 
 
 
     ! ======================================================================
     ! ======================================================================
-    SUBROUTINE GRAINRATE
+    subroutine GRAINRATE
     use global_variables
     use constants
     implicit none
@@ -711,30 +711,30 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
     ! --- Evaluate sticking coeff and accretion rate factor for each species
     STICK=0.0D+0
-    DO I=1,NSMAX
-      IF (ICG(I).EQ.0) THEN
+    do I=1,NSMAX
+      if (ICG(I).EQ.0) then
         STICK=STICK0
-      ENDIF 
-      IF (ICG(I).GT.0) THEN 
+      endif 
+      if (ICG(I).GT.0) then 
         STICK=STICKP 
-      ENDIF
-      IF (ICG(I).LT.0) THEN 
+      endif
+      if (ICG(I).LT.0) then 
         STICK=STICKN 
-      ENDIF
-      !         IF (SPEC(I).EQ.YH2)      STICK=0.D+0 
-      !         IF (SPEC(I).EQ.YHE)      STICK=0.D+0 
-      !         IF (SPEC(I).EQ.YH)       STICK=0.D+0 
-      IF (SPEC(I).EQ.YHEP)     STICK=0.D+0 
-      IF (SPEC(I).EQ.'e-         ')      STICK=0.D+0
-      IF (SPEC(I).EQ.'H+         ')     STICK=0.D+0
-      IF (SPEC(I).EQ.YGRAIN)   STICK=0.D+0
-      IF (SPEC(I).EQ.'GRAIN-     ') STICK=0.D+0
-      !         IF (SPEC(I).EQ.'H-')     STICK=0.D+0
-      !         IF (SPEC(I).EQ.'H2+')    STICK=0.D+0
+      endif
+      !         if (SPEC(I).EQ.YH2)      STICK=0.D+0 
+      !         if (SPEC(I).EQ.YHE)      STICK=0.D+0 
+      !         if (SPEC(I).EQ.YH)       STICK=0.D+0 
+      if (SPEC(I).EQ.YHEP)     STICK=0.D+0 
+      if (SPEC(I).EQ.'e-         ')      STICK=0.D+0
+      if (SPEC(I).EQ.'H+         ')     STICK=0.D+0
+      if (SPEC(I).EQ.YGRAIN)   STICK=0.D+0
+      if (SPEC(I).EQ.'GRAIN-     ') STICK=0.D+0
+      !         if (SPEC(I).EQ.'H-')     STICK=0.D+0
+      !         if (SPEC(I).EQ.'H2+')    STICK=0.D+0
 
-      IF (I.GT.NSGAS) STICK=0.D+0
+      if (I.GT.NSGAS) STICK=0.D+0
       CONDSP(I)=COND*STICK/SQRT(AWT(I))
-    ENDDO
+    enddo
 
 
     ! Read in molecular information for surface rates=======================
@@ -743,123 +743,123 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
     ! --- Read info into dummy arrays
     NGS=0
-    DO I=1,NSMAX
+    do I=1,NSMAX
       700    CONTINUE
       read(10,705) GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
-      705    FORMAT(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)
-      IF (GSPEC(I).EQ.'X          ') GOTO 700
-      IF (GSPEC(I).EQ.'           ') EXIT
+      705    format(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)
+      if (GSPEC(I).EQ.'X          ') GOTO 700
+      if (GSPEC(I).EQ.'           ') EXIT
       NGS=NGS+1
-    ENDDO
+    enddo
 
 
     ! --- Read activation energies into dummy arrays
-    READ(10,720) NEA
-    720 FORMAT(I4)
-    DO J=1,NEA
-      READ(10,730) (GSREAD(L,J),L=1,5),REA5(J)
-      730   FORMAT(5A11,D9.2)
-    ENDDO
+    read(10,720) NEA
+    720 format(I4)
+    do J=1,NEA
+      read(10,730) (GSread(L,J),L=1,5),REA5(J)
+      730   format(5A11,D9.2)
+    enddo
     close(10)
 
     ! --- Transfer from dummies to arrays with correct species numbers
-    DO I=1,NSMAX
+    do I=1,NSMAX
       SMASS(I)=0
       ED(I)=0.0D+0
       EB(I)=0.0D+0
       DEB(I)=0.0D+0
       DHF(I)=0.0D+0
-      DO J=1,NGS
-        IF (SPEC(I).EQ.GSPEC(J)) THEN
+      do J=1,NGS
+        if (SPEC(I).EQ.GSPEC(J)) then
           SMASS(I)=INT1(J)
           ED(I)=REA1(J)
           EB(I)=REA2(J)
           DEB(I)=REA3(J)
           DHF(I)=REA4(J)
-          IF ((SPEC(I).NE.YJH).AND.(SPEC(I).NE.YJH2).AND.&
+          if ((SPEC(I).NE.YJH).AND.(SPEC(I).NE.YJH2).AND.&
           (EBFAC.GE.0.0D+0)) EB(I)=EBFAC*ED(I)
-        ENDIF
-      ENDDO
+        endif
+      enddo
       !IF(SPEC(I) == 'JN2O2      ') write(*,*) ED(I)
-    ENDDO
+    enddo
 
-    DO I=1,NKMAX
+    do I=1,NKMAX
       EA(I)=0.0D+0
-      DO J=1,NEA
-        IF (SYMBOL(4,I)(:1).EQ.'J          ') THEN
-          IF ((SYMBOL(1,I).EQ.GSREAD(1,J)).AND.&
-          (SYMBOL(2,I).EQ.GSREAD(2,J)).AND.&
-          (SYMBOL(4,I).EQ.GSREAD(3,J)).AND.&
-          (SYMBOL(5,I).EQ.GSREAD(4,J)).AND.&
-          (SYMBOL(6,I).EQ.GSREAD(5,J))) EA(I)=REA5(J)
-        ENDIF
-        IF (SYMBOL(4,I)(:1).NE.'J          ') THEN
-          IF ((SYMBOL(1,I).EQ.GSREAD(1,J)).AND.&
-          (SYMBOL(2,I).EQ.GSREAD(2,J)).AND.&
-          (SYMBOL(4,I).EQ.GSREAD(3,J)(2:)).AND.&
-          (SYMBOL(5,I).EQ.GSREAD(4,J)(2:)).AND.&
-          (SYMBOL(6,I).EQ.GSREAD(5,J)(2:))) EA(I)=REA5(J)
-        ENDIF
-      ENDDO
+      do J=1,NEA
+        if (SYMBOL(4,I)(:1).EQ.'J          ') then
+          if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
+          (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
+          (SYMBOL(4,I).EQ.GSread(3,J)).AND.&
+          (SYMBOL(5,I).EQ.GSread(4,J)).AND.&
+          (SYMBOL(6,I).EQ.GSread(5,J))) EA(I)=REA5(J)
+        endif
+        if (SYMBOL(4,I)(:1).NE.'J          ') then
+          if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
+          (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
+          (SYMBOL(4,I).EQ.GSread(3,J)(2:)).AND.&
+          (SYMBOL(5,I).EQ.GSread(4,J)(2:)).AND.&
+          (SYMBOL(6,I).EQ.GSread(5,J)(2:))) EA(I)=REA5(J)
+        endif
+      enddo
       !IF(symbol(4,i) == 'JO2H       ') write(*,*)  symbol(:,i), Ea(i)
-    ENDDO
+    enddo
 
     ! Set up constants, quantum rate info===================================
-    DO I=1,NSMAX
+    do I=1,NSMAX
       CHF(I)=0.0D+0
       RQ1(I)=0.0D+0
       RQ2(I)=0.0D+0
       ! ------ For species which have been assigned surface info, SMASS=/=0
-      IF (SMASS(I).NE.0) THEN
+      if (SMASS(I).NE.0) then
         SMA=REAL(SMASS(I))
         ! --------- Set characteristic frequency
         CHF(I)=SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA)
         ! --------- Set quantum rates
-        IF (DEB(I).GE.1.0D-38) THEN
+        if (DEB(I).GE.1.0D-38) then
           RQ1(I)=DEB(I)*BOLTZ/4.0D+0/HBAR/TNS
-        ELSE
+        else
           RQ1(I)=0.0D+0
-        ENDIF
+        endif
         RQ2(I)=CHF(I)/TNS*&
         EXP(-2.0D+0*ACM/HBAR*SQRT(2.0D+0*AMU*SMA*BOLTZ*EB(I)))
-      ENDIF
-    ENDDO
+      endif
+    enddo
 
     ! === Cycle all reactions
-    DO J=1,NKMAX
+    do J=1,NKMAX
 
       ! ------ Initialise all XJ rate factors, and get species 1 & 2
       XJ(J)=1.0D+0
       JSP1(J)=0
       JSP2(J)=0
-      DO I=1,NSMAX
-        IF (SYMBOL(1,J).EQ.SPEC(I)) JSP1(J)=I
-        IF (SYMBOL(2,J).EQ.SPEC(I)) JSP2(J)=I
-      ENDDO
+      do I=1,NSMAX
+        if (SYMBOL(1,J).EQ.SPEC(I)) JSP1(J)=I
+        if (SYMBOL(2,J).EQ.SPEC(I)) JSP2(J)=I
+      enddo
 
       ! === ITYPE 14 - SURFACE REACTIONS
-      IF (ITYPE(J).EQ.14) THEN
+      if (ITYPE(J).EQ.14) then
         NPATH=0
 
         ! ------ Check for branching
-        DO K=1,NKMAX
-          IF (((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
+        do K=1,NKMAX
+          if (((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
           (SYMBOL(2,J).EQ.SYMBOL(2,K))).OR.&
           ((SYMBOL(2,J).EQ.SYMBOL(1,K)).AND.&
-          (SYMBOL(1,J).EQ.SYMBOL(2,K)))) THEN
-          IF (SYMBOL(4,K)(:1).EQ.'J          ') NPATH=NPATH+1
-        ENDIF
-      ENDDO
+          (SYMBOL(1,J).EQ.SYMBOL(2,K)))) then
+          if (SYMBOL(4,K)(:1).EQ.'J          ') NPATH=NPATH+1
+        endif
+      enddo
 
       ! ------ Branching ratio
-      IF (NPATH.EQ.0) THEN
+      if (NPATH.EQ.0) then
         XJ(J)=0.0D+0
-      ELSE
+      else
         XJ(J)=XJ(J)/REAL(NPATH)
-      ENDIF
+      endif
 
       ! ------ Factor of 2 for same species reactions
-      IF (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
+      if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
       !        write(*,*) SYMBOL(1,J)
       !       write(*,*) SYMBOL(2,J)
       !       write(*,*) XJ(J)
@@ -868,45 +868,45 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
-      DO K=1,NKMAX
-        IF ((SYMBOL(4,J)(:1).EQ.'J          ').AND.(A(K).NE.0.d0)) THEN
-          IF ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
+      do K=1,NKMAX
+        if ((SYMBOL(4,J)(:1).EQ.'J          ').AND.(A(K).NE.0.d0)) then
+          if ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
           (SYMBOL(2,J).EQ.SYMBOL(2,K)).AND.&
           (SYMBOL(4,J)(2:).EQ.SYMBOL(4,K)).AND.&
           (SYMBOL(5,J)(2:).EQ.SYMBOL(5,K)).AND.&
           (SYMBOL(6,J)(2:).EQ.SYMBOL(6,K)).AND.&
           (SYMBOL(4,K)(:1).NE.'J          ')) NEVAP=NEVAP+1
-        ENDIF
-        IF ((SYMBOL(4,J)(:1).NE.'J          ').AND.(A(J).NE.0.d0)) THEN
-          IF ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
+        endif
+        if ((SYMBOL(4,J)(:1).NE.'J          ').AND.(A(J).NE.0.d0)) then
+          if ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
           (SYMBOL(2,J).EQ.SYMBOL(2,K)).AND.&
           (SYMBOL(4,J).EQ.SYMBOL(4,K)(2:)).AND.&
           (SYMBOL(5,J).EQ.SYMBOL(5,K)(2:)).AND.&
           (SYMBOL(6,J).EQ.SYMBOL(6,K)(2:)).AND.&
           (SYMBOL(4,K)(:1).EQ.'J          ')) NEVAP=NEVAP+1
-        ENDIF
-      ENDDO
+        endif
+      enddo
 
       N4=0
       N5=0
       N6=0
-      DO I=NSGAS+1,NSMAX
-        IF (SYMBOL(4,J)(:1).EQ.'J          ') THEN
-          IF (SYMBOL(4,J).EQ.SPEC(I)) N4=I
-          IF (SYMBOL(5,J).EQ.SPEC(I)) N5=I
-          IF (SYMBOL(6,J).EQ.SPEC(I)) N6=I
-        ENDIF
-        IF ((SYMBOL(4,J)(:1).NE.'J          ').AND.&
-        (SYMBOL(4,J)(:1).NE.'X          ')) THEN
-        IF (SYMBOL(4,J).EQ.SPEC(I)(2:)) N4=I
-        IF (SYMBOL(5,J).EQ.SPEC(I)(2:)) N5=I
-        IF (SYMBOL(6,J).EQ.SPEC(I)(2:)) N6=I
-      ENDIF
-    ENDDO
+      do I=NSGAS+1,NSMAX
+        if (SYMBOL(4,J)(:1).EQ.'J          ') then
+          if (SYMBOL(4,J).EQ.SPEC(I)) N4=I
+          if (SYMBOL(5,J).EQ.SPEC(I)) N5=I
+          if (SYMBOL(6,J).EQ.SPEC(I)) N6=I
+        endif
+        if ((SYMBOL(4,J)(:1).NE.'J          ').AND.&
+        (SYMBOL(4,J)(:1).NE.'X          ')) then
+        if (SYMBOL(4,J).EQ.SPEC(I)(2:)) N4=I
+        if (SYMBOL(5,J).EQ.SPEC(I)(2:)) N5=I
+        if (SYMBOL(6,J).EQ.SPEC(I)(2:)) N6=I
+      endif
+    enddo
 
     DHFSUM=DHF(JSP1(J))+DHF(JSP2(J))-DHF(N4)
-    IF (N5.NE.0) DHFSUM=DHFSUM-DHF(N5)
-    IF (N6.NE.0) DHFSUM=DHFSUM-DHF(N6)
+    if (N5.NE.0) DHFSUM=DHFSUM-DHF(N5)
+    if (N6.NE.0) DHFSUM=DHFSUM-DHF(N6)
     ! ------ Convert from kcal to J, from J to K
     DHFSUM=DHFSUM*4.184D+03/1.38054D-23
     ! ------ Convert from #moles-1 to #reactions-1
@@ -915,64 +915,64 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     DHFSUM=DHFSUM+EA(J)
 
     SUM1=ED(N4)
-    IF (N5.NE.0) SUM1=MAX(ED(N4),ED(N5))
-    IF (N6.NE.0) SUM1=MAX(ED(N4),ED(N5),ED(N6))
+    if (N5.NE.0) SUM1=MAX(ED(N4),ED(N5))
+    if (N6.NE.0) SUM1=MAX(ED(N4),ED(N5),ED(N6))
 
     ATOMS=0
-    DO K=1,NEMAX
+    do K=1,NEMAX
       ATOMS=ATOMS+IELM(K,N4)
-    ENDDO
+    enddo
 
     SUM2=1.0D+0-(SUM1/DHFSUM)
-    IF (ATOMS.EQ.2) SUM2=SUM2**(3*ATOMS-5)
-    IF (ATOMS.GT.2) SUM2=SUM2**(3*ATOMS-6)
+    if (ATOMS.EQ.2) SUM2=SUM2**(3*ATOMS-5)
+    if (ATOMS.GT.2) SUM2=SUM2**(3*ATOMS-6)
     !         SUM2=SUM2**(3*ATOMS-6)
     SUM2=ARRK*SUM2
     EVFRAC=SUM2/(1+SUM2)
 
     !        V.W. Jul 2006 f=evfrac=0.009 for H2O (Kroes & Anderson 2006) 
-    !         IF (SYMBOL(4,J).EQ.'H2O     ') THEN
+    !         if (SYMBOL(4,J).EQ.'H2O     ') then
     !                 EVFRAC=0.009
     !                EVFRAC_H2O=0.009
-    !         ENDIF
+    !         endif
 
     BADFLAG=0
-    IF (DHF(JSP1(J)).LE.-999.0) THEN
+    if (DHF(JSP1(J)).LE.-999.0) then
       EVFRAC=0.0D+0
       BADFLAG=BADFLAG+1
-    ENDIF
-    IF (DHF(JSP2(J)).LE.-999.0) THEN
+    endif
+    if (DHF(JSP2(J)).LE.-999.0) then
       EVFRAC=0.0D+0
       BADFLAG=BADFLAG+1
-    ENDIF
-    IF (DHF(N4).LE.-999.0) THEN
+    endif
+    if (DHF(N4).LE.-999.0) then
       EVFRAC=0.0D+0
       BADFLAG=BADFLAG+1
-    ENDIF
-    IF (N5.NE.0) THEN
+    endif
+    if (N5.NE.0) then
       EVFRAC=0.0D+0
       BADFLAG=BADFLAG+1
-    ENDIF
-    IF (N6.NE.0) THEN
+    endif
+    if (N6.NE.0) then
       EVFRAC=0.0D+0
       BADFLAG=BADFLAG+1
-    ENDIF
+    endif
 
-    IF (EVFRAC.GE.1.0D+0) EVFRAC=1.0D+0
-    IF (EVFRAC.LE.0.0D+0) EVFRAC=0.0D+0
-    IF (NEVAP.EQ.0) EVFRAC=0.0D+0
-    IF (DHFSUM.LE.0.0D+0) EVFRAC=0.0D+0
+    if (EVFRAC.GE.1.0D+0) EVFRAC=1.0D+0
+    if (EVFRAC.LE.0.0D+0) EVFRAC=0.0D+0
+    if (NEVAP.EQ.0) EVFRAC=0.0D+0
+    if (DHFSUM.LE.0.0D+0) EVFRAC=0.0D+0
 
     !         EVFRAC=0.0D+0
 
-    IF (SYMBOL(4,J)(:1).EQ.'J          ') THEN
+    if (SYMBOL(4,J)(:1).EQ.'J          ') then
       EVFRAC=1.0D+0-EVFRAC
-    ENDIF
+    endif
 
     !        V.W. Jul 2006 f=evfrac=0.009 for H2O (Kroes & Anderson 2006) 
-    !        IF (SYMBOL(4,J).EQ.'JH2O    ') THEN
+    !        if (SYMBOL(4,J).EQ.'JH2O    ') then
     !            EVFRAC=1.0D+0-EVFRAC_H2O
-    !         ENDIF
+    !         endif
 
     XJ(J)=XJ(J)*EVFRAC
     !        write(*,*) SYMBOL(1,J)
@@ -985,31 +985,31 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&
     REAL(SMASS(JSP1(J))+SMASS(JSP2(J)))
     ACT1(J)=2.0D+0 * ACT/HBAR * SQRT(2.0D+0*AMU*REDMAS*BOLTZ*EA(J))
-  ENDIF
+  endif
 
   ! === ITYPE 16 - C.R. DESORPTION
-  IF (ITYPE(J).EQ.16) THEN
-    IF (SMASS(JSP1(J)).EQ.0) XJ(J)=0.0D+0
-  ENDIF
+  if (ITYPE(J).EQ.16) then
+    if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.0D+0
+  endif
 
   ! === ITYPE 99 - ACCRETION
-  IF (ITYPE(J).EQ.99) THEN
+  if (ITYPE(J).EQ.99) then
     ! ------ Save tag of resultant grain surface species
-    DO I=1,NSMAX
-      IF (SYMBOL(4,J).EQ.SPEC(I)) JSP2(J)=I
-    ENDDO
-  ENDIF
+    do I=1,NSMAX
+      if (SYMBOL(4,J).EQ.SPEC(I)) JSP2(J)=I
+    enddo
+  endif
 
-ENDDO
+enddo
 
 ! === Zero dummy H2 formation rxns, if necc.
-!      IF (IDUST.NE.0) THEN
+!      if (IDUST.NE.0) then
 !         XJ(1)=0.0D+0
 !         XJ(2)=0.0D+0
-!      ENDIF
+!      endif
 
-RETURN
-END SUBROUTINE grainrate
+return
+end subroutine grainrate
 
 ! ======================================================================
 ! ======================================================================

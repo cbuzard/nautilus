@@ -32,7 +32,7 @@ contains
 !! 'parameters.in'
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-SUBROUTINE read_parameters()
+subroutine read_parameters()
 
 use global_variables
 use constants
@@ -62,57 +62,57 @@ integer, dimension(nemax,ns2) :: IELM2
 
 open(5, file='parameters.in')
 
-READ(5,10)
-READ(5,14) RTOL
-READ(5,11)
-READ(5,12) IDUST
-READ(5,12) ISABS
-READ(5,12) IGRQM
-READ(5,12) IMODH
-READ(5,12) ICONS
-READ(5,12) IREAD
-READ(5,11)
-READ(5,14) XNT0
-READ(5,14) TEMP0
-READ(5,14) TAU0
-READ(5,14) ZETA0
-READ(5,14) ZETAX
-READ(5,14) UVGAS
-READ(5,11)
-READ(5,14) DTEMP0
-READ(5,14) DTOGM
-READ(5,14) STICK0
-READ(5,14) STICKP
-READ(5,14) STICKN
-READ(5,14) RHOD
-READ(5,14) RD
-READ(5,14) ACM
-READ(5,14) SNS
-READ(5,14) EBFAC
-READ(5,14) ACT
-READ(5,14) TSMAX
-READ(5,14) CRT
-READ(5,14) CRFE
-READ(5,14) LAYERS
-READ(5,14) ARRK
-READ(5,11)
-READ(5,13) OTPD
-READ(5,14) TSTART
-READ(5,14) TFINAL
+read(5,10)
+read(5,14) RTOL
+read(5,11)
+read(5,12) IDUST
+read(5,12) ISABS
+read(5,12) IGRQM
+read(5,12) IMODH
+read(5,12) ICONS
+read(5,12) IREAD
+read(5,11)
+read(5,14) XNT0
+read(5,14) TEMP0
+read(5,14) TAU0
+read(5,14) ZETA0
+read(5,14) ZETAX
+read(5,14) UVGAS
+read(5,11)
+read(5,14) DTEMP0
+read(5,14) DTOGM
+read(5,14) STICK0
+read(5,14) STICKP
+read(5,14) STICKN
+read(5,14) RHOD
+read(5,14) RD
+read(5,14) ACM
+read(5,14) SNS
+read(5,14) EBFAC
+read(5,14) ACT
+read(5,14) TSMAX
+read(5,14) CRT
+read(5,14) CRFE
+read(5,14) LAYERS
+read(5,14) ARRK
+read(5,11)
+read(5,13) OTPD
+read(5,14) TSTART
+read(5,14) TFINAL
 read(5,'(18X,I5)') WSTEP
 read(5,'(18X,I5)') WSTEPR
 read(5,'(18X,I5)') IRATEOUT
-READ(5,11) 
-READ(5,14) XNMIN
-READ(5,13) NS0
-READ(5,*) 
-READ(5,15) (XS0(I),XN0(I),I=1,NS0)
-10 FORMAT (///////)
-11 FORMAT (//)
-12 FORMAT (21X,I2)
-13 FORMAT (19X,I4)
-14 FORMAT (11X,E12.6)
-15 FORMAT (A11,3X,E12.6)
+read(5,11) 
+read(5,14) XNMIN
+read(5,13) NS0
+read(5,*) 
+read(5,15) (XS0(I),XN0(I),I=1,NS0)
+10 format(///////)
+11 format(//)
+12 format(21X,I2)
+13 format(19X,I4)
+14 format(11X,E12.6)
+15 format(A11,3X,E12.6)
 
 TSTART=TSTART*TYEAR
 TFINAL=TFINAL*TYEAR
@@ -134,18 +134,18 @@ close(5)
 
 DO I=1,NL1
   READ (H2DIS,81) N1H2(I),T1H2(I)
-ENDDO
-81        FORMAT (E9.3,3X,E9.3)
+enddo
+81        format(E9.3,3X,E9.3)
 
 DO I=1,NL3
   READ (CODIS,82) N2CO(I),T2CO(I),N2H2(I),T2H2(I),&
   AV2(I),T2AV(I)              
-ENDDO
-82        FORMAT (6(E9.3,3X))
+enddo
+82        format(6(E9.3,3X))
 
 DO I=NL3+1,NL2
   READ (CODIS,81) N2CO(I),T2CO(I)
-ENDDO
+enddo
 
 
 ! Read species & reaction info from reactions file======================
@@ -157,19 +157,19 @@ open(unit=9, file='nls_gas_fev2012.dat',status='OLD')
 
 DO I=1,NS1
   read(9,80) SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
-  80    FORMAT (A11,i3,13(I3)) 
-ENDDO
+  80    format(A11,i3,13(I3)) 
+enddo
 
 read(9,90) ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
 ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,NK1) 
-90 FORMAT (3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)
+90 format(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)
 close(9)
 
 ! Reading the grain network
 open(unit=19, file='nls_grain_fev2012.dat', status='OLD')
 DO I=1,NS2
   READ (19,80) SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
-ENDDO
+enddo
 
 READ (19,90) ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
 ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,NK2) 
@@ -183,14 +183,14 @@ DO I=1,NS1
   do k=1,NEMAX
     IELM(K,I)=IELM1(K,I)
   enddo
-ENDDO
+enddo
 DO I=1,NS2 
   SPEC(NS1+I)=SPECUO2(I)
   ICG(NS1+I)=ICG2(I)
   do k=1,NEMAX
     IELM(K,NS1+I)=IELM2(K,I)
   enddo
-ENDDO
+enddo
 
 DO I=1,NK1 
   do k=1,7
@@ -204,7 +204,7 @@ DO I=1,NK1
   TmaxUO(I) = Tmax1(I)
   FORMULAUO(I) = FORMULA1(I)
   NUMUO(I) = NUM1(I)
-ENDDO
+enddo
 
 
 DO I=1,NK2 
@@ -219,7 +219,7 @@ DO I=1,NK2
   TmaxUO(NK1+I) = Tmax2(I)
   FORMULAUO(NK1+I) = FORMULA2(I)
   NUMUO(NK1+I) = NUM2(I)
-ENDDO
+enddo
 
 ! Reorder reaction file entries with ITYPE
 jk=1
@@ -256,11 +256,11 @@ do j=1,nkmax-1
     end select
   enddo
 
-ENDDO 
+enddo 
 
 
-RETURN
-END SUBROUTINE read_parameters
+return
+end subroutine read_parameters
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -273,7 +273,7 @@ END SUBROUTINE read_parameters
 !! output file 'species.out'.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-SUBROUTINE write_species()
+subroutine write_species()
 use global_variables
 use constants
 
@@ -284,12 +284,12 @@ integer :: i
 
 open(4, file='species.out')
 ! Write 'ggo_spec.d': 5 columns of numbered species=====================
-WRITE (4,270) (I,SPEC(I),I=1,NSMAX)
-270 FORMAT (5(I4,')',1X,A11,1X))
+write(4,270) (I,SPEC(I),I=1,NSMAX)
+270 format(5(I4,')',1X,A11,1X))
 close(4)
 
-RETURN
-END SUBROUTINE write_species
+return
+end subroutine write_species
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -389,18 +389,18 @@ character(len=*), intent(in) :: filename !< [in] the name of the output file
 integer :: i
 
 open(13, file=filename)
-WRITE (13,690) 00,00,TIME,XNT,TEMP,TAU,ZETA0
-690 FORMAT ('DEPTH POINT=',I2,'/',I2,', TIME =',1PD10.3,' s',&
+write(13,690) 00,00,TIME,XNT,TEMP,TAU,ZETA0
+690 format('DEPTH POINT=',I2,'/',I2,', TIME =',1PD10.3,' s',&
 ', XNT=',1PD10.3,' cm-3',', TEMP=',1PD10.3,' K',&
 ', TAU=',0PF8.3,', ZETA=',1PD10.3,' s-1')
 
-WRITE (13,700) (SPEC(I),XN(I),I=1,NSMAX)
-700 FORMAT (5(A11,':',1X,1PE12.5,2X)) 
-WRITE (13,*)
+write(13,700) (SPEC(I),XN(I),I=1,NSMAX)
+700 format(5(A11,':',1X,1PE12.5,2X)) 
+write(13,*)
 close(13)
 
-RETURN
-END subroutine write_chemical_composition
+return
+end subroutine write_chemical_composition
 
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -435,7 +435,7 @@ subroutine get_linenumber(filename, nb_lines)
   if (.not.test) then
     write(Error_Unit,'(a,a,a)') 'Error: the file "',trim(filename),'" does not exist.'
   end if
-  open (15, file=filename, status='old')
+  open(15, file=filename, status='old')
   
   error = 0
   do while(error.eq.0)

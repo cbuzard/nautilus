@@ -58,7 +58,7 @@ if (nptmax.ne.1) then
   Omega2 = GRAV * MCENTER / DISTR**3
 
   ! Mean molecular weight
-  ! NB: If NH > NH2 then this is wrong  
+  ! NB: if NH > NH2 then this is wrong  
 
   MEANW = 2.4 ! cgs
 
@@ -125,7 +125,7 @@ if (nptmax.ne.1) then
   KFACTOR = RAVNH
 
   ! Computation of an estimated TAUBC using and erf function
-  ! If T is constant outside, rho has a gaussian tail
+  ! if T is constant outside, rho has a gaussian tail
   ! Hsize is usually larger than the true scale height
   ! We use an approximated expression for the erf function
   ! cf "Handbook of mathematical functions" inequality 7.1.13
