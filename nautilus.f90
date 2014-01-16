@@ -222,7 +222,7 @@ implicit none
 !~ OPEN (UNIT=NCON,FILE='nls_control.d',STATUS='OLD')
 !~       OPEN (UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
 !~ OPEN (UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
-OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
+!~ OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
 !~ OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
 !      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
 !~ OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
@@ -736,14 +736,16 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       CONDSP(I)=COND*STICK/SQRT(AWT(I))
     ENDDO
 
+
     ! Read in molecular information for surface rates=======================
-    READ(NGR,*)
+    open(unit=10, file='nls_surf_fev2012.dat', status='OLD')
+    read(10,*)
 
     ! --- Read info into dummy arrays
     NGS=0
     DO I=1,NSMAX
       700    CONTINUE
-      READ(NGR,705) GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
+      read(10,705) GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
       705    FORMAT(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)
       IF (GSPEC(I).EQ.'X          ') GOTO 700
       IF (GSPEC(I).EQ.'           ') EXIT
@@ -752,12 +754,13 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
 
     ! --- Read activation energies into dummy arrays
-    READ(NGR,720) NEA
+    READ(10,720) NEA
     720 FORMAT(I4)
     DO J=1,NEA
-      READ(NGR,730) (GSREAD(L,J),L=1,5),REA5(J)
+      READ(10,730) (GSREAD(L,J),L=1,5),REA5(J)
       730   FORMAT(5A11,D9.2)
     ENDDO
+    close(10)
 
     ! --- Transfer from dummies to arrays with correct species numbers
     DO I=1,NSMAX
