@@ -227,7 +227,7 @@ OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
 !      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
 OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
 !~ OPEN (UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
-OPEN (UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
+!~ OPEN (UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
 OPEN (UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
 OPEN (UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
 
@@ -429,14 +429,15 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   ! Read initial abundances if IREAD is switched on=======================
   IF (IREAD.NE.0) THEN
-
+    open(unit=14,file='chemical_composition.in', status='OLD') 
     ! Skip the first line on nls_init.d
-    READ (NINI,*) 
+    read(14,*) 
 
     ! ------ Read species and abundances
-    READ (NINI,110) (SREAD(I),XN(I),I=1,NSMAX)
+    read(14,110) (SREAD(I),XN(I),I=1,NSMAX)
     110 FORMAT (5(A11,2X,1PE12.5,2X))
-    READ (NINI,*)
+    read(14,*)
+    close(14)
     ! ------ Check if species in nls_init.d correspond to the reaction file
     DO I=1,NSMAX
       IF (SREAD(I).NE.SPEC(I)) THEN
