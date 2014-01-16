@@ -4,8 +4,15 @@ use numerical_types
 
 implicit none
 integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
-integer, parameter :: NKMAX=8335,NSMAX=684,NSGAS=485,NSGRAIN=199,NEMAX=13
-integer, parameter :: NS1=468,NS2=216,NK1=6467,NK2=1868
+integer, parameter :: NKMAX=8335
+integer, parameter :: NSMAX=684
+integer, parameter :: NSGAS=485
+integer, parameter :: NSGRAIN=199
+integer, parameter :: NEMAX=13
+integer, parameter :: NS2=216 !< number of species on the grain surface
+integer, parameter :: NK2=1868 !< number of reactions on the grain surface
+integer, parameter :: NS1=468 !< number of species in gas phase
+integer, parameter :: NK1=6467 !< number of reactions in gas phase
 integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99

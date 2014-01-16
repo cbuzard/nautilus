@@ -77,6 +77,7 @@ use diffusion
 use input_output
 use model_1D
 use ode_solver
+use iso_fortran_env
 
 implicit none
 
@@ -372,9 +373,17 @@ real(double_precision), dimension(NSMAX) :: Y
 integer :: i, j, k
 real(double_precision) :: TOUT
 
+!~ integer :: nb_temp
+
 ! Initialise times======================================================
 TOUT=0.0D+0
 TIME=0.0D+0
+
+!~ call get_linenumber(filename='gas_species.in', nb_lines=NS1)
+!~ call get_linenumber(filename='gas_reactions.in', nb_lines=NK1)
+
+
+!~ write(*,*) 'line number=', nb_temp
 
 ! Set initial abundances================================================
 DO I=1,NSMAX
