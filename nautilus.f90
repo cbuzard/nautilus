@@ -225,7 +225,7 @@ implicit none
 OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
 !~ OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
 !      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
-OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
+!~ OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
 !~ OPEN (UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
 !~ OPEN (UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
 OPEN (UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')

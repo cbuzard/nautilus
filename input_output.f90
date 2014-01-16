@@ -166,13 +166,15 @@ ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,NK1)
 close(9)
 
 ! Reading the grain network
-
+open(unit=19, file='nls_grain_fev2012.dat', status='OLD')
 DO I=1,NS2
-  READ (NJR2,80) SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
+  READ (19,80) SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
 ENDDO
 
-READ (NJR2,90) ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
+READ (19,90) ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
 ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,NK2) 
+close(19)
+
 ! putting everything back into the big tables
 
 DO I=1,NS1 
