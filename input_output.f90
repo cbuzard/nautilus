@@ -284,8 +284,7 @@ integer :: i
 
 open(4, file='species.out')
 ! Write 'ggo_spec.d': 5 columns of numbered species=====================
-write(4,270) (I,SPEC(I),I=1,NSMAX)
-270 format(5(I4,')',1X,A11,1X))
+write(4,'(5(I4,")",1X,A11,1X))') (I,SPEC(I),I=1,NSMAX)
 close(4)
 
 return
@@ -389,10 +388,9 @@ character(len=*), intent(in) :: filename !< [in] the name of the output file
 integer :: i
 
 open(13, file=filename)
-write(13,690) 00,00,TIME,XNT,TEMP,TAU,ZETA0
-690 format('DEPTH POINT=',I2,'/',I2,', TIME =',1PD10.3,' s',&
-', XNT=',1PD10.3,' cm-3',', TEMP=',1PD10.3,' K',&
-', TAU=',0PF8.3,', ZETA=',1PD10.3,' s-1')
+write(13,'("DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
+&", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
+&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,ZETA0
 
 write(13,700) (SPEC(I),XN(I),I=1,NSMAX)
 700 format(5(A11,':',1X,1PE12.5,2X)) 
