@@ -249,7 +249,7 @@ integer :: ILAB, KSUM, j, k, i, isptemp
 ! --- Find the atomic species associated with a given element
 
 ILAB=1
-DO J=1,NSMAX
+do J=1,NSMAX
   KSUM=0
   ! ------ Calculate species' mass
   do K=1,NEMAX
@@ -271,7 +271,7 @@ IF (SPEC(J).EQ.'e-         ') ISPE=J
 enddo
 
 ! --- Re-arrange order of elements to match IELM columns (reactions file)
-DO J=1,NEMAX-1
+do J=1,NEMAX-1
   if (IELM(J,ISPELM(J)).NE.1) then
     do K=J+1,NEMAX
       if (IELM(J,ISPELM(K)).EQ.1) then
@@ -284,7 +284,7 @@ DO J=1,NEMAX-1
 enddo
 
 ! --- Set elements' masses
-DO I=1,NEMAX
+do I=1,NEMAX
   if (SPEC(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
   if (SPEC(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
   if (SPEC(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
@@ -314,7 +314,7 @@ YGRAIN = 'GRAIN0     '
 YCO    = 'CO         '
 
 ! --- Set reference species
-DO I=1,NSMAX 
+do I=1,NSMAX 
   ! ------ Calculate masses
   MSUM=0.d0
   do K=1,NEMAX 
@@ -334,7 +334,7 @@ enddo
 RAVNH=5.34d-22*(DTOGM/1.d-2)
 
 ! Find ITYPE first and last reactions===================================
-DO I=0,NITYPE-1
+do I=0,NITYPE-1
   IRXSTA(I)=0
   IRXFIN(I)=0
   do J=1,NKMAX
@@ -386,7 +386,7 @@ TIME=0.0D+0
 !~ write(*,*) 'line number=', nb_temp
 
 ! Set initial abundances================================================
-DO I=1,NSMAX
+do I=1,NSMAX
   XN(I)=XNMIN
   do K=1,NS0
     if (SPEC(I).EQ.XS0(K)) then
@@ -399,10 +399,10 @@ enddo
 
 ! Compute elemental abundances
 
-DO J=1,NEMAX
+do J=1,NEMAX
   ELEMS(J)=0.0D+0
 enddo
-DO I=1,NSMAX 
+do I=1,NSMAX 
   do J=1,NEMAX
     ELEMS(J)=ELEMS(J)+IELM(J,I)*XN(I)
   enddo

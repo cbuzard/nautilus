@@ -17,7 +17,7 @@ NSP1=NSMAX+1
 SPEC2(1:NSMAX)=SPEC(1:NSMAX)
 SPEC2(NSP1)='           '
 
-DO I=1,NKMAX
+do I=1,NKMAX
   do J=1,NSP1
 
     do L=1,3
@@ -52,7 +52,7 @@ ydot(:)=0.d0
 yd2(:)=0.d0
 
 ! The differential equations are calculated in a loop here
-DO I=1,NKMAX
+do I=1,NKMAX
 
   IR1=REACT(I,1)
   IR2=REACT(I,2)
@@ -106,7 +106,7 @@ NSP1=NSMAX+1
 
 PDJ2(:)=0.d0
 
-DO I=1,NKMAX
+do I=1,NKMAX
   !write(*,*) I
 
   IR1=REACT(I,1)

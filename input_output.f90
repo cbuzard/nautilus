@@ -132,19 +132,19 @@ close(5)
 
 ! Read CO and H2 shielding factors=====================
 
-DO I=1,NL1
-  READ (H2DIS,81) N1H2(I),T1H2(I)
+do I=1,NL1
+  read(H2DIS,81) N1H2(I),T1H2(I)
 enddo
 81        format(E9.3,3X,E9.3)
 
 open(UNIT=16,FILE='gg_CO_Photodiss.d',STATUS='OLD')
-DO I=1,NL3
+do I=1,NL3
   read(16,82) N2CO(I),T2CO(I),N2H2(I),T2H2(I),&
   AV2(I),T2AV(I)              
 enddo
 82        format(6(E9.3,3X))
 
-DO I=NL3+1,NL2
+do I=NL3+1,NL2
   read(16,81) N2CO(I),T2CO(I)
 enddo
 close(16)
@@ -156,7 +156,7 @@ close(16)
 ! Reading the gas phase network
 open(unit=9, file='nls_gas_fev2012.dat',status='OLD')
 
-DO I=1,NS1
+do I=1,NS1
   read(9,80) SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
   80    format(A11,i3,13(I3)) 
 enddo
@@ -168,24 +168,24 @@ close(9)
 
 ! Reading the grain network
 open(unit=19, file='nls_grain_fev2012.dat', status='OLD')
-DO I=1,NS2
-  READ (19,80) SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
+do I=1,NS2
+  read(19,80) SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
 enddo
 
-READ (19,90) ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
+read(19,90) ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
 ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,NK2) 
 close(19)
 
 ! putting everything back into the big tables
 
-DO I=1,NS1 
+do I=1,NS1 
   SPEC(I)=SPECUO1(I)
   ICG(I)=ICG1(I)
   do k=1,NEMAX
     IELM(K,I)=IELM1(K,I)
   enddo
 enddo
-DO I=1,NS2 
+do I=1,NS2 
   SPEC(NS1+I)=SPECUO2(I)
   ICG(NS1+I)=ICG2(I)
   do k=1,NEMAX
@@ -193,7 +193,7 @@ DO I=1,NS2
   enddo
 enddo
 
-DO I=1,NK1 
+do I=1,NK1 
   do k=1,7
     SYMBOLUO(k,I)=SYMBOLUO1(k,I)
   enddo
@@ -208,7 +208,7 @@ DO I=1,NK1
 enddo
 
 
-DO I=1,NK2 
+do I=1,NK2 
   do  k=1,7
     SYMBOLUO(k,NK1+I)=SYMBOLUO2(k,I)
   enddo
@@ -440,7 +440,7 @@ subroutine get_linenumber(filename, nb_lines)
   
   error = 0
   do while(error.eq.0)
-    read (15,*,iostat=error)
+    read(15,*,iostat=error)
     nb_lines = nb_lines + 1
   enddo
   
