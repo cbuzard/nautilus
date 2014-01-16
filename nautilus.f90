@@ -726,11 +726,9 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
 
     ! --- Read activation energies into dummy arrays
-    read(10,720) NEA
-    720 format(I4)
+    read(10,'(I4)') NEA
     do J=1,NEA
-      read(10,730) (GSread(L,J),L=1,5),REA5(J)
-      730   format(5A11,D9.2)
+      read(10,'(5A11,D9.2)') (GSread(L,J),L=1,5),REA5(J)
     enddo
     close(10)
 
