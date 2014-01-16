@@ -137,16 +137,17 @@ DO I=1,NL1
 enddo
 81        format(E9.3,3X,E9.3)
 
+open(UNIT=16,FILE='gg_CO_Photodiss.d',STATUS='OLD')
 DO I=1,NL3
-  READ (CODIS,82) N2CO(I),T2CO(I),N2H2(I),T2H2(I),&
+  read(16,82) N2CO(I),T2CO(I),N2H2(I),T2H2(I),&
   AV2(I),T2AV(I)              
 enddo
 82        format(6(E9.3,3X))
 
 DO I=NL3+1,NL2
-  READ (CODIS,81) N2CO(I),T2CO(I)
+  read(16,81) N2CO(I),T2CO(I)
 enddo
-
+close(16)
 
 ! Read species & reaction info from reactions file======================
 ! WV fev 2012

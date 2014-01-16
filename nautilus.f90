@@ -228,7 +228,7 @@ implicit none
 !~ open(UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
 !~ open(UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')
 !~ open(UNIT=NINI,FILE='chemical_composition.in',STATUS='OLD') 
-open(UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
+!~ open(UNIT=CODIS,FILE='gg_CO_Photodiss.d',STATUS='OLD')
 open(UNIT=H2DIS,FILE='gg_H2_Photodiss.d',STATUS='OLD')
 
 return 
