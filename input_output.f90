@@ -153,15 +153,17 @@ ENDDO
 ! There are now two different files in which the reactions and species are
 
 ! Reading the gas phase network
+open(unit=9, file='nls_gas_fev2012.dat',status='OLD')
 
 DO I=1,NS1
-  READ (NJR,80) SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
+  read(9,80) SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
   80    FORMAT (A11,i3,13(I3)) 
 ENDDO
 
-READ (NJR,90) ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
+read(9,90) ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
 ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,NK1) 
 90 FORMAT (3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)
+close(9)
 
 ! Reading the grain network
 

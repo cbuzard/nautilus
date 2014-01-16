@@ -223,7 +223,7 @@ implicit none
 !~       OPEN (UNIT=NMOD,FILE='nlso_mod.d',STATUS='UNKNOWN')
 !~ OPEN (UNIT=NSP, FILE='nlso_spec.d',STATUS='UNKNOWN')
 OPEN (UNIT=NGR, FILE='nls_surf_fev2012.dat',STATUS='OLD')
-OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
+!~ OPEN (UNIT=NJR, FILE='nls_gas_fev2012.dat',STATUS='OLD')
 !      OPEN (UNIT=NJR, FILE='nls_gas_update.dat',STATUS='OLD')
 OPEN (UNIT=NJR2, FILE='nls_grain_fev2012.dat',STATUS='OLD')
 !~ OPEN (UNIT=NTAI,FILE='abundances.tmp',STATUS='UNKNOWN')

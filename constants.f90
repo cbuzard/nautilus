@@ -4,7 +4,7 @@ implicit none
 !~ integer, parameter :: NCON=5
 integer, parameter :: NERR=6
 integer, parameter :: NMOD=8
-integer, parameter :: NJR=9
+!~ integer, parameter :: NJR=9
 integer, parameter :: NJR2=19
 integer, parameter :: NGR=10
 integer, parameter :: NINF=12
