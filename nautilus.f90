@@ -409,8 +409,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     read(14,*) 
 
     ! ------ Read species and abundances
-    read(14,110) (Sread(I),XN(I),I=1,NSMAX)
-    110 format(5(A11,2X,1PE12.5,2X))
+    read(14,'(5(A11,2X,1PE12.5,2X))') (Sread(I),XN(I),I=1,NSMAX)
     read(14,*)
     close(14)
     ! ------ Check if species in nls_init.d correspond to the reaction file
