@@ -44,13 +44,13 @@ integer :: i,k,j, jk
 
 ! Variables for the unordered reaction file
 
-character(len=11), dimension(ns1) :: SPECUO1 
-integer, dimension(ns1) :: ICG1 
-integer, dimension(nemax, ns1) :: IELM1 
+character(len=11), dimension(nb_species_for_gas) :: SPECUO1 
+integer, dimension(nb_species_for_gas) :: ICG1 
+integer, dimension(nemax, nb_species_for_gas) :: IELM1 
 
-character(len=11), dimension(ns2) :: SPECUO2 
-integer, dimension(ns2) :: ICG2 
-integer, dimension(nemax, ns2) :: IELM2 
+character(len=11), dimension(nb_species_for_grain) :: SPECUO2 
+integer, dimension(nb_species_for_grain) :: ICG2 
+integer, dimension(nemax, nb_species_for_grain) :: IELM2 
 
 character(len=11), dimension(7,nk1) :: SYMBOLUO1 
 real(double_precision), dimension(nk1) :: AUO1,BUO1,CUO1 
@@ -159,7 +159,7 @@ close(16)
 
 ! Reading the gas phase network
 open(unit=9, file='gas_species.in',status='OLD')
-do I=1,NS1
+do I=1,nb_species_for_gas
   read(9,'(A11,i3,13(I3))') SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
 enddo
 close(9)
@@ -171,7 +171,7 @@ close(9)
 
 ! Reading the grain network
 open(unit=19, file='grain_species.in', status='OLD')
-do I=1,NS2
+do I=1,nb_species_for_grain
   read(19,'(A11,i3,13(I3))') SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
 enddo
 close(19)
@@ -183,18 +183,18 @@ close(19)
 
 ! putting everything back into the big tables
 
-do I=1,NS1 
+do I=1,nb_species_for_gas 
   SPEC(I)=SPECUO1(I)
   ICG(I)=ICG1(I)
   do k=1,NEMAX
     IELM(K,I)=IELM1(K,I)
   enddo
 enddo
-do I=1,NS2 
-  SPEC(NS1+I)=SPECUO2(I)
-  ICG(NS1+I)=ICG2(I)
+do I=1,nb_species_for_grain 
+  SPEC(nb_species_for_gas+I)=SPECUO2(I)
+  ICG(nb_species_for_gas+I)=ICG2(I)
   do k=1,NEMAX
-    IELM(K,NS1+I)=IELM2(K,I)
+    IELM(K,nb_species_for_gas+I)=IELM2(K,I)
   enddo
 enddo
 
@@ -323,7 +323,7 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',IT,'.out'
 open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) TIME, zspace, SPEC
-write(35) TEMP1D, DENS1D, TAU1D, ZETAX1D
+write(35) TEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D
 write(35) ZXN
 close(35)
 

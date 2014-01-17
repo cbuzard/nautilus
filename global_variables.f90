@@ -1,4 +1,12 @@
-! Contains most of the common variable declarations and a few parameters
+!******************************************************************************
+! MODULE: global_variables
+!******************************************************************************
+!
+! DESCRIPTION: 
+!> @brief Contains global variables and parameters
+!
+!******************************************************************************
+
 module global_variables
 use numerical_types
 use iso_fortran_env
@@ -10,10 +18,10 @@ integer :: NSMAX
 integer, parameter :: NSGAS=485
 integer, parameter :: NSGRAIN=199
 integer, parameter :: NEMAX=13
-integer :: NS2!=216  !< number of species on the grain surface
-integer :: NK2!=1868 !< number of reactions on the grain surface
-integer :: NS1!=468  !< number of species in gas phase
-integer :: NK1!=6467 !< number of reactions in gas phase
+integer :: nb_species_for_grain !< number of species on the grain surface
+integer :: NK2 !< number of reactions on the grain surface
+integer :: nb_species_for_gas !< number of species in gas phase
+integer :: NK1 !< number of reactions in gas phase
 integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99
@@ -86,7 +94,7 @@ real(double_precision) :: Distr ! Radial distance
 real(double_precision) :: Densmax ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: idiff ! Diffusivity flag
-real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DENS1D, TAU1D, ZETAX1D ! 1D physical structure
+real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D ! 1D physical structure
 real(double_precision), dimension(nptmax) :: DIFF1D ! 1D diffusivity profile
 real(double_precision), dimension(nptmax) :: ZNCO,ZNH2 ! 1D column density (for the self shielding)
 real(double_precision) :: NCO,NH2 ! column density (for the self shielding)
@@ -160,7 +168,7 @@ end subroutine get_linenumber
 ! DESCRIPTION: 
 !> @brief Routine to determine array sizes, namely number of reactions, 
 !! of species, for gas, grain and in total. 
-!! some global size are set (NS1, NK1, NS1, NK2, NSMAX, NKMAX)\n
+!! some global size are set (nb_species_for_gas, NK1, nb_species_for_gas, NK2, NSMAX, NKMAX)\n
 !! This routine prepare allocation of global dynamical arrays
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -169,13 +177,13 @@ subroutine get_array_sizes()
 implicit none
 
 ! We get various sizes
-call get_linenumber(filename='gas_species.in', nb_lines=NS1)
+call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
 call get_linenumber(filename='gas_reactions.in', nb_lines=NK1)
 
-call get_linenumber(filename='grain_species.in', nb_lines=NS2)
+call get_linenumber(filename='grain_species.in', nb_lines=nb_species_for_grain)
 call get_linenumber(filename='grain_reactions.in', nb_lines=NK2)
 
-NSMAX = NS1 + NS2 ! The total number of species, sum of species in gas and grain
+NSMAX = nb_species_for_gas + nb_species_for_grain ! The total number of species, sum of species in gas and grain
 NKMAX = NK1 + NK2 ! The total number of reactions, sum of species in gas and grain
 
 end subroutine get_array_sizes

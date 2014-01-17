@@ -176,9 +176,9 @@ do while (t.lt.0.9*tfinal)
     TAU=TAU1D(ipts)
     ZETAX=ZETAX1D(ipts)
     ! XNT is the total density of H atoms (both H and H2)
-    ! But DENS1D is the real number density
+    ! But DEnb_species_for_gasD is the real number density
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)
-    XNT=2.*DENS1D(ipts)
+    XNT=2.*DEnb_species_for_gasD(ipts)
     TEMP=TEMP1D(ipts)
     DTEMP=DTEMP1D(ipts)
 
@@ -360,7 +360,7 @@ real(double_precision) :: TOUT
 TOUT=0.0D+0
 TIME=0.0D+0
 
-!~ call get_linenumber(filename='gas_species.in', nb_lines=NS1)
+!~ call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
 !~ call get_linenumber(filename='gas_reactions.in', nb_lines=NK1)
 
 

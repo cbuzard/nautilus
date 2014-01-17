@@ -61,7 +61,7 @@ endif
 
 do j = 1, nsmax 
   Y(:)=zxn(j,:)
-  call crank(Y, nptmax-1, zdt, zstepsize, diff1D, dens1d, 0)
+  call crank(Y, nptmax-1, zdt, zstepsize, diff1D, denb_species_for_gasd, 0)
   zxn(j,:) = Y(:)
 enddo
 
