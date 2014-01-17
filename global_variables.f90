@@ -5,7 +5,7 @@ use iso_fortran_env
 
 implicit none
 integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
-integer, parameter :: NKMAX=8335
+integer :: NKMAX
 integer :: NSMAX
 integer, parameter :: NSGAS=485
 integer, parameter :: NSGRAIN=199
@@ -27,15 +27,15 @@ real(double_precision) :: meanw, Omega2
 
 real(double_precision) :: RTOL
 
-CHARACTER (len=11), allocatable, dimension(:) :: SPEC
+character(len=11), allocatable, dimension(:) :: SPEC
 
-character (len=11), dimension(7,nkmax) :: SYMBOL
-CHARACTER (len=11) :: YJH,YJH2,YH,YH2,YHE,YHEP,YE,YGRAIN,YCO
+character(len=11), allocatable, dimension(:,:) :: SYMBOL
+character(len=11) :: YJH,YJH2,YH,YH2,YHE,YHEP,YE,YGRAIN,YCO
 integer :: INDCO, INDH2, INDHE
-CHARACTER (len=11), allocatable, dimension(:) :: XS0
+character(len=11), allocatable, dimension(:) :: XS0
 
-real(double_precision), dimension(nkmax) :: XJ,A,B,C,R
-real(double_precision), dimension(nkmax) :: XK
+real(double_precision), allocatable, dimension(:) :: XJ,A,B,C,R
+real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: XN,XNI,XN0,CTS
 real(double_precision), allocatable, dimension(:) :: DXDT,DXDTP,DXDTN,AWT
 real(double_precision), dimension(nemax) :: ELEMS,ESUM,EMERR
@@ -43,8 +43,8 @@ real(double_precision), dimension(nopmax) :: DENS,AV,TIMS
 real(double_precision), allocatable, dimension(:,:) :: XNOP,CTSOP
 real(double_precision), allocatable, dimension(:,:) :: DXDTOP
 real(double_precision), dimension(6, nopmax) :: EQP
-real(double_precision), dimension(nkmax) :: RDIF1,RDIF2,EX1,EX2,EA, Tmin,Tmax
-real(double_precision), dimension(nkmax) :: ACT1
+real(double_precision), allocatable, dimension(:) :: RDIF1,RDIF2,EX1,EX2,EA, Tmin,Tmax
+real(double_precision), allocatable, dimension(:) :: ACT1
 real(double_precision), allocatable, dimension(:) :: TINDIF,TINACC,TINEVA
 real(double_precision), allocatable, dimension(:) :: ED,EB,DEB,DHF
 real(double_precision), allocatable, dimension(:) :: CHF,CONDSP,RQ1,RQ2
@@ -61,7 +61,7 @@ real(double_precision), dimension(nl3) :: T2H2,AV2,T2AV
 
 integer, dimension(4,nopmax) :: IEQP
 integer, dimension(nopmax) :: IORDTM
-integer, dimension(nkmax) :: INUM, itype, jsp1, jsp2, FORMULA,NUM
+integer, allocatable, dimension(:) :: INUM, itype, jsp1, jsp2, FORMULA,NUM
 integer, allocatable, dimension(:,:) :: ICRTBL,ICROCC
 integer, allocatable, dimension(:) :: ICRNUM,ORDSP, icg
 integer, allocatable, dimension(:,:) :: IELM
@@ -99,7 +99,7 @@ integer :: ipts
 ! For FCHEMVW
 
 character(len=11), allocatable, dimension(:) :: SPEC2
-integer, dimension(NKMAX,7) :: REACT
+integer, allocatable, dimension(:,:) :: REACT
 
 ! For IA and JA
 
@@ -176,7 +176,7 @@ call get_linenumber(filename='grain_species.in', nb_lines=NS2)
 call get_linenumber(filename='grain_reactions.in', nb_lines=NK2)
 
 NSMAX = NS1 + NS2 ! The total number of species, sum of species in gas and grain
-!~ NKMAX = NK1 + NK2 ! The total number of reactions, sum of species in gas and grain
+NKMAX = NK1 + NK2 ! The total number of reactions, sum of species in gas and grain
 
 end subroutine get_array_sizes
 
@@ -228,8 +228,28 @@ allocate(spec2(nsmax+1))
 allocate(ia(nsmax+1))
 allocate(ielm(nemax,nsmax))
 
-
-
+allocate(xj(nkmax))
+allocate(a(nkmax))
+allocate(b(nkmax))
+allocate(c(nkmax))
+allocate(r(nkmax))
+allocate(xk(nkmax))
+allocate(rdif1(nkmax))
+allocate(rdif2(nkmax))
+allocate(ex1(nkmax))
+allocate(ex2(nkmax))
+allocate(ea(nkmax))
+allocate(tmin(nkmax))
+allocate(tmax(nkmax))
+allocate(act1(nkmax))
+allocate(inum(nkmax))
+allocate(itype(nkmax))
+allocate(jsp1(nkmax))
+allocate(jsp2(nkmax))
+allocate(formula(nkmax))
+allocate(num(nkmax))
+allocate(react(nkmax, 7))
+allocate(symbol(7,nkmax))
 
 
 
