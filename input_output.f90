@@ -52,17 +52,17 @@ character(len=11), dimension(nb_species_for_grain) :: SPECUO2
 integer, dimension(nb_species_for_grain) :: ICG2 
 integer, dimension(nemax, nb_species_for_grain) :: IELM2 
 
-character(len=11), dimension(7,nk1) :: SYMBOLUO1 
-real(double_precision), dimension(nk1) :: AUO1,BUO1,CUO1 
-integer, dimension(nk1) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 
+character(len=11), dimension(7,nb_gas_phase_reactions) :: SYMBOLUO1 
+real(double_precision), dimension(nb_gas_phase_reactions) :: AUO1,BUO1,CUO1 
+integer, dimension(nb_gas_phase_reactions) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 
 
-character (len=11), dimension(7,nk2) :: SYMBOLUO2 
-real(double_precision), dimension(nk2) :: AUO2,BUO2,CUO2 
-integer, dimension(nk2) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2 
+character (len=11), dimension(7,nb_surface_reactions) :: SYMBOLUO2 
+real(double_precision), dimension(nb_surface_reactions) :: AUO2,BUO2,CUO2 
+integer, dimension(nb_surface_reactions) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2 
 
-character (len=11), dimension(7,nkmax) :: SYMBOLUO
-real(double_precision), dimension(nkmax) :: AUO,BUO,CUO
-integer, dimension(nkmax) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
+character (len=11), dimension(7,nb_reactions) :: SYMBOLUO
+real(double_precision), dimension(nb_reactions) :: AUO,BUO,CUO
+integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 
 
 
@@ -166,7 +166,7 @@ close(9)
 
 open(unit=9, file='gas_reactions.in',status='OLD')
 read(9,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
-ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,NK1) 
+ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,nb_gas_phase_reactions) 
 close(9)
 
 ! Reading the grain network
@@ -178,7 +178,7 @@ close(19)
 
 open(unit=19, file='grain_reactions.in', status='OLD')
 read(19,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
-ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,NK2) 
+ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,nb_surface_reactions) 
 close(19)
 
 ! putting everything back into the big tables
@@ -198,7 +198,7 @@ do I=1,nb_species_for_grain
   enddo
 enddo
 
-do I=1,NK1 
+do I=1,nb_gas_phase_reactions 
   do k=1,7
     SYMBOLUO(k,I)=SYMBOLUO1(k,I)
   enddo
@@ -213,24 +213,24 @@ do I=1,NK1
 enddo
 
 
-do I=1,NK2 
+do I=1,nb_surface_reactions 
   do  k=1,7
-    SYMBOLUO(k,NK1+I)=SYMBOLUO2(k,I)
+    SYMBOLUO(k,nb_gas_phase_reactions+I)=SYMBOLUO2(k,I)
   enddo
-  AUO(NK1+I)=AUO2(I)
-  BUO(NK1+I)=BUO2(I)
-  CUO(NK1+I)=CUO2(I)
-  ITYPEUO(NK1+I)=ITYPEUO2(I)
-  TminUO(NK1+I) = Tmin2(I)
-  TmaxUO(NK1+I) = Tmax2(I)
-  FORMULAUO(NK1+I) = FORMULA2(I)
-  NUMUO(NK1+I) = NUM2(I)
+  AUO(nb_gas_phase_reactions+I)=AUO2(I)
+  BUO(nb_gas_phase_reactions+I)=BUO2(I)
+  CUO(nb_gas_phase_reactions+I)=CUO2(I)
+  ITYPEUO(nb_gas_phase_reactions+I)=ITYPEUO2(I)
+  TminUO(nb_gas_phase_reactions+I) = Tmin2(I)
+  TmaxUO(nb_gas_phase_reactions+I) = Tmax2(I)
+  FORMULAUO(nb_gas_phase_reactions+I) = FORMULA2(I)
+  NUMUO(nb_gas_phase_reactions+I) = NUM2(I)
 enddo
 
 ! Reorder reaction file entries with ITYPE
 jk=1
 do i=0,nitype
-  do j=1,nkmax
+  do j=1,nb_reactions
     if (itypeuo(j).eq.i) then
       SYMBOL(:,jk)=SYMBOLUO(:,j)     
       A(jk)=AUO(j)
@@ -247,14 +247,14 @@ do i=0,nitype
 enddo
 
 
-if (jk.ne.nkmax+1) then
+if (jk.ne.nb_reactions+1) then
   write(*,*) 'Some reaction was not found by the reorder process'
-  write(*,*) jk,'=/',nkmax+1 
+  write(*,*) jk,'=/',nb_reactions+1 
   stop
 endif
 
 !       replace the species names by blanks for non chemical species                                                                        
-do j=1,nkmax-1
+do j=1,nb_reactions-1
   do i=1,7
     select case(symbol(i,j))
       case ('CR', 'CRP', 'Photon')
@@ -290,7 +290,7 @@ integer :: i
 
 open(4, file='species.out')
 ! Write 'ggo_spec.d': 5 columns of numbered species=====================
-write(4,'(5(I4,")",1X,A11,1X))') (I,SPEC(I),I=1,NSMAX)
+write(4,'(5(I4,")",1X,A11,1X))') (I,SPEC(I),I=1,nb_species)
 close(4)
 
 return
@@ -398,7 +398,7 @@ write(13,'("DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
 &", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,ZETA0
 
-write(13,'(5(A11,":",1X,1PE12.5,2X)) ') (SPEC(I),XN(I),I=1,NSMAX)
+write(13,'(5(A11,":",1X,1PE12.5,2X)) ') (SPEC(I),XN(I),I=1,nb_species)
 write(13,*)
 close(13)
 

@@ -27,7 +27,7 @@ end subroutine mesh
 
 ! Warning !!!
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
-! HSIZE, DENSMAX, UVGAS, UVGRA, TAUBC
+! HSIZE, DEnb_species, UVGAS, UVGRA, TAUBC
 subroutine phys_1D
 use global_variables
 use diffusion
@@ -78,15 +78,15 @@ if (nptmax.ne.1) then
   HSIZE = 4.*HCOLD
   call mesh
 
-  ! Estimated DENSMAX using the inner gaussian (considered to be dominant in the sigma) and 
+  ! Estimated DEnb_species using the inner gaussian (considered to be dominant in the sigma) and 
   ! and the observed sigma (0.8 g cm-2 at 100 AU with a 1.5 power law)
 
   write(*,*) 'Cold height scale (AU) = ',Hcold/AU
   write(*,*) 'Computing half box size (AU) = ',Hsize/AU
-  write(*,*) 'Estimated DENSMAX = ',0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
+  write(*,*) 'Estimated DEnb_species = ',0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
 
-  ! Overwrite DENSMAX with this estimate
-  DENSMAX = 0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
+  ! Overwrite DEnb_species with this estimate
+  DEnb_species = 0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
 
   do ipts=1, nptmax
     !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
@@ -113,10 +113,10 @@ if (nptmax.ne.1) then
   DEnb_species_for_gasD(1:nptmax) = exp(ld1d(:))
 
   ! Rescaling using the fact that whatever A constant, rho*A is still solution
-  ! Rescaling so that maxval(rho) = DENSMAX
+  ! Rescaling so that maxval(rho) = DEnb_species
 
-  DEnb_species_for_gasD(1:nptmax) = DEnb_species_for_gasD(1:nptmax)/maxval(denb_species_for_gasd(1:nptmax)) * DENSMAX
-  !DEnb_species_for_gasD(1:nptmax/2) = DENSMAX
+  DEnb_species_for_gasD(1:nptmax) = DEnb_species_for_gasD(1:nptmax)/maxval(denb_species_for_gasd(1:nptmax)) * DEnb_species
+  !DEnb_species_for_gasD(1:nptmax/2) = DEnb_species
 
   ! Computation of the opacity for constant absorption
   ! TAU = NH * 5.34E-22
@@ -179,7 +179,7 @@ if (nptmax.ne.1) then
   ! Write physical outputs in a separate file
   open(unit=666,file='dmtau_model.dat',form='formatted')
   write(666,*) 'HCOLD = ',HCOLD/AU
-  write(666,*) 'DENSMAX = ',DENSMAX
+  write(666,*) 'DEnb_species = ',DEnb_species
   write(666,*) 'TAUBC = ',TAUBC
   write(666,*) 'UVGAS = ',UVGAS
   close(666)

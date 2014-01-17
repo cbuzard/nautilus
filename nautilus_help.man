@@ -39,8 +39,8 @@ I - useful variables :
 ##############################################################################################################
 
 ==header== ('global' variables)
-nkmax							number of reactions in the network
-nsmax							number of species in the network
+nb_reactions							number of reactions in the network
+nb_species							number of species in the network
 nb_gaseous_species							number of gas phase species
 nb_surface_species							number of grain sticked species
 nemax							number of different elements in the network
@@ -51,15 +51,15 @@ rxmin
 
 Rtol									relative tolerance (solver parameter)
 
-R					tab(nkmax)
-XK					tab(nkmax)
-XNI					tab(nsmax)
-XN0					tab(nsmax)
-CTS					tab(nsmax)
+R					tab(nb_reactions)
+XK					tab(nb_reactions)
+XNI					tab(nb_species)
+XN0					tab(nb_species)
+CTS					tab(nb_species)
 
-DXDT				tab(nsmax)
-DXDTP				tab(nsmax)
-DXDTN				tab(nsmax)
+DXDT				tab(nb_species)
+DXDTP				tab(nb_species)
+DXDTN				tab(nb_species)
 
 ESUM				tab(nemax)
 EMERR				tab(nemax)
@@ -68,10 +68,10 @@ DENS				tab(nopmax)
 AV					tab(nopmax)
 TIMS				tab(nopmax)
 
-XNOP				tab(nsmax:nopmax)
-CTSOP				tab(nsmax:nopmax)
+XNOP				tab(nb_species:nopmax)
+CTSOP				tab(nb_species:nopmax)
 
-DXDTOP				tab(nsmax:nopmax)
+DXDTOP				tab(nb_species:nopmax)
 
 EQP					tab(6:nopmax)
 
@@ -117,20 +117,20 @@ ARRK									a-coefficient for RRK-style formation-desorption, it is the ratio o
 
 
 --network data--
-SPEC				tab(nsmax)			chemical species
-ICG					tab(NSmax)			charge carried by the species
-IELM				tab(nemax:nsmax)    number of elements that compose the species 
+SPEC				tab(nb_species)			chemical species
+ICG					tab(nb_species)			charge carried by the species
+IELM				tab(nemax:nb_species)    number of elements that compose the species 
 											(H,He,C,N,O,Si,S,Fe,Na,Mg,Cl,P)
-SYMBOLUO			tab(8:Nkmax)		reactions. 3 reagents + 5 products (unordered)
-SYMBOL				tab(8:Nsmax)		the same tab as symboluo but itype ordered
-AUO					tab(Nkmax)			k(T)= AUO . (T/300)^BUO . exp(-CUO/T) (unordered)
-BUO					tab(Nkmax)			"
-CUO					tab(Nkmax)			"
-A					tab(Nkmax)			the same as Auo, Buo, Cuo but ordered like symbol
-B					tab(Nkmax)			"
-C					tab(Nkmax)			"
-itypeUO				tab(Nkmax)			type of the reaction (unordered)
-itype				tab(Nkmax)			the same as itypeuo but ordered like symbol
+SYMBOLUO			tab(8:nb_reactions)		reactions. 3 reagents + 5 products (unordered)
+SYMBOL				tab(8:nb_species)		the same tab as symboluo but itype ordered
+AUO					tab(nb_reactions)			k(T)= AUO . (T/300)^BUO . exp(-CUO/T) (unordered)
+BUO					tab(nb_reactions)			"
+CUO					tab(nb_reactions)			"
+A					tab(nb_reactions)			the same as Auo, Buo, Cuo but ordered like symbol
+B					tab(nb_reactions)			"
+C					tab(nb_reactions)			"
+itypeUO				tab(nb_reactions)			type of the reaction (unordered)
+itype				tab(nb_reactions)			the same as itypeuo but ordered like symbol
 											0		gas/grain reaction
 											1		CR-induced photo ionization/dissociation
 											2-12	gas phase reaction
@@ -159,7 +159,7 @@ YCO										char label for CO
 indCO									line index of CO
 indH2									line index of H2
 
-AWT					tab(nsmax)			species' mass (in amu)
+AWT					tab(nb_species)			species' mass (in amu)
 
 
 --H2 and CO shielding factors--
@@ -177,11 +177,11 @@ T2AV				tab (NL3)			teta_Av
 
 IEQP				tab (4:nopmax)			
 IORDTM				tab (nopmax)			
-INUM				tab (nkmax)				
-ICRTBL				tab (nsmax,nkmax)		
-ICROCC				tab (nsmax,nkmax)						
-ICRNUM				tab (nsmax)				
-ORDSP				tab (nsmax)
+INUM				tab (nb_reactions)				
+ICRTBL				tab (nb_species,nb_reactions)		
+ICROCC				tab (nb_species,nb_reactions)						
+ICRNUM				tab (nb_species)				
+ORDSP				tab (nb_species)
 
 
 
@@ -236,7 +236,7 @@ njac									number of non zero jacobian elements (per line)
 
 ! For IA and JA
 
-IA					tab (NSMAX+1)
+IA					tab (nb_species+1)
 
 
 ==unitvar==
@@ -253,7 +253,7 @@ TIME									global time
 TIN										store the curent time T for 1D calculation
 zdt										diffusive timestep
 
-ZXN					tab(nsmax:nptmax)	fractional abundances (space point dependant)				
+ZXN					tab(nb_species:nptmax)	fractional abundances (space point dependant)				
 
 JA					allocatable	tab		array
 liw										size of the JA array
@@ -281,35 +281,35 @@ Mass				tab(Nemax)			mass number (A) of the NEMAX elements
 ==called in GRAINRATE==
 thermodynamic, quantum and kinetic data
 
-GSPEC				tab(nsmax)			on-grain chemical species (as given in NGR)
-INT1				tab(NKMAX)			temporary buffer for mass number (in amu)
-SMASS				tab(NSMAX)			mass number (in amu)
+GSPEC				tab(nb_species)			on-grain chemical species (as given in NGR)
+INT1				tab(nb_reactions)			temporary buffer for mass number (in amu)
+SMASS				tab(nb_species)			mass number (in amu)
 SMA										truncation of SMASS
-REA1				tab(NSMAX)			temporary buffer for ED binding energy for physical adsorption (in K)
-ED					tab(nsmax)			ED binding energy for physical adsorption (in K) (see Hasegawa & Herbst, 1992)
-REA2				tab(NSMAX)			temporary buffer for Eb potential energy barrier height between adjacent surface potential energy wells (in K)
-EB					tab(nsmax)			Eb potential energy barrier height between adjacent surface potential energy wells (in K) (see Hasegawa & Herbst, 1992)
-REA3				tab(NSMAX)			temporary buffer for dEb breadth in energy between two surface wells as seen for the quantum mechanical tunneling effect (in K)
-DEB					tab(nsmax)			dEb breadth in energy between two surface wells as seen by the quantum mechanical tunneling effect (in K) (see Watson 1976)
-REA4				tab(NKMAX)			temporary buffer for dHf heat of formation of the associated compound 
-DHF					tab(nsmax)			dHf heat of formation of the associated compound
+REA1				tab(nb_species)			temporary buffer for ED binding energy for physical adsorption (in K)
+ED					tab(nb_species)			ED binding energy for physical adsorption (in K) (see Hasegawa & Herbst, 1992)
+REA2				tab(nb_species)			temporary buffer for Eb potential energy barrier height between adjacent surface potential energy wells (in K)
+EB					tab(nb_species)			Eb potential energy barrier height between adjacent surface potential energy wells (in K) (see Hasegawa & Herbst, 1992)
+REA3				tab(nb_species)			temporary buffer for dEb breadth in energy between two surface wells as seen for the quantum mechanical tunneling effect (in K)
+DEB					tab(nb_species)			dEb breadth in energy between two surface wells as seen by the quantum mechanical tunneling effect (in K) (see Watson 1976)
+REA4				tab(nb_reactions)			temporary buffer for dHf heat of formation of the associated compound 
+DHF					tab(nb_species)			dHf heat of formation of the associated compound
 NEA										number of on-grain reactions with given activation energy in NGR
 
 STICK									called to calculate the sticking coefficient
 NGS										number of on-grain species in NGR 
 
-GSREAD				tab(5,NKMAX)		on-grain reactions (2 reagents + 3 products)
-REA5				tab(NKMAX)			temporary buffer for activation energies of the corresponding on-grain reactions
-EA					tab(nkmax)			activation energies of the corresponding on-grain reactions
+GSREAD				tab(5,nb_reactions)		on-grain reactions (2 reagents + 3 products)
+REA5				tab(nb_reactions)			temporary buffer for activation energies of the corresponding on-grain reactions
+EA					tab(nb_reactions)			activation energies of the corresponding on-grain reactions
 
-CHF					tab(nsmax)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
-RQ1					tab(nsmax)			(dEB.BOLTZ) / (4.HBAR.TNS) quantum mechanical tunneling rate (Watson 1976)
-RQ2					tab(nsmax)			CHF / TNS.EXP(-2.ACM / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
+CHF					tab(nb_species)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
+RQ1					tab(nb_species)			(dEB.BOLTZ) / (4.HBAR.TNS) quantum mechanical tunneling rate (Watson 1976)
+RQ2					tab(nb_species)			CHF / TNS.EXP(-2.ACM / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
 
-jsp1				tab(nkmax)			first reagent of the reaction (line of)
-jsp2				tab(nkmax)			second reagent of the reaction (line of)
+jsp1				tab(nb_reactions)			first reagent of the reaction (line of)
+jsp2				tab(nb_reactions)			second reagent of the reaction (line of)
 REDMAS									reduced mass of the products
-XJ					tab(nkmax)			branching ratio
+XJ					tab(nb_reactions)			branching ratio
 NPATH									counter for the branching ratio
 NEVAP									counter for the evaporation fraction
 
@@ -320,30 +320,30 @@ ATOMS									number of atoms composing the first product
 EVFRAC									fraction of reactions resulting (or not) in desorption (see Garrod et al. 2007)
 BADFLAG									test how many species in one reaction have dHf set to -999.0
 
-ACT1				tab(nkmax)			exp(-ACT1) is the probability for the reaction to happen upon an encounter (see Hasegawa&Herbst 1992)
+ACT1				tab(nb_reactions)			exp(-ACT1) is the probability for the reaction to happen upon an encounter (see Hasegawa&Herbst 1992)
 
 cond									pi . r^2 . (8.kB / pi.amu)^1/2
-CONDSP				tab(nsmax)			Cond . STICK/(AWT(I))^1/2
+CONDSP				tab(nb_species)			Cond . STICK/(AWT(I))^1/2
 
 
 ==called in START==
 TOUT									output time
 
 NS0										number of initial abundances given (H, He, ...)
-XS0					tab(nsmax)			species which have been given an initial fraction abundance different from 0 (see NCON)
-XN0					tab(nsmax)			initial fraction abundance (as read in NCON)
+XS0					tab(nb_species)			species which have been given an initial fraction abundance different from 0 (see NCON)
+XN0					tab(nb_species)			initial fraction abundance (as read in NCON)
 XNmin									default minimum initial fraction abundance
-XN					tab(nsmax)			initial fraction abundance (as listed in NJR or NINI)
+XN					tab(nb_species)			initial fraction abundance (as listed in NJR or NINI)
 ELEMS				tab(nemax)			initial fraction abundance of the elements
 MEANW									mean molecular weigh (cgs)
 GTODN									grain abundance
 
-SREAD				tab(NSMAX)			species abundance (as listed in NINI)
-Y					tab(NSMAX)			Y(:)=XN(:)
+SREAD				tab(nb_species)			species abundance (as listed in NINI)
+Y					tab(nb_species)			Y(:)=XN(:)
 
 
 ==called in CONSERVE==
-ElmSum				tab(NSMAX)			summed abundance of the elements (to set the conservation law)
+ElmSum				tab(nb_species)			summed abundance of the elements (to set the conservation law)
 ChaSum									summed charge of all the elements considering abundances
 
 
@@ -364,7 +364,7 @@ Hcold									height scale sqrt( kB . TCOLD / (MEANW.AMU.Omega2) )
 
 Hsize									Half size of the computing box
 
-Densmax									Maximum density of the profile 0.8 . (DISTR/100AU)^(-1.5) / (meanw.amu)/Hcold /sqrt(2pi)
+Denb_species									Maximum density of the profile 0.8 . (DISTR/100AU)^(-1.5) / (meanw.amu)/Hcold /sqrt(2pi)
 
 KFACTOR									RAVNH  
 HTAU									sqrt(boltz*temp1D(1)/(meanw*amu*Omega2))
@@ -383,15 +383,15 @@ DIFF1D				tab(nptmax)			1D diffusivity profile
 
 ==called in CHEMSETUP==
 NSP1									dummy species (line of a blank species)
-SPEC2				tab(nsmax+1)		chemical species (same as SPEC but with NSP1 at the end)
-REACT				tab(NKMAX,7)		same as SYMBOL but with the lines of SPEC2 instead of species
+SPEC2				tab(nb_species+1)		chemical species (same as SPEC but with NSP1 at the end)
+REACT				tab(nb_reactions,7)		same as SYMBOL but with the lines of SPEC2 instead of species
 
 
 ==called in EVOLVE==
 IWORK				tab(liw)
 RWORK				tab(lrw)
-DUMMYPDJ			tab(NSMAX)
-DUMMYY				tab(NSMAX)			dummy Y tab
+DUMMYPDJ			tab(nb_species)
+DUMMYY				tab(nb_species)			dummy Y tab
 IDUMMY
 
 itol
@@ -400,7 +400,7 @@ istate
 iopt
 mf
 atol
-satol				tab(nsmax)
+satol				tab(nb_species)
 
 NNZ
 
@@ -413,8 +413,8 @@ TSQ										SQRT(TEMP)
 nsta									starting line of the ITYPE=2-12 reaction group
 nfin									ending line of the ITYPE=2-12 reaction group
 
-TINDIF				tab(nsmax)			thermal diffusion rate (s-1)
-TINEVA				tab(nsmax)			evaporation rate (s-1)
+TINDIF				tab(nb_species)			thermal diffusion rate (s-1)
+TINEVA				tab(nb_species)			evaporation rate (s-1)
 
 
 ==called in RATCON2==
@@ -429,7 +429,7 @@ ZNCO				tab(nptmax)			"
 XNH2
 XNCO
 
-TINACC				tab(nsmax)			accretion rate (for ITYPE 99 reactions)
+TINACC				tab(nb_species)			accretion rate (for ITYPE 99 reactions)
 
 ACTIV									activation energy barrier multiplier EA/DTEMP
 BARR									activation energy barrier BARR=EXP(-ACTIV)
@@ -441,16 +441,16 @@ IMOD2									=1 or to if the second reagent is JH or JH2
 YMOD1									modified abundance according to the evaporation and accreation rate
 YMOD2									"
 
-RDIF1				tab(nkmax)			thermal or tunneling hopping diffusion parameter for the first reagent
-RDIF2				tab(nkmax)			thermal or tunneling hopping diffusion parameter for the second reagent
+RDIF1				tab(nb_reactions)			thermal or tunneling hopping diffusion parameter for the first reagent
+RDIF2				tab(nb_reactions)			thermal or tunneling hopping diffusion parameter for the second reagent
 DIFF									total diffusion parameter (?) RDIF1 + RDIF 2
 
 MONLAY									LAYERS*TNS/GTODN
 
 
 ==called in MODIF==
-EX1					tab(nkmax)			TINEVA/TINACC for the first reagent
-EX2					tab(nkmax)			TINEVA/TINACC for the second reagent
+EX1					tab(nb_reactions)			TINEVA/TINACC for the first reagent
+EX2					tab(nb_reactions)			TINEVA/TINACC for the second reagent
 
 PICK									
 TESTREF1								
@@ -493,7 +493,7 @@ time loop (from 0 to 90% of the final time TFinal)
 			-> call shieldingsetup
 			-> call ratcon(Y)
 			-> call computeIAJA
-			-> call dlsodes(fchem,nsmax,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
+			-> call dlsodes(fchem,nb_species,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 			-> call CONSERVE(Y)
 	
 
@@ -657,12 +657,12 @@ check the conservation of the elements by calculating the relative difference
 ========phys_1D==========================================				nls_phys_1D
 !!build a 1D physical structure of the object
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
-! HSIZE, DENSMAX, UVGAS, UVGRA, TAUBC
+! HSIZE, DEnb_species, UVGAS, UVGRA, TAUBC
 
 if nptmax is not 0
 set the physical parameters of the model (disk model ...), like tempreatures or size of the box
 call MESH
-Estimate DENSMAX using the inner gaussian (considered to be dominant in the sigma) and the observed sigma (0.8 g cm-2 at 100 AU with a 1.5 power law)
+Estimate DEnb_species using the inner gaussian (considered to be dominant in the sigma) and the observed sigma (0.8 g cm-2 at 100 AU with a 1.5 power law)
 Calcultate the gas temperature set the dust temperature as equal
 
 !compute the density DEnb_species_for_gasD through hydrostatic equilibrium using 1st order Euler
@@ -732,7 +732,7 @@ call shieldingsetup
 call ratcon(Y)
 ! Feed IWORK with IA and JA
 call computeIAJA(Y)
-call dlsodes(fchem,nsmax,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
+call dlsodes(fchem,nb_species,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 !Whenever the solver fails converging, print the reason.
 ! cf odpkdmain.f for translation
 CALL CONSERVE(Y)

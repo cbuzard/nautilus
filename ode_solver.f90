@@ -12,12 +12,12 @@ integer :: I,J,L,NSP1
 
 ! NSP1 is a dummy species (with a blank name)
 
-NSP1=NSMAX+1
+NSP1=nb_species+1
 
-SPEC2(1:NSMAX)=SPEC(1:NSMAX)
+SPEC2(1:nb_species)=SPEC(1:nb_species)
 SPEC2(NSP1)='           '
 
-do I=1,NKMAX
+do I=1,nb_reactions
   do J=1,NSP1
 
     do L=1,3
@@ -39,20 +39,20 @@ subroutine FCHEMVW(N,Y,YDOT)
 use global_variables
 implicit none
 integer :: N, NSP1
-real(double_precision), dimension(NSMAX) :: Y, YDOT
-real(double_precision), dimension(NSMAX+1) :: YD2
-!REAL(KIND=16), dimension(NSMAX+1) :: YD2
+real(double_precision), dimension(nb_species) :: Y, YDOT
+real(double_precision), dimension(nb_species+1) :: YD2
+!REAL(KIND=16), dimension(nb_species+1) :: YD2
 integer :: i
 integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
 real(double_precision) :: rate
 
-NSP1=NSMAX+1
+NSP1=nb_species+1
 
 ydot(:)=0.d0
 yd2(:)=0.d0
 
 ! The differential equations are calculated in a loop here
-do I=1,NKMAX
+do I=1,nb_reactions
 
   IR1=REACT(I,1)
   IR2=REACT(I,2)
@@ -84,7 +84,7 @@ do I=1,NKMAX
   YD2(IR3)=YD2(IR3)-RATE
 enddo   
 
-YDOT(1:NSMAX)=YD2(1:NSMAX)
+YDOT(1:nb_species)=YD2(1:nb_species)
 
 return
 end subroutine FCHEMVW
@@ -95,18 +95,18 @@ use global_variables
 implicit none
 integer :: NSP1
 integer J
-real(double_precision), dimension(NSMAX) :: Y, PDJ
-real(double_precision), dimension(NSMAX+1) :: PDJ2
-!REAL(KIND=16), dimension(NSMAX+1) :: PDJ2
+real(double_precision), dimension(nb_species) :: Y, PDJ
+real(double_precision), dimension(nb_species+1) :: PDJ2
+!REAL(KIND=16), dimension(nb_species+1) :: PDJ2
 integer :: i
 integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
 integer :: NUMBERJAC
 
-NSP1=NSMAX+1
+NSP1=nb_species+1
 
 PDJ2(:)=0.d0
 
-do I=1,NKMAX
+do I=1,nb_reactions
   !write(*,*) I
 
   IR1=REACT(I,1)
@@ -188,11 +188,11 @@ do I=1,NKMAX
 
 enddo
 
-PDJ(1:NSMAX)=PDJ2(1:NSMAX)
+PDJ(1:nb_species)=PDJ2(1:nb_species)
 
 IF (TESTJAC.EQ.1) then
   NUMBERJAC=0
-  do i=1,NSMAX
+  do i=1,nb_species
     if (PDJ(i).ne.0.d0) NUMBERJAC=NUMBERJAC+1
   enddo
   write(*,*)  'Number of non-zero values in JAC: ', NUMBERJAC
@@ -206,19 +206,19 @@ subroutine computeIAJA(Y)
 use global_variables
 implicit none
 integer :: i,j,k
-real(double_precision), dimension(nsmax) :: Y, PDJ
+real(double_precision), dimension(nb_species) :: Y, PDJ
 
 call ratcon()
 call ratcon2(Y)
 
 k=1
 
-do j=1,NSMAX
+do j=1,nb_species
   call JACVW(Y,j,PDJ)
 
   IA(j)=k
 
-  do i=1,NSMAX
+  do i=1,nb_species
     if (abs(PDJ(i)).gt.1.d-99) then
       JA(k)=i
       k=k+1
@@ -227,7 +227,7 @@ do j=1,NSMAX
 
 enddo
 
-IA(NSMAX+1)=k
+IA(nb_species+1)=k
 
 return
 end subroutine computeIAJA
@@ -240,7 +240,7 @@ end subroutine computeIAJA
   integer N,J
   real(double_precision) :: T
   real(double_precision), dimension(N) :: IAN, JAN
-  real(double_precision), dimension(NSMAX) :: Y,PDJ
+  real(double_precision), dimension(nb_species) :: Y,PDJ
 
   !      call RATCON2(Y)
 
@@ -256,7 +256,7 @@ end subroutine computeIAJA
   
   implicit none
 
-  real(double_precision), dimension(NSMAX) :: Y,YP
+  real(double_precision), dimension(nb_species) :: Y,YP
   real(double_precision) :: T
   integer :: N
 
@@ -481,7 +481,7 @@ end subroutine computeIAJA
   if (IDUST.NE.0) then
 
     ! ========= Set diffusion and evaporation rates (s-1)
-    do K=1,NSMAX
+    do K=1,nb_species
       TINDIF(K)=CHF(K)*EXP(-EB(K)/DTEMP)/TNS
       TINEVA(K)=CHF(K)*EXP(-ED(K)/DTEMP)
     enddo
@@ -567,7 +567,7 @@ end subroutine computeIAJA
   real(double_precision) :: XNH2,XNCO
   real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
   real(double_precision) :: T300, TI, TSQ
-  real(double_precision), dimension(NSMAX) :: Y
+  real(double_precision), dimension(nb_species) :: Y
   real(double_precision) :: YMOD1, YMOD2
   integer IMOD1,IMOD2
   integer :: j, l

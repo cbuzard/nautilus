@@ -13,15 +13,15 @@ use iso_fortran_env
 
 implicit none
 integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
-integer :: NKMAX
-integer :: NSMAX
-integer, parameter :: nb_gaseous_species=485
-integer, parameter :: nb_surface_species=199
+integer :: nb_reactions !< total number of reactions
+integer :: nb_species !< total number of species
+integer, parameter :: nb_gaseous_species=485 !< number of species that are gaseous
+integer, parameter :: nb_surface_species=199 !< number of species that are on the surface of grains
 integer, parameter :: NEMAX=13
-integer :: nb_species_for_grain !< number of species on the grain surface
-integer :: NK2 !< number of reactions on the grain surface
-integer :: nb_species_for_gas !< number of species in gas phase
-integer :: NK1 !< number of reactions in gas phase
+integer :: nb_species_for_grain !< number of species involved in grain surface reactions
+integer :: nb_surface_reactions !< number of reactions on the grain surface
+integer :: nb_species_for_gas !< number of species involved in gas phase reactions
+integer :: nb_gas_phase_reactions !< number of reactions in gas phase
 integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99
@@ -91,7 +91,7 @@ real(double_precision) :: Hsize ! Size of the computing box
 real(double_precision) :: diffty ! Turbulent diffusivity
 real(double_precision) :: Mcenter ! Central mass
 real(double_precision) :: Distr ! Radial distance
-real(double_precision) :: Densmax ! Maximum density of the profile
+real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: idiff ! Diffusivity flag
 real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D ! 1D physical structure
@@ -168,7 +168,7 @@ end subroutine get_linenumber
 ! DESCRIPTION: 
 !> @brief Routine to determine array sizes, namely number of reactions, 
 !! of species, for gas, grain and in total. 
-!! some global size are set (nb_species_for_gas, NK1, nb_species_for_gas, NK2, NSMAX, NKMAX)\n
+!! some global size are set (nb_species_for_gas, nb_gas_phase_reactions, nb_species_for_gas, nb_surface_reactions, nb_species, nb_reactions)\n
 !! This routine prepare allocation of global dynamical arrays
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
@@ -178,13 +178,13 @@ implicit none
 
 ! We get various sizes
 call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
-call get_linenumber(filename='gas_reactions.in', nb_lines=NK1)
+call get_linenumber(filename='gas_reactions.in', nb_lines=nb_gas_phase_reactions)
 
 call get_linenumber(filename='grain_species.in', nb_lines=nb_species_for_grain)
-call get_linenumber(filename='grain_reactions.in', nb_lines=NK2)
+call get_linenumber(filename='grain_reactions.in', nb_lines=nb_surface_reactions)
 
-NSMAX = nb_species_for_gas + nb_species_for_grain ! The total number of species, sum of species in gas and grain
-NKMAX = NK1 + NK2 ! The total number of reactions, sum of species in gas and grain
+nb_species = nb_species_for_gas + nb_species_for_grain ! The total number of species, sum of species in gas and grain
+nb_reactions = nb_gas_phase_reactions + nb_surface_reactions ! The total number of reactions, sum of species in gas and grain
 
 end subroutine get_array_sizes
 
@@ -202,62 +202,62 @@ subroutine initialize_global_arrays()
 
 implicit none
 
-allocate(spec(nsmax))
-allocate(xs0(nsmax))
-allocate(xn(nsmax))
-allocate(xni(nsmax))
-allocate(xn0(nsmax))
-allocate(cts(nsmax))
-allocate(dxdt(nsmax))
-allocate(dxdtp(nsmax))
-allocate(dxdtn(nsmax))
-allocate(awt(nsmax))
-allocate(xnop(nsmax, nopmax))
-allocate(ctsop(nsmax, nopmax))
-allocate(dxdtop(nsmax, nopmax))
-allocate(tindif(nsmax))
-allocate(tinacc(nsmax))
-allocate(tineva(nsmax))
-allocate(ed(nsmax))
-allocate(eb(nsmax))
-allocate(deb(nsmax))
-allocate(dhf(nsmax))
-allocate(chf(nsmax))
-allocate(condsp(nsmax))
-allocate(rq1(nsmax))
-allocate(rq2(nsmax))
-allocate(icrtbl(nsmax, nkmax))
-allocate(icrocc(nsmax, nkmax))
-allocate(icrnum(nsmax))
-allocate(ordsp(nsmax))
-allocate(icg(nsmax))
-allocate(zxn(nsmax, nptmax))
-allocate(spec2(nsmax+1))
-allocate(ia(nsmax+1))
-allocate(ielm(nemax,nsmax))
+allocate(spec(nb_species))
+allocate(xs0(nb_species))
+allocate(xn(nb_species))
+allocate(xni(nb_species))
+allocate(xn0(nb_species))
+allocate(cts(nb_species))
+allocate(dxdt(nb_species))
+allocate(dxdtp(nb_species))
+allocate(dxdtn(nb_species))
+allocate(awt(nb_species))
+allocate(xnop(nb_species, nopmax))
+allocate(ctsop(nb_species, nopmax))
+allocate(dxdtop(nb_species, nopmax))
+allocate(tindif(nb_species))
+allocate(tinacc(nb_species))
+allocate(tineva(nb_species))
+allocate(ed(nb_species))
+allocate(eb(nb_species))
+allocate(deb(nb_species))
+allocate(dhf(nb_species))
+allocate(chf(nb_species))
+allocate(condsp(nb_species))
+allocate(rq1(nb_species))
+allocate(rq2(nb_species))
+allocate(icrtbl(nb_species, nb_reactions))
+allocate(icrocc(nb_species, nb_reactions))
+allocate(icrnum(nb_species))
+allocate(ordsp(nb_species))
+allocate(icg(nb_species))
+allocate(zxn(nb_species, nptmax))
+allocate(spec2(nb_species+1))
+allocate(ia(nb_species+1))
+allocate(ielm(nemax,nb_species))
 
-allocate(xj(nkmax))
-allocate(a(nkmax))
-allocate(b(nkmax))
-allocate(c(nkmax))
-allocate(r(nkmax))
-allocate(xk(nkmax))
-allocate(rdif1(nkmax))
-allocate(rdif2(nkmax))
-allocate(ex1(nkmax))
-allocate(ex2(nkmax))
-allocate(ea(nkmax))
-allocate(tmin(nkmax))
-allocate(tmax(nkmax))
-allocate(act1(nkmax))
-allocate(inum(nkmax))
-allocate(itype(nkmax))
-allocate(jsp1(nkmax))
-allocate(jsp2(nkmax))
-allocate(formula(nkmax))
-allocate(num(nkmax))
-allocate(react(nkmax, 7))
-allocate(symbol(7,nkmax))
+allocate(xj(nb_reactions))
+allocate(a(nb_reactions))
+allocate(b(nb_reactions))
+allocate(c(nb_reactions))
+allocate(r(nb_reactions))
+allocate(xk(nb_reactions))
+allocate(rdif1(nb_reactions))
+allocate(rdif2(nb_reactions))
+allocate(ex1(nb_reactions))
+allocate(ex2(nb_reactions))
+allocate(ea(nb_reactions))
+allocate(tmin(nb_reactions))
+allocate(tmax(nb_reactions))
+allocate(act1(nb_reactions))
+allocate(inum(nb_reactions))
+allocate(itype(nb_reactions))
+allocate(jsp1(nb_reactions))
+allocate(jsp2(nb_reactions))
+allocate(formula(nb_reactions))
+allocate(num(nb_reactions))
+allocate(react(nb_reactions, 7))
+allocate(symbol(7,nb_reactions))
 
 
 

@@ -83,7 +83,7 @@ implicit none
 
 integer :: lrw, liw
 
-real(double_precision), dimension(:), allocatable :: Y ! NSMAX
+real(double_precision), dimension(:), allocatable :: Y ! nb_species
 
 integer :: itol, itask, istate, iopt, mf
 real(double_precision) :: atol
@@ -93,7 +93,7 @@ data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
 call get_array_sizes()
 
-allocate(Y(NSMAX))
+allocate(Y(nb_species))
 
 call initialize_global_arrays()
 
@@ -108,11 +108,11 @@ if (testjac.eq.1) then
   write(*,*) 'Dummy run to check'
   write(*,*) 'the number of non zero elements per column !'
   write(*,*) '--------------------------------------------'
-  lrw = 20 + 9*NSMAX*NPTMAX + 10000*NSMAX*NPTMAX
-  liw = 31 + NSMAX*NPTMAX + 10000*NSMAX*NPTMAX
+  lrw = 20 + 9*nb_species*NPTMAX + 10000*nb_species*NPTMAX
+  liw = 31 + nb_species*NPTMAX + 10000*nb_species*NPTMAX
 else
-  lrw = 20 + 3 * NJAC*NSMAX + 21 * NSMAX
-  liw = 31 + 3 * NJAC*NSMAX + 21 * NSMAX
+  lrw = 20 + 3 * NJAC*nb_species + 21 * nb_species
+  liw = 31 + 3 * NJAC*nb_species + 21 * nb_species
 endif
 
 ! Build spatial mesh 
@@ -184,8 +184,8 @@ do while (t.lt.0.9*tfinal)
 
     ! Chemical evolution for each spatial point
 
-    Y(:nsmax) = ZXN(:,ipts)
-    XN(:nsmax) = ZXN(:,ipts)
+    Y(:nb_species) = ZXN(:,ipts)
+    XN(:nb_species) = ZXN(:,ipts)
 
     call evolve (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
@@ -230,7 +230,7 @@ integer :: ILAB, KSUM, j, k, i, isptemp
 ! --- Find the atomic species associated with a given element
 
 ILAB=1
-do J=1,NSMAX
+do J=1,nb_species
   KSUM=0
   ! ------ Calculate species' mass
   do K=1,NEMAX
@@ -295,7 +295,7 @@ YGRAIN = 'GRAIN0     '
 YCO    = 'CO         '
 
 ! --- Set reference species
-do I=1,NSMAX 
+do I=1,nb_species 
   ! ------ Calculate masses
   MSUM=0.d0
   do K=1,NEMAX 
@@ -318,14 +318,14 @@ RAVNH=5.34d-22*(DTOGM/1.d-2)
 do I=0,NITYPE-1
   IRXSTA(I)=0
   IRXFIN(I)=0
-  do J=1,NKMAX
+  do J=1,nb_reactions
     if ((ITYPE(J).EQ.I).AND.(IRXSTA(I).EQ.0)) IRXSTA(I)=J
     if (ITYPE(J).EQ.I) IRXFIN(I)=J
   enddo
 enddo
 
 ! Find the index of CO and H2
-do i=1,nsmax
+do i=1,nb_species
   if (SPEC(i).eq.YH2) INDH2=i
   if (SPEC(i).eq.YCO) INDCO=i
   if (SPEC(i).eq.YHE) INDHE=i
@@ -348,8 +348,8 @@ use global_variables
 
 implicit none
 
-character(len=11), dimension(NSMAX) :: SREAD
-real(double_precision), dimension(NSMAX) :: Y
+character(len=11), dimension(nb_species) :: SREAD
+real(double_precision), dimension(nb_species) :: Y
 
 integer :: i, j, k
 real(double_precision) :: TOUT
@@ -361,13 +361,13 @@ TOUT=0.0D+0
 TIME=0.0D+0
 
 !~ call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
-!~ call get_linenumber(filename='gas_reactions.in', nb_lines=NK1)
+!~ call get_linenumber(filename='gas_reactions.in', nb_lines=nb_gas_phase_reactions)
 
 
 !~ write(*,*) 'line number=', nb_temp
 
 ! Set initial abundances================================================
-do I=1,NSMAX
+do I=1,nb_species
   XN(I)=XNMIN
   do K=1,NS0
     if (SPEC(I).EQ.XS0(K)) then
@@ -383,7 +383,7 @@ enddo
 do J=1,NEMAX
   ELEMS(J)=0.0D+0
 enddo
-do I=1,NSMAX 
+do I=1,nb_species 
   do J=1,NEMAX
     ELEMS(J)=ELEMS(J)+IELM(J,I)*XN(I)
   enddo
@@ -415,11 +415,11 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     read(14,*) 
 
     ! ------ Read species and abundances
-    read(14,'(5(A11,2X,1PE12.5,2X))') (Sread(I),XN(I),I=1,NSMAX)
+    read(14,'(5(A11,2X,1PE12.5,2X))') (Sread(I),XN(I),I=1,nb_species)
     read(14,*)
     close(14)
     ! ------ Check if species in nls_init.d correspond to the reaction file
-    do I=1,NSMAX
+    do I=1,nb_species
       if (Sread(I).NE.SPEC(I)) then
         write(Error_Unit,*) 'Input species in init file do not match those in reaction file'
         STOP
@@ -451,14 +451,14 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   integer :: liw,lrw
 
   integer, dimension(liw) :: IWORK
-  real(double_precision), dimension(NSMAX) :: Y
+  real(double_precision), dimension(nb_species) :: Y
   real(double_precision), dimension(lrw) :: RWORK
-  real(double_precision), dimension(NSMAX) :: DUMMYPDJ, DUMMYY
+  real(double_precision), dimension(nb_species) :: DUMMYPDJ, DUMMYY
   integer IDUMMY
   integer :: i
   integer :: itol, itask, istate, iopt, mf
   real(double_precision) :: atol
-  real(double_precision), dimension(nsmax) :: satol
+  real(double_precision), dimension(nb_species) :: satol
 
   real(double_precision) :: T, TOUT, TIN
 
@@ -494,7 +494,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   if (TESTJAC.eq.1) then
     DUMMYY=1.d-5
     call ratcon()
-    do IDUMMY=1,NSMAX
+    do IDUMMY=1,nb_species
       call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
     enddo
     STOP
@@ -511,7 +511,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! Adaptive absolute tolerance to avoid too high precision on very abundant species,
     ! H2 for instance. Helps running a bit faster
 
-    do i=1,nsmax
+    do i=1,nb_species
       satol(i)=max(atol,1.d-16*y(i))
     enddo
 
@@ -521,11 +521,11 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! Feed IWORK with IA and JA
 
     call computeIAJA(Y)
-    NNZ=IA(NSMAX+1)-1
-    iwork(30+1:30+NSMAX+1)=IA(1:NSMAX+1)
-    iwork(31+NSMAX+1:31+NSMAX+NNZ)=JA(1:NNZ)
+    NNZ=IA(nb_species+1)-1
+    iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
+    iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(fchem,nsmax,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
+    call dlsodes(fchem,nb_species,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
@@ -553,20 +553,20 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   
   implicit none
 
-  real(double_precision), dimension(NSMAX) :: Y
+  real(double_precision), dimension(nb_species) :: Y
   real(double_precision), dimension(NEMAX) :: ELMSUM
   real(double_precision) :: CHASUM
 
   integer :: i, k
 
   ! Prevent too low abundances
-  do i=1,NSMAX
+  do i=1,nb_species
     if (Y(i).le.1.d-99) Y(i)=1.d-99
   enddo
 
   ! --- Conserve electrons
   CHASUM=0.0D+0
-  do I=1,NSMAX
+  do I=1,nb_species
     if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*Y(I)
   enddo
   if (CHASUM.LE.0.0D+0) CHASUM=XNMIN
@@ -577,7 +577,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     do K=1,ICONS
       ELMSUM(K)=0.0D+0
     enddo
-    do I=1,NSMAX
+    do I=1,nb_species
       do K=1,ICONS
         if (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
       enddo
@@ -590,7 +590,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   ! Check for conservation
   ELMSUM(:)=0.0D+0
-  do I=1,NSMAX
+  do I=1,nb_species
     do K=1,NEMAX
       ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
     enddo
@@ -669,14 +669,14 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     
     implicit none
 
-    real(double_precision), dimension(nsmax) :: REA1,REA2,REA3,REA4
-    real(double_precision), dimension(nkmax) :: REA5
-    real(double_precision), dimension(nsmax) :: SMASS
+    real(double_precision), dimension(nb_species) :: REA1,REA2,REA3,REA4
+    real(double_precision), dimension(nb_reactions) :: REA5
+    real(double_precision), dimension(nb_species) :: SMASS
     real(double_precision) :: SMA,REDMAS,STICK,EVFRAC,DHFSUM,SUM1,SUM2
-    integer, dimension(NKMAX) :: INT1
+    integer, dimension(nb_reactions) :: INT1
     integer :: NGS,NEA,NPATH,NEVAP,BADFLAG,ATOMS
-    character(len=11), dimension(5,NKMAX) :: GSREAD
-    character(len=11), dimension(nsmax) :: GSPEC
+    character(len=11), dimension(5,nb_reactions) :: GSREAD
+    character(len=11), dimension(nb_species) :: GSPEC
 
     real(double_precision) :: cond
     integer :: i, j,k,l,n4, n5, n6
@@ -690,7 +690,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
     ! --- Evaluate sticking coeff and accretion rate factor for each species
     STICK=0.0D+0
-    do I=1,NSMAX
+    do I=1,nb_species
       if (ICG(I).EQ.0) then
         STICK=STICK0
       endif 
@@ -722,7 +722,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
     ! --- Read info into dummy arrays
     NGS=0
-    do I=1,NSMAX
+    do I=1,nb_species
       700    CONTINUE
       read(10,'(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)') GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
       if (GSPEC(I).EQ.'X          ') GOTO 700
@@ -739,7 +739,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     close(10)
 
     ! --- Transfer from dummies to arrays with correct species numbers
-    do I=1,NSMAX
+    do I=1,nb_species
       SMASS(I)=0
       ED(I)=0.0D+0
       EB(I)=0.0D+0
@@ -759,7 +759,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       !IF(SPEC(I) == 'JN2O2      ') write(*,*) ED(I)
     enddo
 
-    do I=1,NKMAX
+    do I=1,nb_reactions
       EA(I)=0.0D+0
       do J=1,NEA
         if (SYMBOL(4,I)(:1).EQ.'J          ') then
@@ -781,7 +781,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     enddo
 
     ! Set up constants, quantum rate info===================================
-    do I=1,NSMAX
+    do I=1,nb_species
       CHF(I)=0.0D+0
       RQ1(I)=0.0D+0
       RQ2(I)=0.0D+0
@@ -802,13 +802,13 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     enddo
 
     ! === Cycle all reactions
-    do J=1,NKMAX
+    do J=1,nb_reactions
 
       ! ------ Initialise all XJ rate factors, and get species 1 & 2
       XJ(J)=1.0D+0
       JSP1(J)=0
       JSP2(J)=0
-      do I=1,NSMAX
+      do I=1,nb_species
         if (SYMBOL(1,J).EQ.SPEC(I)) JSP1(J)=I
         if (SYMBOL(2,J).EQ.SPEC(I)) JSP2(J)=I
       enddo
@@ -818,7 +818,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
         NPATH=0
 
         ! ------ Check for branching
-        do K=1,NKMAX
+        do K=1,nb_reactions
           if (((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
           (SYMBOL(2,J).EQ.SYMBOL(2,K))).OR.&
           ((SYMBOL(2,J).EQ.SYMBOL(1,K)).AND.&
@@ -844,7 +844,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
-      do K=1,NKMAX
+      do K=1,nb_reactions
         if ((SYMBOL(4,J)(:1).EQ.'J          ').AND.(A(K).NE.0.d0)) then
           if ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
           (SYMBOL(2,J).EQ.SYMBOL(2,K)).AND.&
@@ -866,7 +866,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       N4=0
       N5=0
       N6=0
-      do I=nb_gaseous_species+1,NSMAX
+      do I=nb_gaseous_species+1,nb_species
         if (SYMBOL(4,J)(:1).EQ.'J          ') then
           if (SYMBOL(4,J).EQ.SPEC(I)) N4=I
           if (SYMBOL(5,J).EQ.SPEC(I)) N5=I
@@ -971,7 +971,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! === ITYPE 99 - ACCRETION
   if (ITYPE(J).EQ.99) then
     ! ------ Save tag of resultant grain surface species
-    do I=1,NSMAX
+    do I=1,nb_species
       if (SYMBOL(4,J).EQ.SPEC(I)) JSP2(J)=I
     enddo
   endif
