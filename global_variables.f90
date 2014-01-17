@@ -15,8 +15,8 @@ implicit none
 integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
 integer :: NKMAX
 integer :: NSMAX
-integer, parameter :: NSGAS=485
-integer, parameter :: NSGRAIN=199
+integer, parameter :: nb_gaseous_species=485
+integer, parameter :: nb_surface_species=199
 integer, parameter :: NEMAX=13
 integer :: nb_species_for_grain !< number of species on the grain surface
 integer :: NK2 !< number of reactions on the grain surface

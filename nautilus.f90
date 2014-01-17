@@ -711,7 +711,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       !         if (SPEC(I).EQ.'H-')     STICK=0.D+0
       !         if (SPEC(I).EQ.'H2+')    STICK=0.D+0
 
-      if (I.GT.NSGAS) STICK=0.D+0
+      if (I.GT.nb_gaseous_species) STICK=0.D+0
       CONDSP(I)=COND*STICK/SQRT(AWT(I))
     enddo
 
@@ -866,7 +866,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       N4=0
       N5=0
       N6=0
-      do I=NSGAS+1,NSMAX
+      do I=nb_gaseous_species+1,NSMAX
         if (SYMBOL(4,J)(:1).EQ.'J          ') then
           if (SYMBOL(4,J).EQ.SPEC(I)) N4=I
           if (SYMBOL(5,J).EQ.SPEC(I)) N5=I

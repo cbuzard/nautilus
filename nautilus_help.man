@@ -41,8 +41,8 @@ I - useful variables :
 ==header== ('global' variables)
 nkmax							number of reactions in the network
 nsmax							number of species in the network
-nsgas							number of gas phase species
-nsgrain							number of grain sticked species
+nb_gaseous_species							number of gas phase species
+nb_surface_species							number of grain sticked species
 nemax							number of different elements in the network
 nitype							number of reaction types
 nopmax						
