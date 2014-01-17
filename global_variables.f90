@@ -112,7 +112,7 @@ contains
 !> @author 
 !> Christophe Cossou
 !
-!> @date 2013
+!> @date 2014
 !
 ! DESCRIPTION: 
 !> @brief Routine to retrieve the number of lines of a given file whose
@@ -151,6 +151,19 @@ subroutine get_linenumber(filename, nb_lines)
 
 end subroutine get_linenumber
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Routine to determine array sizes, namely number of reactions, 
+!! of species, for gas, grain and in total. 
+!! some global size are set (NS1, NK1, NS1, NK2, NSMAX, NKMAX)\n
+!! This routine prepare allocation of global dynamical arrays
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine get_array_sizes()
 
 implicit none
@@ -167,6 +180,16 @@ NSMAX = NS1 + NS2 ! The total number of species, sum of species in gas and grain
 
 end subroutine get_array_sizes
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2013
+!
+! DESCRIPTION: 
+!> @brief Routine that allocate global arrays once their sizes are set
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine initialize_global_arrays()
 
 implicit none
