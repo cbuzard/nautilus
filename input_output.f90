@@ -152,13 +152,6 @@ do I=NL3+1,NL2
 enddo
 close(16)
 
-! We get various sizes
-call get_linenumber(filename='gas_species.in', nb_lines=NS1)
-call get_linenumber(filename='gas_reactions.in', nb_lines=NK1)
-
-call get_linenumber(filename='grain_species.in', nb_lines=NS2)
-call get_linenumber(filename='grain_reactions.in', nb_lines=NK2)
-
 allocate(SPECUO1(NS1))
 allocate(SYMBOLUO1(7,nk1))
 allocate(AUO1(NK1))
@@ -439,47 +432,6 @@ return
 end subroutine write_chemical_composition
 
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!> @author 
-!> Christophe Cossou
-!
-!> @date 2013
-!
-! DESCRIPTION: 
-!> @brief Routine to retrieve the number of lines of a given file whose
-!! filename is passed as an argument. 
-!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_linenumber(filename, nb_lines)
 
-  implicit none
-  
-  ! Input
-  character(len=*), intent(in) :: filename !< [in] the filename of the file we want the number of lines
-  
-  ! Output
-  integer, intent(out) :: nb_lines !< [out] the number of line of the input file
-  
-  ! Local
-  integer :: error
-  logical test
-  !------------------------------------------------------------------------------
-  nb_lines = 0
-  
-  ! Read in filenames and check for duplicate filenames
-  inquire (file=filename, exist=test)
-  if (.not.test) then
-    write(Error_Unit,'(a,a,a)') 'Error: the file "',trim(filename),'" does not exist.'
-  end if
-  open(15, file=filename, status='old')
-  
-  error = 0
-  do while(error.eq.0)
-    read(15,*,iostat=error)
-    nb_lines = nb_lines + 1
-  enddo
-  close(15)
-
-end subroutine get_linenumber
 
 end module input_output

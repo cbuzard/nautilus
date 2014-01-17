@@ -83,13 +83,19 @@ implicit none
 
 integer :: lrw, liw
 
-real(double_precision), dimension(NSMAX) :: Y
+real(double_precision), dimension(:), allocatable :: Y ! NSMAX
 
 integer :: itol, itask, istate, iopt, mf
 real(double_precision) :: atol
 real(double_precision) :: T, TOUT, TIN
 
 data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
+
+call get_array_sizes()
+
+allocate(Y(NSMAX))
+
+call initialize_global_arrays()
 
 call read_parameters()
 
