@@ -15,8 +15,8 @@ implicit none
 integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
 integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species
-integer, parameter :: nb_gaseous_species=485 !< number of species that are gaseous
-integer, parameter :: nb_surface_species=199 !< number of species that are on the surface of grains
+integer :: nb_gaseous_species !< number of species that are gaseous
+integer :: nb_surface_species !< number of species that are on the surface of grains
 integer, parameter :: NEMAX=13
 integer :: nb_species_for_grain !< number of species involved in grain surface reactions
 integer :: nb_surface_reactions !< number of reactions on the grain surface
@@ -262,4 +262,38 @@ allocate(symbol(7,nb_reactions))
 
 
 end subroutine initialize_global_arrays
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2013
+!
+! DESCRIPTION: 
+!> @brief From the label of each species, determine if this is a gas
+!! phase or a surface species. Set the values of nb_gaseous_species and
+!! nb_surface_species global parameters that count the total number of species
+!! in each category.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_gas_surface_species()
+
+implicit none
+
+! Locals
+integer :: i
+
+! We retrieve the total number of gas and surface species (not the ones that are involved in reactions, but the actual position of the species)
+nb_gaseous_species = 0
+nb_surface_species = 0
+do i=1,nb_species
+  if (SPEC(i)(1:1).eq.'J') then
+    nb_surface_species = nb_surface_species + 1
+  else
+    nb_gaseous_species = nb_gaseous_species + 1
+  endif
+end do
+
+end subroutine get_gas_surface_species
+
 end module global_variables

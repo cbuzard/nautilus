@@ -99,6 +99,8 @@ call initialize_global_arrays()
 
 call read_parameters()
 
+call get_gas_surface_species()
+
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag
 ! NJAC should be around the largest printed value

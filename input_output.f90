@@ -44,11 +44,11 @@ integer :: i,k,j, jk
 
 ! Variables for the unordered reaction file
 
-character(len=11), dimension(nb_species_for_gas) :: SPECUO1 
+character(len=11), dimension(nb_species_for_gas) :: gas_species_label 
 integer, dimension(nb_species_for_gas) :: ICG1 
 integer, dimension(nemax, nb_species_for_gas) :: IELM1 
 
-character(len=11), dimension(nb_species_for_grain) :: SPECUO2 
+character(len=11), dimension(nb_species_for_grain) :: surface_species_label 
 integer, dimension(nb_species_for_grain) :: ICG2 
 integer, dimension(nemax, nb_species_for_grain) :: IELM2 
 
@@ -160,7 +160,7 @@ close(16)
 ! Reading the gas phase network
 open(unit=9, file='gas_species.in',status='OLD')
 do I=1,nb_species_for_gas
-  read(9,'(A11,i3,13(I3))') SPECUO1(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
+  read(9,'(A11,i3,13(I3))') gas_species_label(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
 enddo
 close(9)
 
@@ -172,7 +172,7 @@ close(9)
 ! Reading the grain network
 open(unit=19, file='grain_species.in', status='OLD')
 do I=1,nb_species_for_grain
-  read(19,'(A11,i3,13(I3))') SPECUO2(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
+  read(19,'(A11,i3,13(I3))') surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
 enddo
 close(19)
 
@@ -184,14 +184,14 @@ close(19)
 ! putting everything back into the big tables
 
 do I=1,nb_species_for_gas 
-  SPEC(I)=SPECUO1(I)
+  SPEC(I)=gas_species_label(I)
   ICG(I)=ICG1(I)
   do k=1,NEMAX
     IELM(K,I)=IELM1(K,I)
   enddo
 enddo
 do I=1,nb_species_for_grain 
-  SPEC(nb_species_for_gas+I)=SPECUO2(I)
+  SPEC(nb_species_for_gas+I)=surface_species_label(I)
   ICG(nb_species_for_gas+I)=ICG2(I)
   do k=1,NEMAX
     IELM(K,nb_species_for_gas+I)=IELM2(K,I)
@@ -211,7 +211,6 @@ do I=1,nb_gas_phase_reactions
   FORMULAUO(I) = FORMULA1(I)
   NUMUO(I) = NUM1(I)
 enddo
-
 
 do I=1,nb_surface_reactions 
   do  k=1,7
