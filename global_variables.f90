@@ -9,10 +9,10 @@ integer, parameter :: NSMAX=684
 integer, parameter :: NSGAS=485
 integer, parameter :: NSGRAIN=199
 integer, parameter :: NEMAX=13
-integer, parameter :: NS2=216 !< number of species on the grain surface
-integer, parameter :: NK2=1868 !< number of reactions on the grain surface
-integer, parameter :: NS1=468 !< number of species in gas phase
-integer, parameter :: NK1=6467 !< number of reactions in gas phase
+integer :: NS2!=216  !< number of species on the grain surface
+integer :: NK2!=1868 !< number of reactions on the grain surface
+integer :: NS1!=468  !< number of species in gas phase
+integer :: NK1!=6467 !< number of reactions in gas phase
 integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99
