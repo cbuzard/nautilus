@@ -1,0 +1,15 @@
+/**
+
+@mainpage Nautilus documentation
+
+@section Introduction
+
+A fast 1D gas-grain chemical model by FH (2008)\n
+Based upon the OSU gas-grain chemical model\n
+Updated from gg_osu_2006v1d by RTG/VW\n
+Rate equations from Hasegawa & Herbst (1992)\n
+Modified rates following Caselli et al. (1998)\n
+Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)\n
+Turbulent mixing implemented through first order operator splitting\n
+
+*/
