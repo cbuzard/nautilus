@@ -44,20 +44,21 @@ integer :: i,k,j, jk
 
 ! Variables for the unordered reaction file
 
-character(len=11), dimension(:), allocatable :: SPECUO1 ! NS1
-character(len=11), dimension(:), allocatable :: SPECUO2 ! NS2
-character(len=11), dimension(:,:), allocatable :: SYMBOLUO1 ! (7,nk1)
-real(double_precision), dimension(:), allocatable :: AUO1,BUO1,CUO1 !(nk1)
-integer, dimension(:), allocatable :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 !(nk1)
-character (len=11), dimension(:,:), allocatable :: SYMBOLUO2 !(7,nk2)
-real(double_precision), dimension(:), allocatable :: AUO2,BUO2,CUO2 !(nk2)
-integer, dimension(:), allocatable :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2 !(nk2)
-integer, dimension(:), allocatable :: ICG1 ! (ns1)
-integer, dimension(:), allocatable :: ICG2 ! (ns2)
-integer, dimension(:,:), allocatable :: IELM1 ! (nemax,ns1)
-integer, dimension(:,:), allocatable :: IELM2 ! (nemax,ns2)
+character(len=11), dimension(ns1) :: SPECUO1 
+integer, dimension(ns1) :: ICG1 
+integer, dimension(nemax, ns1) :: IELM1 
 
+character(len=11), dimension(ns2) :: SPECUO2 
+integer, dimension(ns2) :: ICG2 
+integer, dimension(nemax, ns2) :: IELM2 
 
+character(len=11), dimension(7,nk1) :: SYMBOLUO1 
+real(double_precision), dimension(nk1) :: AUO1,BUO1,CUO1 
+integer, dimension(nk1) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 
+
+character (len=11), dimension(7,nk2) :: SYMBOLUO2 
+real(double_precision), dimension(nk2) :: AUO2,BUO2,CUO2 
+integer, dimension(nk2) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2 
 
 character (len=11), dimension(7,nkmax) :: SYMBOLUO
 real(double_precision), dimension(nkmax) :: AUO,BUO,CUO
@@ -151,33 +152,6 @@ do I=NL3+1,NL2
   read(16,'(E9.3,3X,E9.3)') N2CO(I),T2CO(I)
 enddo
 close(16)
-
-allocate(SPECUO1(NS1))
-allocate(SYMBOLUO1(7,nk1))
-allocate(AUO1(NK1))
-allocate(BUO1(NK1))
-allocate(CUO1(NK1))
-allocate(itypeUO1(NK1))
-allocate(Tmin1(NK1))
-allocate(Tmax1(NK1))
-allocate(FORMULA1(NK1))
-allocate(NUM1(NK1))
-allocate(ICG1(NK1))
-allocate(IELM1(nemax,ns1))
-
-
-allocate(SPECUO2(NS2))
-allocate(SYMBOLUO2(7,nk2))
-allocate(AUO2(NK2))
-allocate(BUO2(NK2))
-allocate(CUO2(NK2))
-allocate(itypeUO2(NK2))
-allocate(Tmin2(NK2))
-allocate(Tmax2(NK2))
-allocate(FORMULA2(NK2))
-allocate(NUM2(NK2))
-allocate(ICG2(NK2))
-allocate(IELM2(nemax,ns2))
 
 ! Read species & reaction info from reactions file======================
 ! WV fev 2012
