@@ -69,6 +69,11 @@ def clean():
   run("rm *.tmp")
   run("rm *.out")
 
+def originalClean():
+  """Delete all outputs files for a given nautilus simulation"""
+  run("rm output_1D.*")
+  run("rm rates1D.*")
+
 def ASCIICompare(original, new):
   """function that compare and print differences between to strings that are compared line by line."""
   
@@ -203,7 +208,7 @@ os.chdir(ORIGINAL_TEST)
 
 if force:
   # We clean the output files
-  clean()
+  originalClean()
 
 if not(os.path.isfile("output_1D.000001")):
   sys.stdout.write("Running original binaries ...\r")

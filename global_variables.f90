@@ -25,11 +25,16 @@ integer :: nb_gas_phase_reactions !< number of reactions in gas phase
 integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99
-real(double_precision), parameter :: BOLTZ=1.38054D-16,GRAV=6.668D-8,PI=3.1415926535898d0
-real(double_precision), parameter :: PLANCK=6.62565D-27,HBAR=1.05459D-27,AMU=1.66043D-24
-real(double_precision), parameter :: ECHARGE=1.60219D-19,AVOGADRO=6.0221415D+23
-real(double_precision), parameter :: TYEAR=3.1536D+07
-real(double_precision), parameter :: AU=1.5D+13
+real(double_precision), parameter :: BOLTZ = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
+real(double_precision), parameter :: GRAV = 6.668D-8
+real(double_precision), parameter :: PI = 3.1415926535898d0
+real(double_precision), parameter :: PLANCK = 6.62565D-27
+real(double_precision), parameter :: HBAR = 1.05459D-27
+real(double_precision), parameter :: AMU = 1.66043D-24
+real(double_precision), parameter :: ECHARGE = 1.60219D-19
+real(double_precision), parameter :: AVOGADRO = 6.0221415D+23
+real(double_precision), parameter :: TYEAR = 3.1536D+07
+real(double_precision), parameter :: AU = 1.5D+13
 
 real(double_precision) :: meanw, Omega2
 

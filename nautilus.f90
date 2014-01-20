@@ -164,7 +164,7 @@ do while (t.lt.0.9*tfinal)
   ! Store the current time in TIN (for 1D calculation)
   TIN = T
 
-  write(Output_Unit,'(A3,I5,A7,1PD10.3,A4)') 'Timestep=',timestep,', TIME=',TIME/TYEAR,' yrs'
+  write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',TIME/TYEAR,' yrs'
 
   do ipts=1,nptmax ! Start of the spatial loop for chemistry
 
