@@ -101,9 +101,17 @@ subroutine JACVW(Y,J,PDJ)
 ! Computes columns of the chemical jacobian
 use global_variables
 implicit none
+
+! Input
+integer, intent(in) :: J
+real(double_precision), intent(in), dimension(nb_species) :: Y
+
+! Output
+real(double_precision), intent(out), dimension(nb_species) :: PDJ
+
+! Local
 integer :: NSP1
-integer J
-real(double_precision), dimension(nb_species) :: Y, PDJ
+
 real(double_precision), dimension(nb_species+1) :: PDJ2
 !REAL(KIND=16), dimension(nb_species+1) :: PDJ2
 integer :: i
@@ -245,10 +253,17 @@ end subroutine computeIAJA
 subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
   use global_variables
   implicit none
-  integer :: N,J
-  real(double_precision) :: T
-  real(double_precision), dimension(N) :: IAN, JAN
-  real(double_precision), dimension(nb_species) :: Y,PDJ
+  
+  ! Input
+  integer, intent(in) :: N
+  integer, intent(in) :: J
+  real(double_precision), intent(in) :: T
+  real(double_precision), intent(in), dimension(N) :: IAN
+  real(double_precision), intent(in), dimension(N) :: JAN
+  real(double_precision), intent(in), dimension(nb_species) :: Y
+  
+  ! Output
+  real(double_precision), intent(out), dimension(nb_species) :: PDJ
 
   !      call RATCON2(Y)
 
