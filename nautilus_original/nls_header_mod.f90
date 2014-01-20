@@ -8,10 +8,10 @@ implicit none
       double precision, parameter :: RXNMIN=1.0D-99
       integer, PARAMETER :: NL1=105,NL2=52,NL3=43
       double precision, PARAMETER :: BOLTZ=1.3806488D-16,GRAV=6.67384D-8,PI=3.1415926535898d0
-      double precision, PARAMETER :: PLANCK=6.62606957D-27,HBAR=1.05459D-27,AMU=1.66043D-24
-      double precision, PARAMETER :: ECHARGE=1.60219D-19,AVOGADRO=6.0221415D+23
-      double precision, PARAMETER :: TYEAR=3.1536D+07
-      double precision, PARAMETER :: AU=1.5D+13
+      double precision, PARAMETER :: PLANCK=6.62606957D-27,HBAR=1.054571628D-27,AMU=1.66053892D-24
+      double precision, PARAMETER :: ECHARGE=1.60217657D-19,AVOGADRO=6.02214129D+23
+      double precision, PARAMETER :: TYEAR=3.15576D+07
+      double precision, PARAMETER :: AU=1.49597871D+13
  
       real(kind=8), save :: meanw, Omega2
 
