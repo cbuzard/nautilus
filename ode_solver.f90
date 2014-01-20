@@ -544,7 +544,7 @@ end subroutine computeIAJA
   endif
 
   ! When dust is turned off, zero all dust rates==========================
-  if ((IDUST.EQ.0).AND.(IT.EQ.1)) then
+  if ((IDUST.EQ.0).AND.(timestep.EQ.1)) then
     do J=IRXSTA(14),IRXFIN(99)
       XK(J)=0.0D+0
       XJ(J)=0.0D+0

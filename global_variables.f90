@@ -122,7 +122,7 @@ integer, allocatable, dimension(:,:) :: IELM
 integer, dimension(nemax) :: ISPELM
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA,IRXFIN
-integer :: IT,NT,ITFLAG,OTPD,DP,NDP,NS0,IODR,IREFSP, ISORD
+integer :: timestep,NT,ITFLAG,OTPD,DP,NDP,NS0,IODR,IREFSP, ISORD
 
 integer :: IDENS,ITEMP,IDUST,IGRQM,ICONS,IMODH,IREAD
 integer :: IPOUT,IPMON,IPLOT,IPDET,IPRXN,IPORD,ISABS

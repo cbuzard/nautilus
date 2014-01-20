@@ -316,7 +316,7 @@ implicit none
 character(len=80) :: filename_output
 integer :: i
 
-write(filename_output, '(a,i0.6,a)') 'abundances.',IT,'.out'
+write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
 
 
 open(UNIT=35, file=filename_output, form='unformatted')
@@ -353,7 +353,7 @@ implicit none
 character(len=80) :: filename_output
 integer :: i
 
-write(filename_output, '(a,i0.6,a)') 'rates.',IT,'.out'
+write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
 
 open(45, file=filename_output, form='unformatted')
 

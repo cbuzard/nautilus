@@ -124,7 +124,7 @@ call mesh
 
 call INITIAL
 
-IT=0
+timestep=0
 call START(TOUT)
 
 ! 1D physical structure (nls_phys_1D)
@@ -159,12 +159,12 @@ do while (t.lt.0.9*tfinal)
   call ztimestep() ! Determination of the diffusive timestep, modification of the global parameter zdt
   TIME=T+ZDT ! Final time for chemistry T -> T + ZDT
 
-  it=it+1
+  timestep = timestep + 1
 
   ! Store the current time in TIN (for 1D calculation)
   TIN = T
 
-  write(Output_Unit,'(A3,I5,A7,1PD10.3,A4)') 'IT=',IT,', TIME=',TIME/TYEAR,' yrs'
+  write(Output_Unit,'(A3,I5,A7,1PD10.3,A4)') 'Timestep=',timestep,', TIME=',TIME/TYEAR,' yrs'
 
   do ipts=1,nptmax ! Start of the spatial loop for chemistry
 
@@ -205,7 +205,7 @@ do while (t.lt.0.9*tfinal)
   ! Generic call to zdiffusion, a subroutine calling the chosen numerical scheme 
   call zdiffusion ! diffusion 
 
-  if (mod(it,wstep).eq.0) then
+  if (mod(timestep,wstep).eq.0) then
     call write_abundances()
   endif
 
@@ -478,8 +478,10 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   IWORK(6) = 10000
   IWORK(7) = 2
 
-  if (it.eq.1) IWORK(6)=2000
-
+  if (timestep.eq.1) then
+    IWORK(6)=2000
+  endif
+  
   ! Changing the time to avoid T + DT = T 
 
   TOUT=TIME
