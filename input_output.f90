@@ -314,7 +314,6 @@ use global_variables
 
 implicit none
 character(len=80) :: filename_output
-integer :: i
 
 write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
 
@@ -351,7 +350,6 @@ implicit none
 
 ! Locals
 character(len=80) :: filename_output
-integer :: i
 
 write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
 
