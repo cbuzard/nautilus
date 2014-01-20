@@ -221,8 +221,13 @@ end subroutine JACVW
 subroutine computeIAJA(Y)
 use global_variables
 implicit none
+
+! Input
+real(double_precision), intent(in), dimension(nb_species) :: Y
+
+! Locals
 integer :: i,j,k
-real(double_precision), dimension(nb_species) :: Y, PDJ
+real(double_precision), dimension(nb_species) :: PDJ
 
 call ratcon()
 call ratcon2(Y)
@@ -309,6 +314,7 @@ end subroutine FCHEM
   
   implicit none
 
+  ! Locals
   real(double_precision) :: T300, TI, TSQ
   integer :: nsta, nfin
   integer :: k, j, w, m, n
@@ -591,12 +597,15 @@ end subroutine FCHEM
   use global_variables 
   
   implicit none
+  
+  ! Input
+    real(double_precision), intent(in), dimension(nb_species) :: Y
 
+  ! Locals
   real(double_precision) :: ACTIV,BARR,MONLAY,DIFF
   real(double_precision) :: XNH2,XNCO
   real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
   real(double_precision) :: T300, TI, TSQ
-  real(double_precision), dimension(nb_species) :: Y
   real(double_precision) :: YMOD1, YMOD2
   integer IMOD1,IMOD2
   integer :: j, l
@@ -855,8 +864,16 @@ end subroutine FCHEM
   
   implicit none
 
-  integer :: J,IMOD1,IMOD2
-  real(double_precision) :: BARR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
+  ! Input
+  integer, intent(in) :: J
+  integer, intent(in) :: IMOD1
+  integer, intent(in) :: IMOD2
+  real(double_precision), intent(in) :: BARR
+  real(double_precision), intent(in) :: YMOD1
+  real(double_precision), intent(in) :: YMOD2
+  
+  ! Local
+  real(double_precision) :: PICK, TESTREF1, TESTREF2, TESTNUM
 
   EX1(J)=0.0D+0
   EX2(J)=0.0D+0
