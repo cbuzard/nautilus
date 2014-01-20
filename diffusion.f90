@@ -101,10 +101,23 @@ subroutine crank(f,ny,dt,dy,nu,rho, ibc)
 ! ibc = 1 -> user supplied boundary conditions (bc)
 ! ibc > 1 -> stops the code, insulting the user
 implicit none
-integer :: ny,ind
-real(double_precision), dimension(0:ny) :: f,s,Q,W,x,y,z,u,v,nu, rho, dd1d
-real(double_precision) :: dt, dy, d !, nu
-integer :: ibc
+
+! Input
+integer, intent(in) :: ny
+real(double_precision), intent(in), dimension(0:ny) :: rho
+real(double_precision), intent(in), dimension(0:ny) :: nu
+real(double_precision), intent(in) :: dt
+real(double_precision), intent(in) :: dy
+integer, intent(in) :: ibc
+
+! Output
+real(double_precision), intent(out), dimension(0:ny) :: f
+
+! Locals
+integer :: ind
+real(double_precision), dimension(0:ny) :: s,Q,W,x,y,z,u,v, dd1d
+real(double_precision) :: d !, nu
+
 
 dd1d(:)=nu(:)*rho(:)
 
