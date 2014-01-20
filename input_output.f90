@@ -36,7 +36,6 @@ subroutine read_parameters()
 
 use global_variables
 
-
 implicit none
 
 ! Locals
@@ -281,7 +280,6 @@ end subroutine read_parameters
 subroutine write_species()
 use global_variables
 
-
 implicit none
 
 ! Locals
@@ -313,6 +311,8 @@ subroutine write_abundances()
 use global_variables
 
 implicit none
+
+! Locals
 character(len=80) :: filename_output
 
 write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
@@ -344,7 +344,6 @@ end subroutine write_abundances
 subroutine write_rates()
 
 use global_variables
-
 
 implicit none
 
@@ -380,7 +379,6 @@ end subroutine write_rates
 subroutine write_chemical_composition(filename)
 
 use global_variables
-
 
 implicit none
 

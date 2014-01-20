@@ -556,8 +556,11 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use global_variables
   
   implicit none
-
-  real(double_precision), dimension(nb_species) :: Y
+  
+  ! Inputs/outputs
+  real(double_precision), intent(inout), dimension(nb_species) :: Y
+  
+  ! Locals
   real(double_precision), dimension(NEMAX) :: ELMSUM
   real(double_precision) :: CHASUM
 
