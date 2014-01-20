@@ -85,7 +85,7 @@ TERR
 DXDTS
 
 --gas phase parameters / grain parameters--   
-XNT0									initial gas density
+initial_gas_density									initial gas density
 TEMP0									initial gas temperature
 DTEMP0									initial dust temperature
 DTOGM									original dust-to-gas mass ratio

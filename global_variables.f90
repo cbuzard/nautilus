@@ -56,12 +56,58 @@ real(double_precision), allocatable, dimension(:) :: ACT1
 real(double_precision), allocatable, dimension(:) :: TINDIF,TINACC,TINEVA
 real(double_precision), allocatable, dimension(:) :: ED,EB,DEB,DHF
 real(double_precision), allocatable, dimension(:) :: CHF,CONDSP,RQ1,RQ2
-real(double_precision) :: CHARGE,TATOM,CSUM,TSUM,CERR,TERR,DXDTS,DTOGM,GTODN, RAVNH
-real(double_precision) :: RD,RHOD,STICK0,STICKP,STICKN,XNMIN
-real(double_precision) :: XNT,XNT0,TEMP
-real(double_precision) :: TEMP0,DTEMP,DTEMP0,TAU,TAU0,ZETA,ZETA0,XNTI,ZETAX
-real(double_precision) :: UVGAS,UVGRA,LAYERS,ACM,SNS,TNS,ACT,TSMAX,CRT,CRFE,EBFAC
-real(double_precision) :: TSTART,TFINAL,TIME,ALPHA,BFAC,NF,A1,B1,C1,A2,B2,C2,ARRK
+real(double_precision) :: CHARGE
+real(double_precision) :: TATOM
+real(double_precision) :: CSUM
+real(double_precision) :: TSUM
+real(double_precision) :: CERR
+real(double_precision) :: TERR
+real(double_precision) :: DXDTS
+real(double_precision) :: DTOGM
+real(double_precision) :: GTODN
+real(double_precision) :: RAVNH
+real(double_precision) :: RD
+real(double_precision) :: RHOD
+real(double_precision) :: STICK0
+real(double_precision) :: STICKP
+real(double_precision) :: STICKN
+real(double_precision) :: XNMIN
+real(double_precision) :: XNT
+real(double_precision) :: initial_gas_density
+real(double_precision) :: TEMP
+real(double_precision) :: TEMP0
+real(double_precision) :: DTEMP
+real(double_precision) :: DTEMP0
+real(double_precision) :: TAU
+real(double_precision) :: TAU0
+real(double_precision) :: ZETA
+real(double_precision) :: ZETA0
+real(double_precision) :: XNTI
+real(double_precision) :: ZETAX
+real(double_precision) :: UVGAS
+real(double_precision) :: UVGRA
+real(double_precision) :: LAYERS
+real(double_precision) :: ACM
+real(double_precision) :: SNS
+real(double_precision) :: TNS
+real(double_precision) :: ACT
+real(double_precision) :: TSMAX
+real(double_precision) :: CRT
+real(double_precision) :: CRFE
+real(double_precision) :: EBFAC
+real(double_precision) :: TSTART
+real(double_precision) :: TFINAL
+real(double_precision) :: TIME
+real(double_precision) :: ALPHA
+real(double_precision) :: BFAC
+real(double_precision) :: NF
+real(double_precision) :: A1
+real(double_precision) :: B1
+real(double_precision) :: C1
+real(double_precision) :: A2
+real(double_precision) :: B2
+real(double_precision) :: C2
+real(double_precision) :: ARRK
 real(double_precision), dimension(nl1) :: N1H2,T1H2
 real(double_precision), dimension(nl2) :: N2CO,T2CO
 real(double_precision), dimension(nl3) :: N2H2
