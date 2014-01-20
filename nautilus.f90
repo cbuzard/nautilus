@@ -219,11 +219,12 @@ contains
 
 ! ======================================================================
 ! ======================================================================
-subroutine INITIAL
+subroutine INITIAL()
 use global_variables
 
 implicit none
 
+! Locals
 real(double_precision), dimension(NEMAX) :: MASS
 real(double_precision) :: MSUM
 integer :: ILAB, KSUM, j, k, i, isptemp
@@ -350,23 +351,17 @@ use global_variables
 
 implicit none
 
+! Output
+real(double_precision), intent(out) :: TOUT
+
+! Locals
 character(len=11), dimension(nb_species) :: SREAD
 real(double_precision), dimension(nb_species) :: Y
-
 integer :: i, j, k
-real(double_precision) :: TOUT
-
-!~ integer :: nb_temp
 
 ! Initialise times======================================================
-TOUT=0.0D+0
-TIME=0.0D+0
-
-!~ call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
-!~ call get_linenumber(filename='gas_reactions.in', nb_lines=nb_gas_phase_reactions)
-
-
-!~ write(*,*) 'line number=', nb_temp
+TOUT=0.0d0
+TIME=0.0d0
 
 ! Set initial abundances================================================
 do I=1,nb_species
@@ -657,10 +652,12 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! from the results for NH2 and NCO computed by RATCON2 the spatial step before
   ! NB: ZN is shifted with respect to N
   ! ======================================================================
-  subroutine SHIELDINGSETUP
+  subroutine SHIELDINGSETUP()
 
   use global_variables
   implicit none
+  
+  ! Locals
   real(double_precision) :: XNH2,XNCO
 
   if (iptstore.eq.1) then
@@ -682,11 +679,12 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
     ! ======================================================================
     ! ======================================================================
-    subroutine GRAINRATE
+  subroutine GRAINRATE()
     use global_variables
     
     implicit none
 
+    ! Locals
     real(double_precision), dimension(nb_species) :: REA1,REA2,REA3,REA4
     real(double_precision), dimension(nb_reactions) :: REA5
     real(double_precision), dimension(nb_species) :: SMASS
