@@ -690,7 +690,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! COND is used to calculate R_acc = (sigma_d) * <v_i> * n_i * n_d
     ! Uses 'Mean' Maxwellian speed, rather than RMS (is this justifiable?)
 
-    COND=PI*grain_radius*grain_radius*SQRT(8.0D+0*BOLTZ/PI/AMU)
+    COND=PI*grain_radius*grain_radius*SQRT(8.0d0*K_B/PI/AMU)
 
     ! --- Evaluate sticking coeff and accretion rate factor for each species
     STICK=0.0D+0
@@ -793,15 +793,15 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       if (SMASS(I).NE.0) then
         SMA=REAL(SMASS(I))
         ! --------- Set characteristic frequency
-        CHF(I)=SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA)
+        CHF(I)=SQRT(2.0D+0*K_B/PI/PI/AMU * SNS*ED(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
-          RQ1(I)=DEB(I)*BOLTZ/4.0D+0/HBAR/nb_sites_per_grain
+          RQ1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
         else
           RQ1(I)=0.0D+0
         endif
         RQ2(I)=CHF(I)/nb_sites_per_grain*&
-        EXP(-2.0D+0*ACM/HBAR*SQRT(2.0D+0*AMU*SMA*BOLTZ*EB(I)))
+        EXP(-2.0D+0*ACM/H_BARRE*SQRT(2.0D+0*AMU*SMA*K_B*EB(I)))
       endif
     enddo
 
@@ -964,7 +964,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! ------ Calculate quantum activation energy
     REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&
     REAL(SMASS(JSP1(J))+SMASS(JSP2(J)))
-    ACT1(J)=2.0D+0 * ACT/HBAR * SQRT(2.0D+0*AMU*REDMAS*BOLTZ*EA(J))
+    ACT1(J)=2.0D+0 * ACT/H_BARRE * SQRT(2.0D+0*AMU*REDMAS*K_B*EA(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION

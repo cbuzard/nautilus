@@ -53,9 +53,9 @@ if (nptmax.ne.1) then
   ! Here the DM Tau disk model
   ! Disabled if nptmax = 1
 
-  ! Omega**2 for the vertical gravity
+  ! Omega**2 for the vertical GRAVITATIONAL_CONSTANTity
 
-  Omega2 = GRAV * MCENTER / DISTR**3
+  Omega2 = GRAVITATIONAL_CONSTANT * MCENTER / DISTR**3
 
   ! Mean molecular weight
   ! NB: if NH > NH2 then this is wrong  
@@ -72,7 +72,7 @@ if (nptmax.ne.1) then
   T100 = 30.D0 !Temperature at 100 AU
   TWARM = T100*(DISTR/(100.*AU))**(-0.5)
 
-  Hcold = sqrt(boltz*TCOLD/(meanw*amu*Omega2))
+  Hcold = sqrt(K_B*TCOLD/(meanw*amu*Omega2))
 
   ! Change the box size
   HSIZE = 4.*HCOLD
@@ -107,7 +107,7 @@ if (nptmax.ne.1) then
   ld1d(1)=0.d0
   do ipts=2,nptmax
     ld1d(ipts) = ld1d(ipts-1) - (log(TEMP1D(ipts))-log(TEMP1D(ipts-1))) - Omega2 * meanw &
-    * amu / (BOLTZ * TEMP1D(ipts)) * zspace(ipts)*(zspace(ipts)-zspace(ipts-1))
+    * amu / (K_B * TEMP1D(ipts)) * zspace(ipts)*(zspace(ipts)-zspace(ipts-1))
   enddo
 
   DEnb_species_for_gasD(1:nptmax) = exp(ld1d(:))
@@ -130,7 +130,7 @@ if (nptmax.ne.1) then
   ! We use an approximated expression for the erf function
   ! cf "Handbook of mathematical functions" inequality 7.1.13
 
-  HTAU = sqrt(boltz*temp1D(1)/(meanw*amu*Omega2))
+  HTAU = sqrt(K_B*temp1D(1)/(meanw*amu*Omega2))
   NHEST = 2. * DEnb_species_for_gasD(1) * HTAU * sqrt(2.d0)*exp(-(Hsize/HTAU/sqrt(2.d0))**2) &
   /((Hsize/HTAU/sqrt(2.d0))+sqrt((Hsize/HTAU/sqrt(2.d0))**2+2.d0))
   TAUEST = NHEST * KFACTOR

@@ -25,11 +25,11 @@ integer :: nb_gas_phase_reactions !< number of reactions in gas phase
 integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99
-real(double_precision), parameter :: BOLTZ = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
-real(double_precision), parameter :: GRAV = 6.67384d-8 !< Gravitationnal constant in CGS (cm^3 g-1 s-2)
+real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
+real(double_precision), parameter :: GRAVITATIONAL_CONSTANT = 6.67384d-8 !< GRAVITATIONAL_CONSTANTitationnal constant in CGS (cm^3 g-1 s-2)
 real(double_precision), parameter :: PI = 3.1415926535898d0 !< The number Pi
 real(double_precision), parameter :: PLANCK = 6.62606957d-27 !< Planck Constant in CGS (g cm2 s-1)
-real(double_precision), parameter :: HBAR = 1.054571628d-27 !< Reduced Planck constant in CGS (g cm2 s-1)
+real(double_precision), parameter :: H_BARRE = 1.054571628d-27 !< Reduced Planck constant in CGS (g cm2 s-1)
 real(double_precision), parameter :: AMU = 1.66053892d-24 !< Atomic mass unit in g
 real(double_precision), parameter :: ECHARGE = 1.60217657d-19 !< Electronic charge in C (thus in SI, and NOT IN CGS like the rest of the code)
 real(double_precision), parameter :: AVOGADRO = 6.02214129d23 !< avogadro number : number of atom in 1 mol

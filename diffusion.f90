@@ -30,9 +30,9 @@ else
 
   ! Alpha diffusivity (for disks)
   if (idiff.eq.2) then
-    Omega2 = GRAV * MCENTER / DISTR**3
+    Omega2 = GRAVITATIONAL_CONSTANT * MCENTER / DISTR**3
     do ipts=1,nptmax
-      diff1D(ipts)=diffty*boltz*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
+      diff1D(ipts)=diffty*K_B*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
     enddo
   endif
 
