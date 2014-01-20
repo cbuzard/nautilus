@@ -122,7 +122,7 @@ if (nptmax.ne.1) then
   ! TAU = NH * 5.34E-22
   ! TAU = 2 * NH2 * 5.34E-22
 
-  KFACTOR = RAVNH
+  KFACTOR = AV_NH_ratio
 
   ! Computation of an estimated TAUBC using and erf function
   ! if T is constant outside, rho has a gaussian tail

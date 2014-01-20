@@ -89,7 +89,7 @@ initial_gas_density									initial gas density
 initial_gas_temperature									initial gas temperature
 initial_dust_temperature									initial dust temperature
 initial_dtg_mass_ratio									original dust-to-gas mass ratio
-RAVNH									Av/NH ratio = 5.34D-22 . (initial_dtg_mass_ratio/0.01)
+AV_NH_ratio									Av/NH ratio = 5.34D-22 . (initial_dtg_mass_ratio/0.01)
 sticking_coeff_neutral									sticking coeff for neutral species
 sticking_coeff_positive									sticking coeff for positive species
 sticking_coeff_negative									sticking coeff for negative species
@@ -366,7 +366,7 @@ Hsize									Half size of the computing box
 
 Denb_species									Maximum density of the profile 0.8 . (DISTR/100AU)^(-1.5) / (meanw.amu)/Hcold /sqrt(2pi)
 
-KFACTOR									RAVNH  
+KFACTOR									AV_NH_ratio  
 HTAU									sqrt(boltz*temp1D(1)/(meanw*amu*Omega2))
 NHEST									2. * DEnb_species_for_gasD(1) * HTAU * sqrt(2.d0)*exp(-(Hsize/HTAU/sqrt(2.d0))**2)/((Hsize/HTAU/sqrt(2.d0))+sqrt((Hsize/HTAU/sqrt(2.d0))**2+2.d0))
 TAUEST									TAUEST = NHEST * KFACTOR
@@ -576,7 +576,7 @@ set species' masses (in amu) by calculation of the total mass number of the spec
 	for the electron AWT = 1/1836 in amu
 	for the grains (neutral and charged) AWT=(4/3).pi.(Rd)^3 . Rhod in amu
 
-initialize the Av/NH ratio RAVNH
+initialize the Av/NH ratio AV_NH_ratio
 
 save the start and ending lines of each ITYPE group (type of reaction) in IRXSTA and IRXFIN (in order not to read the entire NJR database file each time)
 

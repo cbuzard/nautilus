@@ -598,7 +598,7 @@ end subroutine computeIAJA
       if (SYMBOL(1,J).EQ.YH2) then
         TETABIS=1.D0
         if (iptstore.eq.1) then
-          ZNH2(iptstore) = TAU/RAVNH * XNH2
+          ZNH2(iptstore) = TAU/AV_NH_ratio * XNH2
         endif
         NH2=ZNH2(iptstore)
 
@@ -623,8 +623,8 @@ end subroutine computeIAJA
         TETABIS3=1.D0
 
         if (iptstore.eq.1) then
-          ZNH2(iptstore) = TAU/RAVNH * XNH2
-          ZNCO(iptstore) = TAU/RAVNH * XNCO
+          ZNH2(iptstore) = TAU/AV_NH_ratio * XNH2
+          ZNCO(iptstore) = TAU/AV_NH_ratio * XNCO
         endif
         NH2=ZNH2(iptstore)
         NCO=ZNCO(iptstore)

@@ -65,7 +65,7 @@ real(double_precision) :: TERR
 real(double_precision) :: DXDTS
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN
-real(double_precision) :: RAVNH
+real(double_precision) :: AV_NH_ratio
 real(double_precision) :: grain_radius
 real(double_precision) :: RHOD
 real(double_precision) :: sticking_coeff_neutral

@@ -314,7 +314,7 @@ enddo
 ! Here initial_dtg_mass_ratio is the original dust/gas mass ratio (from nls_control.d)
 ! initial_dtg_mass_ratio is changed later into the dust/hydrogen mass ratio
 
-RAVNH=5.34d-22*(initial_dtg_mass_ratio/1.d-2)
+AV_NH_ratio = 5.34d-22 * (initial_dtg_mass_ratio / 1.d-2)
 
 ! Find ITYPE first and last reactions===================================
 do I=0,NITYPE-1
