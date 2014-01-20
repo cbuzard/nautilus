@@ -4,7 +4,7 @@ implicit none
 
 contains
 
-subroutine CHEMSETUP
+subroutine CHEMSETUP()
 ! Initialize the reactants and products
 use global_variables
 implicit none
