@@ -106,7 +106,7 @@ UVGRA
 LAYERS									number of monolayers for ITYPE 17-20 
 ACM										site spacing
 SNS										site density
-TNS										number of sites per grain
+nb_sites_per_grain										number of sites per grain
 ACT										grain rxn activation energy constant
 TSMAX									peak grain temp (CR heating)
 CRT										duration (s) of peak grain T
@@ -303,8 +303,8 @@ REA5				tab(nb_reactions)			temporary buffer for activation energies of the corr
 EA					tab(nb_reactions)			activation energies of the corresponding on-grain reactions
 
 CHF					tab(nb_species)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
-RQ1					tab(nb_species)			(dEB.BOLTZ) / (4.HBAR.TNS) quantum mechanical tunneling rate (Watson 1976)
-RQ2					tab(nb_species)			CHF / TNS.EXP(-2.ACM / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
+RQ1					tab(nb_species)			(dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain) quantum mechanical tunneling rate (Watson 1976)
+RQ2					tab(nb_species)			CHF / nb_sites_per_grain.EXP(-2.ACM / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
 
 jsp1				tab(nb_reactions)			first reagent of the reaction (line of)
 jsp2				tab(nb_reactions)			second reagent of the reaction (line of)
@@ -445,7 +445,7 @@ RDIF1				tab(nb_reactions)			thermal or tunneling hopping diffusion parameter fo
 RDIF2				tab(nb_reactions)			thermal or tunneling hopping diffusion parameter for the second reagent
 DIFF									total diffusion parameter (?) RDIF1 + RDIF 2
 
-MONLAY									LAYERS*TNS/GTODN
+MONLAY									LAYERS*nb_sites_per_grain/GTODN
 
 
 ==called in MODIF==
@@ -582,7 +582,7 @@ save the start and ending lines of each ITYPE group (type of reaction) in IRXSTA
 
 save the lines of H2 and CO into INDH2 and INDCO
 
-calculate the number of sites per grain TNS with the density of sites per grain and the surface of the grain
+calculate the number of sites per grain nb_sites_per_grain with the density of sites per grain and the surface of the grain
 
 initialize the reaction rates by calling the GRAINRATE subroutine
 

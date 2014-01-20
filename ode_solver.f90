@@ -482,7 +482,7 @@ end subroutine computeIAJA
 
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
-      TINDIF(K)=CHF(K)*EXP(-EB(K)/DTEMP)/TNS
+      TINDIF(K)=CHF(K)*EXP(-EB(K)/DTEMP)/nb_sites_per_grain
       TINEVA(K)=CHF(K)*EXP(-ED(K)/DTEMP)
     enddo
 
@@ -575,7 +575,7 @@ end subroutine computeIAJA
   T300=TEMP/300.D+0
   TI=1.0D+00/TEMP
   TSQ=SQRT(TEMP)
-  MONLAY=LAYERS*TNS/GTODN
+  MONLAY=LAYERS*nb_sites_per_grain/GTODN
 
   XNH2=Y(indH2)
   XNCO=Y(indCO)
@@ -778,8 +778,8 @@ end subroutine computeIAJA
       !              XK(J)=0.D0
       ! --------- Allow only 1 monolayer of each to react
       ! Not used for the time being
-      !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*TNS/GTODN/Y(JSP1(J))
-      !            if (Y(JSP2(J)).GT.MONLAY) XK(J)=XK(J)*TNS/GTODN/Y(JSP2(J))
+      !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*nb_sites_per_grain/GTODN/Y(JSP1(J))
+      !            if (Y(JSP2(J)).GT.MONLAY) XK(J)=XK(J)*nb_sites_per_grain/GTODN/Y(JSP2(J))
 
     enddo
 

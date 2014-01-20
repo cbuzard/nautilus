@@ -89,7 +89,7 @@ real(double_precision) :: UVGRA
 real(double_precision) :: LAYERS
 real(double_precision) :: ACM
 real(double_precision) :: SNS
-real(double_precision) :: TNS
+real(double_precision) :: nb_sites_per_grain
 real(double_precision) :: ACT
 real(double_precision) :: TSMAX
 real(double_precision) :: CRT

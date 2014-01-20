@@ -333,8 +333,8 @@ do i=1,nb_species
   if (SPEC(i).eq.YHE) INDHE=i
 enddo
 
-! Compute TNS = number of sites per grain
-TNS = SNS*4.d0*PI*grain_radius**2
+! Compute nb_sites_per_grain = number of sites per grain
+nb_sites_per_grain = SNS*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
 call GRAINRATE
@@ -794,11 +794,11 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
         CHF(I)=SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
-          RQ1(I)=DEB(I)*BOLTZ/4.0D+0/HBAR/TNS
+          RQ1(I)=DEB(I)*BOLTZ/4.0D+0/HBAR/nb_sites_per_grain
         else
           RQ1(I)=0.0D+0
         endif
-        RQ2(I)=CHF(I)/TNS*&
+        RQ2(I)=CHF(I)/nb_sites_per_grain*&
         EXP(-2.0D+0*ACM/HBAR*SQRT(2.0D+0*AMU*SMA*BOLTZ*EB(I)))
       endif
     enddo
