@@ -8,6 +8,8 @@ subroutine CHEMSETUP()
 ! Initialize the reactants and products
 use global_variables
 implicit none
+
+! Locals
 integer :: I,J,L,NSP1
 
 ! NSP1 is a dummy species (with a blank name)
@@ -39,14 +41,14 @@ subroutine FCHEMVW(N,Y,YDOT)
 use global_variables
 implicit none
 
-! Input
+! Inputs
 integer, intent(in) :: N
 real(double_precision), intent(in), dimension(nb_species) :: Y
 
-! Output
+! Outputs
 real(double_precision), intent(out), dimension(nb_species) :: YDOT
 
-! Local
+! Locals
 integer :: NSP1
 real(double_precision), dimension(nb_species+1) :: YD2
 !REAL(KIND=16), dimension(nb_species+1) :: YD2
@@ -102,14 +104,14 @@ subroutine JACVW(Y,J,PDJ)
 use global_variables
 implicit none
 
-! Input
+! Inputs
 integer, intent(in) :: J
 real(double_precision), intent(in), dimension(nb_species) :: Y
 
-! Output
+! Outputs
 real(double_precision), intent(out), dimension(nb_species) :: PDJ
 
-! Local
+! Locals
 integer :: NSP1
 
 real(double_precision), dimension(nb_species+1) :: PDJ2
@@ -222,7 +224,7 @@ subroutine computeIAJA(Y)
 use global_variables
 implicit none
 
-! Input
+! Inputs
 real(double_precision), intent(in), dimension(nb_species) :: Y
 
 ! Locals
@@ -259,7 +261,7 @@ subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
   use global_variables
   implicit none
   
-  ! Input
+  ! Inputs
   integer, intent(in) :: N
   integer, intent(in) :: J
   real(double_precision), intent(in) :: T
@@ -267,7 +269,7 @@ subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
   real(double_precision), intent(in), dimension(N) :: JAN
   real(double_precision), intent(in), dimension(nb_species) :: Y
   
-  ! Output
+  ! Outputs
   real(double_precision), intent(out), dimension(nb_species) :: PDJ
 
   !      call RATCON2(Y)
@@ -284,14 +286,14 @@ subroutine FCHEM (N,T,Y,YP)
   
   implicit none
 
-  ! Input
+  ! Inputs
   real(double_precision), intent(in), dimension(nb_species) :: Y
   real(double_precision), intent(in) :: T
   
-  ! Output
+  ! Outputs
   real(double_precision), intent(out), dimension(nb_species) :: YP
   
-  ! Local
+  ! Locals
   integer :: N
 
   call RATCON2(Y)
@@ -598,7 +600,7 @@ end subroutine FCHEM
   
   implicit none
   
-  ! Input
+  ! Inputs
     real(double_precision), intent(in), dimension(nb_species) :: Y
 
   ! Locals
@@ -864,7 +866,7 @@ end subroutine FCHEM
   
   implicit none
 
-  ! Input
+  ! Inputs
   integer, intent(in) :: J
   integer, intent(in) :: IMOD1
   integer, intent(in) :: IMOD2
@@ -872,7 +874,7 @@ end subroutine FCHEM
   real(double_precision), intent(in) :: YMOD1
   real(double_precision), intent(in) :: YMOD2
   
-  ! Local
+  ! Locals
   real(double_precision) :: PICK, TESTREF1, TESTREF2, TESTNUM
 
   EX1(J)=0.0D+0

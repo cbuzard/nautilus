@@ -4,7 +4,7 @@ implicit none
 
 contains
 
-subroutine mesh
+subroutine mesh()
 ! Gives the spatial mesh of 1D integrations
 use global_variables
 implicit none
@@ -28,7 +28,7 @@ end subroutine mesh
 ! Warning !!!
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
 ! HSIZE, DEnb_species, UVGAS, UVGRA, TAUBC
-subroutine phys_1D
+subroutine phys_1D()
 use global_variables
 use diffusion
 

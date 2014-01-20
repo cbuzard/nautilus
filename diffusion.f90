@@ -109,7 +109,7 @@ subroutine crank(f,ny,dt,dy,nu,rho, ibc)
 ! ibc > 1 -> stops the code, insulting the user
 implicit none
 
-! Input
+! Inputs
 integer, intent(in) :: ny
 real(double_precision), intent(in), dimension(0:ny) :: rho
 real(double_precision), intent(in), dimension(0:ny) :: nu
@@ -117,7 +117,7 @@ real(double_precision), intent(in) :: dt
 real(double_precision), intent(in) :: dy
 integer, intent(in) :: ibc
 
-! Output
+! Outputs
 real(double_precision), intent(out), dimension(0:ny) :: f
 
 ! Locals
@@ -196,7 +196,7 @@ real(double_precision), intent(in), dimension(0:ny) :: rho
 real(double_precision), intent(in) :: dt
 real(double_precision), intent(in) :: dy
 
-! Output
+! Outputs
 real(double_precision), intent(out), dimension(0:ny) :: f
 
 ! Locals
