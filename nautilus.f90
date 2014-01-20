@@ -306,7 +306,7 @@ do I=1,nb_species
   AWT(I)=MSUM
   if (SPEC(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
   if (SPEC(I).EQ.YGRAIN .OR. SPEC(I).EQ.'GRAIN-      ')&
-  AWT(I)=4.0*PI*RD*RD*RD*RHOD/3.0/AMU
+  AWT(I)=4.0*PI*grain_radius*grain_radius*grain_radius*RHOD/3.0/AMU
 enddo
 
 ! Initialize the Av/NH ratio
@@ -334,7 +334,7 @@ do i=1,nb_species
 enddo
 
 ! Compute TNS = number of sites per grain
-TNS = SNS*4.d0*PI*RD**2
+TNS = SNS*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
 call GRAINRATE
@@ -405,7 +405,7 @@ enddo
 
 ! Compute the grain abundance
 
-GTODN=(4.D+0*PI*RHOD*RD*RD*RD)/(3.D+0*initial_dtg_mass_ratio*AMU)
+GTODN=(4.D+0*PI*RHOD*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
 
 where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
@@ -688,7 +688,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! COND is used to calculate R_acc = (sigma_d) * <v_i> * n_i * n_d
     ! Uses 'Mean' Maxwellian speed, rather than RMS (is this justifiable?)
 
-    COND=PI*RD*RD*SQRT(8.0D+0*BOLTZ/PI/AMU)
+    COND=PI*grain_radius*grain_radius*SQRT(8.0D+0*BOLTZ/PI/AMU)
 
     ! --- Evaluate sticking coeff and accretion rate factor for each species
     STICK=0.0D+0

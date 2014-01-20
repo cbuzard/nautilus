@@ -91,7 +91,7 @@ read(5,14) sticking_coeff_neutral
 read(5,14) sticking_coeff_positive
 read(5,14) sticking_coeff_negative
 read(5,14) RHOD
-read(5,14) RD
+read(5,14) grain_radius
 read(5,14) ACM
 read(5,14) SNS
 read(5,14) EBFAC

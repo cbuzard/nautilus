@@ -93,7 +93,7 @@ RAVNH									Av/NH ratio = 5.34D-22 . (initial_dtg_mass_ratio/0.01)
 sticking_coeff_neutral									sticking coeff for neutral species
 sticking_coeff_positive									sticking coeff for positive species
 sticking_coeff_negative									sticking coeff for negative species
-RD										grain radius (cm)
+grain_radius										grain radius (cm)
 RHOD									mass density of grain material
 TAU0									initial visual extinction
 ZETA
