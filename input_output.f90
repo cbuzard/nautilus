@@ -86,7 +86,7 @@ read(5,14) ZETAX
 read(5,14) UVGAS
 read(5,11)
 read(5,14) initial_dust_temperature
-read(5,14) DTOGM
+read(5,14) initial_dtg_mass_ratio
 read(5,14) sticking_coeff_neutral
 read(5,14) sticking_coeff_positive
 read(5,14) sticking_coeff_negative

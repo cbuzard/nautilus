@@ -88,8 +88,8 @@ DXDTS
 initial_gas_density									initial gas density
 initial_gas_temperature									initial gas temperature
 initial_dust_temperature									initial dust temperature
-DTOGM									original dust-to-gas mass ratio
-RAVNH									Av/NH ratio = 5.34D-22 . (DTOGM/0.01)
+initial_dtg_mass_ratio									original dust-to-gas mass ratio
+RAVNH									Av/NH ratio = 5.34D-22 . (initial_dtg_mass_ratio/0.01)
 sticking_coeff_neutral									sticking coeff for neutral species
 sticking_coeff_positive									sticking coeff for positive species
 sticking_coeff_negative									sticking coeff for negative species
@@ -635,9 +635,9 @@ save tag of resultant grain surface species
 initialise times
 set initial abundances of the species specified in NCON
 compute elemental abundances from the previous date
-recompute the dust to grain mass DTOGM to remove He
+recompute the dust to grain mass initial_dtg_mass_ratio to remove He
 calculate the mean molecular weight used for the diffusion in disks
-calculate the grain abundance with the mass of 1 grain and DTOGM
+calculate the grain abundance with the mass of 1 grain and initial_dtg_mass_ratio
 
 if IREAD is set to something else than 0, read the species abundances in nls_init.d NINI
 check the if the species in NINI are listed in the same order as in NJR (prompt an error message if not)

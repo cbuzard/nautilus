@@ -311,10 +311,10 @@ enddo
 
 ! Initialize the Av/NH ratio
 ! Can be scaled for different dust/gas ratios
-! Here DTOGM is the original dust/gas mass ratio (from nls_control.d)
-! DTOGM is changed later into the dust/hydrogen mass ratio
+! Here initial_dtg_mass_ratio is the original dust/gas mass ratio (from nls_control.d)
+! initial_dtg_mass_ratio is changed later into the dust/hydrogen mass ratio
 
-RAVNH=5.34d-22*(DTOGM/1.d-2)
+RAVNH=5.34d-22*(initial_dtg_mass_ratio/1.d-2)
 
 ! Find ITYPE first and last reactions===================================
 do I=0,NITYPE-1
@@ -391,11 +391,11 @@ do I=1,nb_species
   enddo
 enddo
 
-! Recompute DTOGM to remove He
-! In the following, DTOGM is used as a H/dust mass ratio
+! Recompute initial_dtg_mass_ratio to remove He
+! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
 do i=1,nemax
   if (SPEC(ISPELM(I)).EQ.YHE) then
-    DTOGM = DTOGM*(1.d0+4*ELEMS(I))
+    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*ELEMS(I))
     ! Mean molecular weight (cgs) 
     ! Approximated here (the exact calculus would require a sume over AWT
     ! Used for the diffusion in disks, not for chemistry
@@ -405,7 +405,7 @@ enddo
 
 ! Compute the grain abundance
 
-GTODN=(4.D+0*PI*RHOD*RD*RD*RD)/(3.D+0*DTOGM*AMU)
+GTODN=(4.D+0*PI*RHOD*RD*RD*RD)/(3.D+0*initial_dtg_mass_ratio*AMU)
 
 where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
