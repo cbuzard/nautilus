@@ -87,9 +87,9 @@ read(5,14) UVGAS
 read(5,11)
 read(5,14) initial_dust_temperature
 read(5,14) DTOGM
-read(5,14) STICK0
-read(5,14) STICKP
-read(5,14) STICKN
+read(5,14) sticking_coeff_neutral
+read(5,14) sticking_coeff_positive
+read(5,14) sticking_coeff_negative
 read(5,14) RHOD
 read(5,14) RD
 read(5,14) ACM

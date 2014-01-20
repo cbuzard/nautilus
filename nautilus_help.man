@@ -90,9 +90,9 @@ initial_gas_temperature									initial gas temperature
 initial_dust_temperature									initial dust temperature
 DTOGM									original dust-to-gas mass ratio
 RAVNH									Av/NH ratio = 5.34D-22 . (DTOGM/0.01)
-STICK0									sticking coeff for neutral species
-STICKP									sticking coeff for positive species
-STICKN									sticking coeff for negative species
+sticking_coeff_neutral									sticking coeff for neutral species
+sticking_coeff_positive									sticking coeff for positive species
+sticking_coeff_negative									sticking coeff for negative species
 RD										grain radius (cm)
 RHOD									mass density of grain material
 TAU0									initial visual extinction

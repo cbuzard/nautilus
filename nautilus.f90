@@ -694,13 +694,13 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     STICK=0.0D+0
     do I=1,nb_species
       if (ICG(I).EQ.0) then
-        STICK=STICK0
+        STICK=sticking_coeff_neutral
       endif 
       if (ICG(I).GT.0) then 
-        STICK=STICKP 
+        STICK=sticking_coeff_positive 
       endif
       if (ICG(I).LT.0) then 
-        STICK=STICKN 
+        STICK=sticking_coeff_negative 
       endif
       !         if (SPEC(I).EQ.YH2)      STICK=0.D+0 
       !         if (SPEC(I).EQ.YHE)      STICK=0.D+0 
