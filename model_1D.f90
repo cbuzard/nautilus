@@ -41,7 +41,7 @@ real(double_precision) :: TCOLD , TWARM, T100, UV100
 real(double_precision) :: ZETAZERO, Nsec, LXR, RXR, COLDENS 
 
 TEMP1D(:)=TEMP0
-DTEMP1D(:)=DTEMP0
+DTEMP1D(:)=initial_dust_temperature
 TAU1D(:)=TAU0
 DEnb_species_for_gasD(:)=initial_gas_density/2.
 ZETAX1D(:)=ZETAX

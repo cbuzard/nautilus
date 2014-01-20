@@ -85,7 +85,7 @@ read(5,14) ZETA0
 read(5,14) ZETAX
 read(5,14) UVGAS
 read(5,11)
-read(5,14) DTEMP0
+read(5,14) initial_dust_temperature
 read(5,14) DTOGM
 read(5,14) STICK0
 read(5,14) STICKP
