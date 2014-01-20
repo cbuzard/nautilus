@@ -6,9 +6,11 @@ implicit none
 
 contains
 
-subroutine diffusion_setup
+subroutine diffusion_setup()
 use global_variables
 ! Computes the value of the diffusion coefficient (and its variations in space)
+
+implicit none
 
 if (nptmax.eq.1) then
 
@@ -181,9 +183,21 @@ end subroutine crank
 
 subroutine euler(f,ny,dt,dy,nu,rho)
 implicit none
-integer :: ny,ind
-real(double_precision), dimension(0:ny) :: f,Q,W,nu, rho, dd1d
-real(double_precision) :: dt, dy, d !, nu
+
+! Inputs
+integer, intent(in) :: ny
+real(double_precision), intent(in), dimension(0:ny) :: nu
+real(double_precision), intent(in), dimension(0:ny) :: rho
+real(double_precision), intent(in) :: dt
+real(double_precision), intent(in) :: dy
+
+! Output
+real(double_precision), intent(out), dimension(0:ny) :: f
+
+! Locals
+integer :: ind
+real(double_precision), dimension(0:ny) :: Q,W, dd1d
+real(double_precision) :: d !, nu
 
 dd1d(:)=nu(:)*rho(:)
 
