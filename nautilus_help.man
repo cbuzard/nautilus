@@ -86,7 +86,7 @@ DXDTS
 
 --gas phase parameters / grain parameters--   
 initial_gas_density									initial gas density
-TEMP0									initial gas temperature
+initial_gas_temperature									initial gas temperature
 initial_dust_temperature									initial dust temperature
 DTOGM									original dust-to-gas mass ratio
 RAVNH									Av/NH ratio = 5.34D-22 . (DTOGM/0.01)

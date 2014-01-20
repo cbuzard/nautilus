@@ -79,7 +79,7 @@ read(5,12) ICONS
 read(5,12) IREAD
 read(5,11)
 read(5,14) initial_gas_density
-read(5,14) TEMP0
+read(5,14) initial_gas_temperature
 read(5,14) TAU0
 read(5,14) ZETA0
 read(5,14) ZETAX

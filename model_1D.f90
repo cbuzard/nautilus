@@ -40,7 +40,7 @@ real(double_precision), dimension(nptmax) :: ld1d
 real(double_precision) :: TCOLD , TWARM, T100, UV100
 real(double_precision) :: ZETAZERO, Nsec, LXR, RXR, COLDENS 
 
-TEMP1D(:)=TEMP0
+TEMP1D(:)=initial_gas_temperature
 DTEMP1D(:)=initial_dust_temperature
 TAU1D(:)=TAU0
 DEnb_species_for_gasD(:)=initial_gas_density/2.

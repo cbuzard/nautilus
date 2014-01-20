@@ -75,7 +75,7 @@ real(double_precision) :: XNMIN
 real(double_precision) :: XNT
 real(double_precision) :: initial_gas_density
 real(double_precision) :: TEMP
-real(double_precision) :: TEMP0
+real(double_precision) :: initial_gas_temperature
 real(double_precision) :: DTEMP
 real(double_precision) :: initial_dust_temperature
 real(double_precision) :: TAU
