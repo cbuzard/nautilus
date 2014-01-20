@@ -449,20 +449,31 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   use global_variables
   
   implicit none
+  
+  ! Inputs
+  integer, intent(in) :: liw
+  integer, intent(in) :: lrw
+  integer, intent(in) :: itol
+  integer, intent(in) :: itask
+  integer, intent(in) :: iopt
+  integer, intent(in) :: mf
+  real(double_precision), intent(in) :: atol
 
-  integer :: liw,lrw
-
+  ! Outputs
+  integer, intent(out) :: istate
+  real(double_precision), intent(out) :: t
+  real(double_precision), intent(out) :: TOUT
+  real(double_precision), intent(out), dimension(nb_species) :: Y
+ 
+  ! Locals
   integer, dimension(liw) :: IWORK
-  real(double_precision), dimension(nb_species) :: Y
   real(double_precision), dimension(lrw) :: RWORK
   real(double_precision), dimension(nb_species) :: DUMMYPDJ, DUMMYY
   integer IDUMMY
   integer :: i
-  integer :: itol, itask, istate, iopt, mf
-  real(double_precision) :: atol
   real(double_precision), dimension(nb_species) :: satol
 
-  real(double_precision) :: T, TOUT, TIN
+  real(double_precision) :: TIN
 
   integer :: NNZ
 
@@ -504,7 +515,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     STOP
   endif
 
-  call shieldingsetup
+  call shieldingsetup()
 
   ! Don't stop running, Forrest
 
