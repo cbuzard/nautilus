@@ -48,9 +48,11 @@ endif
 return
 end subroutine diffusion_setup
 
-subroutine zdiffusion
+subroutine zdiffusion()
 use global_variables
 implicit none
+
+! Locals
 real(double_precision), dimension(nptmax) :: Y
 integer :: j
 
@@ -72,6 +74,7 @@ end subroutine zdiffusion
 
 subroutine ztimestep()
 use global_variables
+
 implicit none
 
 if (idiff.eq.0) then
@@ -93,6 +96,8 @@ end subroutine ztimestep
 
 subroutine nothinghappens
 ! dummy subroutine to disable diffusion in a readable way
+implicit none
+
 return 
 end subroutine nothinghappens
 
