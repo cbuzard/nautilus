@@ -38,8 +38,16 @@ subroutine FCHEMVW(N,Y,YDOT)
 ! Computes the chemical evolution
 use global_variables
 implicit none
-integer :: N, NSP1
-real(double_precision), dimension(nb_species) :: Y, YDOT
+
+! Input
+integer, intent(in) :: N
+real(double_precision), intent(in), dimension(nb_species) :: Y
+
+! Output
+real(double_precision), intent(out), dimension(nb_species) :: YDOT
+
+! Local
+integer :: NSP1
 real(double_precision), dimension(nb_species+1) :: YD2
 !REAL(KIND=16), dimension(nb_species+1) :: YD2
 integer :: i
@@ -234,10 +242,10 @@ end subroutine computeIAJA
 
   ! ======================================================================
   ! ======================================================================
-  subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
+subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
   use global_variables
   implicit none
-  integer N,J
+  integer :: N,J
   real(double_precision) :: T
   real(double_precision), dimension(N) :: IAN, JAN
   real(double_precision), dimension(nb_species) :: Y,PDJ
@@ -247,24 +255,30 @@ end subroutine computeIAJA
   call JACVW(Y,J,PDJ) 
 
   return
-  end subroutine JAC
+end subroutine JAC
   
   ! ======================================================================
   ! ======================================================================
-  subroutine FCHEM (N,T,Y,YP)
+subroutine FCHEM (N,T,Y,YP)
   use global_variables
   
   implicit none
 
-  real(double_precision), dimension(nb_species) :: Y,YP
-  real(double_precision) :: T
+  ! Input
+  real(double_precision), intent(in), dimension(nb_species) :: Y
+  real(double_precision), intent(in) :: T
+  
+  ! Output
+  real(double_precision), intent(out), dimension(nb_species) :: YP
+  
+  ! Local
   integer :: N
 
   call RATCON2(Y)
   call FCHEMVW(N,Y,YP) 
 
   return
-  end subroutine FCHEM
+end subroutine FCHEM
 
   ! ======================================================================
   ! ======================================================================
