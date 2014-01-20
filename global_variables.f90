@@ -26,7 +26,7 @@ integer, parameter :: NITYPE=100, NOPMAX=1000
 integer, parameter :: NL1=105,NL2=52,NL3=43
 real(double_precision), parameter :: RXNMIN=1.0D-99
 real(double_precision), parameter :: BOLTZ = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
-real(double_precision), parameter :: GRAV = 6.668D-8
+real(double_precision), parameter :: GRAV = 6.67384d-8 !< Gravitationnal constant in CGS (cm^3 g-1 s-2)
 real(double_precision), parameter :: PI = 3.1415926535898d0
 real(double_precision), parameter :: PLANCK = 6.62565D-27
 real(double_precision), parameter :: HBAR = 1.05459D-27
