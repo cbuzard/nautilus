@@ -109,7 +109,6 @@ read(5,'(18X,I5)') WSTEPR
 read(5,'(18X,I5)') IRATEOUT
 read(5,11) 
 read(5,14) XNMIN
-read(5,13) NS0
 read(5,*) 
 10 format(///////)
 11 format(//)
@@ -368,21 +367,22 @@ integer :: i, j
 
 real(double_precision), allocatable, dimension(:) :: temp_abundances
 character(len=11), allocatable, dimension(:) :: temp_names
+integer :: nb_lines
 
-call get_linenumber(filename, NS0)
+call get_linenumber(filename, nb_lines)
 
-allocate(temp_abundances(NS0))
-allocate(temp_names(NS0))
+allocate(temp_abundances(nb_lines))
+allocate(temp_names(nb_lines))
 
 open(5, file=filename)
-read(5,15) (temp_names(I),temp_abundances(I),I=1,NS0)
+read(5,15) (temp_names(I),temp_abundances(I),I=1,nb_lines)
 close(5)
 15 format(A11,3X,E12.6)
 
 ! Set initial abundances================================================
 do I=1,nb_species
   XN(I)=XNMIN
-  do j=1,NS0
+  do j=1,nb_lines
     if (SPEC(I).EQ.temp_names(j)) then
       XN(I)=temp_abundances(j)
     endif

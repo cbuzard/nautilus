@@ -57,7 +57,6 @@ IRATEOUT |            1 | Spatial point for the rate output
 INITIAL ABUNDANCES, ETC
 ---------+--------------+-----------------------------------------------
 XNMIN    |    1.000D-40 | default minimum initial frac abun
-NS0      |           14 | number of initial abundances given below
 ---------+--------------+-----------------------------------------------
 
 ------------------------------------------------------------------------
