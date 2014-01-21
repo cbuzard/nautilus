@@ -335,6 +335,9 @@ do I=1,nb_species
   enddo
 enddo
 
+deallocate(temp_abundances)
+deallocate(temp_names)
+
 return
 end subroutine read_abundances
 
