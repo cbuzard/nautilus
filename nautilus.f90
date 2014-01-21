@@ -995,7 +995,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 enddo
 
 ! === Zero dummy H2 formation rxns, if necc.
-!      if (IDUST.NE.0) then
+!      if (IS_GRAIN_REACTIONS.NE.0) then
 !         XJ(1)=0.0D+0
 !         XJ(2)=0.0D+0
 !      endif

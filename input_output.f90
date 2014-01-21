@@ -70,7 +70,7 @@ open(5, file='parameters.in')
 read(5,10)
 read(5,14) RELATIVE_TOLERANCE
 read(5,11)
-read(5,12) IDUST
+read(5,12) IS_GRAIN_REACTIONS
 read(5,12) ISABS
 read(5,12) IGRQM
 read(5,12) IMODH

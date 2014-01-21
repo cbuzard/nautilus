@@ -216,7 +216,7 @@ IDENS
 ITEMP
 
 --switches--
-IDUST									accretion, grain surface reactions
+IS_GRAIN_REACTIONS									accretion, grain surface reactions
 IGRQM									grain tunneling diffusion 0=thermal; For H,H2: 1=QM1 (see Watson 1976); 2=QM2 (see Hasegawa & Herbst 1992); 3=choose fastest between QM1 QM2 and thermal
 ICONS									0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 IMODH									1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
@@ -753,7 +753,7 @@ set XK(J)=A(J)*ZETA0
 for ITYPE=2-12 reactions
 XK(J)=A(J)*(T300**B(J))*EXP(-C(J)*TI)
 
-if there is accretion and on-grain eactions (IDUST switch) :
+if there is accretion and on-grain eactions (IS_GRAIN_REACTIONS switch) :
 	set diffusion and evaporation rates
 
 	for ITYPE=15 reactions
@@ -804,7 +804,7 @@ modify the H2 and CO photodissociation if the selfshielding ISABS is on
 compute the H2 selfshielding factor and extrapolate for extreme values of NH2 then set XK(H2)=2.54D-11*TETABIS*UVGAS
 compute the CO selfshielding factor with a saturation value then set XK(CO)=1.03D-10*TETABIS1*TETABIS2*TETABIS3*UVGAS
 
-if there is accretion and on-grain eactions (IDUST switch) :
+if there is accretion and on-grain eactions (IS_GRAIN_REACTIONS switch) :
 
 for ITYPE=99 reactions, compute accretion rates TINACC and set XK(J)=A(J)*XJ(J)*TINACC(JSP1(J))/Y(JSP1(J))/GTODN
 

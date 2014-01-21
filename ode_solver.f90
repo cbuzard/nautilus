@@ -333,12 +333,12 @@ end subroutine FCHEM
     XK(J)=A(J)*(T300**B(J))
   enddo
 
-  ! In the case idust eq 0, we still need the formation of H on the grains
+  ! In the case IS_GRAIN_REACTIONS eq 0, we still need the formation of H on the grains
   ! this is done with the XH species, reaction types 10 and 11
 
   ! ====== Rxn ITYPE 10 and 11
-  ! ITYPE 10 and 11: H2 formation on the grains when idust eq 0
-  if (idust.eq.0) then
+  ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
+  if (IS_GRAIN_REACTIONS.eq.0) then
     do J=IRXSTA(10),IRXFIN(10)
       XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/XNT
       !                     write(*,*) 'GTODN', GTODN
@@ -515,7 +515,7 @@ end subroutine FCHEM
   enddo
 
   ! === Grain surfaces
-  if (IDUST.NE.0) then
+  if (IS_GRAIN_REACTIONS.NE.0) then
 
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
@@ -581,7 +581,7 @@ end subroutine FCHEM
   endif
 
   ! When dust is turned off, zero all dust rates==========================
-  if ((IDUST.EQ.0).AND.(timestep.EQ.1)) then
+  if ((IS_GRAIN_REACTIONS.EQ.0).AND.(timestep.EQ.1)) then
     do J=IRXSTA(14),IRXFIN(99)
       XK(J)=0.0D+0
       XJ(J)=0.0D+0
@@ -702,7 +702,7 @@ end subroutine FCHEM
   enddo
 
   ! Continually time-dependent grain rates================================
-  if (IDUST.NE.0) then
+  if (IS_GRAIN_REACTIONS.NE.0) then
 
     ! ====== Rxn ITYPE 99
     ! ITYPE 99: Adsorption on grains
@@ -844,7 +844,7 @@ end subroutine FCHEM
 
   ! Continually time-dependent gas phase rates============================
   ! H2 formation
-  ! XJ(1) and XJ(2) are zero if IDUST=1
+  ! XJ(1) and XJ(2) are zero if IS_GRAIN_REACTIONS=1
   ! cf GRAINRATE
   ! VW Fev 2012 - this process has been removed
   !      do j=irxsta(0),irxfin(0)
