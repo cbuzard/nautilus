@@ -116,7 +116,6 @@ read(5,*)
 12 format(21X,I2)
 13 format(19X,I4)
 14 format(11X,E12.6)
-15 format(A11,3X,E12.6)
 
 TSTART=TSTART*TYEAR
 TFINAL=TFINAL*TYEAR
@@ -134,9 +133,7 @@ read(5,'(18X,I5)') NJAC
 
 close(5)
 
-open(5, file='abundances.in')
-read(5,15) (XS0(I),XN0(I),I=1,NS0)
-close(5)
+call read_abundances()
 
 ! Read CO and H2 shielding factors=====================
 open(unit=17, file='gg_H2_Photodiss.d', status='OLD')
@@ -298,7 +295,7 @@ end subroutine write_species
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
-!> Franck Hersant
+!> Christophe Cossou
 !
 !> @date 2000
 !
@@ -316,17 +313,14 @@ use global_variables
 implicit none
 
 ! Locals
-character(len=80) :: filename_output
+character(len=80) :: filename='abundances.in'
+integer :: i
 
-write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
+open(5, file=filename)
+read(5,15) (XS0(I),XN0(I),I=1,NS0)
+close(5)
+15 format(A11,3X,E12.6)
 
-
-open(UNIT=35, file=filename_output, form='unformatted')
-
-write(35) TIME, zspace, SPEC
-write(35) TEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D
-write(35) ZXN
-close(35)
 
 return
 end subroutine read_abundances
