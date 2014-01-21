@@ -316,13 +316,21 @@ implicit none
 character(len=80) :: filename='abundances.in'
 integer :: i
 
+real(double_precision), allocatable, dimension(:) :: temp_abundances
+character(len=11), allocatable, dimension(:) :: temp_names
+
 call get_linenumber(filename, NS0)
 
+allocate(temp_abundances(NS0))
+allocate(temp_names(NS0))
+
 open(5, file=filename)
-read(5,15) (XS0(I),XN0(I),I=1,NS0)
+read(5,15) (temp_names(I),temp_abundances(I),I=1,NS0)
 close(5)
 15 format(A11,3X,E12.6)
 
+XS0(1:NS0) = temp_names(1:NS0)
+XN0(1:NS0) = temp_abundances(1:NS0)
 
 return
 end subroutine read_abundances
