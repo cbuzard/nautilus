@@ -314,7 +314,7 @@ implicit none
 
 ! Locals
 character(len=80) :: filename='abundances.in'
-integer :: i
+integer :: i, j
 
 real(double_precision), allocatable, dimension(:) :: temp_abundances
 character(len=11), allocatable, dimension(:) :: temp_names
@@ -331,6 +331,16 @@ close(5)
 
 XS0(1:NS0) = temp_names(1:NS0)
 XN0(1:NS0) = temp_abundances(1:NS0)
+
+!~ ! Set initial abundances================================================
+!~ do I=1,nb_species
+!~   XN(I)=XNMIN
+!~   do j=1,NS0
+!~     if (SPEC(I).EQ.XS0(j)) then
+!~       XN(I)=XN0(j)
+!~     endif
+!~   enddo
+!~ enddo
 
 return
 end subroutine read_abundances
