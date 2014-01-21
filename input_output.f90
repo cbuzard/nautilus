@@ -325,15 +325,12 @@ read(5,15) (temp_names(I),temp_abundances(I),I=1,NS0)
 close(5)
 15 format(A11,3X,E12.6)
 
-XS0(1:NS0) = temp_names(1:NS0)
-XN0(1:NS0) = temp_abundances(1:NS0)
-
 ! Set initial abundances================================================
 do I=1,nb_species
   XN(I)=XNMIN
   do j=1,NS0
-    if (SPEC(I).EQ.XS0(j)) then
-      XN(I)=XN0(j)
+    if (SPEC(I).EQ.temp_names(j)) then
+      XN(I)=temp_abundances(j)
     endif
   enddo
 enddo
