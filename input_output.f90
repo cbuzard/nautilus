@@ -68,7 +68,7 @@ integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 open(5, file='parameters.in')
 
 read(5,10)
-read(5,14) RTOL
+read(5,14) RELATIVE_TOLERANCE
 read(5,11)
 read(5,12) IDUST
 read(5,12) ISABS

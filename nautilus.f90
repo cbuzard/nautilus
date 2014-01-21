@@ -535,7 +535,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
     iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(fchem,nb_species,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
+    call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation

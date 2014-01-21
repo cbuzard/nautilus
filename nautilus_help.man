@@ -49,7 +49,7 @@ nopmax
 
 rxmin							
 
-Rtol									relative tolerance (solver parameter)
+RELATIVE_TOLERANCE									relative tolerance (solver parameter)
 
 R					tab(nb_reactions)
 XK					tab(nb_reactions)
@@ -493,7 +493,7 @@ time loop (from 0 to 90% of the final time TFinal)
 			-> call shieldingsetup
 			-> call ratcon(Y)
 			-> call computeIAJA
-			-> call dlsodes(fchem,nb_species,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
+			-> call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 			-> call CONSERVE(Y)
 	
 
@@ -732,7 +732,7 @@ call shieldingsetup
 call ratcon(Y)
 ! Feed IWORK with IA and JA
 call computeIAJA(Y)
-call dlsodes(fchem,nb_species,y,t,tout,itol,rtol,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
+call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 !Whenever the solver fails converging, print the reason.
 ! cf odpkdmain.f for translation
 CALL CONSERVE(Y)

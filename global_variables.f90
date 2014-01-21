@@ -36,7 +36,7 @@ real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in 
 
 real(double_precision) :: meanw, Omega2
 
-real(double_precision) :: RTOL
+real(double_precision) :: RELATIVE_TOLERANCE
 
 character(len=11), allocatable, dimension(:) :: SPEC
 
