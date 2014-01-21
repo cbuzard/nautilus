@@ -295,7 +295,61 @@ end subroutine write_species
 !> @author 
 !> Christophe Cossou
 !
-!> @date 2000
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief subroutine that try to split the line in two part, given a 
+!! separator value (set in parameter of the subroutine)
+!
+!> @warning The first character of the parameter value MUST NOT be a string. All spaces will be truncated
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_parameter_value(line, isParameter, id, value)
+
+  implicit none
+  
+  ! Input
+  character(len=80), intent(in) :: line !< [in] Input line in which we want to retrieve a parameter and its value
+  
+  ! Output
+  logical, intent(out) :: isParameter !< [out] a boolean to say whether or not there is a parameter on this line. 
+!! i.e if there is an occurence of the separator in the input line
+  character(len=80), intent(out) :: id !< [out] the name of the parameter
+  character(len=80), intent(out) :: value !< [out] a string that contains the value(s) associated with the parameter name. 
+!!         Note that a special attention is given to the fact that the first character of 'value' must NOT be a 'space'
+  
+  ! Local
+  character(len=1), parameter :: SEP = '=' ! the separator of a parameter line
+  character(len=1) :: first_character
+  integer :: id_first_char
+  integer :: sep_position ! an integer to get the position of the separator
+
+  !------------------------------------------------------------------------------
+
+  sep_position = index(line, SEP)
+  
+  if (sep_position.ne.0) then
+    isParameter = .true.
+    id = line(1:sep_position-1)
+    
+    id_first_char = sep_position +1
+    first_character = line(id_first_char:id_first_char)
+    do while (first_character.eq.' ')
+      id_first_char = id_first_char +1
+      first_character = line(id_first_char:id_first_char)
+    end do
+    value = line(id_first_char:)
+  else
+    isParameter = .false.
+  end if
+
+end subroutine get_parameter_value
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
 !
 ! DESCRIPTION: 
 !> @brief Read abundances from abundances.in file. All abundances not defined
