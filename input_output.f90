@@ -316,6 +316,8 @@ implicit none
 character(len=80) :: filename='abundances.in'
 integer :: i
 
+call get_linenumber(filename, NS0)
+
 open(5, file=filename)
 read(5,15) (XS0(I),XN0(I),I=1,NS0)
 close(5)
