@@ -43,11 +43,10 @@ character(len=11), allocatable, dimension(:) :: SPEC
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
 character(len=11) :: YJH,YJH2,YH,YH2,YHE,YHEP,YE,YGRAIN,YCO
 integer :: INDCO, INDH2, INDHE
-character(len=11), allocatable, dimension(:) :: XS0
 
 real(double_precision), allocatable, dimension(:) :: XJ,A,B,C,R
 real(double_precision), allocatable, dimension(:) :: XK
-real(double_precision), allocatable, dimension(:) :: XN,XNI,XN0,CTS
+real(double_precision), allocatable, dimension(:) :: XN,XNI,CTS
 real(double_precision), allocatable, dimension(:) :: DXDT,DXDTP,DXDTN,AWT
 real(double_precision), dimension(nemax) :: ELEMS,ESUM,EMERR
 real(double_precision), dimension(nopmax) :: DENS,AV,TIMS
@@ -252,10 +251,8 @@ subroutine initialize_global_arrays()
 implicit none
 
 allocate(spec(nb_species))
-allocate(xs0(nb_species))
 allocate(xn(nb_species))
 allocate(xni(nb_species))
-allocate(xn0(nb_species))
 allocate(cts(nb_species))
 allocate(dxdt(nb_species))
 allocate(dxdtp(nb_species))
