@@ -111,7 +111,6 @@ read(5,11)
 read(5,14) XNMIN
 read(5,13) NS0
 read(5,*) 
-read(5,15) (XS0(I),XN0(I),I=1,NS0)
 10 format(///////)
 11 format(//)
 12 format(21X,I2)
@@ -133,6 +132,10 @@ read(5,'(11X,D12.6)') DISTR
 read(5,'(18X,I5)') TESTJAC
 read(5,'(18X,I5)') NJAC
 
+close(5)
+
+open(5, file='abundances.in')
+read(5,15) (XS0(I),XN0(I),I=1,NS0)
 close(5)
 
 ! Read CO and H2 shielding factors=====================
@@ -292,6 +295,41 @@ close(4)
 
 return
 end subroutine write_species
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Write all abundances for all species in an output file at each
+!! output time. The total number of output files related to abundances 
+!! will be equal to the number of timestep, not equally spaced in time.\n\n
+!! Output filename is of the form : abundances.000001.out
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine read_abundances()
+! Writes 1D outputs
+use global_variables
+
+implicit none
+
+! Locals
+character(len=80) :: filename_output
+
+write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
+
+
+open(UNIT=35, file=filename_output, form='unformatted')
+
+write(35) TIME, zspace, SPEC
+write(35) TEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D
+write(35) ZXN
+close(35)
+
+return
+end subroutine read_abundances
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
