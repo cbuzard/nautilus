@@ -133,8 +133,6 @@ read(5,'(18X,I5)') NJAC
 
 close(5)
 
-call read_abundances()
-
 ! Read CO and H2 shielding factors=====================
 open(unit=17, file='gg_H2_Photodiss.d', status='OLD')
 do I=1,NL1
@@ -300,10 +298,8 @@ end subroutine write_species
 !> @date 2000
 !
 ! DESCRIPTION: 
-!> @brief Write all abundances for all species in an output file at each
-!! output time. The total number of output files related to abundances 
-!! will be equal to the number of timestep, not equally spaced in time.\n\n
-!! Output filename is of the form : abundances.000001.out
+!> @brief Read abundances from abundances.in file. All abundances not defined
+!! here will have the default value XNMIN
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine read_abundances()
@@ -313,7 +309,7 @@ use global_variables
 implicit none
 
 ! Locals
-character(len=80) :: filename='abundances.in'
+character(len=80), parameter :: filename='abundances.in'
 integer :: i, j
 
 real(double_precision), allocatable, dimension(:) :: temp_abundances
@@ -332,15 +328,15 @@ close(5)
 XS0(1:NS0) = temp_names(1:NS0)
 XN0(1:NS0) = temp_abundances(1:NS0)
 
-!~ ! Set initial abundances================================================
-!~ do I=1,nb_species
-!~   XN(I)=XNMIN
-!~   do j=1,NS0
-!~     if (SPEC(I).EQ.XS0(j)) then
-!~       XN(I)=XN0(j)
-!~     endif
-!~   enddo
-!~ enddo
+! Set initial abundances================================================
+do I=1,nb_species
+  XN(I)=XNMIN
+  do j=1,NS0
+    if (SPEC(I).EQ.XS0(j)) then
+      XN(I)=XN0(j)
+    endif
+  enddo
+enddo
 
 return
 end subroutine read_abundances

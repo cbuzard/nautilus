@@ -99,6 +99,8 @@ call initialize_global_arrays()
 
 call read_parameters()
 
+call read_abundances()
+
 call get_gas_surface_species()
 
 ! Dimension of the work arrays for the solver 
@@ -362,18 +364,6 @@ integer :: i, j, k
 ! Initialise times======================================================
 TOUT=0.0d0
 TIME=0.0d0
-
-! Set initial abundances================================================
-do I=1,nb_species
-  XN(I)=XNMIN
-  do K=1,NS0
-    if (SPEC(I).EQ.XS0(K)) then
-      XN(I)=XN0(K)
-    endif
-  enddo
-enddo
-
-
 
 ! Compute elemental abundances
 
