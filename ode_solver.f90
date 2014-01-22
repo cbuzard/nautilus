@@ -543,13 +543,13 @@ end subroutine FCHEM
       ! ITYPE 66: CO photodesorption by external UV
       ! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
       do j=irxsta(66),irxfin(66)
-        XK(J)=A(J)/SNS*UVGAS*1.d8*exp(-2.*TAU) 
+        XK(J)=A(J)/SITE_DENSITY*UVGAS*1.d8*exp(-2.*TAU) 
       enddo
 
       ! ========= Rxn ITYPE 67
       ! ITYPE 67: CO photodesorption by CR generated UV
       do j=irxsta(67),irxfin(67)
-        XK(J)=A(J)/SNS*1.d4
+        XK(J)=A(J)/SITE_DENSITY*1.d4
       enddo
 
     endif

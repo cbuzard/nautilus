@@ -104,8 +104,8 @@ CRB										scale fac for CR radiation field, ITYPE 18
 UVGAS									scale factor for UV radiation field
 UVGRA
 LAYERS									number of monolayers for ITYPE 17-20 
-ACM										site spacing
-SNS										site density
+SITE_SPACING										site spacing
+SITE_DENSITY										site density
 nb_sites_per_grain										number of sites per grain
 ACT										grain rxn activation energy constant
 TSMAX									peak grain temp (CR heating)
@@ -189,7 +189,7 @@ ORDSP				tab (nb_species)
 iptstore								global variable for the current sppatial point (called in nautilus)
 NT
 ITFLAG
-OTPD									outputs per decade  2  8  64  128 (Only without diffusion)
+OUTPUT_PER_DECADE									outputs per decade  2  8  64  128 (Only without diffusion)
 DP
 NDP
 IODR
@@ -302,9 +302,9 @@ GSREAD				tab(5,nb_reactions)		on-grain reactions (2 reagents + 3 products)
 REA5				tab(nb_reactions)			temporary buffer for activation energies of the corresponding on-grain reactions
 EA					tab(nb_reactions)			activation energies of the corresponding on-grain reactions
 
-CHF					tab(nb_species)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SNS*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
+CHF					tab(nb_species)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 RQ1					tab(nb_species)			(dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain) quantum mechanical tunneling rate (Watson 1976)
-RQ2					tab(nb_species)			CHF / nb_sites_per_grain.EXP(-2.ACM / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
+RQ2					tab(nb_species)			CHF / nb_sites_per_grain.EXP(-2.SITE_SPACING / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
 
 jsp1				tab(nb_reactions)			first reagent of the reaction (line of)
 jsp2				tab(nb_reactions)			second reagent of the reaction (line of)
@@ -763,10 +763,10 @@ if there is accretion and on-grain eactions (IS_GRAIN_REACTIONS switch) :
 	set XK(J)=A(J)*XJ(J)*CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
 
 for ITYPE=66 reactions
-set XK(J)=A(J)/SNS*UVGAS*1.d8*exp(-2.*TAU) 
+set XK(J)=A(J)/SITE_DENSITY*UVGAS*1.d8*exp(-2.*TAU) 
 
 for ITYPE=67 reactions
-set XK(J)=A(J)/SNS*1.d4
+set XK(J)=A(J)/SITE_DENSITY*1.d4
 
 when dust is turned off, zero all dust rates
 

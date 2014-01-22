@@ -89,8 +89,8 @@ real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: UVGAS
 real(double_precision) :: UVGRA
 real(double_precision) :: LAYERS
-real(double_precision) :: ACM
-real(double_precision) :: SNS
+real(double_precision) :: SITE_SPACING
+real(double_precision) :: SITE_DENSITY
 real(double_precision) :: nb_sites_per_grain
 real(double_precision) :: ACT
 real(double_precision) :: TSMAX
@@ -124,7 +124,7 @@ integer, allocatable, dimension(:,:) :: IELM
 integer, dimension(nemax) :: ISPELM
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA,IRXFIN
-integer :: timestep,NT,ITFLAG,OTPD,DP,NDP,IODR,IREFSP, ISORD
+integer :: timestep,NT,ITFLAG,OUTPUT_PER_DECADE,DP,NDP,IODR,IREFSP, ISORD
 
 integer :: IDENS,ITEMP,IS_GRAIN_REACTIONS,IGRQM,ICONS,IMODH,IREAD
 integer :: IPOUT,IPMON,IPLOT,IPDET,IPRXN,IPORD,IS_ABSORPTION

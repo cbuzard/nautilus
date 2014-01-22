@@ -80,7 +80,7 @@ implicit none
 if (idiff.eq.0) then
   ! Log spacing of time outputs when there is no diffusion
   if (TIME.gt.1.d-2) then
-    zdt = TIME*(10.**(1.d0/OTPD)-1.)
+    zdt = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
   else
     zdt=1.d0*TYEAR
   endif

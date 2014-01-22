@@ -47,8 +47,8 @@ STICKING_COEFF_POSITIVE =  0.000E+00 ! sticking coeff for positive species
 STICKING_COEFF_NEGATIVE =  0.000E+00 ! sticking coeff for negative species
 GRAIN_DENSITY =  3.000E+00 ! mass density of grain material
 grain_radius =  1.000E-05 ! grain radius (cm)
-ACM =  1.000E-08 ! site spacing (cm)
-SNS =  1.500E+15 ! site density (cm-2)
+SITE_SPACING =  1.000E-08 ! site spacing (cm)
+SITE_DENSITY =  1.500E+15 ! site density (cm-2)
 EBFAC =  5.000E-01 ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values
 ACT =  1.000E-08 ! grain rxn activation energy constant
 TSMAX =  7.000E+01 ! peak grain temp (CR heating)
@@ -61,7 +61,7 @@ ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
 !*        Output times       *
 !*****************************
 
-OTPD =    2 ! outputs per decade  2  8  64  128 (Only without diffusion)
+OUTPUT_PER_DECADE =    2 ! outputs per decade  2  8  64  128 (Only without diffusion)
 TSTART =  1.000E+00 ! first output time, after zero (yrs)
 TFINAL =  1.000E+01 ! last output time (yrs)
 WSTEP =     1 ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)

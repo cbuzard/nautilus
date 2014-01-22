@@ -307,11 +307,11 @@ if (isDefined) then
       case('grain_radius')
         read(value, '(e12.6)') grain_radius
         
-      case('ACM')
-        read(value, '(e12.6)') ACM
+      case('SITE_SPACING')
+        read(value, '(e12.6)') SITE_SPACING
       
-      case('SNS')
-        read(value, '(e12.6)') SNS
+      case('SITE_DENSITY')
+        read(value, '(e12.6)') SITE_DENSITY
       
       case('EBFAC')
         read(value, '(e12.6)') EBFAC
@@ -335,8 +335,8 @@ if (isDefined) then
         read(value, '(e12.6)') ARRK
       
       ! Outputs
-      case('OTPD')
-        read(value, '(i4)') OTPD
+      case('OUTPUT_PER_DECADE')
+        read(value, '(i4)') OUTPUT_PER_DECADE
       
       case('TSTART')
         read(value, '(e12.6)') TSTART
@@ -464,8 +464,8 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEGATIVE = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
   write(10,'(a,es10.3e2,a)') 'GRAIN_DENSITY = ', GRAIN_DENSITY, ' ! mass density of grain material'
   write(10,'(a,es10.3e2,a)') 'RD = ', grain_radius, ' ! grain radius (cm)'
-  write(10,'(a,es10.3e2,a)') 'ACM = ', ACM, ' ! site spacing (cm)'
-  write(10,'(a,es10.3e2,a)') 'SNS = ', SNS, ' ! site density (cm-2)'
+  write(10,'(a,es10.3e2,a)') 'SITE_SPACING = ', SITE_SPACING, ' ! site spacing (cm)'
+  write(10,'(a,es10.3e2,a)') 'SITE_DENSITY = ', SITE_DENSITY, ' ! site density (cm-2)'
   write(10,'(a,es10.3e2,a)') 'EBFAC = ', EBFAC, ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
   write(10,'(a,es10.3e2,a)') 'TSMAX = ', TSMAX, ' ! peak grain temp (CR heating)'
@@ -478,7 +478,7 @@ use global_variables
   write(10,'(a)') "!*        Output times       *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i4,a)') 'OTPD = ', OTPD, ' ! outputs per decade  2  8  64  128 (Only without diffusion)'
+  write(10,'(a,i4,a)') 'OUTPUT_PER_DECADE = ', OUTPUT_PER_DECADE, ' ! outputs per decade  2  8  64  128 (Only without diffusion)'
   write(10,'(a,es10.3e2,a)') 'TSTART = ', TSTART/TYEAR, ' ! first output time, after zero (yrs)'
   write(10,'(a,es10.3e2,a)') 'TFINAL = ', TFINAL/TYEAR, ' ! last output time (yrs)'
   write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'

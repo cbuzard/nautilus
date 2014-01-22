@@ -339,7 +339,7 @@ do i=1,nb_species
 enddo
 
 ! Compute nb_sites_per_grain = number of sites per grain
-nb_sites_per_grain = SNS*4.d0*PI*grain_radius**2
+nb_sites_per_grain = SITE_DENSITY*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
 call grainrate()
@@ -797,7 +797,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       if (SMASS(I).NE.0) then
         SMA=REAL(SMASS(I))
         ! --------- Set characteristic frequency
-        CHF(I)=SQRT(2.0D+0*K_B/PI/PI/AMU * SNS*ED(I)/SMA)
+        CHF(I)=SQRT(2.0D+0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
           RQ1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
@@ -805,7 +805,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
           RQ1(I)=0.0D+0
         endif
         RQ2(I)=CHF(I)/nb_sites_per_grain*&
-        EXP(-2.0D+0*ACM/H_BARRE*SQRT(2.0D+0*AMU*SMA*K_B*EB(I)))
+        EXP(-2.0D+0*SITE_SPACING/H_BARRE*SQRT(2.0D+0*AMU*SMA*K_B*EB(I)))
       endif
     enddo
 
