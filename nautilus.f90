@@ -99,6 +99,8 @@ call initialize_global_arrays()
 
 call read_input_files()
 
+call write_parameters()
+
 call read_abundances()
 
 call get_gas_surface_species()

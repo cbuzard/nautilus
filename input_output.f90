@@ -283,6 +283,116 @@ end subroutine read_parameters_in
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief subroutine that write the simulation parameters into the file 'parameters.out'
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine write_parameters()
+use global_variables
+
+  implicit none
+  
+  character(len=80) :: filename = 'parameters.out'
+  
+  open(10, file=filename)
+  write(10,'(a)') "!# ------------------------------------------------"
+  write(10,'(a)') "!# Parameter file for various properties of the disk."
+  write(10,'(a)') "!# ------------------------------------------------"
+  write(10,'(a)') "!# blanck line or with spaces will be skipped."
+  write(10,'(a)') "!# In fact, the only lines that matter are non commented lines with a"
+  write(10,'(a)') "!# '=' character to distinguish the identificator and the value(s)"
+  write(10,'(a)') "!# (each value must be separated with at least one space."
+  write(10,'(a)') "!# Line must not be longer than 80 character, but comments can be far"
+  write(10,'(a)') "!# bigger than that, even on line with a parameter to read."
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*     Solver Parameters     *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,e12.6, a)') 'RTOL = ',RELATIVE_TOLERANCE, ' ! Relative tolerance'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*          Switches         *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,i2,a)') 'IDUST = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
+  write(10,'(a,i2,a)') 'ISABS = ', ISABS, ' ! H2 AND CO SELF-SHIELDING'
+  write(10,'(a,i2,a)') 'IGRQM = ', IGRQM, ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
+  write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
+  write(10,'(a,i2,a)') 'ICONS = ', ICONS, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc '
+  write(10,'(a,i2,a)') 'IREAD = ', IREAD, ' ! 0 read initial abundances from the nls_control'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*    Gas phase parameters   *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,e12.6,a)') 'XNT0 = ', initial_gas_density, ' ! initial gas density'
+  write(10,'(a,e12.6,a)') 'TEMP0 = ', initial_gas_temperature, ' ! initial gas temp'
+  write(10,'(a,e12.6,a)') 'TAU0 = ', TAU0, ' ! initial visual extinction'
+  write(10,'(a,e12.6,a)') 'ZETA0 = ', ZETA0, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
+  write(10,'(a,e12.6,a)') 'ZETAX = ', ZETAX, ' ! Ionisation rate due to X-rays (s-1)'
+  write(10,'(a,e12.6,a)') 'UVGAS = ', UVGAS, ' ! scale fac for UV radiation field'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*      Grain parameters     *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,e12.6,a)') 'DTEMP0 = ', initial_dust_temperature, ' ! initial dust temp'
+  write(10,'(a,e12.6,a)') 'DTOGM = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
+  write(10,'(a,e12.6,a)') 'STICK0 = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
+  write(10,'(a,e12.6,a)') 'STICKP = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
+  write(10,'(a,e12.6,a)') 'STICKN = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
+  write(10,'(a,e12.6,a)') 'RHOD = ', RHOD, ' ! mass density of grain material'
+  write(10,'(a,e12.6,a)') 'RD = ', grain_radius, ' ! grain radius (cm)'
+  write(10,'(a,e12.6,a)') 'ACM = ', ACM, ' ! site spacing (cm)'
+  write(10,'(a,e12.6,a)') 'SNS = ', SNS, ' ! site density (cm-2)'
+  write(10,'(a,e12.6,a)') 'EBFAC = ', EBFAC, ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
+  write(10,'(a,e12.6,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
+  write(10,'(a,e12.6,a)') 'TSMAX = ', TSMAX, ' ! peak grain temp (CR heating)'
+  write(10,'(a,e12.6,a)') 'CRT = ', CRT, ' ! duration (s) of peak grain T'
+  write(10,'(a,e12.6,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter s-1 grain-1 (for 0.1 micron grain)'
+  write(10,'(a,e12.6,a)') 'LAYERS = ', LAYERS, ' ! number of monolayers for ITYPE 17-20 currently not used in the code'
+  write(10,'(a,e12.6,a)') 'ARRK = ', ARRK, ' ! a-coefficient for RRK-style formation-desorption'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*        Output times       *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,i4,a)') 'OTPD = ', OTPD, ' ! outputs per decade  2  8  64  128 (Only without diffusion)'
+  write(10,'(a,e12.6,a)') 'TSTART = ', TSTART, ' ! first output time, after zero (yrs)'
+  write(10,'(a,e12.6,a)') 'TFINAL = ', TFINAL, ' ! last output time (yrs)'
+  write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
+  write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
+  write(10,'(a,i5,a)') 'IRATEOUT = ', IRATEOUT, ' ! Spatial point for the rate output'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*     Initial Abundances    *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,e12.6,a)') 'XNMIN = ', XNMIN, ' ! default minimum initial frac abun'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*       1D parameters       *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
+  write(10,'(a,i5,a)') 'IDIFF = ', IDIFF, ' ! Diffusivity flag (1. constant 2. alpha)'
+  write(10,'(a,e12.6,a)') 'DIFFTY = ', DIFFTY, ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
+  write(10,'(a,e12.6,a)') 'HSIZE = ', HSIZE, ' ! Computing box"s size (cm)'
+  write(10,'(a,e12.6,a)') 'MCENTER = ', MCENTER, ' ! Central mass (g)'
+  write(10,'(a,e12.6,a)') 'DISTR = ', DISTR, ' ! Radial distance (cm) for the disk model 1.500D+15 cm = 100 AU'
+  write(10,'(a,i5,a)') 'TESTJAC = ', TESTJAC, ' ! Testing the number of non-zero jacobian elements ?'
+  write(10,'(a,i5,a)') 'NJAC = ', NJAC, ' ! Number of non-zero jacobian elements (per line, result of TESTJAC=1)'
+  write(10,*) ''
+  close(10)
+  
+end subroutine write_parameters
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
 !> Franck Hersant
 !
 !> @date 2000
