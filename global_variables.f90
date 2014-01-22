@@ -81,7 +81,7 @@ real(double_precision) :: initial_gas_temperature
 real(double_precision) :: DTEMP
 real(double_precision) :: initial_dust_temperature
 real(double_precision) :: TAU
-real(double_precision) :: TAU0
+real(double_precision) :: VISUAL_EXTINCTION
 real(double_precision) :: ZETA
 real(double_precision) :: ZETA0
 real(double_precision) :: XNTI

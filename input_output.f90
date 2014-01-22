@@ -273,8 +273,8 @@ if (isDefined) then
       case('INITIAL_GAS_TEMPERATURE')
         read(value, '(e12.6)') initial_gas_temperature
       
-      case('TAU0')
-        read(value, '(e12.6)') TAU0
+      case('VISUAL_EXTINCTION')
+        read(value, '(e12.6)') VISUAL_EXTINCTION
       
       case('ZETA0')
         read(value, '(e12.6)') ZETA0
@@ -448,7 +448,7 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_DENSITY = ', initial_gas_density, ' ! initial gas density'
   write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_TEMPERATURE = ', initial_gas_temperature, ' ! initial gas temp'
-  write(10,'(a,es10.3e2,a)') 'TAU0 = ', TAU0, ' ! initial visual extinction'
+  write(10,'(a,es10.3e2,a)') 'VISUAL_EXTINCTION = ', VISUAL_EXTINCTION, ' ! initial visual extinction'
   write(10,'(a,es10.3e2,a)') 'ZETA0 = ', ZETA0, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
   write(10,'(a,es10.3e2,a)') 'ZETAX = ', ZETAX, ' ! Ionisation rate due to X-rays (s-1)'
   write(10,'(a,es10.3e2,a)') 'UVGAS = ', UVGAS, ' ! scale fac for UV radiation field'

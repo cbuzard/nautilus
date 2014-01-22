@@ -31,7 +31,7 @@ IREAD =  0 ! 0 read initial abundances from the nls_control
 
 INITIAL_GAS_DENSITY =  2.000E+04 ! initial gas density
 INITIAL_GAS_TEMPERATURE =  1.000E+01 ! initial gas temp
-TAU0 =  1.500E+01 ! initial visual extinction
+VISUAL_EXTINCTION =  1.500E+01 ! initial visual extinction
 ZETA0 =  1.300E-17 ! cosmic ray ionisation rate (1.3e-17 standard value)
 ZETAX =  0.000E+00 ! Ionisation rate due to X-rays (s-1)
 UVGAS =  1.000E+00 ! scale fac for UV radiation field
