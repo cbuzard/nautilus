@@ -195,8 +195,8 @@ NDP
 IODR
 IREFSP
 ISORD
-TSTART									first output time, after zero (yrs)
-TFINAL									last output time (yrs)
+START_TIME									first output time, after zero (yrs)
+STOP_TIME									last output time (yrs)
 wstep									outputs every wstep timesteps
 wstepr									Outputs every WSTEPR timesteps for the rate coefficients
 Istep
@@ -246,7 +246,7 @@ see fileset for the corresponding units of each datafile
 ==called in nautilus==
 lrw												
 
-IT										number of time loops (typically 0.1Tfinal/zdt with a constant zdt)
+IT										number of time loops (typically 0.1STOP_TIME/zdt with a constant zdt)
 
 T										local time
 TIME									global time
@@ -481,7 +481,7 @@ initialize ZXN with the values of XN
 
 allocate the JA array
 
-time loop (from 0 to 90% of the final time TFinal)
+time loop (from 0 to 90% of the final time STOP_TIME)
 	call ztimestep(zdt)
 	write in NERR the associated iterations eand time in years
 	

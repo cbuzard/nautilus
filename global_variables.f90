@@ -97,8 +97,8 @@ real(double_precision) :: TSMAX
 real(double_precision) :: CRT
 real(double_precision) :: CRFE
 real(double_precision) :: EBFAC
-real(double_precision) :: TSTART
-real(double_precision) :: TFINAL
+real(double_precision) :: START_TIME
+real(double_precision) :: STOP_TIME
 real(double_precision) :: TIME
 real(double_precision) :: ALPHA
 real(double_precision) :: BFAC

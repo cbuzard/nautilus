@@ -158,7 +158,7 @@ TIME = 0.d0
 allocate(JA(1:liw))
 
 ! The real time loop
-do while (t.lt.0.9*tfinal)
+do while (t.lt.0.9*STOP_TIME)
 
   call ztimestep() ! Determination of the diffusive timestep, modification of the global parameter zdt
   TIME=T+ZDT ! Final time for chemistry T -> T + ZDT
