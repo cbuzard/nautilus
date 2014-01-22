@@ -97,7 +97,7 @@ grain_radius										grain radius (cm)
 RHOD									mass density of grain material
 VISUAL_EXTINCTION									initial visual extinction
 ZETA
-ZETA0									cosmic ray ionisation rate
+CR_IONISATION_RATE									cosmic ray ionisation rate
 XNTI
 CRA										scale fac for CR radiation field, ITYPE 17
 CRB										scale fac for CR radiation field, ITYPE 18
@@ -748,7 +748,7 @@ for ITYPE=0 reactions
 set XK(J)=A(J)*(T300**B(J))*GTODN
 
 for ITYPE=1 reactions
-set XK(J)=A(J)*ZETA0
+set XK(J)=A(J)*CR_IONISATION_RATE
 
 for ITYPE=2-12 reactions
 XK(J)=A(J)*(T300**B(J))*EXP(-C(J)*TI)
@@ -819,11 +819,11 @@ set XK(J)=A(J)*XJ(J)*BARR*DIFF*GTODN/XNT
 !Allow only 1 monolayer of each to react (Not used for the time being)
 
 for ITYPE=17 reactions
-set XK(J)=A(J)*ZETA0*CRA
+set XK(J)=A(J)*CR_IONISATION_RATE*CRA
 !Allow only 1 monolayer of each to react (Not used for the time being)
 
 for ITYPE=18 reactions
-set XK(J)=A(J)*ZETA0*CRB
+set XK(J)=A(J)*CR_IONISATION_RATE*CRB
 !Allow only 1 monolayer of each to react (Not used for the time being)
 
 for ITYPE=19-20 reactions

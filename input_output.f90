@@ -276,11 +276,11 @@ if (isDefined) then
       case('VISUAL_EXTINCTION')
         read(value, '(e12.6)') VISUAL_EXTINCTION
       
-      case('ZETA0')
-        read(value, '(e12.6)') ZETA0
+      case('CR_IONISATION_RATE')
+        read(value, '(e12.6)') CR_IONISATION_RATE
       
-      case('ZETAX')
-        read(value, '(e12.6)') ZETAX
+      case('X_IONISATION_RATE')
+        read(value, '(e12.6)') X_IONISATION_RATE
       
       case('UVGAS')
         read(value, '(e12.6)') UVGAS
@@ -449,8 +449,8 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_DENSITY = ', initial_gas_density, ' ! initial gas density'
   write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_TEMPERATURE = ', initial_gas_temperature, ' ! initial gas temp'
   write(10,'(a,es10.3e2,a)') 'VISUAL_EXTINCTION = ', VISUAL_EXTINCTION, ' ! initial visual extinction'
-  write(10,'(a,es10.3e2,a)') 'ZETA0 = ', ZETA0, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
-  write(10,'(a,es10.3e2,a)') 'ZETAX = ', ZETAX, ' ! Ionisation rate due to X-rays (s-1)'
+  write(10,'(a,es10.3e2,a)') 'CR_IONISATION_RATE = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
+  write(10,'(a,es10.3e2,a)') 'X_IONISATION_RATE = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays (s-1)'
   write(10,'(a,es10.3e2,a)') 'UVGAS = ', UVGAS, ' ! scale fac for UV radiation field'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
@@ -707,7 +707,7 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
 open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) TIME, zspace, SPEC
-write(35) TEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D
+write(35) TEMP1D, DEnb_species_for_gasD, TAU1D, X_IONISATION_RATE1D
 write(35) ZXN
 close(35)
 
@@ -777,7 +777,7 @@ integer :: i
 open(13, file=filename)
 write(13,'("DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
-&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,ZETA0
+&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,CR_IONISATION_RATE
 
 write(13,'(5(A11,":",1X,1PE12.5,2X)) ') (SPEC(I),XN(I),I=1,nb_species)
 write(13,*)

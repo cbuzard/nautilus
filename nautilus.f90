@@ -180,7 +180,7 @@ do while (t.lt.0.9*tfinal)
 
     ! Feed 1D physical structure
     TAU=TAU1D(ipts)
-    ZETAX=ZETAX1D(ipts)
+    X_IONISATION_RATE=X_IONISATION_RATE1D(ipts)
     ! XNT is the total density of H atoms (both H and H2)
     ! But DEnb_species_for_gasD is the real number density
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)

@@ -351,12 +351,12 @@ end subroutine FCHEM
 
   ! ====== Rxn ITYPE 1
   ! ITYPE 1: Photodissoc/ionisation with cosmic rays
-  ! Add X-rays in case ZETAX is not 0
+  ! Add X-rays in case X_IONISATION_RATE is not 0
   do J=IRXSTA(1),IRXFIN(1)
-    XK(J)=A(J)*(ZETA0+ZETAX)
+    XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
   do J=IRXSTA(2),IRXFIN(2)
-    XK(J)=A(J)*(ZETA0+ZETAX)
+    XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
 
   ! ====== Rxns ITYPE 4 - 8
@@ -532,7 +532,7 @@ end subroutine FCHEM
     ! ========= Rxn ITYPE 16
     ! ITYPE 16: Cosmic-ray evaporation
     do J=IRXSTA(16),IRXFIN(16)
-      XK(J)=A(J)*XJ(J)*((ZETA0+ZETAX)/1.3D-17)&
+      XK(J)=A(J)*XJ(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
       *CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
     enddo
 
@@ -565,16 +565,16 @@ end subroutine FCHEM
 
     ! ====== Rxn ITYPE 17
     ! ITYPE 17: Photodissociations by Cosmic rays on grain surfaces
-    ! Add X-rays in case ZETAX is not 0
+    ! Add X-rays in case X_IONISATION_RATE is not 0
     do J=IRXSTA(17),IRXFIN(17)
-      XK(J)=A(J)*(ZETA0 + ZETAX)
+      XK(J)=A(J)*(CR_IONISATION_RATE + X_IONISATION_RATE)
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
     ! ====== Rxn ITYPE 18
     ! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces
     do J=IRXSTA(18),IRXFIN(18)
-      XK(J)=A(J)*(ZETA0+ZETAX)
+      XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 

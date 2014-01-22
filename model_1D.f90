@@ -44,7 +44,7 @@ TEMP1D(:)=initial_gas_temperature
 DTEMP1D(:)=initial_dust_temperature
 TAU1D(:)=VISUAL_EXTINCTION
 DEnb_species_for_gasD(:)=initial_gas_density/2.
-ZETAX1D(:)=ZETAX
+X_IONISATION_RATE1D(:)=X_IONISATION_RATE
 
 if (nptmax.ne.1) then
   ! Here: provide TEMP1D, DTEMP1D, DEnb_species_for_gasD, TAU1D for your physical model
@@ -169,7 +169,7 @@ if (nptmax.ne.1) then
   do ipts=1,nptmax
     ! column density of H above the point ipts
     COLDENS=TAU1D(ipts)/KFACTOR
-    ZETAX1D(ipts) = ZETAZERO * &
+    X_IONISATION_RATE1D(ipts) = ZETAZERO * &
     (1.d0/(3.d0*COLDENS) * (EXP(-COLDENS*6.d-23*0.5D0**(-3))-EXP(-COLDENS*6.d-23*0.014D0**(-3))) + &
     3.d0/(8.d0*COLDENS) * (EXP(-COLDENS*2.6d-22*7.D0**(-8/3))-EXP(-COLDENS*2.6d-22*0.5D0**(-8/3))) + &
     3.d0/(8.d0*COLDENS) * (1.D0-EXP(-COLDENS*4.4d-22*7.D0**(-8/3))))

@@ -83,9 +83,9 @@ real(double_precision) :: initial_dust_temperature
 real(double_precision) :: TAU
 real(double_precision) :: VISUAL_EXTINCTION
 real(double_precision) :: ZETA
-real(double_precision) :: ZETA0
+real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: XNTI
-real(double_precision) :: ZETAX
+real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: UVGAS
 real(double_precision) :: UVGRA
 real(double_precision) :: LAYERS
@@ -142,7 +142,7 @@ real(double_precision) :: Distr ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: idiff ! Diffusivity flag
-real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DEnb_species_for_gasD, TAU1D, ZETAX1D ! 1D physical structure
+real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DEnb_species_for_gasD, TAU1D, X_IONISATION_RATE1D ! 1D physical structure
 real(double_precision), dimension(nptmax) :: DIFF1D ! 1D diffusivity profile
 real(double_precision), dimension(nptmax) :: ZNCO,ZNH2 ! 1D column density (for the self shielding)
 real(double_precision) :: NCO,NH2 ! column density (for the self shielding)
