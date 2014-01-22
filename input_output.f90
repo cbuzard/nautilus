@@ -292,13 +292,13 @@ if (isDefined) then
       case('INITIAL_DTG_MASS_RATIO')
         read(value, '(e12.6)') initial_dtg_mass_ratio
       
-      case('STICK0')
+      case('STICKING_COEFF_NEUTRAL')
         read(value, '(e12.6)') sticking_coeff_neutral
       
-      case('STICKP')
+      case('STICKING_COEFF_POSITIVE')
         read(value, '(e12.6)') sticking_coeff_positive
       
-      case('STICKN')
+      case('STICKING_COEFF_NEGATIVE')
         read(value, '(e12.6)') sticking_coeff_negative
       
       case('RHOD')
@@ -459,9 +459,9 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'INITIAL_DUST_TEMPERATURE = ', initial_dust_temperature, ' ! initial dust temp'
   write(10,'(a,es10.3e2,a)') 'INITIAL_DTG_MASS_RATIO = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
-  write(10,'(a,es10.3e2,a)') 'STICK0 = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
-  write(10,'(a,es10.3e2,a)') 'STICKP = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
-  write(10,'(a,es10.3e2,a)') 'STICKN = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
+  write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEUTRAL = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
+  write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_POSITIVE = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
+  write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEGATIVE = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
   write(10,'(a,es10.3e2,a)') 'RHOD = ', RHOD, ' ! mass density of grain material'
   write(10,'(a,es10.3e2,a)') 'RD = ', grain_radius, ' ! grain radius (cm)'
   write(10,'(a,es10.3e2,a)') 'ACM = ', ACM, ' ! site spacing (cm)'

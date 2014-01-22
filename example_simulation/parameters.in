@@ -42,9 +42,9 @@ UVGAS =  1.000E+00 ! scale fac for UV radiation field
 
 INITIAL_DUST_TEMPERATURE =  1.000E+01 ! initial dust temp
 INITIAL_DTG_MASS_RATIO =  1.000E-02 ! dust-to-gas ratio by mass
-STICK0 =  1.000E+00 ! sticking coeff for neutral species
-STICKP =  0.000E+00 ! sticking coeff for positive species
-STICKN =  0.000E+00 ! sticking coeff for negative species
+STICKING_COEFF_NEUTRAL =  1.000E+00 ! sticking coeff for neutral species
+STICKING_COEFF_POSITIVE =  0.000E+00 ! sticking coeff for positive species
+STICKING_COEFF_NEGATIVE =  0.000E+00 ! sticking coeff for negative species
 RHOD =  3.000E+00 ! mass density of grain material
 RD =  1.000E-05 ! grain radius (cm)
 ACM =  1.000E-08 ! site spacing (cm)
