@@ -6,25 +6,25 @@
 !------------------------------------------------------------------------
 !SOLVER PARAMETERS
 !---------+--------------+-----------------------------------------------
-RTOL     |    1.000D-04 | Relative tolerance
-!------------------------------------------------------------------------
-!SWITCHES
-!---------+--------------+-----------------------------------------------
-IDUST    |            1 | accretion, grain surface reactions
-ISABS    |            1 | H2 AND CO SELF-SHILEDING
-IGRQM    |            0 | 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
-IMODH    |            1 | 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
-ICONS    |            0 | 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc 
-IREAD    |            0 | 0 read initial abundances from the nls_control
-!---------+--------------+-----------------------------------------------
-!GAS PHASE PARAMETERS
-!---------+--------------+-----------------------------------------------
-XNT0     |    2.000D+04 | initial gas density  3.000D+03  1.000D+07
-TEMP0    |    1.000D+01 | initial gas temp
-TAU0     |    1.500D+01 | initial visual extinction  1.000D+00  2.231D+02
-ZETA0    |    1.300D-17 | cosmic ray ionisation rate (1.3e-17 standard value)
-ZETAX    |    0.000D+00 | Ionisation rate due to X-rays (s-1)
-UVGAS    |    1.000D+00 | scale fac for UV radiation field
+RTOL     |    1.000D-04 ! Relative tolerance
+!-----------------------!------------------------------------------------
+!SWITCHES               !
+!---------+-------------!+-----------------------------------------------
+IDUST    |            1 ! accretion, grain surface reactions
+ISABS    |            1 ! H2 AND CO SELF-SHILEDING
+IGRQM    |            0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
+IMODH    |            1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
+ICONS    |            0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc 
+IREAD    |            0 ! 0 read initial abundances from the nls_control
+!---------+-------------!+-----------------------------------------------
+!GAS PHASE PARAMETERS   !
+!---------+-------------!+-----------------------------------------------
+XNT0     |    2.000D+04 ! initial gas density  3.000D+03  1.000D+07
+TEMP0    |    1.000D+01 ! initial gas temp
+TAU0     |    1.500D+01 ! initial visual extinction  1.000D+00  2.231D+02
+ZETA0    |    1.300D-17 ! cosmic ray ionisation rate (1.3e-17 standard value)
+ZETAX    |    0.000D+00 ! Ionisation rate due to X-rays (s-1)
+UVGAS    |    1.000D+00 ! scale fac for UV radiation field
 !---------+--------------+-----------------------------------------------
 !GRAIN PARAMETERS
 !---------+--------------+-----------------------------------------------
