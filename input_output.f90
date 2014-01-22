@@ -369,15 +369,55 @@ real(double_precision), allocatable, dimension(:) :: temp_abundances
 character(len=11), allocatable, dimension(:) :: temp_names
 integer :: nb_lines
 
+character(len=80) :: line
+character(len=1), parameter :: comment_character = '!' ! character that will indicate that the rest of the line is a comment
+integer :: comment_position ! the index of the comment character on the line. if zero, there is none on the current string
+integer :: error ! to store the state of a read instruction
+integer :: boolean ! integer value used to define a logical value (a bit complicated to define directly a boolean)
+
+logical :: isParameter, isDefined
+character(len=80) :: identificator, value
+
 call get_linenumber(filename, nb_lines)
 
 allocate(temp_abundances(nb_lines))
 allocate(temp_names(nb_lines))
 
-open(5, file=filename)
-read(5,15) (temp_names(I),temp_abundances(I),I=1,nb_lines)
-close(5)
-15 format(A11,3X,E12.6)
+!~ open(5, file=filename)
+!~ read(5,15) (temp_names(I),temp_abundances(I),I=1,nb_lines)
+!~ close(5)
+!~ 15 format(A11,3X,E12.6)
+
+
+  !------------------------------------------------------------------------------
+  
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  i = 1
+  do 
+    read(10, '(a80)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    call get_parameter_value(line, isParameter, identificator, value)
+      
+    if (isParameter) then
+      read(value, '(e12.6)') temp_abundances(I)
+      read(identificator, *) temp_names(I)
+      i = i + 1
+    end if
+  enddo
+  close(10)
+endif
 
 ! Set initial abundances================================================
 do I=1,nb_species

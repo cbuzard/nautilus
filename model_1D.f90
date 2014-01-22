@@ -76,7 +76,7 @@ if (nptmax.ne.1) then
 
   ! Change the box size
   HSIZE = 4.*HCOLD
-  call mesh
+  call mesh()
 
   ! Estimated DEnb_species using the inner gaussian (considered to be dominant in the sigma) and 
   ! and the observed sigma (0.8 g cm-2 at 100 AU with a 1.5 power law)
@@ -187,7 +187,7 @@ if (nptmax.ne.1) then
   ! End of the if test for the 1D structure
 endif
 
-call diffusion_setup
+call diffusion_setup()
 
 return
 end subroutine phys_1D

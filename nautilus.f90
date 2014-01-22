@@ -120,17 +120,17 @@ else
 endif
 
 ! Build spatial mesh 
-call mesh
+call mesh()
 
 ! Initialization of elemental/chemical quantities
 
-call INITIAL
+call initial()
 
 timestep=0
-call START(TOUT)
+call start(TOUT)
 
 ! 1D physical structure (nls_phys_1D)
-call phys_1D
+call phys_1D()
 
 ! Write species name/index correspondance
 call write_species()
@@ -140,7 +140,7 @@ iptstore=1
 
 ! Initialize indices of reactants and products 
 
-call chemsetup
+call chemsetup()
 
 ! Initializing ZXN
 do ipts=1,nptmax
@@ -205,7 +205,7 @@ do while (t.lt.0.9*tfinal)
   enddo ! end of the spatial loop for chemistry 
 
   ! Generic call to zdiffusion, a subroutine calling the chosen numerical scheme 
-  call zdiffusion ! diffusion 
+  call zdiffusion() ! diffusion 
 
   if (mod(timestep,wstep).eq.0) then
     call write_abundances()
@@ -340,14 +340,14 @@ enddo
 nb_sites_per_grain = SNS*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
-call GRAINRATE
+call grainrate()
 
 return 
-end subroutine INITIAL
+end subroutine initial
 
 ! ======================================================================
 ! ======================================================================
-subroutine START(TOUT)
+subroutine start(tout)
 
 use global_variables
 
@@ -420,7 +420,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! as nls_control
 
   Y(:)=XN(:)
-  call CONSERVE(Y)
+  call conserve(Y)
   XN(:)=Y(:) 
 
   return 
@@ -429,7 +429,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   ! ======================================================================
   ! ======================================================================
 
-  subroutine EVOLVE (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+  subroutine evolve(T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
   
@@ -495,7 +495,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     DUMMYY=1.d-5
     call ratcon()
     do IDUMMY=1,nb_species
-      call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
+      call jacvw(dummyy,idummy,dummypdj)
     enddo
     STOP
   endif
@@ -531,7 +531,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     ! cf odpkdmain.f for translation
     if (istate.ne.2) write(*,*)  'IPTS = ', ipts, 'ISTATE = ', ISTATE
 
-    call CONSERVE(Y)
+    call conserve(Y)
 
     ! Stop, Forrest
   enddo
@@ -541,14 +541,14 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   XN=Y
 
   return 
-  end subroutine EVOLVE
+  end subroutine evolve
 
 
 
 
   ! ======================================================================
   ! ======================================================================
-  subroutine CONSERVE(Y)
+  subroutine conserve(Y)
   use global_variables
   
   implicit none

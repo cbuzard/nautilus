@@ -237,7 +237,7 @@ call ratcon2(Y)
 k=1
 
 do j=1,nb_species
-  call JACVW(Y,j,PDJ)
+  call jacvw(Y,j,PDJ)
 
   IA(j)=k
 
@@ -296,8 +296,8 @@ subroutine FCHEM (N,T,Y,YP)
   ! Locals
   integer :: N
 
-  call RATCON2(Y)
-  call FCHEMVW(N,Y,YP) 
+  call ratcon2(y)
+  call fchemvw(n,y,yp) 
 
   return
 end subroutine FCHEM
