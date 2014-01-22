@@ -244,7 +244,7 @@ if (isDefined) then
     if (isParameter) then
       select case(identificator)
       ! Solver
-      case('RTOL')
+      case('relative_tolerance')
         read(value, '(e12.6)') RELATIVE_TOLERANCE
       
       !Switches
@@ -429,7 +429,7 @@ use global_variables
   write(10,'(a)') "!*     Solver Parameters     *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2, a)') 'RTOL = ',RELATIVE_TOLERANCE, ' ! Relative tolerance'
+  write(10,'(a,es10.3e2, a)') 'relative_tolerance = ',RELATIVE_TOLERANCE, ' ! Relative tolerance'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*          Switches         *"

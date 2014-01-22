@@ -12,7 +12,7 @@
 !*     Solver Parameters     *
 !*****************************
 
-RTOL =  1.000E-04 ! Relative tolerance
+relative_tolerance =  1.000E-04 ! Relative tolerance
 
 !*****************************
 !*          Switches         *
