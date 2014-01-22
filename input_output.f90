@@ -248,10 +248,10 @@ if (isDefined) then
         read(value, '(e12.6)') RELATIVE_TOLERANCE
       
       !Switches
-      case('IS_GRAIN_REACTIONS')
+      case('is_grain_reactions')
         read(value, '(i2)') IS_GRAIN_REACTIONS
       
-      case('IS_ABSORPTION')
+      case('is_absorption')
         read(value, '(i2)') IS_ABSORPTION
       
       case('IGRQM')
@@ -267,50 +267,50 @@ if (isDefined) then
         read(value, '(i2)') IREAD
       
       ! Gas phase
-      case('INITIAL_GAS_DENSITY')
+      case('initial_gas_density')
         read(value, '(e12.6)') initial_gas_density
       
-      case('INITIAL_GAS_TEMPERATURE')
+      case('initial_gas_temperature')
         read(value, '(e12.6)') initial_gas_temperature
       
-      case('INITIAL_VISUAL_EXTINCTION')
+      case('initial_visual_extinction')
         read(value, '(e12.6)') INITIAL_VISUAL_EXTINCTION
       
-      case('CR_IONISATION_RATE')
+      case('cr_ionisation_rate')
         read(value, '(e12.6)') CR_IONISATION_RATE
       
-      case('X_IONISATION_RATE')
+      case('x_ionisation_rate')
         read(value, '(e12.6)') X_IONISATION_RATE
       
       case('UVGAS')
         read(value, '(e12.6)') UVGAS
       
       ! Grain
-      case('INITIAL_DUST_TEMPERATURE')
+      case('initial_dust_temperature')
         read(value, '(e12.6)') initial_dust_temperature
       
-      case('INITIAL_DTG_MASS_RATIO')
+      case('initial_dtg_mass_ratio')
         read(value, '(e12.6)') initial_dtg_mass_ratio
       
-      case('STICKING_COEFF_NEUTRAL')
+      case('sticking_coeff_neutral')
         read(value, '(e12.6)') sticking_coeff_neutral
       
-      case('STICKING_COEFF_POSITIVE')
+      case('sticking_coeff_positive')
         read(value, '(e12.6)') sticking_coeff_positive
       
-      case('STICKING_COEFF_NEGATIVE')
+      case('sticking_coeff_negative')
         read(value, '(e12.6)') sticking_coeff_negative
       
-      case('GRAIN_DENSITY')
+      case('grain_density')
         read(value, '(e12.6)') GRAIN_DENSITY
       
       case('grain_radius')
-        read(value, '(e12.6)') grain_radius
+        read(value, '(e12.6)') GRAIN_RADIUS
         
-      case('SITE_SPACING')
+      case('site_spacing')
         read(value, '(e12.6)') SITE_SPACING
       
-      case('SITE_DENSITY')
+      case('site_density')
         read(value, '(e12.6)') SITE_DENSITY
       
       case('EBFAC')
@@ -335,13 +335,13 @@ if (isDefined) then
         read(value, '(e12.6)') ARRK
       
       ! Outputs
-      case('OUTPUT_PER_DECADE')
+      case('output_per_decade')
         read(value, '(i4)') OUTPUT_PER_DECADE
       
-      case('START_TIME')
+      case('start_time')
         read(value, '(e12.6)') START_TIME
       
-      case('STOP_TIME')
+      case('stop_time')
         read(value, '(e12.6)') STOP_TIME
       
       case('WSTEP')
@@ -435,8 +435,8 @@ use global_variables
   write(10,'(a)') "!*          Switches         *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i2,a)') 'IS_GRAIN_REACTIONS = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
-  write(10,'(a,i2,a)') 'IS_ABSORPTION = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
+  write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
+  write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'IGRQM = ', IGRQM, ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'ICONS = ', ICONS, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc '
@@ -446,26 +446,26 @@ use global_variables
   write(10,'(a)') "!*    Gas phase parameters   *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_DENSITY = ', initial_gas_density, ' ! initial gas density'
-  write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_TEMPERATURE = ', initial_gas_temperature, ' ! initial gas temp'
-  write(10,'(a,es10.3e2,a)') 'INITIAL_VISUAL_EXTINCTION = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
-  write(10,'(a,es10.3e2,a)') 'CR_IONISATION_RATE = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
-  write(10,'(a,es10.3e2,a)') 'X_IONISATION_RATE = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays (s-1)'
+  write(10,'(a,es10.3e2,a)') 'initial_gas_density = ', initial_gas_density, ' ! initial gas density'
+  write(10,'(a,es10.3e2,a)') 'initial_gas_temperature = ', initial_gas_temperature, ' ! initial gas temp'
+  write(10,'(a,es10.3e2,a)') 'initial_visual_extinction = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
+  write(10,'(a,es10.3e2,a)') 'cr_ionisation_rate = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
+  write(10,'(a,es10.3e2,a)') 'x_ionisation_rate = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays (s-1)'
   write(10,'(a,es10.3e2,a)') 'UVGAS = ', UVGAS, ' ! scale fac for UV radiation field'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*      Grain parameters     *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'INITIAL_DUST_TEMPERATURE = ', initial_dust_temperature, ' ! initial dust temp'
-  write(10,'(a,es10.3e2,a)') 'INITIAL_DTG_MASS_RATIO = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
-  write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEUTRAL = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
-  write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_POSITIVE = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
-  write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEGATIVE = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
-  write(10,'(a,es10.3e2,a)') 'GRAIN_DENSITY = ', GRAIN_DENSITY, ' ! mass density of grain material'
-  write(10,'(a,es10.3e2,a)') 'RD = ', grain_radius, ' ! grain radius (cm)'
-  write(10,'(a,es10.3e2,a)') 'SITE_SPACING = ', SITE_SPACING, ' ! site spacing (cm)'
-  write(10,'(a,es10.3e2,a)') 'SITE_DENSITY = ', SITE_DENSITY, ' ! site density (cm-2)'
+  write(10,'(a,es10.3e2,a)') 'initial_dust_temperature = ', initial_dust_temperature, ' ! initial dust temp'
+  write(10,'(a,es10.3e2,a)') 'initial_dtg_mass_ratio = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
+  write(10,'(a,es10.3e2,a)') 'sticking_coeff_neutral = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
+  write(10,'(a,es10.3e2,a)') 'sticking_coeff_positive = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
+  write(10,'(a,es10.3e2,a)') 'sticking_coeff_negative = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
+  write(10,'(a,es10.3e2,a)') 'grain_density = ', GRAIN_DENSITY, ' ! mass density of grain material'
+  write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius (cm)'
+  write(10,'(a,es10.3e2,a)') 'site_spacing = ', SITE_SPACING, ' ! site spacing (cm)'
+  write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density (cm-2)'
   write(10,'(a,es10.3e2,a)') 'EBFAC = ', EBFAC, ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
   write(10,'(a,es10.3e2,a)') 'TSMAX = ', TSMAX, ' ! peak grain temp (CR heating)'

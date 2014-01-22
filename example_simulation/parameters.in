@@ -18,8 +18,8 @@ relative_tolerance =  1.000E-04 ! Relative tolerance
 !*          Switches         *
 !*****************************
 
-IS_GRAIN_REACTIONS =  1 ! Accretion, grain surface reactions
-IS_ABSORPTION =  1 ! H2 AND CO SELF-SHIELDING
+is_grain_reactions =  1 ! Accretion, grain surface reactions
+is_absorption =  1 ! H2 AND CO SELF-SHIELDING
 IGRQM =  0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
 IMODH =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 ICONS =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc 
@@ -29,26 +29,26 @@ IREAD =  0 ! 0 read initial abundances from the nls_control
 !*    Gas phase parameters   *
 !*****************************
 
-INITIAL_GAS_DENSITY =  2.000E+04 ! initial gas density
-INITIAL_GAS_TEMPERATURE =  1.000E+01 ! initial gas temp
-INITIAL_VISUAL_EXTINCTION =  1.500E+01 ! initial visual extinction
-CR_IONISATION_RATE =  1.300E-17 ! cosmic ray ionisation rate (1.3e-17 standard value)
-X_IONISATION_RATE =  0.000E+00 ! Ionisation rate due to X-rays (s-1)
+initial_gas_density =  2.000E+04 ! initial gas density
+initial_gas_temperature =  1.000E+01 ! initial gas temp
+initial_visual_extinction =  1.500E+01 ! initial visual extinction
+cr_ionisation_rate =  1.300E-17 ! cosmic ray ionisation rate (1.3e-17 standard value)
+x_ionisation_rate =  0.000E+00 ! Ionisation rate due to X-rays (s-1)
 UVGAS =  1.000E+00 ! scale fac for UV radiation field
 
 !*****************************
 !*      Grain parameters     *
 !*****************************
 
-INITIAL_DUST_TEMPERATURE =  1.000E+01 ! initial dust temp
-INITIAL_DTG_MASS_RATIO =  1.000E-02 ! dust-to-gas ratio by mass
-STICKING_COEFF_NEUTRAL =  1.000E+00 ! sticking coeff for neutral species
-STICKING_COEFF_POSITIVE =  0.000E+00 ! sticking coeff for positive species
-STICKING_COEFF_NEGATIVE =  0.000E+00 ! sticking coeff for negative species
-GRAIN_DENSITY =  3.000E+00 ! mass density of grain material
+initial_dust_temperature =  1.000E+01 ! initial dust temp
+initial_dtg_mass_ratio =  1.000E-02 ! dust-to-gas ratio by mass
+sticking_coeff_neutral =  1.000E+00 ! sticking coeff for neutral species
+sticking_coeff_positive =  0.000E+00 ! sticking coeff for positive species
+sticking_coeff_negative =  0.000E+00 ! sticking coeff for negative species
+grain_density =  3.000E+00 ! mass density of grain material
 grain_radius =  1.000E-05 ! grain radius (cm)
-SITE_SPACING =  1.000E-08 ! site spacing (cm)
-SITE_DENSITY =  1.500E+15 ! site density (cm-2)
+site_spacing =  1.000E-08 ! site spacing (cm)
+site_density =  1.500E+15 ! site density (cm-2)
 EBFAC =  5.000E-01 ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values
 ACT =  1.000E-08 ! grain rxn activation energy constant
 TSMAX =  7.000E+01 ! peak grain temp (CR heating)
@@ -61,9 +61,9 @@ ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
 !*        Output times       *
 !*****************************
 
-OUTPUT_PER_DECADE =    2 ! outputs per decade  2  8  64  128 (Only without diffusion)
-START_TIME =  1.000E+00 ! first output time, after zero (yrs)
-STOP_TIME =  1.000E+01 ! last output time (yrs)
+output_per_decade =    2 ! outputs per decade  2  8  64  128 (Only without diffusion)
+start_time =  1.000E+00 ! first output time, after zero (yrs)
+stop_time =  1.000E+01 ! last output time (yrs)
 WSTEP =     1 ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)
 WSTEPR =    10 ! Outputs every WSTEPR timesteps for the rate coefficients
 IRATEOUT =     1 ! Spatial point for the rate output
