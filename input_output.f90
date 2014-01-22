@@ -211,72 +211,190 @@ use global_variables
 
 implicit none
 
-open(5, file='parameters.in')
+character(len=80) :: filename = 'parameters.in'
+character(len=80) :: line
+character(len=1), parameter :: comment_character = '!' ! character that will indicate that the rest of the line is a comment
+integer :: comment_position ! the index of the comment character on the line. if zero, there is none on the current string
+integer :: error ! to store the state of a read instruction
+integer :: boolean ! integer value used to define a logical value (a bit complicated to define directly a boolean)
 
-read(5,10)
-read(5,14) RELATIVE_TOLERANCE
-read(5,11)
-read(5,12) IS_GRAIN_REACTIONS
-read(5,12) ISABS
-read(5,12) IGRQM
-read(5,12) IMODH
-read(5,12) ICONS
-read(5,12) IREAD
-read(5,11)
-read(5,14) initial_gas_density
-read(5,14) initial_gas_temperature
-read(5,14) TAU0
-read(5,14) ZETA0
-read(5,14) ZETAX
-read(5,14) UVGAS
-read(5,11)
-read(5,14) initial_dust_temperature
-read(5,14) initial_dtg_mass_ratio
-read(5,14) sticking_coeff_neutral
-read(5,14) sticking_coeff_positive
-read(5,14) sticking_coeff_negative
-read(5,14) RHOD
-read(5,14) grain_radius
-read(5,14) ACM
-read(5,14) SNS
-read(5,14) EBFAC
-read(5,14) ACT
-read(5,14) TSMAX
-read(5,14) CRT
-read(5,14) CRFE
-read(5,14) LAYERS
-read(5,14) ARRK
-read(5,11)
-read(5,13) OTPD
-read(5,14) TSTART
-read(5,14) TFINAL
-read(5,'(18X,I5)') WSTEP
-read(5,'(18X,I5)') WSTEPR
-read(5,'(18X,I5)') IRATEOUT
-read(5,11) 
-read(5,14) XNMIN
-read(5,*) 
-10 format(///////)
-11 format(//)
-12 format(21X,I2)
-13 format(19X,I4)
-14 format(11X,E12.6)
+logical :: isParameter, isDefined
+character(len=80) :: identificator, value
+!------------------------------------------------------------------------------
+
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  
+  do
+    read(10, '(a80)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    call get_parameter_value(line, isParameter, identificator, value)
+      
+    if (isParameter) then
+      select case(identificator)
+      ! Solver
+      case('RTOL')
+        read(value, '(e12.6)') RELATIVE_TOLERANCE
+      
+      !Switches
+      case('IDUST')
+        read(value, '(i2)') IS_GRAIN_REACTIONS
+      
+      case('ISABS')
+        read(value, '(i2)') ISABS
+      
+      case('IGRQM')
+        read(value, '(i2)') IGRQM
+      
+      case('IMODH')
+        read(value, '(i2)') IMODH
+      
+      case('ICONS')
+        read(value, '(i2)') ICONS
+      
+      case('IREAD')
+        read(value, '(i2)') IREAD
+      
+      ! Gas phase
+      case('XNT0')
+        read(value, '(e12.6)') initial_gas_density
+      
+      case('TEMP0')
+        read(value, '(e12.6)') initial_gas_temperature
+      
+      case('TAU0')
+        read(value, '(e12.6)') TAU0
+      
+      case('ZETA0')
+        read(value, '(e12.6)') ZETA0
+      
+      case('ZETAX')
+        read(value, '(e12.6)') ZETAX
+      
+      case('UVGAS')
+        read(value, '(e12.6)') UVGAS
+      
+      ! Grain
+      case('DTEMP0')
+        read(value, '(e12.6)') initial_dust_temperature
+      
+      case('DTOGM')
+        read(value, '(e12.6)') initial_dtg_mass_ratio
+      
+      case('STICK0')
+        read(value, '(e12.6)') sticking_coeff_neutral
+      
+      case('STICKP')
+        read(value, '(e12.6)') sticking_coeff_positive
+      
+      case('STICKN')
+        read(value, '(e12.6)') sticking_coeff_negative
+      
+      case('RHOD')
+        read(value, '(e12.6)') RHOD
+      
+      case('RD')
+        read(value, '(e12.6)') grain_radius
+        
+      case('ACM')
+        read(value, '(e12.6)') ACM
+      
+      case('SNS')
+        read(value, '(e12.6)') SNS
+      
+      case('EBFAC')
+        read(value, '(e12.6)') EBFAC
+      
+      case('ACT')
+        read(value, '(e12.6)') ACT
+      
+      case('TSMAX')
+        read(value, '(e12.6)') TSMAX
+      
+      case('CRT')
+        read(value, '(e12.6)') CRT
+      
+      case('CRFE')
+        read(value, '(e12.6)') CRFE
+      
+      case('LAYERS')
+        read(value, '(e12.6)') LAYERS
+      
+      case('ARRK')
+        read(value, '(e12.6)') ARRK
+      
+      ! Outputs
+      case('OTPD')
+        read(value, '(i4)') OTPD
+      
+      case('TSTART')
+        read(value, '(e12.6)') TSTART
+      
+      case('TFINAL')
+        read(value, '(e12.6)') TFINAL
+      
+      case('WSTEP')
+        read(value, '(i5)') WSTEP
+      
+      case('WSTEPR')
+        read(value, '(i5)') WSTEPR
+      
+      case('IRATEOUT')
+        read(value, '(i5)') IRATEOUT
+      
+      ! Initial abundances
+      case('XNMIN')
+        read(value, '(e12.6)') XNMIN
+      
+      ! 1D Parameters
+      case('IDIFF')
+        read(value, '(i5)') IDIFF
+      
+      case('DIFFTY')
+        read(value, '(e12.6)') DIFFTY
+      
+      case('HSIZE')
+        read(value, '(e12.6)') HSIZE
+        
+      case('MCENTER')
+        read(value, '(e12.6)') MCENTER
+      
+      case('DISTR')
+        read(value, '(e12.6)') DISTR
+      
+      case('TESTJAC')
+        read(value, '(i5)') TESTJAC
+        
+      case('NJAC')
+        read(value, '(i5)') NJAC
+         
+      case default
+        write(*,*) 'Warning: An unknown parameter has been found'
+        write(*,*) "identificator='", trim(identificator), "' ; value(s)='", trim(value),"'"
+      end select
+    end if
+  end do
+  close(10)
+  
+  
+  
+else
+  write (*,*) 'Warning: The file "parameters.in" does not exist. Default values have been used'
+end if
 
 TSTART=TSTART*TYEAR
 TFINAL=TFINAL*TYEAR
-
-! read 1D and jacobian parameters
-
-read(5,'(///)')
-read(5,'(18X,I5)') IDIFF
-read(5,'(11X,D12.6)') DIFFTY
-read(5,'(11X,D12.6)') HSIZE
-read(5,'(11X,D12.6)') MCENTER
-read(5,'(11X,D12.6)') DISTR
-read(5,'(18X,I5)') TESTJAC
-read(5,'(18X,I5)') NJAC
-
-close(5)
 
 return
 end subroutine read_parameters_in
