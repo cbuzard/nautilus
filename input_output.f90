@@ -251,8 +251,8 @@ if (isDefined) then
       case('IS_GRAIN_REACTIONS')
         read(value, '(i2)') IS_GRAIN_REACTIONS
       
-      case('ISABS')
-        read(value, '(i2)') ISABS
+      case('IS_ABSORPTION')
+        read(value, '(i2)') IS_ABSORPTION
       
       case('IGRQM')
         read(value, '(i2)') IGRQM
@@ -436,7 +436,7 @@ use global_variables
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
   write(10,'(a,i2,a)') 'IS_GRAIN_REACTIONS = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
-  write(10,'(a,i2,a)') 'ISABS = ', ISABS, ' ! H2 AND CO SELF-SHIELDING'
+  write(10,'(a,i2,a)') 'IS_ABSORPTION = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'IGRQM = ', IGRQM, ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'ICONS = ', ICONS, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc '

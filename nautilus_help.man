@@ -227,7 +227,7 @@ IPLOT
 IPDET
 IPRXN
 IPORD
-ISABS									H2 and CO self shielding
+IS_ABSORPTION									H2 and CO self shielding
 
       COMMON/RCOEFF/XK
 
@@ -800,7 +800,7 @@ call FCHEMVW(N,Y,YP)
 
 for ITYPE=13 reactions
 set XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
-modify the H2 and CO photodissociation if the selfshielding ISABS is on
+modify the H2 and CO photodissociation if the selfshielding IS_ABSORPTION is on
 compute the H2 selfshielding factor and extrapolate for extreme values of NH2 then set XK(H2)=2.54D-11*TETABIS*UVGAS
 compute the CO selfshielding factor with a saturation value then set XK(CO)=1.03D-10*TETABIS1*TETABIS2*TETABIS3*UVGAS
 

@@ -631,8 +631,8 @@ end subroutine FCHEM
   do J=IRXSTA(3),IRXFIN(3)
     XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
 
-    ! MODIFY THE H2 AND CO PHOTODISSOCIATION if ISABS EQ 1
-    if (ISABS.EQ.1) then 
+    ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
+    if (IS_ABSORPTION.EQ.1) then 
 
       ! ====== Compute the H2 self-shielding
       if (SYMBOL(1,J).EQ.YH2) then
