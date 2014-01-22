@@ -29,8 +29,8 @@ IREAD =  0 ! 0 read initial abundances from the nls_control
 !*    Gas phase parameters   *
 !*****************************
 
-XNT0 =  2.000E+04 ! initial gas density
-TEMP0 =  1.000E+01 ! initial gas temp
+INITIAL_GAS_DENSITY =  2.000E+04 ! initial gas density
+INITIAL_GAS_TEMPERATURE =  1.000E+01 ! initial gas temp
 TAU0 =  1.500E+01 ! initial visual extinction
 ZETA0 =  1.300E-17 ! cosmic ray ionisation rate (1.3e-17 standard value)
 ZETAX =  0.000E+00 ! Ionisation rate due to X-rays (s-1)
@@ -40,7 +40,7 @@ UVGAS =  1.000E+00 ! scale fac for UV radiation field
 !*      Grain parameters     *
 !*****************************
 
-DTEMP0 =  1.000E+01 ! initial dust temp
+INITIAL_DUST_TEMPERATURE =  1.000E+01 ! initial dust temp
 DTOGM =  1.000E-02 ! dust-to-gas ratio by mass
 STICK0 =  1.000E+00 ! sticking coeff for neutral species
 STICKP =  0.000E+00 ! sticking coeff for positive species

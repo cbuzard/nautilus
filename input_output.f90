@@ -267,10 +267,10 @@ if (isDefined) then
         read(value, '(i2)') IREAD
       
       ! Gas phase
-      case('XNT0')
+      case('INITIAL_GAS_DENSITY')
         read(value, '(e12.6)') initial_gas_density
       
-      case('TEMP0')
+      case('INITIAL_GAS_TEMPERATURE')
         read(value, '(e12.6)') initial_gas_temperature
       
       case('TAU0')
@@ -286,7 +286,7 @@ if (isDefined) then
         read(value, '(e12.6)') UVGAS
       
       ! Grain
-      case('DTEMP0')
+      case('INITIAL_DUST_TEMPERATURE')
         read(value, '(e12.6)') initial_dust_temperature
       
       case('DTOGM')
@@ -446,8 +446,8 @@ use global_variables
   write(10,'(a)') "!*    Gas phase parameters   *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'XNT0 = ', initial_gas_density, ' ! initial gas density'
-  write(10,'(a,es10.3e2,a)') 'TEMP0 = ', initial_gas_temperature, ' ! initial gas temp'
+  write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_DENSITY = ', initial_gas_density, ' ! initial gas density'
+  write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_TEMPERATURE = ', initial_gas_temperature, ' ! initial gas temp'
   write(10,'(a,es10.3e2,a)') 'TAU0 = ', TAU0, ' ! initial visual extinction'
   write(10,'(a,es10.3e2,a)') 'ZETA0 = ', ZETA0, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
   write(10,'(a,es10.3e2,a)') 'ZETAX = ', ZETAX, ' ! Ionisation rate due to X-rays (s-1)'
@@ -457,7 +457,7 @@ use global_variables
   write(10,'(a)') "!*      Grain parameters     *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'DTEMP0 = ', initial_dust_temperature, ' ! initial dust temp'
+  write(10,'(a,es10.3e2,a)') 'INITIAL_DUST_TEMPERATURE = ', initial_dust_temperature, ' ! initial dust temp'
   write(10,'(a,es10.3e2,a)') 'DTOGM = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
   write(10,'(a,es10.3e2,a)') 'STICK0 = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
   write(10,'(a,es10.3e2,a)') 'STICKP = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
