@@ -273,8 +273,8 @@ if (isDefined) then
       case('INITIAL_GAS_TEMPERATURE')
         read(value, '(e12.6)') initial_gas_temperature
       
-      case('VISUAL_EXTINCTION')
-        read(value, '(e12.6)') VISUAL_EXTINCTION
+      case('INITIAL_VISUAL_EXTINCTION')
+        read(value, '(e12.6)') INITIAL_VISUAL_EXTINCTION
       
       case('CR_IONISATION_RATE')
         read(value, '(e12.6)') CR_IONISATION_RATE
@@ -448,7 +448,7 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_DENSITY = ', initial_gas_density, ' ! initial gas density'
   write(10,'(a,es10.3e2,a)') 'INITIAL_GAS_TEMPERATURE = ', initial_gas_temperature, ' ! initial gas temp'
-  write(10,'(a,es10.3e2,a)') 'VISUAL_EXTINCTION = ', VISUAL_EXTINCTION, ' ! initial visual extinction'
+  write(10,'(a,es10.3e2,a)') 'INITIAL_VISUAL_EXTINCTION = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
   write(10,'(a,es10.3e2,a)') 'CR_IONISATION_RATE = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
   write(10,'(a,es10.3e2,a)') 'X_IONISATION_RATE = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays (s-1)'
   write(10,'(a,es10.3e2,a)') 'UVGAS = ', UVGAS, ' ! scale fac for UV radiation field'

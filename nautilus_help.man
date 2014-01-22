@@ -95,7 +95,7 @@ sticking_coeff_positive									sticking coeff for positive species
 sticking_coeff_negative									sticking coeff for negative species
 grain_radius										grain radius (cm)
 RHOD									mass density of grain material
-VISUAL_EXTINCTION									initial visual extinction
+INITIAL_VISUAL_EXTINCTION									initial visual extinction
 ZETA
 CR_IONISATION_RATE									cosmic ray ionisation rate
 XNTI

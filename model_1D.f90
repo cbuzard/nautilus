@@ -42,7 +42,7 @@ real(double_precision) :: ZETAZERO, Nsec, LXR, RXR, COLDENS
 
 TEMP1D(:)=initial_gas_temperature
 DTEMP1D(:)=initial_dust_temperature
-TAU1D(:)=VISUAL_EXTINCTION
+TAU1D(:)=INITIAL_VISUAL_EXTINCTION
 DEnb_species_for_gasD(:)=initial_gas_density/2.
 X_IONISATION_RATE1D(:)=X_IONISATION_RATE
 
