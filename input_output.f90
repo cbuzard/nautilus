@@ -211,9 +211,9 @@ use global_variables
 
 implicit none
 
-character(len=80) :: filename = 'parameters.in'
+character(len=80) :: filename = 'parameters.in' !< name of the file in which parameters are stored
 character(len=80) :: line
-character(len=1), parameter :: comment_character = '!' ! character that will indicate that the rest of the line is a comment
+character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
 integer :: comment_position ! the index of the comment character on the line. if zero, there is none on the current string
 integer :: error ! to store the state of a read instruction
 integer :: boolean ! integer value used to define a logical value (a bit complicated to define directly a boolean)
@@ -387,14 +387,12 @@ if (isDefined) then
   end do
   close(10)
   
-  
-  
 else
   write (*,*) 'Warning: The file "parameters.in" does not exist. Default values have been used'
 end if
 
-TSTART=TSTART*TYEAR
-TFINAL=TFINAL*TYEAR
+TSTART = TSTART * TYEAR
+TFINAL = TFINAL * TYEAR
 
 return
 end subroutine read_parameters_in
