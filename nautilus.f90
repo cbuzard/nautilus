@@ -97,7 +97,7 @@ allocate(Y(nb_species))
 
 call initialize_global_arrays()
 
-call read_parameters()
+call read_input_files()
 
 call read_abundances()
 

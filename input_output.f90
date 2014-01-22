@@ -32,7 +32,7 @@ contains
 !! 'parameters.in'
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine read_parameters()
+subroutine read_input_files()
 
 use global_variables
 
@@ -63,74 +63,7 @@ character (len=11), dimension(7,nb_reactions) :: SYMBOLUO
 real(double_precision), dimension(nb_reactions) :: AUO,BUO,CUO
 integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 
-
-
-open(5, file='parameters.in')
-
-read(5,10)
-read(5,14) RELATIVE_TOLERANCE
-read(5,11)
-read(5,12) IS_GRAIN_REACTIONS
-read(5,12) ISABS
-read(5,12) IGRQM
-read(5,12) IMODH
-read(5,12) ICONS
-read(5,12) IREAD
-read(5,11)
-read(5,14) initial_gas_density
-read(5,14) initial_gas_temperature
-read(5,14) TAU0
-read(5,14) ZETA0
-read(5,14) ZETAX
-read(5,14) UVGAS
-read(5,11)
-read(5,14) initial_dust_temperature
-read(5,14) initial_dtg_mass_ratio
-read(5,14) sticking_coeff_neutral
-read(5,14) sticking_coeff_positive
-read(5,14) sticking_coeff_negative
-read(5,14) RHOD
-read(5,14) grain_radius
-read(5,14) ACM
-read(5,14) SNS
-read(5,14) EBFAC
-read(5,14) ACT
-read(5,14) TSMAX
-read(5,14) CRT
-read(5,14) CRFE
-read(5,14) LAYERS
-read(5,14) ARRK
-read(5,11)
-read(5,13) OTPD
-read(5,14) TSTART
-read(5,14) TFINAL
-read(5,'(18X,I5)') WSTEP
-read(5,'(18X,I5)') WSTEPR
-read(5,'(18X,I5)') IRATEOUT
-read(5,11) 
-read(5,14) XNMIN
-read(5,*) 
-10 format(///////)
-11 format(//)
-12 format(21X,I2)
-13 format(19X,I4)
-14 format(11X,E12.6)
-
-TSTART=TSTART*TYEAR
-TFINAL=TFINAL*TYEAR
-
-! read 1D and jacobian parameters
-
-read(5,'(///)')
-read(5,'(18X,I5)') IDIFF
-read(5,'(11X,D12.6)') DIFFTY
-read(5,'(11X,D12.6)') HSIZE
-read(5,'(11X,D12.6)') MCENTER
-read(5,'(11X,D12.6)') DISTR
-read(5,'(18X,I5)') TESTJAC
-read(5,'(18X,I5)') NJAC
-
-close(5)
+call read_parameters_in()
 
 ! Read CO and H2 shielding factors=====================
 open(unit=17, file='gg_H2_Photodiss.d', status='OLD')
@@ -261,7 +194,92 @@ enddo
 
 
 return
-end subroutine read_parameters
+end subroutine read_input_files
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Read simulation parameters from the file parameters.in
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine read_parameters_in()
+use global_variables
+
+implicit none
+
+open(5, file='parameters.in')
+
+read(5,10)
+read(5,14) RELATIVE_TOLERANCE
+read(5,11)
+read(5,12) IS_GRAIN_REACTIONS
+read(5,12) ISABS
+read(5,12) IGRQM
+read(5,12) IMODH
+read(5,12) ICONS
+read(5,12) IREAD
+read(5,11)
+read(5,14) initial_gas_density
+read(5,14) initial_gas_temperature
+read(5,14) TAU0
+read(5,14) ZETA0
+read(5,14) ZETAX
+read(5,14) UVGAS
+read(5,11)
+read(5,14) initial_dust_temperature
+read(5,14) initial_dtg_mass_ratio
+read(5,14) sticking_coeff_neutral
+read(5,14) sticking_coeff_positive
+read(5,14) sticking_coeff_negative
+read(5,14) RHOD
+read(5,14) grain_radius
+read(5,14) ACM
+read(5,14) SNS
+read(5,14) EBFAC
+read(5,14) ACT
+read(5,14) TSMAX
+read(5,14) CRT
+read(5,14) CRFE
+read(5,14) LAYERS
+read(5,14) ARRK
+read(5,11)
+read(5,13) OTPD
+read(5,14) TSTART
+read(5,14) TFINAL
+read(5,'(18X,I5)') WSTEP
+read(5,'(18X,I5)') WSTEPR
+read(5,'(18X,I5)') IRATEOUT
+read(5,11) 
+read(5,14) XNMIN
+read(5,*) 
+10 format(///////)
+11 format(//)
+12 format(21X,I2)
+13 format(19X,I4)
+14 format(11X,E12.6)
+
+TSTART=TSTART*TYEAR
+TFINAL=TFINAL*TYEAR
+
+! read 1D and jacobian parameters
+
+read(5,'(///)')
+read(5,'(18X,I5)') IDIFF
+read(5,'(11X,D12.6)') DIFFTY
+read(5,'(11X,D12.6)') HSIZE
+read(5,'(11X,D12.6)') MCENTER
+read(5,'(11X,D12.6)') DISTR
+read(5,'(18X,I5)') TESTJAC
+read(5,'(18X,I5)') NJAC
+
+close(5)
+
+return
+end subroutine read_parameters_in
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
