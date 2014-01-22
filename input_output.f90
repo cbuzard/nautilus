@@ -301,10 +301,10 @@ if (isDefined) then
       case('STICKING_COEFF_NEGATIVE')
         read(value, '(e12.6)') sticking_coeff_negative
       
-      case('RHOD')
-        read(value, '(e12.6)') RHOD
+      case('GRAIN_DENSITY')
+        read(value, '(e12.6)') GRAIN_DENSITY
       
-      case('RD')
+      case('grain_radius')
         read(value, '(e12.6)') grain_radius
         
       case('ACM')
@@ -462,7 +462,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEUTRAL = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
   write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_POSITIVE = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
   write(10,'(a,es10.3e2,a)') 'STICKING_COEFF_NEGATIVE = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
-  write(10,'(a,es10.3e2,a)') 'RHOD = ', RHOD, ' ! mass density of grain material'
+  write(10,'(a,es10.3e2,a)') 'GRAIN_DENSITY = ', GRAIN_DENSITY, ' ! mass density of grain material'
   write(10,'(a,es10.3e2,a)') 'RD = ', grain_radius, ' ! grain radius (cm)'
   write(10,'(a,es10.3e2,a)') 'ACM = ', ACM, ' ! site spacing (cm)'
   write(10,'(a,es10.3e2,a)') 'SNS = ', SNS, ' ! site density (cm-2)'

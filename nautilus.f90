@@ -311,7 +311,7 @@ do I=1,nb_species
   AWT(I)=MSUM
   if (SPEC(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
   if (SPEC(I).EQ.YGRAIN .OR. SPEC(I).EQ.'GRAIN-      ')&
-  AWT(I)=4.0*PI*grain_radius*grain_radius*grain_radius*RHOD/3.0/AMU
+  AWT(I)=4.0*PI*grain_radius*grain_radius*grain_radius*GRAIN_DENSITY/3.0/AMU
 enddo
 
 ! Initialize the Av/NH ratio
@@ -392,7 +392,7 @@ enddo
 
 ! Compute the grain abundance
 
-GTODN=(4.D+0*PI*RHOD*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
+GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
 
 where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 

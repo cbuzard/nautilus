@@ -94,7 +94,7 @@ sticking_coeff_neutral									sticking coeff for neutral species
 sticking_coeff_positive									sticking coeff for positive species
 sticking_coeff_negative									sticking coeff for negative species
 grain_radius										grain radius (cm)
-RHOD									mass density of grain material
+GRAIN_DENSITY									mass density of grain material
 INITIAL_VISUAL_EXTINCTION									initial visual extinction
 ZETA
 CR_IONISATION_RATE									cosmic ray ionisation rate
@@ -574,7 +574,7 @@ set elements' masses (in amu) of the IELM elements in amu
 
 set species' masses (in amu) by calculation of the total mass number of the species in AWT
 	for the electron AWT = 1/1836 in amu
-	for the grains (neutral and charged) AWT=(4/3).pi.(Rd)^3 . Rhod in amu
+	for the grains (neutral and charged) AWT=(4/3).pi.(Rd)^3 . GRAIN_DENSITY in amu
 
 initialize the Av/NH ratio AV_NH_ratio
 
