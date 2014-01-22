@@ -289,7 +289,7 @@ if (isDefined) then
       case('INITIAL_DUST_TEMPERATURE')
         read(value, '(e12.6)') initial_dust_temperature
       
-      case('DTOGM')
+      case('INITIAL_DTG_MASS_RATIO')
         read(value, '(e12.6)') initial_dtg_mass_ratio
       
       case('STICK0')
@@ -458,7 +458,7 @@ use global_variables
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'INITIAL_DUST_TEMPERATURE = ', initial_dust_temperature, ' ! initial dust temp'
-  write(10,'(a,es10.3e2,a)') 'DTOGM = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
+  write(10,'(a,es10.3e2,a)') 'INITIAL_DTG_MASS_RATIO = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
   write(10,'(a,es10.3e2,a)') 'STICK0 = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
   write(10,'(a,es10.3e2,a)') 'STICKP = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
   write(10,'(a,es10.3e2,a)') 'STICKN = ', sticking_coeff_negative, ' ! sticking coeff for negative species'

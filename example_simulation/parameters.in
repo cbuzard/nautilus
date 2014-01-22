@@ -41,7 +41,7 @@ UVGAS =  1.000E+00 ! scale fac for UV radiation field
 !*****************************
 
 INITIAL_DUST_TEMPERATURE =  1.000E+01 ! initial dust temp
-DTOGM =  1.000E-02 ! dust-to-gas ratio by mass
+INITIAL_DTG_MASS_RATIO =  1.000E-02 ! dust-to-gas ratio by mass
 STICK0 =  1.000E+00 ! sticking coeff for neutral species
 STICKP =  0.000E+00 ! sticking coeff for positive species
 STICKN =  0.000E+00 ! sticking coeff for negative species
