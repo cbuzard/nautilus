@@ -248,7 +248,7 @@ if (isDefined) then
         read(value, '(e12.6)') RELATIVE_TOLERANCE
       
       !Switches
-      case('IDUST')
+      case('IS_GRAIN_REACTIONS')
         read(value, '(i2)') IS_GRAIN_REACTIONS
       
       case('ISABS')
@@ -435,7 +435,7 @@ use global_variables
   write(10,'(a)') "!*          Switches         *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i2,a)') 'IDUST = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
+  write(10,'(a,i2,a)') 'IS_GRAIN_REACTIONS = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i2,a)') 'ISABS = ', ISABS, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'IGRQM = ', IGRQM, ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
