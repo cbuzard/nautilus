@@ -182,9 +182,9 @@ do while (t.lt.0.9*STOP_TIME)
     TAU=TAU1D(ipts)
     X_IONISATION_RATE=X_IONISATION_RATE1D(ipts)
     ! XNT is the total density of H atoms (both H and H2)
-    ! But DEnb_species_for_gasD is the real number density
+    ! But DENS1D is the real number density
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)
-    XNT=2.*DEnb_species_for_gasD(ipts)
+    XNT=2.*DENS1D(ipts)
     TEMP=TEMP1D(ipts)
     DTEMP=DTEMP1D(ipts)
 

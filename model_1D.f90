@@ -43,11 +43,11 @@ real(double_precision) :: ZETAZERO, Nsec, LXR, RXR, COLDENS
 TEMP1D(:)=initial_gas_temperature
 DTEMP1D(:)=initial_dust_temperature
 TAU1D(:)=INITIAL_VISUAL_EXTINCTION
-DEnb_species_for_gasD(:)=initial_gas_density/2.
+DENS1D(:)=initial_gas_density/2.
 X_IONISATION_RATE1D(:)=X_IONISATION_RATE
 
 if (nptmax.ne.1) then
-  ! Here: provide TEMP1D, DTEMP1D, DEnb_species_for_gasD, TAU1D for your physical model
+  ! Here: provide TEMP1D, DTEMP1D, DENS1D, TAU1D for your physical model
 
   ! Custom model for the structure of the object
   ! Here the DM Tau disk model
@@ -110,13 +110,13 @@ if (nptmax.ne.1) then
     * amu / (K_B * TEMP1D(ipts)) * zspace(ipts)*(zspace(ipts)-zspace(ipts-1))
   enddo
 
-  DEnb_species_for_gasD(1:nptmax) = exp(ld1d(:))
+  DENS1D(1:nptmax) = exp(ld1d(:))
 
   ! Rescaling using the fact that whatever A constant, rho*A is still solution
   ! Rescaling so that maxval(rho) = DEnb_species
 
-  DEnb_species_for_gasD(1:nptmax) = DEnb_species_for_gasD(1:nptmax)/maxval(denb_species_for_gasd(1:nptmax)) * DEnb_species
-  !DEnb_species_for_gasD(1:nptmax/2) = DEnb_species
+  DENS1D(1:nptmax) = DENS1D(1:nptmax)/maxval(DENS1D(1:nptmax)) * DEnb_species
+  !DENS1D(1:nptmax/2) = DEnb_species
 
   ! Computation of the opacity for constant absorption
   ! TAU = NH * 5.34E-22
@@ -131,7 +131,7 @@ if (nptmax.ne.1) then
   ! cf "Handbook of mathematical functions" inequality 7.1.13
 
   HTAU = sqrt(K_B*temp1D(1)/(meanw*amu*Omega2))
-  NHEST = 2. * DEnb_species_for_gasD(1) * HTAU * sqrt(2.d0)*exp(-(Hsize/HTAU/sqrt(2.d0))**2) &
+  NHEST = 2. * DENS1D(1) * HTAU * sqrt(2.d0)*exp(-(Hsize/HTAU/sqrt(2.d0))**2) &
   /((Hsize/HTAU/sqrt(2.d0))+sqrt((Hsize/HTAU/sqrt(2.d0))**2+2.d0))
   TAUEST = NHEST * KFACTOR
 
@@ -143,7 +143,7 @@ if (nptmax.ne.1) then
 
   TAU1D(1)=TAUBC
   do ipts=2,nptmax
-    TAU1D(ipts) = TAU1D(ipts-1) + DEnb_species_for_gasD(ipts) * 2. * KFACTOR * (zspace(ipts-1) - zspace(ipts))
+    TAU1D(ipts) = TAU1D(ipts-1) + DENS1D(ipts) * 2. * KFACTOR * (zspace(ipts-1) - zspace(ipts))
   enddo
 
   ! UV at 4 Hcold
