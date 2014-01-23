@@ -14,7 +14,7 @@ implicit none
 
 if (nptmax.eq.1) then
 
-  diff1D(:)=diffty
+  diff1D(:)= TURBULENT_DIFFUSIVITY
 
   ! No diffusion in 0D
   if (IS_DIFFUSIVITY.ne.0) then
@@ -25,16 +25,16 @@ if (nptmax.eq.1) then
 else
 
   ! No diffusion
-  if (IS_DIFFUSIVITY.eq.0) diff1D(:)=diffty ! diffty then only defines the timescale
+  if (IS_DIFFUSIVITY.eq.0) diff1D(:) = TURBULENT_DIFFUSIVITY ! diffty then only defines the timescale
 
   ! Constant diffusivity
-  if (IS_DIFFUSIVITY.eq.1) diff1D(:)=diffty
+  if (IS_DIFFUSIVITY.eq.1) diff1D(:) = TURBULENT_DIFFUSIVITY
 
   ! Alpha diffusivity (for disks)
   if (IS_DIFFUSIVITY.eq.2) then
     Omega2 = GRAVITATIONAL_CONSTANT * MCENTER / DISTR**3
     do ipts=1,nptmax
-      diff1D(ipts)=diffty*K_B*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
+      diff1D(ipts)=TURBULENT_DIFFUSIVITY*K_B*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
     enddo
   endif
 

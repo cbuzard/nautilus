@@ -136,7 +136,7 @@ real(double_precision), allocatable, dimension(:,:) ::  ZXN
 real(double_precision) :: zdt ! diffusive timestep
 real(double_precision) :: zstepsize ! Spatial resolution
 real(double_precision) :: Hsize ! Size of the computing box
-real(double_precision) :: diffty ! Turbulent diffusivity
+real(double_precision) :: TURBULENT_DIFFUSIVITY ! Turbulent diffusivity
 real(double_precision) :: Mcenter ! Central mass
 real(double_precision) :: Distr ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile

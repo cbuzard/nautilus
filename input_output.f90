@@ -358,8 +358,8 @@ if (isDefined) then
       case('is_diffusivity')
         read(value, '(i5)') IS_DIFFUSIVITY
       
-      case('DIFFTY')
-        read(value, '(e12.6)') DIFFTY
+      case('turbulent_diffusivity')
+        read(value, '(e12.6)') TURBULENT_DIFFUSIVITY
       
       case('HSIZE')
         read(value, '(e12.6)') HSIZE
@@ -497,7 +497,8 @@ use global_variables
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
   write(10,'(a,i5,a)') 'is_diffusivity = ', IS_DIFFUSIVITY, ' ! Diffusivity flag (1. constant 2. alpha)'
-  write(10,'(a,es10.3e2,a)') 'DIFFTY = ', DIFFTY, ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
+  write(10,'(a,es10.3e2,a)') 'turbulent_diffusivity = ', TURBULENT_DIFFUSIVITY, &
+  ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
   write(10,'(a,es10.3e2,a)') 'HSIZE = ', HSIZE, ' ! Computing box"s size (cm)'
   write(10,'(a,es10.3e2,a)') 'MCENTER = ', MCENTER, ' ! Central mass (g)'
   write(10,'(a,es10.3e2,a)') 'DISTR = ', DISTR, ' ! Radial distance (cm) for the disk model 1.500D+15 cm = 100 AU'
