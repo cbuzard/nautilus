@@ -73,7 +73,7 @@ real(double_precision) :: GRAIN_DENSITY
 real(double_precision) :: sticking_coeff_neutral
 real(double_precision) :: sticking_coeff_positive
 real(double_precision) :: sticking_coeff_negative
-real(double_precision) :: XNMIN
+real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
 real(double_precision) :: XNT
 real(double_precision) :: initial_gas_density
 real(double_precision) :: TEMP

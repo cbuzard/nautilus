@@ -553,7 +553,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   do I=1,nb_species
     if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*Y(I)
   enddo
-  if (CHASUM.LE.0.0D+0) CHASUM=XNMIN
+  if (CHASUM.LE.0.0D+0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
   Y(ISPE)=CHASUM
 
   ! --- Conserve other elements if selected
@@ -568,7 +568,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
     enddo
     do K=1,ICONS
       Y(ISPELM(K))=ELEMS(K)-ELMSUM(K)
-      if (Y(ISPELM(K)).LE.0.0D+0) Y(ISPELM(K))=XNMIN
+      if (Y(ISPELM(K)).LE.0.0D+0) Y(ISPELM(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo
   endif
 

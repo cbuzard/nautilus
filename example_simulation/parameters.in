@@ -71,7 +71,7 @@ IRATEOUT =     1 ! Spatial point for the rate output
 !*     Initial Abundances    *
 !*****************************
 
-XNMIN =  1.000E-40 ! default minimum initial frac abun
+minimum_initial_abundance =  1.000E-40 ! default minimum initial frac abun
 
 !*****************************
 !*       1D parameters       *

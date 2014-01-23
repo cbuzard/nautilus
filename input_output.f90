@@ -351,8 +351,8 @@ if (isDefined) then
         read(value, '(i5)') IRATEOUT
       
       ! Initial abundances
-      case('XNMIN')
-        read(value, '(e12.6)') XNMIN
+      case('minimum_initial_abundance')
+        read(value, '(e12.6)') MINIMUM_INITIAL_ABUNDANCE
       
       ! 1D Parameters
       case('is_diffusivity')
@@ -490,7 +490,7 @@ use global_variables
   write(10,'(a)') "!*     Initial Abundances    *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'XNMIN = ', XNMIN, ' ! default minimum initial frac abun'
+  write(10,'(a,es10.3e2,a)') 'minimum_initial_abundance = ', MINIMUM_INITIAL_ABUNDANCE, ' ! default minimum initial frac abun'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*       1D parameters       *"
@@ -598,7 +598,7 @@ end subroutine get_parameter_value
 !
 ! DESCRIPTION: 
 !> @brief Read abundances from abundances.in file. All abundances not defined
-!! here will have the default value XNMIN
+!! here will have the default value MINIMUM_INITIAL_ABUNDANCE
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine read_abundances()
@@ -684,7 +684,7 @@ enddo
 
 ! Set initial abundances================================================
 do I=1,nb_species
-  XN(I)=XNMIN
+  XN(I)=MINIMUM_INITIAL_ABUNDANCE
   do j=1,nb_lines
     if (SPEC(I).EQ.temp_names(j)) then
       XN(I)=temp_abundances(j)
