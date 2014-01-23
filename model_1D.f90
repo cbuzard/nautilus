@@ -55,7 +55,7 @@ if (nptmax.ne.1) then
 
   ! Omega**2 for the vertical GRAVITATIONAL_CONSTANTity
 
-  Omega2 = GRAVITATIONAL_CONSTANT * MCENTER / DISTR**3
+  Omega2 = GRAVITATIONAL_CONSTANT * CENTRAL_MASS / DISTR**3
 
   ! Mean molecular weight
   ! NB: if NH > NH2 then this is wrong  

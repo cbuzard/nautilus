@@ -137,7 +137,7 @@ real(double_precision) :: zdt ! diffusive timestep
 real(double_precision) :: zstepsize ! Spatial resolution
 real(double_precision) :: BOX_SIZE ! Size of the computing box
 real(double_precision) :: TURBULENT_DIFFUSIVITY ! Turbulent diffusivity
-real(double_precision) :: Mcenter ! Central mass
+real(double_precision) :: CENTRAL_MASS !< Central mass in g
 real(double_precision) :: Distr ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
