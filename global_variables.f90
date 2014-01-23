@@ -141,7 +141,7 @@ real(double_precision) :: Mcenter ! Central mass
 real(double_precision) :: Distr ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
-integer :: idiff ! Diffusivity flag
+integer :: IS_DIFFUSIVITY ! Diffusivity flag
 real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DENS1D, TAU1D, X_IONISATION_RATE1D ! 1D physical structure
 real(double_precision), dimension(nptmax) :: DIFF1D ! 1D diffusivity profile
 real(double_precision), dimension(nptmax) :: ZNCO,ZNH2 ! 1D column density (for the self shielding)

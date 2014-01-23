@@ -17,32 +17,27 @@ if (nptmax.eq.1) then
   diff1D(:)=diffty
 
   ! No diffusion in 0D
-  if (idiff.ne.0) then
-    write(*,*) 'No diffusion allowed in 0D. Please change the IDIFF value in nls_control.d'
+  if (IS_DIFFUSIVITY.ne.0) then
+    write(*,*) 'No diffusion allowed in 0D. Please change the IS_DIFFUSIVITY value in parameters.in'
     stop
   endif
 
 else
 
   ! No diffusion
-  if (idiff.eq.0) diff1D(:)=diffty ! diffty then only defines the timescale
+  if (IS_DIFFUSIVITY.eq.0) diff1D(:)=diffty ! diffty then only defines the timescale
 
   ! Constant diffusivity
-  if (idiff.eq.1) diff1D(:)=diffty
+  if (IS_DIFFUSIVITY.eq.1) diff1D(:)=diffty
 
   ! Alpha diffusivity (for disks)
-  if (idiff.eq.2) then
+  if (IS_DIFFUSIVITY.eq.2) then
     Omega2 = GRAVITATIONAL_CONSTANT * MCENTER / DISTR**3
     do ipts=1,nptmax
       diff1D(ipts)=diffty*K_B*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
     enddo
   endif
 
-endif
-
-if ((idiff.lt.0).or.(idiff.gt.2)) then
-  write(*,*) 'This value for idiff is not implemented: ',IDIFF
-  stop
 endif
 
 return
@@ -56,7 +51,7 @@ implicit none
 real(double_precision), dimension(nptmax) :: Y
 integer :: j
 
-if (idiff.eq.0) then
+if (IS_DIFFUSIVITY.eq.0) then
   call nothinghappens ! the name is explicit enough I guess
   return
 endif
@@ -77,7 +72,7 @@ use global_variables
 
 implicit none
 
-if (idiff.eq.0) then
+if (IS_DIFFUSIVITY.eq.0) then
   ! Log spacing of time outputs when there is no diffusion
   if (TIME.gt.1.d-2) then
     zdt = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)

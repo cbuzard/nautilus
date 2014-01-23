@@ -355,8 +355,8 @@ if (isDefined) then
         read(value, '(e12.6)') XNMIN
       
       ! 1D Parameters
-      case('IDIFF')
-        read(value, '(i5)') IDIFF
+      case('is_diffusivity')
+        read(value, '(i5)') IS_DIFFUSIVITY
       
       case('DIFFTY')
         read(value, '(e12.6)') DIFFTY
@@ -387,6 +387,11 @@ if (isDefined) then
 else
   write (*,*) 'Warning: The file "parameters.in" does not exist. Default values have been used'
 end if
+
+if ((IS_DIFFUSIVITY.lt.0).or.(IS_DIFFUSIVITY.gt.2)) then
+  write(*,*) 'This value for IS_DIFFUSIVITY is not implemented: ',IS_DIFFUSIVITY
+  stop
+endif
 
 START_TIME = START_TIME * TYEAR
 STOP_TIME = STOP_TIME * TYEAR
@@ -474,9 +479,9 @@ use global_variables
   write(10,'(a)') "!*        Output times       *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i4,a)') 'OUTPUT_PER_DECADE = ', OUTPUT_PER_DECADE, ' ! outputs per decade  2  8  64  128 (Only without diffusion)'
-  write(10,'(a,es10.3e2,a)') 'START_TIME = ', START_TIME/TYEAR, ' ! first output time, after zero (yrs)'
-  write(10,'(a,es10.3e2,a)') 'STOP_TIME = ', STOP_TIME/TYEAR, ' ! last output time (yrs)'
+  write(10,'(a,i4,a)') 'output_per_decade = ', OUTPUT_PER_DECADE, ' ! outputs per decade  2  8  64  128 (Only without diffusion)'
+  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/TYEAR, ' ! first output time, after zero (yrs)'
+  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/TYEAR, ' ! last output time (yrs)'
   write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
   write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
   write(10,'(a,i5,a)') 'IRATEOUT = ', IRATEOUT, ' ! Spatial point for the rate output'
@@ -491,7 +496,7 @@ use global_variables
   write(10,'(a)') "!*       1D parameters       *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i5,a)') 'IDIFF = ', IDIFF, ' ! Diffusivity flag (1. constant 2. alpha)'
+  write(10,'(a,i5,a)') 'is_diffusivity = ', IS_DIFFUSIVITY, ' ! Diffusivity flag (1. constant 2. alpha)'
   write(10,'(a,es10.3e2,a)') 'DIFFTY = ', DIFFTY, ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
   write(10,'(a,es10.3e2,a)') 'HSIZE = ', HSIZE, ' ! Computing box"s size (cm)'
   write(10,'(a,es10.3e2,a)') 'MCENTER = ', MCENTER, ' ! Central mass (g)'
