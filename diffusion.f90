@@ -56,7 +56,7 @@ if (IS_DIFFUSIVITY.eq.0) then
   return
 endif
 
-!zstepsize = Hsize/(nptmax-1)
+!zstepsize = BOX_SIZE/(nptmax-1)
 
 do j = 1, nb_species 
   Y(:)=zxn(j,:)
@@ -82,7 +82,7 @@ if (IS_DIFFUSIVITY.eq.0) then
 else
   ! Diffusion controlled timestep
   ! Required for the Operator splitting procedure
-  zdt = (Hsize/nptmax)**2/maxval(diff1D) ! smallest timescale you can think of
+  zdt = (BOX_SIZE/nptmax)**2/maxval(diff1D) ! smallest timescale you can think of
   zdt = zdt/4 ! To ensure a good numerical precision
 endif
 

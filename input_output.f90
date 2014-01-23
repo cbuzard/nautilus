@@ -361,8 +361,8 @@ if (isDefined) then
       case('turbulent_diffusivity')
         read(value, '(e12.6)') TURBULENT_DIFFUSIVITY
       
-      case('HSIZE')
-        read(value, '(e12.6)') HSIZE
+      case('box_size')
+        read(value, '(e12.6)') BOX_SIZE
         
       case('MCENTER')
         read(value, '(e12.6)') MCENTER
@@ -499,7 +499,7 @@ use global_variables
   write(10,'(a,i5,a)') 'is_diffusivity = ', IS_DIFFUSIVITY, ' ! Diffusivity flag (1. constant 2. alpha)'
   write(10,'(a,es10.3e2,a)') 'turbulent_diffusivity = ', TURBULENT_DIFFUSIVITY, &
   ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
-  write(10,'(a,es10.3e2,a)') 'HSIZE = ', HSIZE, ' ! Computing box"s size (cm)'
+  write(10,'(a,es10.3e2,a)') 'box_size = ', BOX_SIZE, ' ! Computing box"s size (cm)'
   write(10,'(a,es10.3e2,a)') 'MCENTER = ', MCENTER, ' ! Central mass (g)'
   write(10,'(a,es10.3e2,a)') 'DISTR = ', DISTR, ' ! Radial distance (cm) for the disk model 1.500D+15 cm = 100 AU'
   write(10,'(a,i5,a)') 'TESTJAC = ', TESTJAC, ' ! Testing the number of non-zero jacobian elements ?'

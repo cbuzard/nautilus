@@ -13,11 +13,11 @@ do ipts=1,nptmax
   zaspace(ipts) = 1.d0 - 2.*real(ipts-1)/(2*nptmax-1)
 enddo
 
-zspace(:)=zaspace(:)*Hsize
+zspace(:)=zaspace(:) * BOX_SIZE
 
 if (nptmax.ne.1) then
   !zstepsize = abs(zspace(2)-zspace(1))
-  zstepsize=2./(2*nptmax-1)*Hsize
+  zstepsize=2./(2*nptmax-1) * BOX_SIZE
 else
   zstepsize = 0.
 endif
@@ -27,7 +27,7 @@ end subroutine mesh
 
 ! Warning !!!
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
-! HSIZE, DEnb_species, UVGAS, UVGRA, TAUBC
+! BOX_SIZE, DEnb_species, UVGAS, UVGRA, TAUBC
 subroutine phys_1D()
 use global_variables
 use diffusion
@@ -75,14 +75,14 @@ if (nptmax.ne.1) then
   Hcold = sqrt(K_B*TCOLD/(meanw*amu*Omega2))
 
   ! Change the box size
-  HSIZE = 4.*HCOLD
+  BOX_SIZE = 4.*HCOLD
   call mesh()
 
   ! Estimated DEnb_species using the inner gaussian (considered to be dominant in the sigma) and 
   ! and the observed sigma (0.8 g cm-2 at 100 AU with a 1.5 power law)
 
   write(*,*) 'Cold height scale (AU) = ',Hcold/AU
-  write(*,*) 'Computing half box size (AU) = ',Hsize/AU
+  write(*,*) 'Computing half box size (AU) = ',BOX_SIZE/AU
   write(*,*) 'Estimated DEnb_species = ',0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
 
   ! Overwrite DEnb_species with this estimate
@@ -126,13 +126,13 @@ if (nptmax.ne.1) then
 
   ! Computation of an estimated TAUBC using and erf function
   ! if T is constant outside, rho has a gaussian tail
-  ! Hsize is usually larger than the true scale height
+  ! BOX_SIZE is usually larger than the true scale height
   ! We use an approximated expression for the erf function
   ! cf "Handbook of mathematical functions" inequality 7.1.13
 
   HTAU = sqrt(K_B*temp1D(1)/(meanw*amu*Omega2))
-  NHEST = 2. * DENS1D(1) * HTAU * sqrt(2.d0)*exp(-(Hsize/HTAU/sqrt(2.d0))**2) &
-  /((Hsize/HTAU/sqrt(2.d0))+sqrt((Hsize/HTAU/sqrt(2.d0))**2+2.d0))
+  NHEST = 2. * DENS1D(1) * HTAU * sqrt(2.d0)*exp(-(BOX_SIZE/HTAU/sqrt(2.d0))**2) &
+  /((BOX_SIZE/HTAU/sqrt(2.d0))+sqrt((BOX_SIZE/HTAU/sqrt(2.d0))**2+2.d0))
   TAUEST = NHEST * KFACTOR
 
   ! Overwrite TAUBC
