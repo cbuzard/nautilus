@@ -214,9 +214,9 @@ implicit none
 character(len=80) :: filename = 'parameters.in' !< name of the file in which parameters are stored
 character(len=80) :: line
 character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
-integer :: comment_position ! the index of the comment character on the line. if zero, there is none on the current string
-integer :: error ! to store the state of a read instruction
-integer :: boolean ! integer value used to define a logical value (a bit complicated to define directly a boolean)
+integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+integer :: error !< to store the state of a read instruction
+integer :: boolean !< integer value used to define a logical value (a bit complicated to define directly a boolean)
 
 logical :: isParameter, isDefined
 character(len=80) :: identificator, value
@@ -262,9 +262,6 @@ if (isDefined) then
       
       case('ICONS')
         read(value, '(i2)') ICONS
-      
-      case('IREAD')
-        read(value, '(i2)') IREAD
       
       ! Gas phase
       case('initial_gas_density')
@@ -440,7 +437,6 @@ use global_variables
   write(10,'(a,i2,a)') 'IGRQM = ', IGRQM, ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'ICONS = ', ICONS, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc '
-  write(10,'(a,i2,a)') 'IREAD = ', IREAD, ' ! 0 read initial abundances from the nls_control'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*    Gas phase parameters   *"
@@ -663,6 +659,23 @@ if (isDefined) then
   close(10)
 endif
 
+! We check if all species in abundances.in exists in the simulation
+do j=1,nb_lines
+  error = 1
+  do i=1,nb_species
+    if (temp_names(j).eq.SPEC(i)) then
+      error = 0 ! The species exist
+    endif
+  enddo
+  
+  if (error.eq.1) then
+    write(*,*) j
+    write(*,*) temp_names
+    write(Error_Unit,*) 'Input species "', trim(temp_names(j)), '" in "', trim(filename), '" do not match those in reaction file'
+    stop
+  endif
+enddo
+
 ! Set initial abundances================================================
 do I=1,nb_species
   XN(I)=XNMIN
@@ -692,7 +705,7 @@ end subroutine read_abundances
 !! Output filename is of the form : abundances.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_abundances()
+subroutine write_output_abundances()
 ! Writes 1D outputs
 use global_variables
 
@@ -712,7 +725,7 @@ write(35) ZXN
 close(35)
 
 return
-end subroutine write_abundances
+end subroutine write_output_abundances
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -775,11 +788,14 @@ character(len=*), intent(in) :: filename !< [in] the name of the output file
 integer :: i
 
 open(13, file=filename)
-write(13,'("DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
+write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
 &", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,CR_IONISATION_RATE
 
-write(13,'(5(A11,":",1X,1PE12.5,2X)) ') (SPEC(I),XN(I),I=1,nb_species)
+do i=1,nb_species
+  write(13,'(a," = ",1PE12.5)') SPEC(I),XN(I)
+enddo
+
 write(13,*)
 close(13)
 

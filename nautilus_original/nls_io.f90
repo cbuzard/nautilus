@@ -309,14 +309,16 @@ use unitvar
 implicit none
 integer :: i
 
-      WRITE (NTAI,690) 00,00,TIME,XNT,TEMP,TAU,ZETA0
-  690 FORMAT ('DEPTH POINT=',I2,'/',I2,', TIME =',1PD10.3,' s',&
-        ', XNT=',1PD10.3,' cm-3',', TEMP=',1PD10.3,' K',&
-        ', TAU=',0PF8.3,', ZETA=',1PD10.3,' s-1')
+WRITE (NTAI,690) 00,00,TIME,XNT,TEMP,TAU,ZETA0
+690 FORMAT ('!DEPTH POINT=',I2,'/',I2,', TIME =',1PD10.3,' s',&
+', XNT=',1PD10.3,' cm-3',', TEMP=',1PD10.3,' K',&
+', TAU=',0PF8.3,', ZETA=',1PD10.3,' s-1')
 
-      WRITE (NTAI,700) (SPEC(I),XN(I),I=1,NSMAX)
-  700 FORMAT (5(A11,':',1X,1PE12.5,2X)) 
-      WRITE (NTAI,*)
+do i=1,NSMAX
+  write(NTAI,700) SPEC(I),XN(I)
+enddo
+700 FORMAT (5(A,' = ',1PE12.5)) 
+WRITE (NTAI,*)
 
 RETURN
 END

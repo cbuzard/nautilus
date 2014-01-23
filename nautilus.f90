@@ -210,7 +210,7 @@ do while (t.lt.0.9*STOP_TIME)
   call zdiffusion() ! diffusion 
 
   if (mod(timestep,wstep).eq.0) then
-    call write_abundances()
+    call write_output_abundances()
   endif
 
 enddo
@@ -395,27 +395,6 @@ enddo
 GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
 
 where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
-
-
-  ! Read initial abundances if IREAD is switched on=======================
-  if (IREAD.NE.0) then
-    open(unit=14,file='chemical_composition.in', status='OLD') 
-    ! Skip the first line on nls_init.d
-    read(14,*) 
-
-    ! ------ Read species and abundances
-    read(14,'(5(A11,2X,1PE12.5,2X))') (Sread(I),XN(I),I=1,nb_species)
-    read(14,*)
-    close(14)
-    ! ------ Check if species in nls_init.d correspond to the reaction file
-    do I=1,nb_species
-      if (Sread(I).NE.SPEC(I)) then
-        write(Error_Unit,*) 'Input species in init file do not match those in reaction file'
-        STOP
-      endif
-    enddo
-  endif
-
 
   ! Set the electron abundance via conservation===========
   ! And check at the same time that nls_init has the same elemental abundance
