@@ -215,7 +215,7 @@ do while (t.lt.0.9*STOP_TIME)
 
 enddo
 
-if (nptmax.eq.1) call write_chemical_composition('chemical_composition.tmp')
+if (nptmax.eq.1) call write_abundances('abundances.tmp')
 
 stop
 

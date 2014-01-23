@@ -261,7 +261,7 @@ print("comparing rates outputs:")
 compare2Binaries(RATES_FILENAMES_OLD, RATES_FILENAMES)
 
 ASCII_OLD = ['nlso_tail.d', 'nlso_spec.d']
-ASCII_NEW = ['chemical_composition.tmp', 'species.out']
+ASCII_NEW = ['abundances.tmp', 'species.out']
 
 # We include the folder name because we are in the parent folder.
 ASCII_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in ASCII_OLD]

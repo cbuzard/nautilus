@@ -775,7 +775,7 @@ end subroutine write_current_rates
 !! same routine to write input, temporary and output files
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_chemical_composition(filename)
+subroutine write_abundances(filename)
 
 use global_variables
 
@@ -800,7 +800,7 @@ write(13,*)
 close(13)
 
 return
-end subroutine write_chemical_composition
+end subroutine write_abundances
 
 
 
