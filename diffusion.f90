@@ -60,7 +60,7 @@ endif
 
 do j = 1, nb_species 
   Y(:)=zxn(j,:)
-  call crank(Y, nptmax-1, zdt, zstepsize, diff1D, DENS1D, 0)
+  call crank(Y, nptmax-1, DIFFUSIVE_TIMESTEP, zstepsize, diff1D, DENS1D, 0)
   zxn(j,:) = Y(:)
 enddo
 
@@ -75,15 +75,15 @@ implicit none
 if (IS_DIFFUSIVITY.eq.0) then
   ! Log spacing of time outputs when there is no diffusion
   if (TIME.gt.1.d-2) then
-    zdt = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
+    DIFFUSIVE_TIMESTEP = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
   else
-    zdt=1.d0*TYEAR
+    DIFFUSIVE_TIMESTEP = 1.d0 * TYEAR
   endif
 else
   ! Diffusion controlled timestep
   ! Required for the Operator splitting procedure
-  zdt = (BOX_SIZE/nptmax)**2/maxval(diff1D) ! smallest timescale you can think of
-  zdt = zdt/4 ! To ensure a good numerical precision
+  DIFFUSIVE_TIMESTEP = (BOX_SIZE/nptmax)**2 / maxval(diff1D) ! smallest timescale you can think of
+  DIFFUSIVE_TIMESTEP = 0.25d0 * DIFFUSIVE_TIMESTEP ! To ensure a good numerical precision
 endif
 
 return
