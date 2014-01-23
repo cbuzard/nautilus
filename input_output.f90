@@ -409,7 +409,7 @@ use global_variables
 
   implicit none
   
-  character(len=80) :: filename = 'parameters.out'
+  character(len=80) :: filename = 'parameters.in'
   
   open(10, file=filename)
   write(10,'(a)') "!# ------------------------------------------------"
