@@ -197,7 +197,7 @@ do while (t.lt.0.9*STOP_TIME)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
-    call write_rates()
+    call write_current_rates()
     !      endif
 
     if (istate.eq.-3) stop
@@ -210,7 +210,7 @@ do while (t.lt.0.9*STOP_TIME)
   call zdiffusion() ! diffusion 
 
   if (mod(timestep,wstep).eq.0) then
-    call write_output_abundances()
+    call write_current_output()
   endif
 
 enddo

@@ -705,7 +705,7 @@ end subroutine read_abundances
 !! Output filename is of the form : abundances.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_output_abundances()
+subroutine write_current_output()
 ! Writes 1D outputs
 use global_variables
 
@@ -725,7 +725,7 @@ write(35) ZXN
 close(35)
 
 return
-end subroutine write_output_abundances
+end subroutine write_current_output
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -740,7 +740,7 @@ end subroutine write_output_abundances
 !! Output filename is of the form : rates.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_rates()
+subroutine write_current_rates()
 
 use global_variables
 
@@ -761,7 +761,7 @@ write(45) NUM
 close(45)
 
 return 
-end subroutine write_rates
+end subroutine write_current_rates
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
