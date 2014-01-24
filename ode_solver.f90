@@ -1,5 +1,7 @@
 module ode_solver
 
+use shielding
+
 implicit none
 
 contains
