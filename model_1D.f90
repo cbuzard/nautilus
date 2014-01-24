@@ -60,7 +60,7 @@ if (nptmax.ne.1) then
   ! Mean molecular weight
   ! NB: if NH > NH2 then this is wrong  
 
-  mean_molecular_weight = 2.4 ! cgs
+  mean_molecular_weight = 2.4d0 ! cgs
 
   ! User provided temperature in z
 
@@ -90,7 +90,7 @@ if (nptmax.ne.1) then
 
   do ipts=1, nptmax
     !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
-    TEMP1D(ipts) = TCOLD + (TWARM-TCOLD) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
+    TEMP1D(ipts) = TCOLD + (TWARM-TCOLD) * 0.5d0*(1.d0+tanh((abs(zspace(ipts))-2.d0*Hcold)/(Hcold/3.d0)))
     !write(*,*) zspace(ipts)/AU,Temp1d(ipts)
   enddo
 

@@ -201,7 +201,6 @@ character(len=80) :: line
 character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
 integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
 integer :: error !< to store the state of a read instruction
-integer :: boolean !< integer value used to define a logical value (a bit complicated to define directly a boolean)
 
 logical :: isParameter, isDefined
 character(len=80) :: identificator, value
@@ -604,7 +603,6 @@ character(len=80) :: line
 character(len=1), parameter :: comment_character = '!' ! character that will indicate that the rest of the line is a comment
 integer :: comment_position ! the index of the comment character on the line. if zero, there is none on the current string
 integer :: error ! to store the state of a read instruction
-integer :: boolean ! integer value used to define a logical value (a bit complicated to define directly a boolean)
 
 logical :: isParameter, isDefined
 character(len=80) :: identificator, value

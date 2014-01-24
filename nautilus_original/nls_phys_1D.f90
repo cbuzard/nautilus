@@ -31,7 +31,7 @@ Omega2 = GRAV * MCENTER / DISTR**3
 ! Mean molecular weight
 ! NB: If NH > NH2 then this is wrong  
 
-MEANW = 2.4 ! cgs
+MEANW = 2.4d0 ! cgs
 
 ! User provided temperature in z
 
@@ -61,7 +61,7 @@ DENSMAX = 0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
 
 do ipts=1, nptmax
 !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
-TEMP1D(ipts) = TCOLD + (TWARM-TCOLD) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
+TEMP1D(ipts) = TCOLD + (TWARM-TCOLD) * 0.5d0*(1.d0+tanh((abs(zspace(ipts))-2.d0*Hcold)/(Hcold/3.d0)))
 !print *,zspace(ipts)/AU,Temp1d(ipts)
 enddo
 
