@@ -35,7 +35,7 @@ MEANW = 2.4d0 ! cgs
 
 ! User provided temperature in z
 
-temp1d=0.
+temp1d=0.d0
 
 ! DM Tau parametric model
 

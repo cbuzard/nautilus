@@ -4,7 +4,7 @@ use header
 implicit none
 
 do ipts=1,nptmax
-zaspace(ipts) = 1.d0 - 2.*real(ipts-1)/(2*nptmax-1)
+zaspace(ipts) = 1.d0 - 2.d0*dble(ipts-1)/(2.d0*nptmax-1.0)
 enddo
 
 zspace(:)=zaspace(:)*Hsize

@@ -10,7 +10,7 @@ use global_variables
 implicit none
 
 do ipts=1,nptmax
-  zaspace(ipts) = 1.d0 - 2.*real(ipts-1)/(2*nptmax-1)
+  zaspace(ipts) = 1.d0 - 2.d0 * dble(ipts-1) / (2.d0 * nptmax - 1)
 enddo
 
 zspace(:)=zaspace(:) * BOX_SIZE
@@ -64,7 +64,7 @@ if (nptmax.ne.1) then
 
   ! User provided temperature in z
 
-  temp1d=0.
+  temp1d=0.d0
 
   ! DM Tau parametric model
 
