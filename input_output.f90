@@ -113,14 +113,14 @@ close(19)
 ! putting everything back into the big tables
 
 do I=1,nb_species_for_gas 
-  SPEC(I)=gas_species_label(I)
+  species_name(I)=gas_species_label(I)
   ICG(I)=ICG1(I)
   do k=1,NEMAX
     IELM(K,I)=IELM1(K,I)
   enddo
 enddo
 do I=1,nb_species_for_grain 
-  SPEC(nb_species_for_gas+I)=surface_species_label(I)
+  species_name(nb_species_for_gas+I)=surface_species_label(I)
   ICG(nb_species_for_gas+I)=ICG2(I)
   do k=1,NEMAX
     IELM(K,nb_species_for_gas+I)=IELM2(K,I)
@@ -530,7 +530,7 @@ integer :: i
 
 open(4, file='species.out')
 ! Write 'ggo_spec.d': 5 columns of numbered species=====================
-write(4,'(5(I4,")",1X,A11,1X))') (I,SPEC(I),I=1,nb_species)
+write(4,'(5(I4,")",1X,A11,1X))') (I,species_name(I),I=1,nb_species)
 close(4)
 
 return
@@ -669,7 +669,7 @@ endif
 do j=1,nb_lines
   error = 1
   do i=1,nb_species
-    if (temp_names(j).eq.SPEC(i)) then
+    if (temp_names(j).eq.species_name(i)) then
       error = 0 ! The species exist
     endif
   enddo
@@ -686,7 +686,7 @@ enddo
 do I=1,nb_species
   XN(I)=MINIMUM_INITIAL_ABUNDANCE
   do j=1,nb_lines
-    if (SPEC(I).EQ.temp_names(j)) then
+    if (species_name(I).EQ.temp_names(j)) then
       XN(I)=temp_abundances(j)
     endif
   enddo
@@ -725,7 +725,7 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
 
 open(UNIT=35, file=filename_output, form='unformatted')
 
-write(35) TIME, zspace, SPEC
+write(35) TIME, zspace, species_name
 write(35) TEMP1D, DENS1D, TAU1D, X_IONISATION_RATE1D
 write(35) ZXN
 close(35)
@@ -759,7 +759,7 @@ write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
 
 open(45, file=filename_output, form='unformatted')
 
-write(45) SPEC
+write(45) species_name
 write(45) SYMBOL
 write(45) XK
 write(45) NUM
@@ -799,7 +799,7 @@ write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,CR_IONISATION_RATE
 
 do i=1,nb_species
-  write(13,'(a," = ",1PE12.5)') SPEC(I),XN(I)
+  write(13,'(a," = ",1PE12.5)') species_name(I),XN(I)
 enddo
 
 write(13,*)

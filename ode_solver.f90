@@ -16,7 +16,7 @@ integer :: I,J,L,NSP1
 
 NSP1=nb_species+1
 
-SPEC2(1:nb_species)=SPEC(1:nb_species)
+SPEC2(1:nb_species)=species_name(1:nb_species)
 SPEC2(NSP1)='           '
 
 do I=1,nb_reactions

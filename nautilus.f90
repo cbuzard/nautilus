@@ -245,17 +245,19 @@ do J=1,nb_species
   enddo
   ! ------ Check for atomic species
   if ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
-  (SPEC(J)(:1).NE.'J          ').AND.(SPEC(J)(:1).NE.'X          ')) then
-  if (ILAB.GT.NEMAX) then
-    STOP '***More elements than NEMAX***'
-  endif       
-  ! --------- Save species number
-  ISPELM(ILAB)=J
-  ILAB=ILAB+1
-endif
+  (species_name(J)(:1).NE.'J          ').AND.(species_name(J)(:1).NE.'X          ')) then
+    if (ILAB.GT.NEMAX) then
+      STOP '***More elements than NEMAX***'
+    endif       
+    ! --------- Save species number
+    ISPELM(ILAB)=J
+    ILAB=ILAB+1
+  endif
 
-! ------ Check for electron species number
-IF (SPEC(J).EQ.'e-         ') ISPE=J
+  ! ------ Check for electron species number
+  IF (species_name(J).EQ.'e-         ') then
+    ISPE=J
+  endif
 enddo
 
 ! --- Re-arrange order of elements to match IELM columns (reactions file)
@@ -273,20 +275,20 @@ enddo
 
 ! --- Set elements' masses
 do I=1,NEMAX
-  if (SPEC(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
-  if (SPEC(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
-  if (SPEC(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
-  if (SPEC(ISPELM(I)).EQ.'C          ') MASS(I)=12.d0
-  if (SPEC(ISPELM(I)).EQ.'N          ') MASS(I)=14.d0
-  if (SPEC(ISPELM(I)).EQ.'O          ') MASS(I)=16.d0
-  if (SPEC(ISPELM(I)).EQ.'Na         ') MASS(I)=23.d0
-  if (SPEC(ISPELM(I)).EQ.'Mg         ') MASS(I)=24.d0
-  if (SPEC(ISPELM(I)).EQ.'Si         ') MASS(I)=28.d0
-  if (SPEC(ISPELM(I)).EQ.'P          ') MASS(I)=31.d0
-  if (SPEC(ISPELM(I)).EQ.'S          ') MASS(I)=32.d0
-  if (SPEC(ISPELM(I)).EQ.'Cl         ') MASS(I)=35.d0
-  if (SPEC(ISPELM(I)).EQ.'Fe         ') MASS(I)=56.d0
-  if (SPEC(ISPELM(I)).EQ.'F          ') MASS(I)=19.d0
+  if (species_name(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
+  if (species_name(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
+  if (species_name(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
+  if (species_name(ISPELM(I)).EQ.'C          ') MASS(I)=12.d0
+  if (species_name(ISPELM(I)).EQ.'N          ') MASS(I)=14.d0
+  if (species_name(ISPELM(I)).EQ.'O          ') MASS(I)=16.d0
+  if (species_name(ISPELM(I)).EQ.'Na         ') MASS(I)=23.d0
+  if (species_name(ISPELM(I)).EQ.'Mg         ') MASS(I)=24.d0
+  if (species_name(ISPELM(I)).EQ.'Si         ') MASS(I)=28.d0
+  if (species_name(ISPELM(I)).EQ.'P          ') MASS(I)=31.d0
+  if (species_name(ISPELM(I)).EQ.'S          ') MASS(I)=32.d0
+  if (species_name(ISPELM(I)).EQ.'Cl         ') MASS(I)=35.d0
+  if (species_name(ISPELM(I)).EQ.'Fe         ') MASS(I)=56.d0
+  if (species_name(ISPELM(I)).EQ.'F          ') MASS(I)=19.d0
 enddo
 
 ! Set species' characteristics==========================================
@@ -309,8 +311,8 @@ do I=1,nb_species
     MSUM=MSUM+MASS(K)*IELM(K,I) 
   enddo 
   AWT(I)=MSUM
-  if (SPEC(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
-  if (SPEC(I).EQ.YGRAIN .OR. SPEC(I).EQ.'GRAIN-      ')&
+  if (species_name(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
+  if (species_name(I).EQ.YGRAIN .OR. species_name(I).EQ.'GRAIN-      ')&
   AWT(I)=4.0*PI*grain_radius*grain_radius*grain_radius*GRAIN_DENSITY/3.0/AMU
 enddo
 
@@ -333,9 +335,9 @@ enddo
 
 ! Find the index of CO and H2
 do i=1,nb_species
-  if (SPEC(i).eq.YH2) INDH2=i
-  if (SPEC(i).eq.YCO) INDCO=i
-  if (SPEC(i).eq.YHE) INDHE=i
+  if (species_name(i).eq.YH2) INDH2=i
+  if (species_name(i).eq.YCO) INDCO=i
+  if (species_name(i).eq.YHE) INDHE=i
 enddo
 
 ! Compute nb_sites_per_grain = number of sites per grain
@@ -381,7 +383,7 @@ enddo
 ! Recompute initial_dtg_mass_ratio to remove He
 ! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
 do i=1,nemax
-  if (SPEC(ISPELM(I)).EQ.YHE) then
+  if (species_name(ISPELM(I)).EQ.YHE) then
     initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*ELEMS(I))
     ! Mean molecular weight (cgs) 
     ! Approximated here (the exact calculus would require a sume over AWT
@@ -394,7 +396,7 @@ enddo
 
 GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
 
-where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
+where(species_name.EQ.YGRAIN) XN=1.0/GTODN
 
   ! Set the electron abundance via conservation===========
   ! And check at the same time that nls_init has the same elemental abundance
@@ -582,13 +584,13 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
 
   do k=1,nemax
     if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01d0) then 
-      write(*,*)  'CAUTION : Element ',SPEC(ISPELM(K)), 'is not conserved'
+      write(*,*)  'CAUTION : Element ',species_name(ISPELM(K)), 'is not conserved'
       write(*,*)  'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
     endif
-    if (SPEC(ISPELM(K)).eq.YH) then
+    if (species_name(ISPELM(K)).eq.YH) then
       if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) write(*,*) 'H is too depleted on the grains !!!!'
     endif
-    if (SPEC(ISPELM(K)).eq.YHE) then
+    if (species_name(ISPELM(K)).eq.YHE) then
       if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01d0) write(*,*) 'He is too depleted on the grains !!!!'
     endif       
   enddo
@@ -687,16 +689,16 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       if (ICG(I).LT.0) then 
         STICK=sticking_coeff_negative 
       endif
-      !         if (SPEC(I).EQ.YH2)      STICK=0.D+0 
-      !         if (SPEC(I).EQ.YHE)      STICK=0.D+0 
-      !         if (SPEC(I).EQ.YH)       STICK=0.D+0 
-      if (SPEC(I).EQ.YHEP)     STICK=0.D+0 
-      if (SPEC(I).EQ.'e-         ')      STICK=0.D+0
-      if (SPEC(I).EQ.'H+         ')     STICK=0.D+0
-      if (SPEC(I).EQ.YGRAIN)   STICK=0.D+0
-      if (SPEC(I).EQ.'GRAIN-     ') STICK=0.D+0
-      !         if (SPEC(I).EQ.'H-')     STICK=0.D+0
-      !         if (SPEC(I).EQ.'H2+')    STICK=0.D+0
+      !         if (species_name(I).EQ.YH2)      STICK=0.D+0 
+      !         if (species_name(I).EQ.YHE)      STICK=0.D+0 
+      !         if (species_name(I).EQ.YH)       STICK=0.D+0 
+      if (species_name(I).EQ.YHEP)     STICK=0.D+0 
+      if (species_name(I).EQ.'e-         ')      STICK=0.D+0
+      if (species_name(I).EQ.'H+         ')     STICK=0.D+0
+      if (species_name(I).EQ.YGRAIN)   STICK=0.D+0
+      if (species_name(I).EQ.'GRAIN-     ') STICK=0.D+0
+      !         if (species_name(I).EQ.'H-')     STICK=0.D+0
+      !         if (species_name(I).EQ.'H2+')    STICK=0.D+0
 
       if (I.GT.nb_gaseous_species) STICK=0.D+0
       CONDSP(I)=COND*STICK/SQRT(AWT(I))
@@ -733,17 +735,17 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       DEB(I)=0.0D+0
       DHF(I)=0.0D+0
       do J=1,NGS
-        if (SPEC(I).EQ.GSPEC(J)) then
+        if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=INT1(J)
           ED(I)=REA1(J)
           EB(I)=REA2(J)
           DEB(I)=REA3(J)
           DHF(I)=REA4(J)
-          if ((SPEC(I).NE.YJH).AND.(SPEC(I).NE.YJH2).AND.&
+          if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.&
           (EBFAC.GE.0.0D+0)) EB(I)=EBFAC*ED(I)
         endif
       enddo
-      !IF(SPEC(I) == 'JN2O2      ') write(*,*) ED(I)
+      !IF(species_name(I) == 'JN2O2      ') write(*,*) ED(I)
     enddo
 
     do I=1,nb_reactions
@@ -796,8 +798,8 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       JSP1(J)=0
       JSP2(J)=0
       do I=1,nb_species
-        if (SYMBOL(1,J).EQ.SPEC(I)) JSP1(J)=I
-        if (SYMBOL(2,J).EQ.SPEC(I)) JSP2(J)=I
+        if (SYMBOL(1,J).EQ.species_name(I)) JSP1(J)=I
+        if (SYMBOL(2,J).EQ.species_name(I)) JSP2(J)=I
       enddo
 
       ! === ITYPE 14 - SURFACE REACTIONS
@@ -855,15 +857,15 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
       N6=0
       do I=nb_gaseous_species+1,nb_species
         if (SYMBOL(4,J)(:1).EQ.'J          ') then
-          if (SYMBOL(4,J).EQ.SPEC(I)) N4=I
-          if (SYMBOL(5,J).EQ.SPEC(I)) N5=I
-          if (SYMBOL(6,J).EQ.SPEC(I)) N6=I
+          if (SYMBOL(4,J).EQ.species_name(I)) N4=I
+          if (SYMBOL(5,J).EQ.species_name(I)) N5=I
+          if (SYMBOL(6,J).EQ.species_name(I)) N6=I
         endif
         if ((SYMBOL(4,J)(:1).NE.'J          ').AND.&
         (SYMBOL(4,J)(:1).NE.'X          ')) then
-        if (SYMBOL(4,J).EQ.SPEC(I)(2:)) N4=I
-        if (SYMBOL(5,J).EQ.SPEC(I)(2:)) N5=I
-        if (SYMBOL(6,J).EQ.SPEC(I)(2:)) N6=I
+        if (SYMBOL(4,J).EQ.species_name(I)(2:)) N4=I
+        if (SYMBOL(5,J).EQ.species_name(I)(2:)) N5=I
+        if (SYMBOL(6,J).EQ.species_name(I)(2:)) N6=I
       endif
     enddo
 
@@ -959,7 +961,7 @@ where(SPEC.EQ.YGRAIN) XN=1.0/GTODN
   if (ITYPE(J).EQ.99) then
     ! ------ Save tag of resultant grain surface species
     do I=1,nb_species
-      if (SYMBOL(4,J).EQ.SPEC(I)) JSP2(J)=I
+      if (SYMBOL(4,J).EQ.species_name(I)) JSP2(J)=I
     enddo
   endif
 

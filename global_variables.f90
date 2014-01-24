@@ -34,11 +34,12 @@ real(double_precision), parameter :: AVOGADRO = 6.02214129d23 !< avogadro number
 real(double_precision), parameter :: TYEAR = 3.15576d7 !< one year in seconds
 real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in cm (mean earth-sun distance)
 
-real(double_precision) :: mean_molecular_weight, Omega2
+real(double_precision) :: mean_molecular_weight !< mean molecular weight in atomic mass unit
+real(double_precision) :: Omega2 !< angular speed squared
 
 real(double_precision) :: RELATIVE_TOLERANCE
 
-character(len=11), allocatable, dimension(:) :: SPEC
+character(len=11), allocatable, dimension(:) :: species_name
 
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
 character(len=11) :: YJH,YJH2,YH,YH2,YHE,YHEP,YE,YGRAIN,YCO
@@ -271,7 +272,7 @@ subroutine initialize_global_arrays()
 
 implicit none
 
-allocate(spec(nb_species))
+allocate(species_name(nb_species))
 allocate(xn(nb_species))
 allocate(xni(nb_species))
 allocate(cts(nb_species))
@@ -354,7 +355,7 @@ integer :: i
 nb_gaseous_species = 0
 nb_surface_species = 0
 do i=1,nb_species
-  if (SPEC(i)(1:1).eq.'J') then
+  if (species_name(i)(1:1).eq.'J') then
     nb_surface_species = nb_surface_species + 1
   else
     nb_gaseous_species = nb_gaseous_species + 1
