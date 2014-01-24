@@ -126,7 +126,7 @@ dd1d(:)=nu(:)*rho(:)
 d=dt/(dy**2)
 Q(:)=rho(:)
 
-s(:)=0.
+s(:)=0.d0
 
 do ind = 1, ny-1
   W(ind) = s(ind)*dt + d/4*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/4*(dd1d(ind+1)+2*dd1d(ind) &
@@ -158,8 +158,8 @@ enddo
 !endif
 
 ! Test
-u(ny)=1.
-v(ny)=0.
+u(ny)=1.d0
+v(ny)=0.d0
 x(ny) = -d/2*dd1d(ny)/rho(ny)
 y(ny) = Q(ny)/rho(ny) + d/4*(3*dd1d(ny)+dd1d(ny-1))/rho(ny)
 z(ny) = -d/4*(dd1d(ny)+dd1d(ny-1))/rho(ny)
