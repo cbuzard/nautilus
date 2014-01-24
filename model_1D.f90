@@ -60,7 +60,7 @@ if (nptmax.ne.1) then
   ! Mean molecular weight
   ! NB: if NH > NH2 then this is wrong  
 
-  MEANW = 2.4 ! cgs
+  mean_molecular_weight = 2.4 ! cgs
 
   ! User provided temperature in z
 
@@ -72,7 +72,7 @@ if (nptmax.ne.1) then
   T100 = 30.D0 !Temperature at 100 AU
   TWARM = T100*(DISTR/(100.*AU))**(-0.5)
 
-  Hcold = sqrt(K_B*TCOLD/(meanw*amu*Omega2))
+  Hcold = sqrt(K_B*TCOLD/(mean_molecular_weight*amu*Omega2))
 
   ! Change the box size
   BOX_SIZE = 4.*HCOLD
@@ -83,10 +83,10 @@ if (nptmax.ne.1) then
 
   write(*,*) 'Cold height scale (AU) = ',Hcold/AU
   write(*,*) 'Computing half box size (AU) = ',BOX_SIZE/AU
-  write(*,*) 'Estimated DEnb_species = ',0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
+  write(*,*) 'Estimated DEnb_species = ',0.8*(DISTR/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
 
   ! Overwrite DEnb_species with this estimate
-  DEnb_species = 0.8*(DISTR/(100.*AU))**(-1.5)/(meanw*amu)/Hcold/sqrt(2.*pi)
+  DEnb_species = 0.8*(DISTR/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
 
   do ipts=1, nptmax
     !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
@@ -106,7 +106,7 @@ if (nptmax.ne.1) then
 
   ld1d(1)=0.d0
   do ipts=2,nptmax
-    ld1d(ipts) = ld1d(ipts-1) - (log(TEMP1D(ipts))-log(TEMP1D(ipts-1))) - Omega2 * meanw &
+    ld1d(ipts) = ld1d(ipts-1) - (log(TEMP1D(ipts))-log(TEMP1D(ipts-1))) - Omega2 * mean_molecular_weight &
     * amu / (K_B * TEMP1D(ipts)) * zspace(ipts)*(zspace(ipts)-zspace(ipts-1))
   enddo
 
@@ -130,7 +130,7 @@ if (nptmax.ne.1) then
   ! We use an approximated expression for the erf function
   ! cf "Handbook of mathematical functions" inequality 7.1.13
 
-  HTAU = sqrt(K_B*temp1D(1)/(meanw*amu*Omega2))
+  HTAU = sqrt(K_B*temp1D(1)/(mean_molecular_weight*amu*Omega2))
   NHEST = 2. * DENS1D(1) * HTAU * sqrt(2.d0)*exp(-(BOX_SIZE/HTAU/sqrt(2.d0))**2) &
   /((BOX_SIZE/HTAU/sqrt(2.d0))+sqrt((BOX_SIZE/HTAU/sqrt(2.d0))**2+2.d0))
   TAUEST = NHEST * KFACTOR

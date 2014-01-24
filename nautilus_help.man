@@ -335,7 +335,7 @@ XN0					tab(nb_species)			initial fraction abundance (as read in NCON)
 XNmin									default minimum initial fraction abundance
 XN					tab(nb_species)			initial fraction abundance (as listed in NJR or NINI)
 ELEMS				tab(nemax)			initial fraction abundance of the elements
-MEANW									mean molecular weigh (cgs)
+mean_molecular_weight									mean molecular weigh (cgs)
 GTODN									grain abundance
 
 SREAD				tab(nb_species)			species abundance (as listed in NINI)
@@ -360,14 +360,14 @@ Distr									Radial distance (for a disk model) (cm)
 TCOLD									DM TAU parametric disk model
 TWARM									T100 . (DISTR / 100.AU)^(-3/2)
 T100									temperature at 10 AU
-Hcold									height scale sqrt( kB . TCOLD / (MEANW.AMU.Omega2) )
+Hcold									height scale sqrt( kB . TCOLD / (mean_molecular_weight.AMU.Omega2) )
 
 Hsize									Half size of the computing box
 
-Denb_species									Maximum density of the profile 0.8 . (DISTR/100AU)^(-1.5) / (meanw.amu)/Hcold /sqrt(2pi)
+Denb_species									Maximum density of the profile 0.8 . (DISTR/100AU)^(-1.5) / (mean_molecular_weight.amu)/Hcold /sqrt(2pi)
 
 KFACTOR									AV_NH_ratio  
-HTAU									sqrt(boltz*temp1D(1)/(meanw*amu*Omega2))
+HTAU									sqrt(boltz*temp1D(1)/(mean_molecular_weight*amu*Omega2))
 NHEST									2. * DENS1D(1) * HTAU * sqrt(2.d0)*exp(-(Hsize/HTAU/sqrt(2.d0))**2)/((Hsize/HTAU/sqrt(2.d0))+sqrt((Hsize/HTAU/sqrt(2.d0))**2+2.d0))
 TAUEST									TAUEST = NHEST * KFACTOR
 ld1d				tab(nptmax)

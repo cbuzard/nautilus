@@ -34,7 +34,7 @@ real(double_precision), parameter :: AVOGADRO = 6.02214129d23 !< avogadro number
 real(double_precision), parameter :: TYEAR = 3.15576d7 !< one year in seconds
 real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in cm (mean earth-sun distance)
 
-real(double_precision) :: meanw, Omega2
+real(double_precision) :: mean_molecular_weight, Omega2
 
 real(double_precision) :: RELATIVE_TOLERANCE
 

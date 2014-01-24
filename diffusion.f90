@@ -34,7 +34,7 @@ else
   if (IS_DIFFUSIVITY.eq.2) then
     Omega2 = GRAVITATIONAL_CONSTANT * CENTRAL_MASS / DISTR**3
     do ipts=1,nptmax
-      diff1D(ipts)=TURBULENT_DIFFUSIVITY*K_B*temp1D(ipts)/(meanw*amu)/sqrt(Omega2)
+      diff1D(ipts)=TURBULENT_DIFFUSIVITY*K_B*temp1D(ipts)/(mean_molecular_weight*amu)/sqrt(Omega2)
     enddo
   endif
 

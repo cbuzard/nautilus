@@ -386,7 +386,7 @@ do i=1,nemax
     ! Mean molecular weight (cgs) 
     ! Approximated here (the exact calculus would require a sume over AWT
     ! Used for the diffusion in disks, not for chemistry
-    MEANW = 2.d0 + 4.d0*ELEMS(I)/(1.d0+ELEMS(I))
+    mean_molecular_weight = 2.d0 + 4.d0*ELEMS(I)/(1.d0+ELEMS(I))
   endif
 enddo
 
