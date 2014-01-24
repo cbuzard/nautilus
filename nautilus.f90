@@ -532,6 +532,8 @@ where(species_name.EQ.YGRAIN) XN=1.0/GTODN
 
   ! ======================================================================
   ! ======================================================================
+  ! Check if elementary abundances are conserved. If not, display a warning. 
+  ! The option ICONS can override abundances and skip the warning display.
   subroutine conserve(Y)
   use global_variables
   
