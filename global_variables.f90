@@ -58,7 +58,7 @@ real(double_precision), allocatable, dimension(:) :: XJ
 real(double_precision), allocatable, dimension(:) :: A
 real(double_precision), allocatable, dimension(:) :: B
 real(double_precision), allocatable, dimension(:) :: C
-real(double_precision), allocatable, dimension(:) :: R
+!~ real(double_precision), allocatable, dimension(:) :: R
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: XN
 real(double_precision), allocatable, dimension(:) :: XNI
@@ -380,7 +380,7 @@ allocate(xj(nb_reactions))
 allocate(a(nb_reactions))
 allocate(b(nb_reactions))
 allocate(c(nb_reactions))
-allocate(r(nb_reactions))
+!~ allocate(r(nb_reactions))
 allocate(xk(nb_reactions))
 allocate(rdif1(nb_reactions))
 allocate(rdif2(nb_reactions))
