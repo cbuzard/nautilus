@@ -97,11 +97,11 @@ real(double_precision), allocatable, dimension(:) :: CONDSP
 real(double_precision), allocatable, dimension(:) :: RQ1
 real(double_precision), allocatable, dimension(:) :: RQ2
 !~ real(double_precision) :: CHARGE
-real(double_precision) :: TATOM
-real(double_precision) :: CSUM
-real(double_precision) :: TSUM
-real(double_precision) :: CERR
-real(double_precision) :: TERR
+!~ real(double_precision) :: TATOM
+!~ real(double_precision) :: CSUM
+!~ real(double_precision) :: TSUM
+!~ real(double_precision) :: CERR
+!~ real(double_precision) :: TERR
 !~ real(double_precision) :: DXDTS
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN
