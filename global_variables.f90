@@ -72,11 +72,11 @@ real(double_precision), dimension(nemax) :: ELEMS
 !~ real(double_precision), dimension(nemax) :: EMERR
 !~ real(double_precision), dimension(nopmax) :: DENS
 !~ real(double_precision), dimension(nopmax) :: AV
-real(double_precision), dimension(nopmax) :: TIMS
-real(double_precision), allocatable, dimension(:,:) :: XNOP
-real(double_precision), allocatable, dimension(:,:) :: CTSOP
+!~ real(double_precision), dimension(nopmax) :: TIMS
+!~ real(double_precision), allocatable, dimension(:,:) :: XNOP
+!~ real(double_precision), allocatable, dimension(:,:) :: CTSOP
 !~ real(double_precision), allocatable, dimension(:,:) :: DXDTOP
-real(double_precision), dimension(6, nopmax) :: EQP
+!~ real(double_precision), dimension(6, nopmax) :: EQP
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -149,7 +149,7 @@ real(double_precision) :: B2
 real(double_precision) :: C2
 real(double_precision) :: ARRK
 
-integer, dimension(4,nopmax) :: IEQP
+!~ integer, dimension(4,nopmax) :: IEQP
 integer, dimension(nopmax) :: IORDTM
 integer, allocatable, dimension(:) :: INUM
 integer, allocatable, dimension(:) :: itype
@@ -352,8 +352,8 @@ allocate(xn(nb_species))
 !~ allocate(dxdtp(nb_species))
 !~ allocate(dxdtn(nb_species))
 allocate(awt(nb_species))
-allocate(xnop(nb_species, nopmax))
-allocate(ctsop(nb_species, nopmax))
+!~ allocate(xnop(nb_species, nopmax))
+!~ allocate(ctsop(nb_species, nopmax))
 !~ allocate(dxdtop(nb_species, nopmax))
 allocate(tindif(nb_species))
 allocate(tinacc(nb_species))
