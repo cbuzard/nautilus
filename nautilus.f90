@@ -147,7 +147,7 @@ call chemsetup()
 
 ! Initializing ZXN
 do ipts=1,nptmax
-  ZXN(:,ipts) = XN(:)
+  ZXN(:,ipts) = abundances(:)
 enddo
 
 ! Initializing T
@@ -192,7 +192,7 @@ do while (t.lt.0.9*STOP_TIME)
     ! Chemical evolution for each spatial point
 
     Y(:nb_species) = ZXN(:,ipts)
-    XN(:nb_species) = ZXN(:,ipts)
+    abundances(:nb_species) = ZXN(:,ipts)
 
     call evolve (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
@@ -203,7 +203,7 @@ do while (t.lt.0.9*STOP_TIME)
 
     if (istate.eq.-3) stop
 
-    ZXN(:,ipts) = XN(:) ! putting back
+    ZXN(:,ipts) = abundances(:) ! putting back
 
   enddo ! end of the spatial loop for chemistry 
 
@@ -377,7 +377,7 @@ do J=1,NEMAX
 enddo
 do I=1,nb_species 
   do J=1,NEMAX
-    ELEMS(J)=ELEMS(J)+IELM(J,I)*XN(I)
+    ELEMS(J) = ELEMS(J) + IELM(J,I) * abundances(I)
   enddo
 enddo
 
@@ -397,15 +397,15 @@ enddo
 
 GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
 
-where(species_name.EQ.YGRAIN) XN=1.0/GTODN
+where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 
   ! Set the electron abundance via conservation===========
   ! And check at the same time that nls_init has the same elemental abundance
   ! as nls_control
 
-  Y(:)=XN(:)
+  Y(:)=abundances(:)
   call conserve(Y)
-  XN(:)=Y(:) 
+  abundances(:)=Y(:) 
 
   return 
   end subroutine start
@@ -470,7 +470,7 @@ where(species_name.EQ.YGRAIN) XN=1.0/GTODN
   TOUT = TOUT - TIN
   T = 0.d0      
 
-  Y(:) = XN(:)
+  Y(:) = abundances(:)
 
   ! if testjac is 1, print non zero elements per column of the Jacobian
   ! Done in odes/JACVW
@@ -522,7 +522,7 @@ where(species_name.EQ.YGRAIN) XN=1.0/GTODN
 
   T = TOUT + TIN 
 
-  XN=Y
+  abundances(:) = Y(:)
 
   return 
   end subroutine evolve

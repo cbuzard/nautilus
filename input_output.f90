@@ -667,10 +667,10 @@ enddo
 
 ! Set initial abundances================================================
 do I=1,nb_species
-  XN(I)=MINIMUM_INITIAL_ABUNDANCE
+  abundances(I) = MINIMUM_INITIAL_ABUNDANCE
   do j=1,nb_lines
     if (species_name(I).EQ.temp_names(j)) then
-      XN(I)=temp_abundances(j)
+      abundances(I)=temp_abundances(j)
     endif
   enddo
 enddo
@@ -782,7 +782,7 @@ write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,CR_IONISATION_RATE
 
 do i=1,nb_species
-  write(13,'(a," = ",1PE12.5)') species_name(I),XN(I)
+  write(13,'(a," = ",1PE12.5)') species_name(I),abundances(I)
 enddo
 
 write(13,*)

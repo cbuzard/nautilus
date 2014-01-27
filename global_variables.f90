@@ -59,7 +59,7 @@ real(double_precision), allocatable, dimension(:) :: A
 real(double_precision), allocatable, dimension(:) :: B
 real(double_precision), allocatable, dimension(:) :: C
 real(double_precision), allocatable, dimension(:) :: XK
-real(double_precision), allocatable, dimension(:) :: XN
+real(double_precision), allocatable, dimension(:) :: abundances !< abundances of all species
 real(double_precision), allocatable, dimension(:) :: AWT
 real(double_precision), dimension(nemax) :: ELEMS
 real(double_precision), allocatable, dimension(:) :: RDIF1
@@ -288,7 +288,7 @@ subroutine initialize_global_arrays()
 implicit none
 
 allocate(species_name(nb_species))
-allocate(xn(nb_species))
+allocate(abundances(nb_species))
 allocate(awt(nb_species))
 allocate(tindif(nb_species))
 allocate(tinacc(nb_species))
