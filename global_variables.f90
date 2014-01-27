@@ -63,9 +63,9 @@ real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: XN
 !~ real(double_precision), allocatable, dimension(:) :: XNI
 !~ real(double_precision), allocatable, dimension(:) :: CTS
-real(double_precision), allocatable, dimension(:) :: DXDT
-real(double_precision), allocatable, dimension(:) :: DXDTP
-real(double_precision), allocatable, dimension(:) :: DXDTN
+!~ real(double_precision), allocatable, dimension(:) :: DXDT
+!~ real(double_precision), allocatable, dimension(:) :: DXDTP
+!~ real(double_precision), allocatable, dimension(:) :: DXDTN
 real(double_precision), allocatable, dimension(:) :: AWT
 real(double_precision), dimension(nemax) :: ELEMS
 real(double_precision), dimension(nemax) :: ESUM
@@ -75,7 +75,7 @@ real(double_precision), dimension(nopmax) :: AV
 real(double_precision), dimension(nopmax) :: TIMS
 real(double_precision), allocatable, dimension(:,:) :: XNOP
 real(double_precision), allocatable, dimension(:,:) :: CTSOP
-real(double_precision), allocatable, dimension(:,:) :: DXDTOP
+!~ real(double_precision), allocatable, dimension(:,:) :: DXDTOP
 real(double_precision), dimension(6, nopmax) :: EQP
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
@@ -102,7 +102,7 @@ real(double_precision) :: CSUM
 real(double_precision) :: TSUM
 real(double_precision) :: CERR
 real(double_precision) :: TERR
-real(double_precision) :: DXDTS
+!~ real(double_precision) :: DXDTS
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN
 real(double_precision) :: AV_NH_ratio
@@ -348,13 +348,13 @@ allocate(species_name(nb_species))
 allocate(xn(nb_species))
 !~ allocate(xni(nb_species))
 !~ allocate(cts(nb_species))
-allocate(dxdt(nb_species))
-allocate(dxdtp(nb_species))
-allocate(dxdtn(nb_species))
+!~ allocate(dxdt(nb_species))
+!~ allocate(dxdtp(nb_species))
+!~ allocate(dxdtn(nb_species))
 allocate(awt(nb_species))
 allocate(xnop(nb_species, nopmax))
 allocate(ctsop(nb_species, nopmax))
-allocate(dxdtop(nb_species, nopmax))
+!~ allocate(dxdtop(nb_species, nopmax))
 allocate(tindif(nb_species))
 allocate(tinacc(nb_species))
 allocate(tineva(nb_species))
