@@ -41,23 +41,61 @@ real(double_precision) :: RELATIVE_TOLERANCE
 character(len=11), allocatable, dimension(:) :: species_name
 
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
-character(len=11) :: YJH,YJH2,YH,YH2,YHE,YHEP,YE,YGRAIN,YCO
-integer :: INDCO, INDH2, INDHE
+character(len=11) :: YJH
+character(len=11) :: YJH2
+character(len=11) :: YH
+character(len=11) :: YH2
+character(len=11) :: YHE
+character(len=11) :: YHEP
+character(len=11) :: YE
+character(len=11) :: YGRAIN
+character(len=11) :: YCO
+integer :: INDCO
+integer :: INDH2
+integer :: INDHE
 
-real(double_precision), allocatable, dimension(:) :: XJ,A,B,C,R
+real(double_precision), allocatable, dimension(:) :: XJ
+real(double_precision), allocatable, dimension(:) :: A
+real(double_precision), allocatable, dimension(:) :: B
+real(double_precision), allocatable, dimension(:) :: C
+real(double_precision), allocatable, dimension(:) :: R
 real(double_precision), allocatable, dimension(:) :: XK
-real(double_precision), allocatable, dimension(:) :: XN,XNI,CTS
-real(double_precision), allocatable, dimension(:) :: DXDT,DXDTP,DXDTN,AWT
-real(double_precision), dimension(nemax) :: ELEMS,ESUM,EMERR
-real(double_precision), dimension(nopmax) :: DENS,AV,TIMS
-real(double_precision), allocatable, dimension(:,:) :: XNOP,CTSOP
+real(double_precision), allocatable, dimension(:) :: XN
+real(double_precision), allocatable, dimension(:) :: XNI
+real(double_precision), allocatable, dimension(:) :: CTS
+real(double_precision), allocatable, dimension(:) :: DXDT
+real(double_precision), allocatable, dimension(:) :: DXDTP
+real(double_precision), allocatable, dimension(:) :: DXDTN
+real(double_precision), allocatable, dimension(:) :: AWT
+real(double_precision), dimension(nemax) :: ELEMS
+real(double_precision), dimension(nemax) :: ESUM
+real(double_precision), dimension(nemax) :: EMERR
+real(double_precision), dimension(nopmax) :: DENS
+real(double_precision), dimension(nopmax) :: AV
+real(double_precision), dimension(nopmax) :: TIMS
+real(double_precision), allocatable, dimension(:,:) :: XNOP
+real(double_precision), allocatable, dimension(:,:) :: CTSOP
 real(double_precision), allocatable, dimension(:,:) :: DXDTOP
 real(double_precision), dimension(6, nopmax) :: EQP
-real(double_precision), allocatable, dimension(:) :: RDIF1,RDIF2,EX1,EX2,EA, Tmin,Tmax
+real(double_precision), allocatable, dimension(:) :: RDIF1
+real(double_precision), allocatable, dimension(:) :: RDIF2
+real(double_precision), allocatable, dimension(:) :: EX1
+real(double_precision), allocatable, dimension(:) :: EX2
+real(double_precision), allocatable, dimension(:) :: EA
+real(double_precision), allocatable, dimension(:) ::  Tmin
+real(double_precision), allocatable, dimension(:) :: Tmax
 real(double_precision), allocatable, dimension(:) :: ACT1
-real(double_precision), allocatable, dimension(:) :: TINDIF,TINACC,TINEVA
-real(double_precision), allocatable, dimension(:) :: ED,EB,DEB,DHF
-real(double_precision), allocatable, dimension(:) :: CHF,CONDSP,RQ1,RQ2
+real(double_precision), allocatable, dimension(:) :: TINDIF
+real(double_precision), allocatable, dimension(:) :: TINACC
+real(double_precision), allocatable, dimension(:) :: TINEVA
+real(double_precision), allocatable, dimension(:) :: ED
+real(double_precision), allocatable, dimension(:) :: EB
+real(double_precision), allocatable, dimension(:) :: DEB
+real(double_precision), allocatable, dimension(:) :: DHF
+real(double_precision), allocatable, dimension(:) :: CHF
+real(double_precision), allocatable, dimension(:) :: CONDSP
+real(double_precision), allocatable, dimension(:) :: RQ1
+real(double_precision), allocatable, dimension(:) :: RQ2
 real(double_precision) :: CHARGE
 real(double_precision) :: TATOM
 real(double_precision) :: CSUM
@@ -113,17 +151,46 @@ real(double_precision) :: ARRK
 
 integer, dimension(4,nopmax) :: IEQP
 integer, dimension(nopmax) :: IORDTM
-integer, allocatable, dimension(:) :: INUM, itype, jsp1, jsp2, FORMULA,NUM
-integer, allocatable, dimension(:,:) :: ICRTBL,ICROCC
-integer, allocatable, dimension(:) :: ICRNUM,ORDSP, icg
+integer, allocatable, dimension(:) :: INUM
+integer, allocatable, dimension(:) :: itype
+integer, allocatable, dimension(:) :: jsp1
+integer, allocatable, dimension(:) :: jsp2
+integer, allocatable, dimension(:) :: FORMULA
+integer, allocatable, dimension(:) :: NUM
+integer, allocatable, dimension(:,:) :: ICRTBL
+integer, allocatable, dimension(:,:) :: ICROCC
+integer, allocatable, dimension(:) :: ICRNUM
+integer, allocatable, dimension(:) :: ORDSP
+integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: IELM
 integer, dimension(nemax) :: ISPELM
 integer :: ISPE
-integer, dimension(0:nitype-1) :: IRXSTA,IRXFIN
-integer :: timestep,NT,ITFLAG,OUTPUT_PER_DECADE,DP,NDP,IODR,IREFSP, ISORD
+integer, dimension(0:nitype-1) :: IRXSTA
+integer, dimension(0:nitype-1) :: IRXFIN
+integer :: timestep
+integer :: NT
+integer :: ITFLAG
+integer :: OUTPUT_PER_DECADE
+integer :: DP
+integer :: NDP
+integer :: IODR
+integer :: IREFSP
+integer :: ISORD
 
-integer :: IDENS,ITEMP,IS_GRAIN_REACTIONS,IGRQM,ICONS,IMODH,IREAD
-integer :: IPOUT,IPMON,IPLOT,IPDET,IPRXN,IPORD,IS_ABSORPTION
+integer :: IDENS
+integer :: ITEMP
+integer :: IS_GRAIN_REACTIONS
+integer :: IGRQM
+integer :: ICONS
+integer :: IMODH
+integer :: IREAD
+integer :: IPOUT
+integer :: IPMON
+integer :: IPLOT
+integer :: IPDET
+integer :: IPRXN
+integer :: IPORD
+integer :: IS_ABSORPTION
 
 
 ! Diffusion and 1D variables
@@ -138,12 +205,22 @@ real(double_precision) :: Distr ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: IS_DIFFUSIVITY ! Diffusivity flag
-real(double_precision), dimension(nptmax) :: TEMP1D, DTEMP1D, DENS1D, TAU1D, X_IONISATION_RATE1D ! 1D physical structure
+real(double_precision), dimension(nptmax) :: TEMP1D
+real(double_precision), dimension(nptmax) :: DTEMP1D
+real(double_precision), dimension(nptmax) :: DENS1D
+real(double_precision), dimension(nptmax) :: TAU1D
+real(double_precision), dimension(nptmax) :: X_IONISATION_RATE1D ! 1D physical structure
 real(double_precision), dimension(nptmax) :: DIFF1D ! 1D diffusivity profile
-real(double_precision), dimension(nptmax) :: ZNCO,ZNH2 ! 1D column density (for the self shielding)
-real(double_precision) :: NCO,NH2 ! column density (for the self shielding)
-integer :: istep, wstep, wstepr, irateout
-integer :: testjac, njac
+real(double_precision), dimension(nptmax) :: ZNCO
+real(double_precision), dimension(nptmax) :: ZNH2 ! 1D column density (for the self shielding)
+real(double_precision) :: NCO ! column density (for the self shielding)
+real(double_precision) :: NH2 ! column density (for the self shielding)
+integer :: istep
+integer :: wstep
+integer :: wstepr
+integer :: irateout
+integer :: testjac
+integer :: njac
 
 integer :: iptstore
 integer :: ipts
