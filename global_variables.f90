@@ -70,7 +70,7 @@ real(double_precision), allocatable, dimension(:) :: AWT
 real(double_precision), dimension(nemax) :: ELEMS
 !~ real(double_precision), dimension(nemax) :: ESUM
 !~ real(double_precision), dimension(nemax) :: EMERR
-real(double_precision), dimension(nopmax) :: DENS
+!~ real(double_precision), dimension(nopmax) :: DENS
 real(double_precision), dimension(nopmax) :: AV
 real(double_precision), dimension(nopmax) :: TIMS
 real(double_precision), allocatable, dimension(:,:) :: XNOP
