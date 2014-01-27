@@ -159,8 +159,8 @@ integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
 !~ integer, allocatable, dimension(:,:) :: ICRTBL
 !~ integer, allocatable, dimension(:,:) :: ICROCC
-integer, allocatable, dimension(:) :: ICRNUM
-integer, allocatable, dimension(:) :: ORDSP
+!~ integer, allocatable, dimension(:) :: ICRNUM
+!~ integer, allocatable, dimension(:) :: ORDSP
 integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: IELM
 integer, dimension(nemax) :: ISPELM
@@ -368,8 +368,8 @@ allocate(rq1(nb_species))
 allocate(rq2(nb_species))
 !~ allocate(icrtbl(nb_species, nb_reactions))
 !~ allocate(icrocc(nb_species, nb_reactions))
-allocate(icrnum(nb_species))
-allocate(ordsp(nb_species))
+!~ allocate(icrnum(nb_species))
+!~ allocate(ordsp(nb_species))
 allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
 allocate(spec2(nb_species+1))
