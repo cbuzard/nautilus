@@ -130,7 +130,7 @@ integer :: timestep
 integer :: OUTPUT_PER_DECADE
 
 integer :: IS_GRAIN_REACTIONS
-integer :: IGRQM
+integer :: GRAIN_TUNNELING_DIFFUSION
 integer :: ICONS
 integer :: IMODH
 integer :: IS_ABSORPTION

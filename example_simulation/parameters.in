@@ -20,7 +20,7 @@ relative_tolerance =  1.000E-04 ! Relative tolerance
 
 is_grain_reactions =  1 ! Accretion, grain surface reactions
 is_absorption =  1 ! H2 AND CO SELF-SHIELDING
-IGRQM =  0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
+grain_tunneling_diffusion =  0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
 IMODH =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 ICONS =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc 
 

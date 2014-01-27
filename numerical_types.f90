@@ -4,8 +4,7 @@
 !
 ! DESCRIPTION: 
 !> @brief Module that define simple and double precision parameters. 
-!
-!> @example
+!!\n\n
 !!\n real(sp) :: a ! real simple precision
 !!\n real(dp) :: b ! real double precision
 !

@@ -217,7 +217,7 @@ ITEMP
 
 --switches--
 IS_GRAIN_REACTIONS									accretion, grain surface reactions
-IGRQM									grain tunneling diffusion 0=thermal; For H,H2: 1=QM1 (see Watson 1976); 2=QM2 (see Hasegawa & Herbst 1992); 3=choose fastest between QM1 QM2 and thermal
+GRAIN_TUNNELING_DIFFUSION									grain tunneling diffusion 0=thermal; For H,H2: 1=QM1 (see Watson 1976); 2=QM2 (see Hasegawa & Herbst 1992); 3=choose fastest between QM1 QM2 and thermal
 ICONS									0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 IMODH									1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 IREAD									0=read initial abundances from nls_control / x=from nls_init

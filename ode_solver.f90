@@ -742,21 +742,21 @@ end subroutine FCHEM
       ! --------- QM for JH,JH2 only - others are too heavy
       if (IMOD1+IMOD2.NE.0) then
         ! ------------ QM1 - Tunnelling (if it's faster than thermal)
-        if (IGRQM.EQ.1) then
+        if (GRAIN_TUNNELING_DIFFUSION.EQ.1) then
           if ((IMOD1.NE.0).AND.&
           (RQ1(JSP1(J)).GT.RDIF1(J))) RDIF1(J)=RQ1(JSP1(J))
           if ((IMOD2.NE.0).AND.&
           (RQ1(JSP2(J)).GT.RDIF2(J))) RDIF2(J)=RQ1(JSP2(J))
         endif
         ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
-        if (IGRQM.EQ.2) then
+        if (GRAIN_TUNNELING_DIFFUSION.EQ.2) then
           if ((IMOD1.NE.0).AND.&
           (RQ2(JSP1(J)).GT.RDIF1(J))) RDIF1(J)=RQ2(JSP1(J))
           if ((IMOD2.NE.0).AND.&
           (RQ2(JSP2(J)).GT.RDIF2(J))) RDIF2(J)=RQ2(JSP2(J))
         endif
         ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
-        if (IGRQM.EQ.3) then
+        if (GRAIN_TUNNELING_DIFFUSION.EQ.3) then
           if (IMOD1.NE.0) then
             if (RQ1(JSP1(J)).GT.RDIF1(J)) RDIF1(J)=RQ1(JSP1(J))
             if (RQ2(JSP1(J)).GT.RDIF1(J)) RDIF1(J)=RQ2(JSP1(J))
