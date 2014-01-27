@@ -169,32 +169,33 @@ integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
 integer :: timestep
 !~ integer :: NT
-integer :: ITFLAG
+!~ integer :: ITFLAG
 integer :: OUTPUT_PER_DECADE
-integer :: DP
-integer :: NDP
-integer :: IODR
-integer :: IREFSP
-integer :: ISORD
+!~ integer :: DP
+!~ integer :: NDP
+!~ integer :: IODR
+!~ integer :: IREFSP
+!~ integer :: ISORD
 
-integer :: IDENS
-integer :: ITEMP
+!~ integer :: IDENS
+!~ integer :: ITEMP
 integer :: IS_GRAIN_REACTIONS
 integer :: IGRQM
 integer :: ICONS
 integer :: IMODH
-integer :: IREAD
-integer :: IPOUT
-integer :: IPMON
-integer :: IPLOT
-integer :: IPDET
-integer :: IPRXN
-integer :: IPORD
+!~ integer :: IREAD
+!~ integer :: IPOUT
+!~ integer :: IPMON
+!~ integer :: IPLOT
+!~ integer :: IPDET
+!~ integer :: IPRXN
+!~ integer :: IPORD
 integer :: IS_ABSORPTION
 
 
 ! Diffusion and 1D variables
-real(double_precision), dimension(nptmax) :: zspace, zaspace ! space variables
+real(double_precision), dimension(nptmax) :: zspace ! space variables
+real(double_precision), dimension(nptmax) :: zaspace ! space variables
 real(double_precision), allocatable, dimension(:,:) ::  ZXN
 real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep
 real(double_precision) :: zstepsize ! Spatial resolution
