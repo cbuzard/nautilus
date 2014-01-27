@@ -351,8 +351,8 @@ if (isDefined) then
       case('central_mass')
         read(value, '(e12.6)') CENTRAL_MASS
       
-      case('DISTR')
-        read(value, '(e12.6)') DISTR
+      case('radial_distance')
+        read(value, '(e12.6)') RADIAL_DISTANCE
       
       case('TESTJAC')
         read(value, '(i5)') TESTJAC
@@ -485,7 +485,7 @@ use global_variables
   ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
   write(10,'(a,es10.3e2,a)') 'box_size = ', BOX_SIZE, ' ! Computing box"s size (cm)'
   write(10,'(a,es10.3e2,a)') 'central_mass = ', CENTRAL_MASS, ' ! Central mass (g)'
-  write(10,'(a,es10.3e2,a)') 'DISTR = ', DISTR, ' ! Radial distance (cm) for the disk model 1.500D+15 cm = 100 AU'
+  write(10,'(a,es10.3e2,a)') 'radial_distance = ', RADIAL_DISTANCE, ' ! Radial distance (cm) for the disk model'
   write(10,'(a,i5,a)') 'TESTJAC = ', TESTJAC, ' ! Testing the number of non-zero jacobian elements ?'
   write(10,'(a,i5,a)') 'NJAC = ', NJAC, ' ! Number of non-zero jacobian elements (per line, result of TESTJAC=1)'
   write(10,*) ''

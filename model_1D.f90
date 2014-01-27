@@ -55,7 +55,7 @@ if (nptmax.ne.1) then
 
   ! Omega**2 for the vertical GRAVITATIONAL_CONSTANTity
 
-  Omega2 = GRAVITATIONAL_CONSTANT * CENTRAL_MASS / DISTR**3
+  Omega2 = GRAVITATIONAL_CONSTANT * CENTRAL_MASS / RADIAL_DISTANCE**3
 
   ! Mean molecular weight
   ! NB: if NH > NH2 then this is wrong  
@@ -70,7 +70,7 @@ if (nptmax.ne.1) then
 
   TCOLD = 10.D0
   T100 = 30.D0 !Temperature at 100 AU
-  TWARM = T100*(DISTR/(100.*AU))**(-0.5)
+  TWARM = T100*(RADIAL_DISTANCE/(100.*AU))**(-0.5)
 
   Hcold = sqrt(K_B*TCOLD/(mean_molecular_weight*amu*Omega2))
 
@@ -83,10 +83,10 @@ if (nptmax.ne.1) then
 
   write(*,*) 'Cold height scale (AU) = ',Hcold/AU
   write(*,*) 'Computing half box size (AU) = ',BOX_SIZE/AU
-  write(*,*) 'Estimated DEnb_species = ',0.8*(DISTR/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
+  write(*,*) 'Estimated DEnb_species = ',0.8*(RADIAL_DISTANCE/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
 
   ! Overwrite DEnb_species with this estimate
-  DEnb_species = 0.8*(DISTR/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
+  DEnb_species = 0.8*(RADIAL_DISTANCE/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
 
   do ipts=1, nptmax
     !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
@@ -152,8 +152,8 @@ if (nptmax.ne.1) then
 
   UV100=410.D0/2.D0
 
-  UVGAS = UV100/((DISTR/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
-  !UVGAS = 1.d10/((DISTR/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
+  UVGAS = UV100/((RADIAL_DISTANCE/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
+  !UVGAS = 1.d10/((RADIAL_DISTANCE/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
 
   ! X ray approximation from Maloney et al. (1996) and 
 
@@ -162,7 +162,7 @@ if (nptmax.ne.1) then
   LXR = 1.D31*1.D-7  ! X luminosity in erg.s-1 / converted in Joules
   !kTXR = 5.D3*1.6D-19  ! X energy in eV  / converted in Joules
 
-  ZETAZERO = Nsec/2.D0 * RXR/DISTR * LXR /(4.D0*PI*DISTR*DISTR) 
+  ZETAZERO = Nsec/2.D0 * RXR/RADIAL_DISTANCE * LXR /(4.D0*PI*RADIAL_DISTANCE*RADIAL_DISTANCE) 
   write(*,*) ZETAZERO
 
 
