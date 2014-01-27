@@ -120,7 +120,7 @@ real(double_precision) :: DTEMP
 real(double_precision) :: initial_dust_temperature
 real(double_precision) :: TAU
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
-real(double_precision) :: ZETA
+!~ real(double_precision) :: ZETA
 real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: XNTI
 real(double_precision) :: X_IONISATION_RATE
