@@ -58,25 +58,10 @@ real(double_precision), allocatable, dimension(:) :: XJ
 real(double_precision), allocatable, dimension(:) :: A
 real(double_precision), allocatable, dimension(:) :: B
 real(double_precision), allocatable, dimension(:) :: C
-!~ real(double_precision), allocatable, dimension(:) :: R
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: XN
-!~ real(double_precision), allocatable, dimension(:) :: XNI
-!~ real(double_precision), allocatable, dimension(:) :: CTS
-!~ real(double_precision), allocatable, dimension(:) :: DXDT
-!~ real(double_precision), allocatable, dimension(:) :: DXDTP
-!~ real(double_precision), allocatable, dimension(:) :: DXDTN
 real(double_precision), allocatable, dimension(:) :: AWT
 real(double_precision), dimension(nemax) :: ELEMS
-!~ real(double_precision), dimension(nemax) :: ESUM
-!~ real(double_precision), dimension(nemax) :: EMERR
-!~ real(double_precision), dimension(nopmax) :: DENS
-!~ real(double_precision), dimension(nopmax) :: AV
-!~ real(double_precision), dimension(nopmax) :: TIMS
-!~ real(double_precision), allocatable, dimension(:,:) :: XNOP
-!~ real(double_precision), allocatable, dimension(:,:) :: CTSOP
-!~ real(double_precision), allocatable, dimension(:,:) :: DXDTOP
-!~ real(double_precision), dimension(6, nopmax) :: EQP
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -96,13 +81,6 @@ real(double_precision), allocatable, dimension(:) :: CHF
 real(double_precision), allocatable, dimension(:) :: CONDSP
 real(double_precision), allocatable, dimension(:) :: RQ1
 real(double_precision), allocatable, dimension(:) :: RQ2
-!~ real(double_precision) :: CHARGE
-!~ real(double_precision) :: TATOM
-!~ real(double_precision) :: CSUM
-!~ real(double_precision) :: TSUM
-!~ real(double_precision) :: CERR
-!~ real(double_precision) :: TERR
-!~ real(double_precision) :: DXDTS
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN
 real(double_precision) :: AV_NH_ratio
@@ -120,12 +98,9 @@ real(double_precision) :: DTEMP
 real(double_precision) :: initial_dust_temperature
 real(double_precision) :: TAU
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
-!~ real(double_precision) :: ZETA
 real(double_precision) :: CR_IONISATION_RATE
-!~ real(double_precision) :: XNTI
 real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: UVGAS
-!~ real(double_precision) :: UVGRA
 real(double_precision) :: LAYERS
 real(double_precision) :: SITE_SPACING
 real(double_precision) :: SITE_DENSITY
@@ -138,29 +113,13 @@ real(double_precision) :: EBFAC
 real(double_precision) :: START_TIME
 real(double_precision) :: STOP_TIME
 real(double_precision) :: TIME
-!~ real(double_precision) :: ALPHA
-!~ real(double_precision) :: BFAC
-!~ real(double_precision) :: NF
-!~ real(double_precision) :: A1
-!~ real(double_precision) :: B1
-!~ real(double_precision) :: C1
-!~ real(double_precision) :: A2
-!~ real(double_precision) :: B2
-!~ real(double_precision) :: C2
 real(double_precision) :: ARRK
 
-!~ integer, dimension(4,nopmax) :: IEQP
-!~ integer, dimension(nopmax) :: IORDTM
-!~ integer, allocatable, dimension(:) :: INUM
 integer, allocatable, dimension(:) :: itype
 integer, allocatable, dimension(:) :: jsp1
 integer, allocatable, dimension(:) :: jsp2
 integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
-!~ integer, allocatable, dimension(:,:) :: ICRTBL
-!~ integer, allocatable, dimension(:,:) :: ICROCC
-!~ integer, allocatable, dimension(:) :: ICRNUM
-!~ integer, allocatable, dimension(:) :: ORDSP
 integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: IELM
 integer, dimension(nemax) :: ISPELM
@@ -168,28 +127,12 @@ integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
 integer :: timestep
-!~ integer :: NT
-!~ integer :: ITFLAG
 integer :: OUTPUT_PER_DECADE
-!~ integer :: DP
-!~ integer :: NDP
-!~ integer :: IODR
-!~ integer :: IREFSP
-!~ integer :: ISORD
 
-!~ integer :: IDENS
-!~ integer :: ITEMP
 integer :: IS_GRAIN_REACTIONS
 integer :: IGRQM
 integer :: ICONS
 integer :: IMODH
-!~ integer :: IREAD
-!~ integer :: IPOUT
-!~ integer :: IPMON
-!~ integer :: IPLOT
-!~ integer :: IPDET
-!~ integer :: IPRXN
-!~ integer :: IPORD
 integer :: IS_ABSORPTION
 
 
@@ -216,7 +159,6 @@ real(double_precision), dimension(nptmax) :: ZNCO
 real(double_precision), dimension(nptmax) :: ZNH2 ! 1D column density (for the self shielding)
 real(double_precision) :: NCO ! column density (for the self shielding)
 real(double_precision) :: NH2 ! column density (for the self shielding)
-!~ integer :: istep
 integer :: wstep
 integer :: wstepr
 integer :: irateout
@@ -347,15 +289,7 @@ implicit none
 
 allocate(species_name(nb_species))
 allocate(xn(nb_species))
-!~ allocate(xni(nb_species))
-!~ allocate(cts(nb_species))
-!~ allocate(dxdt(nb_species))
-!~ allocate(dxdtp(nb_species))
-!~ allocate(dxdtn(nb_species))
 allocate(awt(nb_species))
-!~ allocate(xnop(nb_species, nopmax))
-!~ allocate(ctsop(nb_species, nopmax))
-!~ allocate(dxdtop(nb_species, nopmax))
 allocate(tindif(nb_species))
 allocate(tinacc(nb_species))
 allocate(tineva(nb_species))
@@ -367,10 +301,6 @@ allocate(chf(nb_species))
 allocate(condsp(nb_species))
 allocate(rq1(nb_species))
 allocate(rq2(nb_species))
-!~ allocate(icrtbl(nb_species, nb_reactions))
-!~ allocate(icrocc(nb_species, nb_reactions))
-!~ allocate(icrnum(nb_species))
-!~ allocate(ordsp(nb_species))
 allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
 allocate(spec2(nb_species+1))
@@ -381,7 +311,6 @@ allocate(xj(nb_reactions))
 allocate(a(nb_reactions))
 allocate(b(nb_reactions))
 allocate(c(nb_reactions))
-!~ allocate(r(nb_reactions))
 allocate(xk(nb_reactions))
 allocate(rdif1(nb_reactions))
 allocate(rdif2(nb_reactions))
@@ -391,7 +320,6 @@ allocate(ea(nb_reactions))
 allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
 allocate(act1(nb_reactions))
-!~ allocate(inum(nb_reactions))
 allocate(itype(nb_reactions))
 allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
