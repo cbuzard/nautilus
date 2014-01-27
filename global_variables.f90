@@ -139,7 +139,7 @@ real(double_precision) :: START_TIME
 real(double_precision) :: STOP_TIME
 real(double_precision) :: TIME
 !~ real(double_precision) :: ALPHA
-real(double_precision) :: BFAC
+!~ real(double_precision) :: BFAC
 real(double_precision) :: NF
 real(double_precision) :: A1
 real(double_precision) :: B1
