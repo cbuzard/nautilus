@@ -533,7 +533,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! ======================================================================
   ! ======================================================================
   ! Check if elementary abundances are conserved. If not, display a warning. 
-  ! The option ICONS can override abundances and skip the warning display.
+  ! The option CONSERVATION_TYPE can override abundances and skip the warning display.
   subroutine conserve(temp_abundances)
   use global_variables
   
@@ -564,16 +564,16 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   temp_abundances(ISPE)=CHASUM
 
   ! --- Conserve other elements if selected
-  if (ICONS.GT.0) then
-    do K=1,ICONS
+  if (CONSERVATION_TYPE.GT.0) then
+    do K=1,CONSERVATION_TYPE
       ELMSUM(K)=0.0D+0
     enddo
     do I=1,nb_species
-      do K=1,ICONS
+      do K=1,CONSERVATION_TYPE
         if (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*temp_abundances(I)
       enddo
     enddo
-    do K=1,ICONS
+    do K=1,CONSERVATION_TYPE
       temp_abundances(ISPELM(K))=ELEMS(K)-ELMSUM(K)
       if (temp_abundances(ISPELM(K)).LE.0.0D+0) temp_abundances(ISPELM(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo

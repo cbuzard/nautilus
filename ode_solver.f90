@@ -545,7 +545,7 @@ end subroutine FCHEM
       ! ITYPE 66: CO photodesorption by external UV
       ! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
       do j=irxsta(66),irxfin(66)
-        XK(J)=A(J)/SITE_DENSITY*UVGAS*1.d8*exp(-2.*TAU) 
+        XK(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*exp(-2.*TAU) 
       enddo
 
       ! ========= Rxn ITYPE 67
@@ -631,7 +631,7 @@ end subroutine FCHEM
   ! ====== Rxn ITYPE 13
   ! ITYPE 2: Gas phase photodissociations/ionisations by UV
   do J=IRXSTA(3),IRXFIN(3)
-    XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
+    XK(J)=A(J)*EXP(-C(J)*TAU)*UV_FLUX
 
     ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
     if (IS_ABSORPTION.EQ.1) then 
@@ -654,7 +654,7 @@ end subroutine FCHEM
 
         XK(J)=2.54D-11*TETABIS
 
-        XK(J)=XK(J)*UVGAS
+        XK(J)=XK(J)*UV_FLUX
       endif
 
       ! ====== Compute the CO self-shielding
@@ -695,7 +695,7 @@ end subroutine FCHEM
         if (TAU.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
 
         XK(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
-        XK(J)=XK(J)*UVGAS
+        XK(J)=XK(J)*UV_FLUX
 
       endif
 
@@ -829,7 +829,7 @@ end subroutine FCHEM
     ! ITYPE 19: Photodissociations by UV photons on grain surfaces
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
     do J=IRXSTA(19),IRXFIN(20)
-      XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
+      XK(J)=A(J)*EXP(-C(J)*TAU)*UV_FLUX
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 

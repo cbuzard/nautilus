@@ -22,7 +22,7 @@ is_grain_reactions =  1 ! Accretion, grain surface reactions
 is_absorption =  1 ! H2 AND CO SELF-SHIELDING
 grain_tunneling_diffusion =  0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
 IMODH =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
-ICONS =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc 
+conservation_type =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 
 !*****************************
 !*    Gas phase parameters   *
@@ -33,7 +33,7 @@ initial_gas_temperature =  1.000E+01 ! initial gas temp
 initial_visual_extinction =  1.500E+01 ! initial visual extinction
 cr_ionisation_rate =  1.300E-17 ! cosmic ray ionisation rate (1.3e-17 standard value)
 x_ionisation_rate =  0.000E+00 ! Ionisation rate due to X-rays (s-1)
-UVGAS =  1.000E+00 ! scale fac for UV radiation field
+uv_flux =  1.000E+00 ! Scale factor for the UV flux, in unit of the reference flux (1.=nominal)
 
 !*****************************
 !*      Grain parameters     *

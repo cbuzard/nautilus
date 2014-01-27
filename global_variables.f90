@@ -100,7 +100,7 @@ real(double_precision) :: TAU
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
 real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: X_IONISATION_RATE
-real(double_precision) :: UVGAS
+real(double_precision) :: UV_FLUX
 real(double_precision) :: LAYERS
 real(double_precision) :: SITE_SPACING
 real(double_precision) :: SITE_DENSITY
@@ -131,7 +131,7 @@ integer :: OUTPUT_PER_DECADE
 
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION
-integer :: ICONS
+integer :: CONSERVATION_TYPE
 integer :: IMODH
 integer :: IS_ABSORPTION
 

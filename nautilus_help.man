@@ -101,7 +101,7 @@ CR_IONISATION_RATE									cosmic ray ionisation rate
 XNTI
 CRA										scale fac for CR radiation field, ITYPE 17
 CRB										scale fac for CR radiation field, ITYPE 18
-UVGAS									scale factor for UV radiation field
+UV_FLUX									scale factor for UV radiation field
 UVGRA
 LAYERS									number of monolayers for ITYPE 17-20 
 SITE_SPACING										site spacing
@@ -218,7 +218,7 @@ ITEMP
 --switches--
 IS_GRAIN_REACTIONS									accretion, grain surface reactions
 GRAIN_TUNNELING_DIFFUSION									grain tunneling diffusion 0=thermal; For H,H2: 1=QM1 (see Watson 1976); 2=QM2 (see Hasegawa & Herbst 1992); 3=choose fastest between QM1 QM2 and thermal
-ICONS									0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
+CONSERVATION_TYPE									0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 IMODH									1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 IREAD									0=read initial abundances from nls_control / x=from nls_init
 IPOUT
@@ -650,14 +650,14 @@ Call CONSERVE
 
 prevent too low abundances by setting the value to 1.d-99 if it's below
 calculate the electron total abundance (electron, ions, grains) CHASUM and set it to a minimum if it's too low
-set a conservation law of the elements in the species (if selected with ICONS > 0)
+set a conservation law of the elements in the species (if selected with CONSERVATION_TYPE > 0)
 check the conservation of the elements by calculating the relative difference
 
 
 ========phys_1D==========================================				nls_phys_1D
 !!build a 1D physical structure of the object
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
-! HSIZE, DEnb_species, UVGAS, UVGRA, TAUBC
+! HSIZE, DEnb_species, UV_FLUX, UVGRA, TAUBC
 
 if nptmax is not 0
 set the physical parameters of the model (disk model ...), like tempreatures or size of the box
@@ -763,7 +763,7 @@ if there is accretion and on-grain eactions (IS_GRAIN_REACTIONS switch) :
 	set XK(J)=A(J)*XJ(J)*CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
 
 for ITYPE=66 reactions
-set XK(J)=A(J)/SITE_DENSITY*UVGAS*1.d8*exp(-2.*TAU) 
+set XK(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*exp(-2.*TAU) 
 
 for ITYPE=67 reactions
 set XK(J)=A(J)/SITE_DENSITY*1.d4
@@ -799,10 +799,10 @@ call FCHEMVW(N,Y,YP)
 !!compute the rate constants for ITYPE=13,14,17,18,19,20,99 including selfshielding effetcs
 
 for ITYPE=13 reactions
-set XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
+set XK(J)=A(J)*EXP(-C(J)*TAU)*UV_FLUX
 modify the H2 and CO photodissociation if the selfshielding IS_ABSORPTION is on
-compute the H2 selfshielding factor and extrapolate for extreme values of NH2 then set XK(H2)=2.54D-11*TETABIS*UVGAS
-compute the CO selfshielding factor with a saturation value then set XK(CO)=1.03D-10*TETABIS1*TETABIS2*TETABIS3*UVGAS
+compute the H2 selfshielding factor and extrapolate for extreme values of NH2 then set XK(H2)=2.54D-11*TETABIS*UV_FLUX
+compute the CO selfshielding factor with a saturation value then set XK(CO)=1.03D-10*TETABIS1*TETABIS2*TETABIS3*UV_FLUX
 
 if there is accretion and on-grain eactions (IS_GRAIN_REACTIONS switch) :
 
@@ -827,7 +827,7 @@ set XK(J)=A(J)*CR_IONISATION_RATE*CRB
 !Allow only 1 monolayer of each to react (Not used for the time being)
 
 for ITYPE=19-20 reactions
-set XK(J)=A(J)*EXP(-C(J)*TAU)*UVGAS
+set XK(J)=A(J)*EXP(-C(J)*TAU)*UV_FLUX
 !Allow only 1 monolayer of each to react (Not used for the time being)
 
 

@@ -244,8 +244,8 @@ if (isDefined) then
       case('IMODH')
         read(value, '(i2)') IMODH
       
-      case('ICONS')
-        read(value, '(i2)') ICONS
+      case('conservation_type')
+        read(value, '(i2)') CONSERVATION_TYPE
       
       ! Gas phase
       case('initial_gas_density')
@@ -263,8 +263,8 @@ if (isDefined) then
       case('x_ionisation_rate')
         read(value, '(e12.6)') X_IONISATION_RATE
       
-      case('UVGAS')
-        read(value, '(e12.6)') UVGAS
+      case('uv_flux')
+        read(value, '(e12.6)') UV_FLUX
       
       ! Grain
       case('initial_dust_temperature')
@@ -426,7 +426,7 @@ use global_variables
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
-  write(10,'(a,i2,a)') 'ICONS = ', ICONS, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc '
+  write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*    Gas phase parameters   *"
@@ -437,7 +437,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'initial_visual_extinction = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
   write(10,'(a,es10.3e2,a)') 'cr_ionisation_rate = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
   write(10,'(a,es10.3e2,a)') 'x_ionisation_rate = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays (s-1)'
-  write(10,'(a,es10.3e2,a)') 'UVGAS = ', UVGAS, ' ! scale fac for UV radiation field'
+  write(10,'(a,es10.3e2,a)') 'uv_flux = ', UV_FLUX, ' ! Scale factor for the UV flux, in unit of the reference flux (1.=nominal)'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*      Grain parameters     *"

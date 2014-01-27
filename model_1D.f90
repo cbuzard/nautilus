@@ -27,7 +27,7 @@ end subroutine mesh
 
 ! Warning !!!
 ! This parametric disk model overwrites some of the parameters defined in gg_control_1D and gg_control
-! BOX_SIZE, DEnb_species, UVGAS, UVGRA, TAUBC
+! BOX_SIZE, DEnb_species, UV_FLUX, UVGRA, TAUBC
 subroutine phys_1D()
 use global_variables
 use diffusion
@@ -152,8 +152,8 @@ if (nptmax.ne.1) then
 
   UV100=410.D0/2.D0
 
-  UVGAS = UV100/((RADIAL_DISTANCE/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
-  !UVGAS = 1.d10/((RADIAL_DISTANCE/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
+  UV_FLUX = UV100/((RADIAL_DISTANCE/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
+  !UV_FLUX = 1.d10/((RADIAL_DISTANCE/(100.*AU))**2+(4.*HCOLD/(100.*AU))**2)
 
   ! X ray approximation from Maloney et al. (1996) and 
 
@@ -181,7 +181,7 @@ if (nptmax.ne.1) then
   write(666,*) 'HCOLD = ',HCOLD/AU
   write(666,*) 'DEnb_species = ',DEnb_species
   write(666,*) 'TAUBC = ',TAUBC
-  write(666,*) 'UVGAS = ',UVGAS
+  write(666,*) 'UV_FLUX = ',UV_FLUX
   close(666)
 
   ! End of the if test for the 1D structure
