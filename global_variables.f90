@@ -216,7 +216,7 @@ real(double_precision), dimension(nptmax) :: ZNCO
 real(double_precision), dimension(nptmax) :: ZNH2 ! 1D column density (for the self shielding)
 real(double_precision) :: NCO ! column density (for the self shielding)
 real(double_precision) :: NH2 ! column density (for the self shielding)
-integer :: istep
+!~ integer :: istep
 integer :: wstep
 integer :: wstepr
 integer :: irateout
