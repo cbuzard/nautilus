@@ -150,15 +150,15 @@ real(double_precision) :: TIME
 real(double_precision) :: ARRK
 
 !~ integer, dimension(4,nopmax) :: IEQP
-integer, dimension(nopmax) :: IORDTM
-integer, allocatable, dimension(:) :: INUM
+!~ integer, dimension(nopmax) :: IORDTM
+!~ integer, allocatable, dimension(:) :: INUM
 integer, allocatable, dimension(:) :: itype
 integer, allocatable, dimension(:) :: jsp1
 integer, allocatable, dimension(:) :: jsp2
 integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
-integer, allocatable, dimension(:,:) :: ICRTBL
-integer, allocatable, dimension(:,:) :: ICROCC
+!~ integer, allocatable, dimension(:,:) :: ICRTBL
+!~ integer, allocatable, dimension(:,:) :: ICROCC
 integer, allocatable, dimension(:) :: ICRNUM
 integer, allocatable, dimension(:) :: ORDSP
 integer, allocatable, dimension(:) :: icg
@@ -366,8 +366,8 @@ allocate(chf(nb_species))
 allocate(condsp(nb_species))
 allocate(rq1(nb_species))
 allocate(rq2(nb_species))
-allocate(icrtbl(nb_species, nb_reactions))
-allocate(icrocc(nb_species, nb_reactions))
+!~ allocate(icrtbl(nb_species, nb_reactions))
+!~ allocate(icrocc(nb_species, nb_reactions))
 allocate(icrnum(nb_species))
 allocate(ordsp(nb_species))
 allocate(icg(nb_species))
@@ -390,7 +390,7 @@ allocate(ea(nb_reactions))
 allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
 allocate(act1(nb_reactions))
-allocate(inum(nb_reactions))
+!~ allocate(inum(nb_reactions))
 allocate(itype(nb_reactions))
 allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
