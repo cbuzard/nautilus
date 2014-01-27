@@ -62,7 +62,7 @@ real(double_precision), allocatable, dimension(:) :: C
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: XN
 !~ real(double_precision), allocatable, dimension(:) :: XNI
-real(double_precision), allocatable, dimension(:) :: CTS
+!~ real(double_precision), allocatable, dimension(:) :: CTS
 real(double_precision), allocatable, dimension(:) :: DXDT
 real(double_precision), allocatable, dimension(:) :: DXDTP
 real(double_precision), allocatable, dimension(:) :: DXDTN
@@ -347,7 +347,7 @@ implicit none
 allocate(species_name(nb_species))
 allocate(xn(nb_species))
 !~ allocate(xni(nb_species))
-allocate(cts(nb_species))
+!~ allocate(cts(nb_species))
 allocate(dxdt(nb_species))
 allocate(dxdtp(nb_species))
 allocate(dxdtn(nb_species))
