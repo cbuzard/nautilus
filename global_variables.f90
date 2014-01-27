@@ -168,7 +168,7 @@ integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
 integer :: timestep
-integer :: NT
+!~ integer :: NT
 integer :: ITFLAG
 integer :: OUTPUT_PER_DECADE
 integer :: DP
