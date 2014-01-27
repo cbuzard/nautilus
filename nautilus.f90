@@ -84,7 +84,7 @@ implicit none
 
 integer :: lrw, liw
 
-real(double_precision), dimension(:), allocatable :: Y ! nb_species
+real(double_precision), dimension(:), allocatable :: temp_abundances ! nb_species
 
 integer :: itol, itask, istate, iopt, mf
 real(double_precision) :: atol
@@ -94,7 +94,7 @@ data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
 call get_array_sizes()
 
-allocate(Y(nb_species))
+allocate(temp_abundances(nb_species))
 
 call initialize_global_arrays()
 
@@ -191,10 +191,10 @@ do while (t.lt.0.9*STOP_TIME)
 
     ! Chemical evolution for each spatial point
 
-    Y(:nb_species) = ZXN(:,ipts)
+    temp_abundances(:nb_species) = ZXN(:,ipts)
     abundances(:nb_species) = ZXN(:,ipts)
 
-    call evolve (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+    call evolve (T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
@@ -363,7 +363,7 @@ real(double_precision), intent(out) :: TOUT
 
 ! Locals
 character(len=11), dimension(nb_species) :: SREAD
-real(double_precision), dimension(nb_species) :: Y
+real(double_precision), dimension(nb_species) :: temp_abundances
 integer :: i, j, k
 
 ! Initialise times======================================================
@@ -403,9 +403,9 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! And check at the same time that nls_init has the same elemental abundance
   ! as nls_control
 
-  Y(:)=abundances(:)
-  call conserve(Y)
-  abundances(:)=Y(:) 
+  temp_abundances(:)=abundances(:)
+  call conserve(temp_abundances)
+  abundances(:)=temp_abundances(:) 
 
   return 
   end subroutine start
@@ -413,7 +413,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! ======================================================================
   ! ======================================================================
 
-  subroutine evolve(T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+  subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
   
@@ -432,7 +432,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   integer, intent(out) :: istate
   real(double_precision), intent(out) :: t
   real(double_precision), intent(out) :: TOUT
-  real(double_precision), intent(out), dimension(nb_species) :: Y
+  real(double_precision), intent(out), dimension(nb_species) :: temp_abundances
  
   ! Locals
   integer, dimension(liw) :: IWORK
@@ -470,7 +470,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   TOUT = TOUT - TIN
   T = 0.d0      
 
-  Y(:) = abundances(:)
+  temp_abundances(:) = abundances(:)
 
   ! if testjac is 1, print non zero elements per column of the Jacobian
   ! Done in odes/JACVW
@@ -496,7 +496,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
     ! H2 for instance. Helps running a bit faster
 
     do i=1,nb_species
-      satol(i)=max(atol,1.d-16*y(i))
+      satol(i)=max(atol,1.d-16*temp_abundances(i))
     enddo
 
     ! ratcond is already called in compute IAJA
@@ -504,25 +504,25 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 
     ! Feed IWORK with IA and JA
 
-    call computeIAJA(Y)
+    call computeIAJA(temp_abundances)
     NNZ=IA(nb_species+1)-1
     iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
     iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
+    call dlsodes(fchem,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
     if (istate.ne.2) write(*,*)  'IPTS = ', ipts, 'ISTATE = ', ISTATE
 
-    call conserve(Y)
+    call conserve(temp_abundances)
 
     ! Stop, Forrest
   enddo
 
   T = TOUT + TIN 
 
-  abundances(:) = Y(:)
+  abundances(:) = temp_abundances(:)
 
   return 
   end subroutine evolve
@@ -534,13 +534,13 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! ======================================================================
   ! Check if elementary abundances are conserved. If not, display a warning. 
   ! The option ICONS can override abundances and skip the warning display.
-  subroutine conserve(Y)
+  subroutine conserve(temp_abundances)
   use global_variables
   
   implicit none
   
   ! Inputs/outputs
-  real(double_precision), intent(inout), dimension(nb_species) :: Y
+  real(double_precision), intent(inout), dimension(nb_species) :: temp_abundances
   
   ! Locals
   real(double_precision), dimension(NEMAX) :: ELMSUM
@@ -550,16 +550,18 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 
   ! Prevent too low abundances
   do i=1,nb_species
-    if (Y(i).le.1.d-99) Y(i)=1.d-99
+    if (temp_abundances(i).le.1.d-99) then
+      temp_abundances(i) = 1.d-99
+    endif
   enddo
 
   ! --- Conserve electrons
   CHASUM=0.0D+0
   do I=1,nb_species
-    if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*Y(I)
+    if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*temp_abundances(I)
   enddo
   if (CHASUM.LE.0.0D+0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
-  Y(ISPE)=CHASUM
+  temp_abundances(ISPE)=CHASUM
 
   ! --- Conserve other elements if selected
   if (ICONS.GT.0) then
@@ -568,12 +570,12 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
     enddo
     do I=1,nb_species
       do K=1,ICONS
-        if (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
+        if (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*temp_abundances(I)
       enddo
     enddo
     do K=1,ICONS
-      Y(ISPELM(K))=ELEMS(K)-ELMSUM(K)
-      if (Y(ISPELM(K)).LE.0.0D+0) Y(ISPELM(K))=MINIMUM_INITIAL_ABUNDANCE
+      temp_abundances(ISPELM(K))=ELEMS(K)-ELMSUM(K)
+      if (temp_abundances(ISPELM(K)).LE.0.0D+0) temp_abundances(ISPELM(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo
   endif
 
@@ -581,7 +583,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ELMSUM(:)=0.0D+0
   do I=1,nb_species
     do K=1,NEMAX
-      ELMSUM(K)=ELMSUM(K)+IELM(K,I)*Y(I)
+      ELMSUM(K)=ELMSUM(K)+IELM(K,I)*temp_abundances(I)
     enddo
   enddo
 
@@ -591,10 +593,10 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
       write(*,*)  'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
     endif
     if (species_name(ISPELM(K)).eq.YH) then
-      if (abs(ELEMS(K)-Y(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) write(*,*) 'H is too depleted on the grains !!!!'
+      if (abs(ELEMS(K)-temp_abundances(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) write(*,*) 'H is too depleted on the grains !!!!'
     endif
     if (species_name(ISPELM(K)).eq.YHE) then
-      if (abs(ELEMS(K)-Y(INDHE))/ELEMS(K).ge.0.01d0) write(*,*) 'He is too depleted on the grains !!!!'
+      if (abs(ELEMS(K)-temp_abundances(INDHE))/ELEMS(K).ge.0.01d0) write(*,*) 'He is too depleted on the grains !!!!'
     endif       
   enddo
 

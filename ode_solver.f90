@@ -45,7 +45,7 @@ implicit none
 
 ! Inputs
 integer, intent(in) :: N
-real(double_precision), intent(in), dimension(nb_species) :: Y
+real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
 ! Outputs
 real(double_precision), intent(out), dimension(nb_species) :: YDOT
@@ -108,7 +108,7 @@ implicit none
 
 ! Inputs
 integer, intent(in) :: J
-real(double_precision), intent(in), dimension(nb_species) :: Y
+real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
 ! Outputs
 real(double_precision), intent(out), dimension(nb_species) :: PDJ
@@ -227,7 +227,7 @@ use global_variables
 implicit none
 
 ! Inputs
-real(double_precision), intent(in), dimension(nb_species) :: Y
+real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
 ! Locals
 integer :: i,j,k
@@ -269,7 +269,7 @@ subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
   real(double_precision), intent(in) :: T
   real(double_precision), intent(in), dimension(N) :: IAN
   real(double_precision), intent(in), dimension(N) :: JAN
-  real(double_precision), intent(in), dimension(nb_species) :: Y
+  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
   
   ! Outputs
   real(double_precision), intent(out), dimension(nb_species) :: PDJ
@@ -289,7 +289,7 @@ subroutine FCHEM (N,T,Y,YP)
   implicit none
 
   ! Inputs
-  real(double_precision), intent(in), dimension(nb_species) :: Y
+  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
   real(double_precision), intent(in) :: T
   
   ! Outputs
@@ -603,7 +603,7 @@ end subroutine FCHEM
   implicit none
   
   ! Inputs
-    real(double_precision), intent(in), dimension(nb_species) :: Y
+  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
   ! Locals
   real(double_precision) :: ACTIV,BARR,MONLAY,DIFF

@@ -48,7 +48,7 @@ use global_variables
 implicit none
 
 ! Locals
-real(double_precision), dimension(nptmax) :: Y
+real(double_precision), dimension(nptmax) :: temp_abundances
 integer :: j
 
 if (IS_DIFFUSIVITY.eq.0) then
@@ -59,9 +59,9 @@ endif
 !zstepsize = BOX_SIZE/(nptmax-1)
 
 do j = 1, nb_species 
-  Y(:)=zxn(j,:)
-  call crank(Y, nptmax-1, DIFFUSIVE_TIMESTEP, zstepsize, diff1D, DENS1D, 0)
-  zxn(j,:) = Y(:)
+  temp_abundances(:)=zxn(j,:)
+  call crank(temp_abundances, nptmax-1, DIFFUSIVE_TIMESTEP, zstepsize, diff1D, DENS1D, 0)
+  zxn(j,:) = temp_abundances(:)
 enddo
 
 return
