@@ -82,7 +82,7 @@ real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
 real(double_precision), allocatable, dimension(:) :: EX2
 real(double_precision), allocatable, dimension(:) :: EA
-real(double_precision), allocatable, dimension(:) ::  Tmin
+real(double_precision), allocatable, dimension(:) :: Tmin
 real(double_precision), allocatable, dimension(:) :: Tmax
 real(double_precision), allocatable, dimension(:) :: ACT1
 real(double_precision), allocatable, dimension(:) :: TINDIF
@@ -96,7 +96,7 @@ real(double_precision), allocatable, dimension(:) :: CHF
 real(double_precision), allocatable, dimension(:) :: CONDSP
 real(double_precision), allocatable, dimension(:) :: RQ1
 real(double_precision), allocatable, dimension(:) :: RQ2
-real(double_precision) :: CHARGE
+!~ real(double_precision) :: CHARGE
 real(double_precision) :: TATOM
 real(double_precision) :: CSUM
 real(double_precision) :: TSUM
