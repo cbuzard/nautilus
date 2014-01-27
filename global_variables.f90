@@ -122,10 +122,10 @@ real(double_precision) :: TAU
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
 !~ real(double_precision) :: ZETA
 real(double_precision) :: CR_IONISATION_RATE
-real(double_precision) :: XNTI
+!~ real(double_precision) :: XNTI
 real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: UVGAS
-real(double_precision) :: UVGRA
+!~ real(double_precision) :: UVGRA
 real(double_precision) :: LAYERS
 real(double_precision) :: SITE_SPACING
 real(double_precision) :: SITE_DENSITY
