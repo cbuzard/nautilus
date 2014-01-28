@@ -83,7 +83,7 @@ if (isDefined) then
   
   j = 0
   do
-    read(10, '(a200)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
       
     ! We get only what is on the left of an eventual comment parameter
@@ -231,7 +231,7 @@ if (isDefined) then
   
   i = 0
   do
-    read(10, '(a80)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
       
     ! We get only what is on the left of an eventual comment parameter
@@ -265,7 +265,7 @@ if (isDefined) then
   
   i = 0
   do
-    read(10, '(a80)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
       
     ! We get only what is on the left of an eventual comment parameter
@@ -340,7 +340,7 @@ if (isDefined) then
   open(10, file=filename, status='old')
   
   do
-    read(10, '(a80)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
       
     ! We get only what is on the left of an eventual comment parameter
@@ -755,7 +755,7 @@ if (isDefined) then
   open(10, file=filename, status='old')
   i = 1
   do 
-    read(10, '(a80)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
       
     ! We get only what is on the left of an eventual comment parameter

@@ -220,7 +220,7 @@ subroutine get_linenumber(filename, nb_lines)
   
   error = 0
   do 
-    read(15,'(a80)',iostat=error) line
+    read(15,'(a)',iostat=error) line
     
     if(error.ne.0) then
       exit
