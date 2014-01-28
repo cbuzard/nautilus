@@ -218,8 +218,6 @@ enddo
 
 if (nptmax.eq.1) call write_abundances('abundances.tmp')
 
-stop
-
 contains
 
 ! ======================================================================
@@ -248,7 +246,8 @@ do J=1,nb_species
   if ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
   (species_name(J)(:1).NE.'J          ').AND.(species_name(J)(:1).NE.'X          ')) then
     if (ILAB.GT.NB_PRIME_ELEMENTS) then
-      STOP '***More elements than NB_PRIME_ELEMENTS***'
+      write(Error_unit, *) '***More fundamental elements than NB_PRIME_ELEMENTS***'
+      call exit(3)
     endif       
     ! --------- Save species number
     ISPELM(ILAB)=J
@@ -856,11 +855,6 @@ end subroutine get_elemental_abundance
 
       ! ------ Factor of 2 for same species reactions
       if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
-      !        write(*,*) SYMBOL(1,J)
-      !       write(*,*) SYMBOL(2,J)
-      !       write(*,*) XJ(J)
-
-      !       stop
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
@@ -959,23 +953,11 @@ end subroutine get_elemental_abundance
     if (NEVAP.EQ.0) EVFRAC=0.0D+0
     if (DHFSUM.LE.0.0D+0) EVFRAC=0.0D+0
 
-    !         EVFRAC=0.0D+0
-
     if (SYMBOL(4,J)(:1).EQ.'J          ') then
       EVFRAC=1.0D+0-EVFRAC
     endif
 
-    !        V.W. Jul 2006 f=evfrac=0.009 for H2O (Kroes & Anderson 2006) 
-    !        if (SYMBOL(4,J).EQ.'JH2O    ') then
-    !            EVFRAC=1.0D+0-EVFRAC_H2O
-    !         endif
-
     XJ(J)=XJ(J)*EVFRAC
-    !        write(*,*) SYMBOL(1,J)
-    !       write(*,*) SYMBOL(2,J)
-    !       write(*,*) XJ(J)
-
-    !       stop
 
     ! ------ Calculate quantum activation energy
     REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&

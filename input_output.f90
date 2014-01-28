@@ -184,9 +184,9 @@ enddo
 
 
 if (jk.ne.nb_reactions+1) then
-  write(*,*) 'Some reaction was not found by the reorder process'
-  write(*,*) jk,'=/',nb_reactions+1 
-  stop
+  write(Error_unit,*) 'Some reaction was not found by the reorder process'
+  write(Error_unit,*) jk,'=/',nb_reactions+1 
+  call exit(4)
 endif
 
 !       replace the species names by blanks for non chemical species                                                                        
@@ -522,8 +522,8 @@ else
 end if
 
 if ((IS_DIFFUSIVITY.lt.0).or.(IS_DIFFUSIVITY.gt.2)) then
-  write(*,*) 'This value for IS_DIFFUSIVITY is not implemented: ',IS_DIFFUSIVITY
-  stop
+  write(Error_unit,*) 'This value for IS_DIFFUSIVITY is not implemented: ',IS_DIFFUSIVITY
+  call exit(5)
 endif
 
 START_TIME = START_TIME * TYEAR

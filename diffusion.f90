@@ -139,24 +139,6 @@ do ind = 1,ny-1
   z(ind) = -d/4*(dd1d(ind)+dd1d(ind-1))/rho(ind)
 enddo
 
-! Boundary conditions
-
-!if (ibc.eq.0) then
-!u(ny-1) = 1.
-!v(ny-1) = 0.
-!u(ny-1)=0.
-!v(ny-1)=f(0)
-!else
-!if (ibc.eq.1) then
-!f(0) = bc
-!u(ny-1) = 0.
-!v(ny-1) = bc
-!else
-!write(*,*)  '**** Error: ibc must be either 0 or 1 *****'
-!stop
-!endif
-!endif
-
 ! Test
 u(ny)=1.d0
 v(ny)=0.d0

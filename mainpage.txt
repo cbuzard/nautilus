@@ -18,4 +18,10 @@ Error 1: Missing input file.
 
 Error 2: Species name in reaction do not match expected list of species
 
+Error 3: More elements than NB_PRIME_ELEMENTS
+
+Error 4: When reordering reactions, it seems that some reactions misses or not expected
+
+Error 5 : In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code
+
 */
