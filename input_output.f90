@@ -43,14 +43,6 @@ integer :: i,k,j, jk
 
 ! Variables for the unordered reaction file
 
-character(len=11), dimension(nb_species_for_gas) :: gas_species_label 
-integer, dimension(nb_species_for_gas) :: ICG1 
-integer, dimension(nemax, nb_species_for_gas) :: IELM1 
-
-character(len=11), dimension(nb_species_for_grain) :: surface_species_label 
-integer, dimension(nb_species_for_grain) :: ICG2 
-integer, dimension(nemax, nb_species_for_grain) :: IELM2 
-
 character(len=11), dimension(7,nb_gas_phase_reactions) :: SYMBOLUO1 
 real(double_precision), dimension(nb_gas_phase_reactions) :: AUO1,BUO1,CUO1 
 integer, dimension(nb_gas_phase_reactions) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 
@@ -65,30 +57,16 @@ integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 
 call read_parameters_in()
 
-
+call read_species()
 
 ! Read species & reaction info from reactions file======================
 ! WV fev 2012
 ! There are now two different files in which the reactions and species are
 
-! Reading the gas phase network
-open(unit=9, file='gas_species.in',status='OLD')
-do I=1,nb_species_for_gas
-  read(9,'(A11,i3,13(I3))') gas_species_label(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
-enddo
-close(9)
-
 open(unit=9, file='gas_reactions.in',status='OLD')
 read(9,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
 ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,nb_gas_phase_reactions) 
 close(9)
-
-! Reading the grain network
-open(unit=19, file='grain_species.in', status='OLD')
-do I=1,nb_species_for_grain
-  read(19,'(A11,i3,13(I3))') surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
-enddo
-close(19)
 
 open(unit=19, file='grain_reactions.in', status='OLD')
 read(19,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
@@ -96,22 +74,6 @@ ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,nb_surface_reactions)
 close(19)
 
 ! putting everything back into the big tables
-
-do I=1,nb_species_for_gas 
-  species_name(I)=gas_species_label(I)
-  ICG(I)=ICG1(I)
-  do k=1,NEMAX
-    IELM(K,I)=IELM1(K,I)
-  enddo
-enddo
-do I=1,nb_species_for_grain 
-  species_name(nb_species_for_gas+I)=surface_species_label(I)
-  ICG(nb_species_for_gas+I)=ICG2(I)
-  do k=1,NEMAX
-    IELM(K,nb_species_for_gas+I)=IELM2(K,I)
-  enddo
-enddo
-
 do I=1,nb_gas_phase_reactions 
   do k=1,7
     SYMBOLUO(k,I)=SYMBOLUO1(k,I)
@@ -180,6 +142,74 @@ enddo
 
 return
 end subroutine read_input_files
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Read all species information from gas_species.in and grain_species.in
+!! files.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine read_species()
+
+use global_variables
+
+implicit none
+
+! Locals
+integer :: i,k
+
+! Variables for the unordered reaction file
+
+character(len=11), dimension(nb_species_for_gas) :: gas_species_label 
+integer, dimension(nb_species_for_gas) :: ICG1 
+integer, dimension(nemax, nb_species_for_gas) :: IELM1 
+
+character(len=11), dimension(nb_species_for_grain) :: surface_species_label 
+integer, dimension(nb_species_for_grain) :: ICG2 
+integer, dimension(nemax, nb_species_for_grain) :: IELM2 
+
+! Read species & reaction info from reactions file======================
+! WV fev 2012
+! There are now two different files in which the reactions and species are
+
+! Reading the gas phase network
+open(unit=9, file='gas_species.in',status='OLD')
+do I=1,nb_species_for_gas
+  read(9,'(A11,i3,13(I3))') gas_species_label(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
+enddo
+close(9)
+
+! Reading the grain network
+open(unit=19, file='grain_species.in', status='OLD')
+do I=1,nb_species_for_grain
+  read(19,'(A11,i3,13(I3))') surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
+enddo
+close(19)
+
+! putting everything back into the big tables
+
+do I=1,nb_species_for_gas 
+  species_name(I)=gas_species_label(I)
+  ICG(I)=ICG1(I)
+  do k=1,NEMAX
+    IELM(K,I)=IELM1(K,I)
+  enddo
+enddo
+do I=1,nb_species_for_grain 
+  species_name(nb_species_for_gas+I)=surface_species_label(I)
+  ICG(nb_species_for_gas+I)=ICG2(I)
+  do k=1,NEMAX
+    IELM(K,nb_species_for_gas+I)=IELM2(K,I)
+  enddo
+enddo
+
+return
+end subroutine read_species
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
