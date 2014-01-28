@@ -17,7 +17,7 @@ integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species
 integer :: nb_gaseous_species !< number of species that are gaseous
 integer :: nb_surface_species !< number of species that are on the surface of grains
-integer, parameter :: NEMAX=13
+integer, parameter :: NB_PRIME_ELEMENTS=13 !< Number of prime element that compose molecules, such as H, He, C and so on.
 integer :: nb_species_for_grain !< number of species involved in grain surface reactions
 integer :: nb_surface_reactions !< number of reactions on the grain surface
 integer :: nb_species_for_gas !< number of species involved in gas phase reactions
@@ -61,7 +61,7 @@ real(double_precision), allocatable, dimension(:) :: C
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: abundances !< abundances of all species
 real(double_precision), allocatable, dimension(:) :: AWT
-real(double_precision), dimension(nemax) :: ELEMS
+real(double_precision), dimension(NB_PRIME_ELEMENTS) :: ELEMS
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -122,7 +122,7 @@ integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
 integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: IELM
-integer, dimension(nemax) :: ISPELM
+integer, dimension(NB_PRIME_ELEMENTS) :: ISPELM
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
@@ -305,7 +305,7 @@ allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
 allocate(spec2(nb_species+1))
 allocate(ia(nb_species+1))
-allocate(ielm(nemax,nb_species))
+allocate(ielm(NB_PRIME_ELEMENTS,nb_species))
 
 allocate(xj(nb_reactions))
 allocate(a(nb_reactions))

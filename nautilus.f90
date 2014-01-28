@@ -230,7 +230,7 @@ use global_variables
 implicit none
 
 ! Locals
-real(double_precision), dimension(NEMAX) :: MASS
+real(double_precision), dimension(NB_PRIME_ELEMENTS) :: MASS
 real(double_precision) :: MSUM
 integer :: ILAB, KSUM, j, k, i, isptemp
 
@@ -241,14 +241,14 @@ ILAB=1
 do J=1,nb_species
   KSUM=0
   ! ------ Calculate species' mass
-  do K=1,NEMAX
+  do K=1,NB_PRIME_ELEMENTS
     KSUM=KSUM+IELM(K,J)
   enddo
   ! ------ Check for atomic species
   if ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
   (species_name(J)(:1).NE.'J          ').AND.(species_name(J)(:1).NE.'X          ')) then
-    if (ILAB.GT.NEMAX) then
-      STOP '***More elements than NEMAX***'
+    if (ILAB.GT.NB_PRIME_ELEMENTS) then
+      STOP '***More elements than NB_PRIME_ELEMENTS***'
     endif       
     ! --------- Save species number
     ISPELM(ILAB)=J
@@ -262,9 +262,9 @@ do J=1,nb_species
 enddo
 
 ! --- Re-arrange order of elements to match IELM columns (reactions file)
-do J=1,NEMAX-1
+do J=1,NB_PRIME_ELEMENTS-1
   if (IELM(J,ISPELM(J)).NE.1) then
-    do K=J+1,NEMAX
+    do K=J+1,NB_PRIME_ELEMENTS
       if (IELM(J,ISPELM(K)).EQ.1) then
         ISPTEMP=ISPELM(K)
         ISPELM(K)=ISPELM(J)
@@ -275,7 +275,7 @@ do J=1,NEMAX-1
 enddo
 
 ! --- Set elements' masses
-do I=1,NEMAX
+do I=1,NB_PRIME_ELEMENTS
   if (species_name(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
   if (species_name(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
   if (species_name(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
@@ -308,7 +308,7 @@ YCO    = 'CO         '
 do I=1,nb_species 
   ! ------ Calculate masses
   MSUM=0.d0
-  do K=1,NEMAX 
+  do K=1,NB_PRIME_ELEMENTS 
     MSUM=MSUM+MASS(K)*IELM(K,I) 
   enddo 
   AWT(I)=MSUM
@@ -372,18 +372,18 @@ TIME=0.0d0
 
 ! Compute elemental abundances
 
-do J=1,NEMAX
+do J=1,NB_PRIME_ELEMENTS
   ELEMS(J)=0.0D+0
 enddo
 do I=1,nb_species 
-  do J=1,NEMAX
+  do J=1,NB_PRIME_ELEMENTS
     ELEMS(J) = ELEMS(J) + IELM(J,I) * abundances(I)
   enddo
 enddo
 
 ! Recompute initial_dtg_mass_ratio to remove He
 ! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
-do i=1,nemax
+do i=1,NB_PRIME_ELEMENTS
   if (species_name(ISPELM(I)).EQ.YHE) then
     initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*ELEMS(I))
     ! Mean molecular weight (cgs) 
@@ -543,7 +543,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   real(double_precision), intent(inout), dimension(nb_species) :: temp_abundances
   
   ! Locals
-  real(double_precision), dimension(NEMAX) :: ELMSUM
+  real(double_precision), dimension(NB_PRIME_ELEMENTS) :: ELMSUM
   real(double_precision) :: CHASUM
 
   integer :: i, k
@@ -582,12 +582,12 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! Check for conservation
   ELMSUM(:)=0.0D+0
   do I=1,nb_species
-    do K=1,NEMAX
+    do K=1,NB_PRIME_ELEMENTS
       ELMSUM(K)=ELMSUM(K)+IELM(K,I)*temp_abundances(I)
     enddo
   enddo
 
-  do k=1,nemax
+  do k=1,NB_PRIME_ELEMENTS
     if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01d0) then 
       write(*,*)  'CAUTION : Element ',species_name(ISPELM(K)), 'is not conserved'
       write(*,*)  'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
@@ -889,7 +889,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
     if (N6.NE.0) SUM1=MAX(ED(N4),ED(N5),ED(N6))
 
     ATOMS=0
-    do K=1,NEMAX
+    do K=1,NB_PRIME_ELEMENTS
       ATOMS=ATOMS+IELM(K,N4)
     enddo
 

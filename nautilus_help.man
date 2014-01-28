@@ -43,7 +43,7 @@ nb_reactions							number of reactions in the network
 nb_species							number of species in the network
 nb_gaseous_species							number of gas phase species
 nb_surface_species							number of grain sticked species
-nemax							number of different elements in the network
+NB_PRIME_ELEMENTS							number of different elements in the network
 nitype							number of reaction types
 nopmax						
 
@@ -61,8 +61,8 @@ DXDT				tab(nb_species)
 DXDTP				tab(nb_species)
 DXDTN				tab(nb_species)
 
-ESUM				tab(nemax)
-EMERR				tab(nemax)
+ESUM				tab(NB_PRIME_ELEMENTS)
+EMERR				tab(NB_PRIME_ELEMENTS)
 
 DENS				tab(nopmax)
 AV					tab(nopmax)
@@ -119,7 +119,7 @@ ARRK									a-coefficient for RRK-style formation-desorption, it is the ratio o
 --network data--
 SPEC				tab(nb_species)			chemical species
 ICG					tab(nb_species)			charge carried by the species
-IELM				tab(nemax:nb_species)    number of elements that compose the species 
+IELM				tab(NB_PRIME_ELEMENTS:nb_species)    number of elements that compose the species 
 											(H,He,C,N,O,Si,S,Fe,Na,Mg,Cl,P)
 SYMBOLUO			tab(8:nb_reactions)		reactions. 3 reagents + 5 products (unordered)
 SYMBOL				tab(8:nb_species)		the same tab as symboluo but itype ordered
@@ -273,9 +273,9 @@ zstepsize								Spatial resolution
 
 ==called in INITIAL==
 KSUM									number of elements in the species
-ISPELM				tab(Nemax)			corresponding lines (in IELM) of the NEMAX elements
+ISPELM				tab(NB_PRIME_ELEMENTS)			corresponding lines (in IELM) of the NB_PRIME_ELEMENTS elements
 ISPE									corresponding line (in IELM) of the electron
-Mass				tab(Nemax)			mass number (A) of the NEMAX elements									
+Mass				tab(NB_PRIME_ELEMENTS)			mass number (A) of the NB_PRIME_ELEMENTS elements									
 
 
 ==called in GRAINRATE==
@@ -334,7 +334,7 @@ XS0					tab(nb_species)			species which have been given an initial fraction abun
 XN0					tab(nb_species)			initial fraction abundance (as read in NCON)
 XNmin									default minimum initial fraction abundance
 XN					tab(nb_species)			initial fraction abundance (as listed in NJR or NINI)
-ELEMS				tab(nemax)			initial fraction abundance of the elements
+ELEMS				tab(NB_PRIME_ELEMENTS)			initial fraction abundance of the elements
 mean_molecular_weight									mean molecular weigh (cgs)
 GTODN									grain abundance
 
