@@ -212,19 +212,46 @@ if (isDefined) then
   close(10)
   
 else
-  write (Error_unit,*) 'Warning: The file ', filename,' does not exist. Default values have been used'
+  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
   call exit(1)
 end if
 
+
 ! Reading list of species for grain surface
-open(unit=19, file='grain_species.in', status='old')
-do I=1,nb_species_for_grain
-  read(19,'(A11,i3,13(I3))') surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
-enddo
-close(19)
+filename = 'grain_species.in'
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  
+  i = 0
+  do
+    read(10, '(a80)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    if (line.ne.'') then
+      i = i + 1
+      read(line, '(A11,i3,13(I3))')  surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
+    
+    end if
+  end do
+  close(10)
+  
+else
+  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  call exit(1)
+end if
+
 
 ! putting everything back into the big tables
-
 do I=1,nb_species_for_gas 
   species_name(I)=gas_species_label(I)
   ICG(I)=ICG1(I)
