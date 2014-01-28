@@ -41,8 +41,15 @@ implicit none
 ! Locals
 integer :: i,k,j, jk
 
-! Variables for the unordered reaction file
+character(len=80) :: filename !< name of the file to be read
+character(len=200) :: line
+character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
+integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+integer :: error !< to store the state of a read instruction
 
+logical :: isDefined
+
+! Variables for the unordered reaction file
 character(len=11), dimension(7,nb_gas_phase_reactions) :: SYMBOLUO1 
 real(double_precision), dimension(nb_gas_phase_reactions) :: AUO1,BUO1,CUO1 
 integer, dimension(nb_gas_phase_reactions) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 
@@ -62,11 +69,44 @@ call read_species()
 ! Read species & reaction info from reactions file======================
 ! WV fev 2012
 ! There are now two different files in which the reactions and species are
+!~ 
+!~ open(unit=9, file='gas_reactions.in',status='OLD')
+!~ read(9,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
+!~ ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,nb_gas_phase_reactions) 
+!~ close(9)
 
-open(unit=9, file='gas_reactions.in',status='OLD')
-read(9,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
-ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,nb_gas_phase_reactions) 
-close(9)
+filename = 'gas_reactions.in'
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  
+  j = 0
+  do
+    read(10, '(a200)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    if (line.ne.'') then
+      j = j + 1
+      read(line, '(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)')  (SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
+ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J)
+    
+    end if
+  end do
+  close(10)
+  
+else
+  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  call exit(1)
+end if
 
 open(unit=19, file='grain_reactions.in', status='OLD')
 read(19,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
@@ -170,8 +210,7 @@ character(len=1), parameter :: comment_character = '!' !< character that will in
 integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
 integer :: error !< to store the state of a read instruction
 
-logical :: isParameter, isDefined
-character(len=80) :: identificator, value
+logical :: isDefined
 
 ! Variables for the unordered reaction file
 character(len=11), dimension(nb_species_for_gas) :: gas_species_label 
