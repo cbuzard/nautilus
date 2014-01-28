@@ -157,14 +157,23 @@ end subroutine read_input_files
 subroutine read_species()
 
 use global_variables
+use iso_fortran_env
 
 implicit none
 
 ! Locals
 integer :: i,k
 
-! Variables for the unordered reaction file
+character(len=80) :: filename !< name of the file to be read
+character(len=80) :: line
+character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
+integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+integer :: error !< to store the state of a read instruction
 
+logical :: isParameter, isDefined
+character(len=80) :: identificator, value
+
+! Variables for the unordered reaction file
 character(len=11), dimension(nb_species_for_gas) :: gas_species_label 
 integer, dimension(nb_species_for_gas) :: ICG1 
 integer, dimension(nemax, nb_species_for_gas) :: IELM1 
@@ -173,19 +182,42 @@ character(len=11), dimension(nb_species_for_grain) :: surface_species_label
 integer, dimension(nb_species_for_grain) :: ICG2 
 integer, dimension(nemax, nb_species_for_grain) :: IELM2 
 
-! Read species & reaction info from reactions file======================
-! WV fev 2012
-! There are now two different files in which the reactions and species are
 
-! Reading the gas phase network
-open(unit=9, file='gas_species.in',status='OLD')
-do I=1,nb_species_for_gas
-  read(9,'(A11,i3,13(I3))') gas_species_label(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
-enddo
-close(9)
+! Reading list of species for gas phase
+filename = 'gas_species.in'
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
 
-! Reading the grain network
-open(unit=19, file='grain_species.in', status='OLD')
+  open(10, file=filename, status='old')
+  
+  i = 0
+  do
+    read(10, '(a80)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    if (line.ne.'') then
+      i = i + 1
+      read(line, '(A11,i3,13(I3))')  gas_species_label(I),ICG1(I),(IELM1(K,I),K=1,NEMAX) 
+    
+    end if
+  end do
+  close(10)
+  
+else
+  write (Error_unit,*) 'Warning: The file ', filename,' does not exist. Default values have been used'
+  call exit(1)
+end if
+
+! Reading list of species for grain surface
+open(unit=19, file='grain_species.in', status='old')
 do I=1,nb_species_for_grain
   read(19,'(A11,i3,13(I3))') surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NEMAX) 
 enddo

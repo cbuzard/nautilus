@@ -12,4 +12,8 @@ Modified rates following Caselli et al. (1998)\n
 Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)\n
 Turbulent mixing implemented through first order operator splitting\n
 
+@section Errors
+
+Error 1: Missing input file.
+
 */
