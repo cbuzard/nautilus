@@ -66,15 +66,7 @@ call read_parameters_in()
 
 call read_species()
 
-! Read species & reaction info from reactions file======================
-! WV fev 2012
-! There are now two different files in which the reactions and species are
-!~ 
-!~ open(unit=9, file='gas_reactions.in',status='OLD')
-!~ read(9,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
-!~ ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J),J=1,nb_gas_phase_reactions) 
-!~ close(9)
-
+! Reading list of reaction for gas phase
 filename = 'gas_reactions.in'
 inquire(file=filename, exist=isDefined)
 if (isDefined) then
@@ -108,10 +100,39 @@ else
   call exit(1)
 end if
 
-open(unit=19, file='grain_reactions.in', status='OLD')
-read(19,'(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)') ((SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
-ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J),J=1,nb_surface_reactions) 
-close(19)
+! Reading list of reaction for grains
+filename = 'grain_reactions.in'
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  
+  j = 0
+  do
+    read(10, '(a)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    if (line.ne.'') then
+      j = j + 1
+      read(line, '(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)')  (SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
+ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J)
+    
+    end if
+  end do
+  close(10)
+  
+else
+  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  call exit(1)
+end if
 
 ! putting everything back into the big tables
 do I=1,nb_gas_phase_reactions 
