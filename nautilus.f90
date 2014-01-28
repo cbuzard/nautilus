@@ -373,11 +373,11 @@ TIME=0.0d0
 ! Compute elemental abundances
 
 do J=1,NB_PRIME_ELEMENTS
-  ELEMS(J)=0.0D+0
+  INITIAL_ELEMENTAL_ABUNDANCE(J)=0.0D+0
 enddo
 do I=1,nb_species 
   do J=1,NB_PRIME_ELEMENTS
-    ELEMS(J) = ELEMS(J) + IELM(J,I) * abundances(I)
+    INITIAL_ELEMENTAL_ABUNDANCE(J) = INITIAL_ELEMENTAL_ABUNDANCE(J) + IELM(J,I) * abundances(I)
   enddo
 enddo
 
@@ -385,11 +385,11 @@ enddo
 ! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
 do i=1,NB_PRIME_ELEMENTS
   if (species_name(ISPELM(I)).EQ.YHE) then
-    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*ELEMS(I))
+    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
     ! Mean molecular weight (cgs) 
     ! Approximated here (the exact calculus would require a sume over AWT
     ! Used for the diffusion in disks, not for chemistry
-    mean_molecular_weight = 2.d0 + 4.d0*ELEMS(I)/(1.d0+ELEMS(I))
+    mean_molecular_weight = 2.d0 + 4.d0*INITIAL_ELEMENTAL_ABUNDANCE(I)/(1.d0+INITIAL_ELEMENTAL_ABUNDANCE(I))
   endif
 enddo
 
@@ -543,7 +543,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   real(double_precision), intent(inout), dimension(nb_species) :: temp_abundances
   
   ! Locals
-  real(double_precision), dimension(NB_PRIME_ELEMENTS) :: ELMSUM
+  real(double_precision), dimension(NB_PRIME_ELEMENTS) :: elemental_abundance
   real(double_precision) :: CHASUM
 
   integer :: i, k
@@ -566,37 +566,42 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! --- Conserve other elements if selected
   if (CONSERVATION_TYPE.GT.0) then
     do K=1,CONSERVATION_TYPE
-      ELMSUM(K)=0.0D+0
+      elemental_abundance(K)=0.0D+0
     enddo
     do I=1,nb_species
       do K=1,CONSERVATION_TYPE
-        if (I.NE.ISPELM(K)) ELMSUM(K)=ELMSUM(K)+IELM(K,I)*temp_abundances(I)
+        if (I.NE.ISPELM(K)) elemental_abundance(K)=elemental_abundance(K)+IELM(K,I)*temp_abundances(I)
       enddo
     enddo
     do K=1,CONSERVATION_TYPE
-      temp_abundances(ISPELM(K))=ELEMS(K)-ELMSUM(K)
+      temp_abundances(ISPELM(K))=INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)
       if (temp_abundances(ISPELM(K)).LE.0.0D+0) temp_abundances(ISPELM(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo
   endif
 
   ! Check for conservation
-  ELMSUM(:)=0.0D+0
+  elemental_abundance(:)=0.0D+0
   do I=1,nb_species
     do K=1,NB_PRIME_ELEMENTS
-      ELMSUM(K)=ELMSUM(K)+IELM(K,I)*temp_abundances(I)
+      elemental_abundance(K)=elemental_abundance(K)+IELM(K,I)*temp_abundances(I)
     enddo
   enddo
 
   do k=1,NB_PRIME_ELEMENTS
-    if (abs(ELEMS(K)-ELMSUM(K))/ELEMS(K).ge.0.01d0) then 
-      write(*,*)  'CAUTION : Element ',species_name(ISPELM(K)), 'is not conserved'
-      write(*,*)  'Relative difference: ', abs(ELEMS(K)-ELMSUM(K))/ELEMS(K)
+    if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 
+      write(Error_unit,*) 'CAUTION : Element ',species_name(ISPELM(K)), 'is not conserved'
+      write(Error_unit,*) 'Relative difference: ', abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)) / &
+                           INITIAL_ELEMENTAL_ABUNDANCE(K)
     endif
     if (species_name(ISPELM(K)).eq.YH) then
-      if (abs(ELEMS(K)-temp_abundances(INDH2)*2.D0)/ELEMS(K).ge.0.01d0) write(*,*) 'H is too depleted on the grains !!!!'
+      if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-temp_abundances(INDH2)*2.D0)/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then
+        write(Error_unit,*) 'H is too depleted on the grains !!!!'
+      endif
     endif
     if (species_name(ISPELM(K)).eq.YHE) then
-      if (abs(ELEMS(K)-temp_abundances(INDHE))/ELEMS(K).ge.0.01d0) write(*,*) 'He is too depleted on the grains !!!!'
+      if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-temp_abundances(INDHE))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then
+        write(Error_unit,*) 'He is too depleted on the grains !!!!'
+      endif
     endif       
   enddo
 

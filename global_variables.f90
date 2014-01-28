@@ -61,7 +61,7 @@ real(double_precision), allocatable, dimension(:) :: C
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: abundances !< abundances of all species
 real(double_precision), allocatable, dimension(:) :: AWT
-real(double_precision), dimension(NB_PRIME_ELEMENTS) :: ELEMS
+real(double_precision), dimension(NB_PRIME_ELEMENTS) :: INITIAL_ELEMENTAL_ABUNDANCE
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1

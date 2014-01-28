@@ -334,7 +334,7 @@ XS0					tab(nb_species)			species which have been given an initial fraction abun
 XN0					tab(nb_species)			initial fraction abundance (as read in NCON)
 XNmin									default minimum initial fraction abundance
 XN					tab(nb_species)			initial fraction abundance (as listed in NJR or NINI)
-ELEMS				tab(NB_PRIME_ELEMENTS)			initial fraction abundance of the elements
+INITIAL_ELEMENTAL_ABUNDANCE				tab(NB_PRIME_ELEMENTS)			initial fraction abundance of the elements
 mean_molecular_weight									mean molecular weigh (cgs)
 GTODN									grain abundance
 
@@ -343,7 +343,7 @@ Y					tab(nb_species)			Y(:)=XN(:)
 
 
 ==called in CONSERVE==
-ElmSum				tab(nb_species)			summed abundance of the elements (to set the conservation law)
+elemental_abundance				tab(nb_species)			summed abundance of the elements (to set the conservation law)
 ChaSum									summed charge of all the elements considering abundances
 
 
