@@ -22,7 +22,7 @@ integer :: nb_species_for_grain !< number of species involved in grain surface r
 integer :: nb_surface_reactions !< number of reactions on the grain surface
 integer :: nb_species_for_gas !< number of species involved in gas phase reactions
 integer :: nb_gas_phase_reactions !< number of reactions in gas phase
-integer, parameter :: NITYPE=100, NOPMAX=1000
+integer, parameter :: NITYPE=100
 real(double_precision), parameter :: RXNMIN=1.0D-99
 real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
 real(double_precision), parameter :: GRAVITATIONAL_CONSTANT = 6.67384d-8 !< GRAVITATIONAL_CONSTANTitationnal constant in CGS (cm^3 g-1 s-2)
