@@ -216,6 +216,7 @@ subroutine get_linenumber(filename, nb_lines)
   inquire (file=filename, exist=test)
   if (.not.test) then
     write(Error_Unit,'(a,a,a)') 'Error: the file "',trim(filename),'" does not exist.'
+    call exit(1)
   end if
   open(15, file=filename, status='old')
   

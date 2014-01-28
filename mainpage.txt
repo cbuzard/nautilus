@@ -16,4 +16,6 @@ Turbulent mixing implemented through first order operator splitting\n
 
 Error 1: Missing input file.
 
+Error 2: Species name in reaction do not match expected list of species
+
 */

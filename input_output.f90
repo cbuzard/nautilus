@@ -811,7 +811,7 @@ do j=1,nb_lines
     write(*,*) j
     write(*,*) temp_names
     write(Error_Unit,*) 'Input species "', trim(temp_names(j)), '" in "', trim(filename), '" do not match those in reaction file'
-    stop
+    call exit(2)
   endif
 enddo
 
