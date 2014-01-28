@@ -371,15 +371,7 @@ TOUT=0.0d0
 TIME=0.0d0
 
 ! Compute elemental abundances
-
-do J=1,NB_PRIME_ELEMENTS
-  INITIAL_ELEMENTAL_ABUNDANCE(J)=0.0D+0
-enddo
-do I=1,nb_species 
-  do J=1,NB_PRIME_ELEMENTS
-    INITIAL_ELEMENTAL_ABUNDANCE(J) = INITIAL_ELEMENTAL_ABUNDANCE(J) + IELM(J,I) * abundances(I)
-  enddo
-enddo
+call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
 
 ! Recompute initial_dtg_mass_ratio to remove He
 ! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
@@ -580,12 +572,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   endif
 
   ! Check for conservation
-  elemental_abundance(:)=0.0D+0
-  do I=1,nb_species
-    do K=1,NB_PRIME_ELEMENTS
-      elemental_abundance(K)=elemental_abundance(K)+IELM(K,I)*temp_abundances(I)
-    enddo
-  enddo
+  call get_elemental_abundance(all_abundances=temp_abundances, el_abundances=elemental_abundance)
 
   do k=1,NB_PRIME_ELEMENTS
     if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 
@@ -611,6 +598,40 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 
   return
   end subroutine CONSERVE
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Routine that calculate the elemantal abundances from
+!! all abundances of all species
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_elemental_abundance(all_abundances, el_abundances)
+
+implicit none
+
+! Inputs
+real(double_precision), intent(in), dimension(nb_species) :: all_abundances !< [in] List of abundances for all existing species
+
+! Outputs
+real(double_precision), intent(out), dimension(NB_PRIME_ELEMENTS) :: el_abundances !< [out] list of abundances for all fundamental elements
+
+! Locals
+integer :: i,j
+
+el_abundances(1:NB_PRIME_ELEMENTS) = 0.0d0
+
+do i=1,nb_species
+  do j=1,NB_PRIME_ELEMENTS
+    el_abundances(j) = el_abundances(j) + IELM(j,i) * all_abundances(i)
+  enddo
+enddo
+
+end subroutine get_elemental_abundance
 
   ! ======================================================================
   ! Dummy jacobians when the code is run with mf=222

@@ -61,7 +61,8 @@ real(double_precision), allocatable, dimension(:) :: C
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: abundances !< abundances of all species
 real(double_precision), allocatable, dimension(:) :: AWT
-real(double_precision), dimension(NB_PRIME_ELEMENTS) :: INITIAL_ELEMENTAL_ABUNDANCE
+real(double_precision), dimension(NB_PRIME_ELEMENTS) :: INITIAL_ELEMENTAL_ABUNDANCE !< Store abundances for all 
+!! elemental species before running the simulation
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -277,7 +278,7 @@ end subroutine get_array_sizes
 !> @author 
 !> Christophe Cossou
 !
-!> @date 2013
+!> @date 2014
 !
 ! DESCRIPTION: 
 !> @brief Routine that allocate global arrays once their sizes are set
