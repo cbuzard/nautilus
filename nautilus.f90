@@ -86,11 +86,13 @@ integer :: lrw, liw
 
 real(double_precision), dimension(:), allocatable :: temp_abundances ! nb_species
 
-integer :: itol, itask, istate, iopt, mf
-real(double_precision) :: atol
+integer :: itol = 2
+integer :: itask = 1
+integer :: istate = 1
+integer :: iopt = 1
+integer :: mf = 21
+real(double_precision) :: atol = 1.d-99
 real(double_precision) :: T, TOUT, TIN
-
-data itol, itask, istate, iopt, mf, atol/2,1,1,1,021,1.d-99/
 
 call get_array_sizes()
 
