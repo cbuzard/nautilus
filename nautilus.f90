@@ -407,7 +407,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   ! as nls_control
 
   temp_abundances(:)=abundances(:)
-  call conserve(temp_abundances)
+  call check_conservation(temp_abundances)
   abundances(:)=temp_abundances(:) 
 
   return 
@@ -518,7 +518,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
     ! cf odpkdmain.f for translation
     if (istate.ne.2) write(*,*)  'IPTS = ', ipts, 'ISTATE = ', ISTATE
 
-    call conserve(temp_abundances)
+    call check_conservation(temp_abundances)
 
     ! Stop, Forrest
   enddo
@@ -537,7 +537,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   ! ======================================================================
   ! Check if elementary abundances are conserved. If not, display a warning. 
   ! The option CONSERVATION_TYPE can override abundances and skip the warning display.
-  subroutine conserve(temp_abundances)
+  subroutine check_conservation(temp_abundances)
   use global_variables
   
   implicit none
@@ -610,7 +610,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
 
   return
-  end subroutine CONSERVE
+  end subroutine check_conservation
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
