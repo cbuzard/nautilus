@@ -256,7 +256,7 @@ do J=1,nb_species
       call exit(3)
     endif       
     ! --------- Save species number
-    ISPELM(ILAB)=J
+    PRIME_ELEMENT_IDX(ILAB)=J
     ILAB=ILAB+1
   endif
 
@@ -270,12 +270,12 @@ enddo
 
 ! --- Re-arrange order of elements to match IELM columns (reactions file)
 do J=1,NB_PRIME_ELEMENTS-1
-  if (IELM(J,ISPELM(J)).NE.1) then
+  if (IELM(J,PRIME_ELEMENT_IDX(J)).NE.1) then
     do K=J+1,NB_PRIME_ELEMENTS
-      if (IELM(J,ISPELM(K)).EQ.1) then
-        ISPTEMP=ISPELM(K)
-        ISPELM(K)=ISPELM(J)
-        ISPELM(J)=ISPTEMP
+      if (IELM(J,PRIME_ELEMENT_IDX(K)).EQ.1) then
+        ISPTEMP=PRIME_ELEMENT_IDX(K)
+        PRIME_ELEMENT_IDX(K)=PRIME_ELEMENT_IDX(J)
+        PRIME_ELEMENT_IDX(J)=ISPTEMP
       endif
     enddo
   endif
@@ -283,20 +283,20 @@ enddo
 
 ! --- Set elements' elemental_masses
 do I=1,NB_PRIME_ELEMENTS
-  if (species_name(ISPELM(I)).EQ.'H          ') elemental_mass(i) = 1.d0
-  if (species_name(ISPELM(I)).EQ.'D          ') elemental_mass(i) = 2.d0
-  if (species_name(ISPELM(I)).EQ.'He         ') elemental_mass(i) = 4.d0
-  if (species_name(ISPELM(I)).EQ.'C          ') elemental_mass(i) = 12.d0
-  if (species_name(ISPELM(I)).EQ.'N          ') elemental_mass(i) = 14.d0
-  if (species_name(ISPELM(I)).EQ.'O          ') elemental_mass(i) = 16.d0
-  if (species_name(ISPELM(I)).EQ.'Na         ') elemental_mass(i) = 23.d0
-  if (species_name(ISPELM(I)).EQ.'Mg         ') elemental_mass(i) = 24.d0
-  if (species_name(ISPELM(I)).EQ.'Si         ') elemental_mass(i) = 28.d0
-  if (species_name(ISPELM(I)).EQ.'P          ') elemental_mass(i) = 31.d0
-  if (species_name(ISPELM(I)).EQ.'S          ') elemental_mass(i) = 32.d0
-  if (species_name(ISPELM(I)).EQ.'Cl         ') elemental_mass(i) = 35.d0
-  if (species_name(ISPELM(I)).EQ.'Fe         ') elemental_mass(i) = 56.d0
-  if (species_name(ISPELM(I)).EQ.'F          ') elemental_mass(i) = 19.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'H          ') elemental_mass(i) = 1.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'D          ') elemental_mass(i) = 2.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'He         ') elemental_mass(i) = 4.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'C          ') elemental_mass(i) = 12.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'N          ') elemental_mass(i) = 14.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'O          ') elemental_mass(i) = 16.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Na         ') elemental_mass(i) = 23.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Mg         ') elemental_mass(i) = 24.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Si         ') elemental_mass(i) = 28.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'P          ') elemental_mass(i) = 31.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'S          ') elemental_mass(i) = 32.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Cl         ') elemental_mass(i) = 35.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Fe         ') elemental_mass(i) = 56.d0
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'F          ') elemental_mass(i) = 19.d0
 enddo
 
 ! Set species' characteristics==========================================
@@ -385,7 +385,7 @@ call write_elemental_abundances(filename='elemental_abundances.out', el_abundanc
 ! Recompute initial_dtg_mass_ratio to remove He
 ! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
 do i=1,NB_PRIME_ELEMENTS
-  if (species_name(ISPELM(I)).EQ.YHE) then
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.YHE) then
     initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
     ! Mean molecular weight (cgs) 
     ! Approximated here (the exact calculus would require a sume over AWT
@@ -571,12 +571,12 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
     enddo
     do I=1,nb_species
       do K=1,CONSERVATION_TYPE
-        if (I.NE.ISPELM(K)) elemental_abundance(K)=elemental_abundance(K)+IELM(K,I)*temp_abundances(I)
+        if (I.NE.PRIME_ELEMENT_IDX(K)) elemental_abundance(K)=elemental_abundance(K)+IELM(K,I)*temp_abundances(I)
       enddo
     enddo
     do K=1,CONSERVATION_TYPE
-      temp_abundances(ISPELM(K))=INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)
-      if (temp_abundances(ISPELM(K)).LE.0.0D+0) temp_abundances(ISPELM(K))=MINIMUM_INITIAL_ABUNDANCE
+      temp_abundances(PRIME_ELEMENT_IDX(K))=INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)
+      if (temp_abundances(PRIME_ELEMENT_IDX(K)).LE.0.0D+0) temp_abundances(PRIME_ELEMENT_IDX(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo
   endif
 
@@ -587,16 +587,16 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   do k=1,NB_PRIME_ELEMENTS
     if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 
-      write(Error_unit,*) 'CAUTION : Element ',species_name(ISPELM(K)), 'is not conserved'
+      write(Error_unit,*) 'CAUTION : Element ',species_name(PRIME_ELEMENT_IDX(K)), 'is not conserved'
       write(Error_unit,*) 'Relative difference: ', abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)) / &
                            INITIAL_ELEMENTAL_ABUNDANCE(K)
     endif
-    if (species_name(ISPELM(K)).eq.YH) then
+    if (species_name(PRIME_ELEMENT_IDX(K)).eq.YH) then
       if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-temp_abundances(INDH2)*2.D0)/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then
         write(Error_unit,*) 'H is too depleted on the grains !!!!'
       endif
     endif
-    if (species_name(ISPELM(K)).eq.YHE) then
+    if (species_name(PRIME_ELEMENT_IDX(K)).eq.YHE) then
       if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-temp_abundances(INDHE))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then
         write(Error_unit,*) 'He is too depleted on the grains !!!!'
       endif

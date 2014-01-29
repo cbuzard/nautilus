@@ -273,7 +273,7 @@ zstepsize								Spatial resolution
 
 ==called in INITIAL==
 KSUM									number of elements in the species
-ISPELM				tab(NB_PRIME_ELEMENTS)			corresponding lines (in IELM) of the NB_PRIME_ELEMENTS elements
+PRIME_ELEMENT_IDX				tab(NB_PRIME_ELEMENTS)			corresponding lines (in IELM) of the NB_PRIME_ELEMENTS elements
 ISPE									corresponding line (in IELM) of the electron
 Mass				tab(NB_PRIME_ELEMENTS)			mass number (A) of the NB_PRIME_ELEMENTS elements									
 
@@ -566,7 +566,7 @@ reorder reactions by type
 ! the "lines" called here are the lines of the network file NJR itself (as read and stored by READINPUT)
 
 calculate the number of elements in each chemical species and then check for gas phase neutral monoatomic species (i.e. an element)
-if the Xth element is found line Y, it marks the number line in the Xth column of ISPELM (then stop when all elements have been found)
+if the Xth element is found line Y, it marks the number line in the Xth column of PRIME_ELEMENT_IDX (then stop when all elements have been found)
 mark the line number of the electron in ISPE
 Re-arrange order of elements to match IELM columns (reactions file), the first element is H, then He, then ...
 

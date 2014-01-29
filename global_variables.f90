@@ -124,7 +124,7 @@ integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
 integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: IELM
-integer, allocatable, dimension(:) :: ISPELM ! < Tell for each prime element its index in the global array of all elements. Size (NB_PRIME_ELEMENTS)
+integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < Tell for each prime element its index in the global array of all elements. Size (NB_PRIME_ELEMENTS)
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
@@ -424,7 +424,7 @@ allocate(symbol(7,nb_reactions))
 
 allocate(elemental_mass(NB_PRIME_ELEMENTS))
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
-allocate(ispelm(NB_PRIME_ELEMENTS))
+allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(ielm(NB_PRIME_ELEMENTS,nb_species))
 
 
