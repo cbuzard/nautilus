@@ -98,7 +98,13 @@ allocate(temp_abundances(nb_species))
 
 call initialize_global_arrays()
 
-call read_input_files()
+call read_parameters_in()
+
+call read_species()
+
+call read_reactions()
+
+
 
 call write_parameters()
 

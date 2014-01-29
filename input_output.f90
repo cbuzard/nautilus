@@ -28,11 +28,10 @@ contains
 !> @date 2000
 !
 ! DESCRIPTION: 
-!> @brief Read all the simulation parameters in a file named 
-!! 'parameters.in'
+!> @brief Read all reactions both for gas phase and grain surface
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine read_input_files()
+subroutine read_reactions()
 
 use global_variables
 
@@ -61,10 +60,6 @@ integer, dimension(nb_surface_reactions) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2
 character (len=11), dimension(7,nb_reactions) :: SYMBOLUO
 real(double_precision), dimension(nb_reactions) :: AUO,BUO,CUO
 integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
-
-call read_parameters_in()
-
-call read_species()
 
 ! Reading list of reaction for gas phase
 filename = 'gas_reactions.in'
@@ -202,7 +197,7 @@ enddo
 
 
 return
-end subroutine read_input_files
+end subroutine read_reactions
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -241,6 +236,8 @@ integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_gas) :: IELM1
 character(len=11), dimension(nb_species_for_grain) :: surface_species_label 
 integer, dimension(nb_species_for_grain) :: ICG2 
 integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_grain) :: IELM2 
+
+
 
 
 ! Reading list of species for gas phase
@@ -941,7 +938,43 @@ close(13)
 return
 end subroutine write_abundances
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief For a given line passed as an argument, return the number of columns on this line
+!! i.e, the number of tokens separated by spaces.
+!
+!> @return number of columns (separated by spaces) on the input string
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+integer function get_nb_columns(line)
+implicit none
 
+character, intent(in) :: line*(*)
+integer :: i, n, toks
+
+i = 1
+n = len_trim(line)
+toks = 0
+get_nb_columns = 0
+do while(i <= n)
+   do while(line(i:i) == ' ') 
+     i = i + 1
+     if (n < i) return
+   enddo
+   toks = toks + 1
+   get_nb_columns = toks
+   do
+     i = i + 1
+     if (n < i) return
+     if (line(i:i) == ' ') exit
+   enddo
+enddo
+end function get_nb_columns 
 
 
 end module input_output
