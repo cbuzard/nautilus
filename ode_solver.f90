@@ -12,25 +12,17 @@ use global_variables
 implicit none
 
 ! Locals
-integer :: I,J,L,NSP1
+integer :: I,J,L
 
-! NSP1 is a dummy species (with a blank name)
-
-NSP1=nb_species+1
-
-SPEC2(1:nb_species)=species_name(1:nb_species)
-SPEC2(NSP1)='           '
+! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
+REACT(1:nb_reactions, 1:7) = nb_species + 1
 
 do I=1,nb_reactions
-  do J=1,NSP1
+  do J=1,nb_reactions
 
-    do L=1,3
-      if (SYMBOL(L,I).EQ.SPEC2(J)) REACT(I,L)=J
+    do L=1,7
+      if (SYMBOL(L,I).EQ.species_name(J)) REACT(I,L)=J
     enddo
-
-    do L=1,4
-      if (SYMBOL(L+3,I).EQ.SPEC2(J)) REACT(I,L+3)=J
-    enddo           
 
   enddo
 enddo   

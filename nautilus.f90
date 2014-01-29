@@ -449,9 +449,6 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   integer :: NNZ
 
-  !EXTERNAL FCHEM,JAC
-
-
   ! Initialize work arrays
 
   iwork(:) = 0
@@ -530,20 +527,25 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   return 
   end subroutine evolve
 
-
-
-
-  ! ======================================================================
-  ! ======================================================================
-  ! Check if elementary abundances are conserved. If not, display a warning. 
-  ! The option CONSERVATION_TYPE can override abundances and skip the warning display.
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Check if elementary abundances are conserved. If not, display a warning. 
+!! The option CONSERVATION_TYPE can override abundances and skip the warning display.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   subroutine check_conservation(temp_abundances)
   use global_variables
   
   implicit none
   
   ! Inputs/outputs
-  real(double_precision), intent(inout), dimension(nb_species) :: temp_abundances
+  real(double_precision), intent(inout), dimension(nb_species) :: temp_abundances !< [in,out] The list of abundances for all species. 
+!! Can be overwritten if CONSERVATION_TYPE is on, and force conservation.
   
   ! Locals
   real(double_precision), dimension(NB_PRIME_ELEMENTS) :: elemental_abundance

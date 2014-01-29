@@ -172,13 +172,12 @@ integer :: ipts
 
 ! For FCHEMVW
 
-character(len=11), allocatable, dimension(:) :: SPEC2
 integer, allocatable, dimension(:,:) :: REACT
 
 ! For IA and JA
 
 integer, allocatable, dimension(:) :: IA
-integer, allocatable :: JA(:)
+integer, allocatable, dimension(:) :: JA
 
 contains 
 
@@ -398,7 +397,6 @@ allocate(rq1(nb_species))
 allocate(rq2(nb_species))
 allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
-allocate(spec2(nb_species+1))
 allocate(ia(nb_species+1))
 
 allocate(xj(nb_reactions))
@@ -435,7 +433,7 @@ end subroutine initialize_global_arrays
 !> @author 
 !> Christophe Cossou
 !
-!> @date 2013
+!> @date 2014
 !
 ! DESCRIPTION: 
 !> @brief From the label of each species, determine if this is a gas
