@@ -63,6 +63,7 @@ real(double_precision), allocatable, dimension(:) :: abundances !< abundances of
 real(double_precision), allocatable, dimension(:) :: AWT
 real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< Store abundances for all 
 !! elemental species before running the simulation. Size (NB_PRIME_ELEMENTS)
+real(double_precision), allocatable, dimension(:) :: elemental_mass !< elemental mass. Size (NB_PRIME_ELEMENTS)
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -421,6 +422,7 @@ allocate(num(nb_reactions))
 allocate(react(nb_reactions, 7))
 allocate(symbol(7,nb_reactions))
 
+allocate(elemental_mass(NB_PRIME_ELEMENTS))
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(ispelm(NB_PRIME_ELEMENTS))
 allocate(ielm(NB_PRIME_ELEMENTS,nb_species))

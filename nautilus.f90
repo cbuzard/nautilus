@@ -234,7 +234,6 @@ use global_variables
 implicit none
 
 ! Locals
-real(double_precision), dimension(NB_PRIME_ELEMENTS) :: elemental_mass
 real(double_precision) :: MSUM
 integer :: ILAB, j, k, i, isptemp
 integer :: KSUM ! sum of number of primary element composing the species. If equal to 1, the current species is elemental

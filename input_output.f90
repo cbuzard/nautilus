@@ -689,10 +689,10 @@ real(double_precision), intent(in), dimension(NB_PRIME_ELEMENTS) :: el_abundance
 integer :: i
 
 open(10, file=filename)
-write(10, '(a)') '! Species name ; abundance (relative to H)'
+write(10, '(a)') '! Species name ; abundance (relative to H) ; mass (AMU)'
 do i=1, NB_PRIME_ELEMENTS
   
-  write(10, '(a,es10.4e2, f4.1)'), species_name(ISPELM(i)), el_abundances(i)
+  write(10, '(a,es10.4e2, f8.3)'), species_name(ISPELM(i)), el_abundances(i), elemental_mass(i)
   
 enddo
 close(10)
