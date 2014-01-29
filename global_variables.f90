@@ -17,7 +17,7 @@ integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species
 integer :: nb_gaseous_species !< number of species that are gaseous
 integer :: nb_surface_species !< number of species that are on the surface of grains
-integer, parameter :: NB_PRIME_ELEMENTS=13 !< Number of prime element that compose molecules, such as H, He, C and so on.
+integer :: NB_PRIME_ELEMENTS !< Number of prime element that compose molecules, such as H, He, C and so on.
 integer :: nb_species_for_grain !< number of species involved in grain surface reactions
 integer :: nb_surface_reactions !< number of reactions on the grain surface
 integer :: nb_species_for_gas !< number of species involved in gas phase reactions
@@ -61,8 +61,8 @@ real(double_precision), allocatable, dimension(:) :: C
 real(double_precision), allocatable, dimension(:) :: XK
 real(double_precision), allocatable, dimension(:) :: abundances !< abundances of all species
 real(double_precision), allocatable, dimension(:) :: AWT
-real(double_precision), dimension(NB_PRIME_ELEMENTS) :: INITIAL_ELEMENTAL_ABUNDANCE !< Store abundances for all 
-!! elemental species before running the simulation
+real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< Store abundances for all 
+!! elemental species before running the simulation. Size (NB_PRIME_ELEMENTS)
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -123,7 +123,7 @@ integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
 integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: IELM
-integer, dimension(NB_PRIME_ELEMENTS) :: ISPELM
+integer, allocatable, dimension(:) :: ISPELM ! < Tell for each prime element its index in the global array of all elements. Size (NB_PRIME_ELEMENTS)
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
@@ -263,17 +263,109 @@ subroutine get_array_sizes()
 
 implicit none
 
-! We get various sizes
+character(len=80) :: filename_gas = 'gas_species.in'
+character(len=80) :: filename_grain = 'grain_species.in'
+
+integer :: nb_columns_gas
+integer :: nb_columns_grain
+
+! We get the number of prime elements
+nb_columns_gas = get_nb_columns(filename_gas)
+nb_columns_grain = get_nb_columns(filename_grain)
+
+if (nb_columns_gas.ne.nb_columns_grain) then
+  write (Error_unit,*) 'The number of prime elements is different in "', trim(filename_gas), '" and "', trim(filename_grain), '".'
+  call exit(6)
+endif
+
+NB_PRIME_ELEMENTS = nb_columns_gas - 2 ! One column for electrons, one for species name. The others are prime elements
+
+! We get the number of reactions and species
 call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
 call get_linenumber(filename='gas_reactions.in', nb_lines=nb_gas_phase_reactions)
 
 call get_linenumber(filename='grain_species.in', nb_lines=nb_species_for_grain)
 call get_linenumber(filename='grain_reactions.in', nb_lines=nb_surface_reactions)
 
+
+
 nb_species = nb_species_for_gas + nb_species_for_grain ! The total number of species, sum of species in gas and grain
 nb_reactions = nb_gas_phase_reactions + nb_surface_reactions ! The total number of reactions, sum of species in gas and grain
 
 end subroutine get_array_sizes
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief For a given line passed as an argument, return the number of columns on this line
+!! i.e, the number of tokens separated by spaces.
+!
+!> @return number of columns (separated by spaces) on the input string
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+integer function get_nb_columns(filename)
+implicit none
+
+! Inputs
+character(len=*), intent(in) :: filename !< [in] datafile name we want to get the number of columns
+
+! Locals
+integer :: i, n, toks
+character(len=200) :: line
+character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
+integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+integer :: error !< to store the state of a read instruction
+
+logical :: isDefined
+
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  
+  ! We get the first data line (without taking into account commented or blanck lines)
+  line = ''
+  do while(line.eq.'')
+    read(10, '(a)', iostat=error) line
+    
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+    comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+  enddo
+  close(10)
+else
+  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  call exit(1)
+endif
+
+i = 1
+n = len_trim(line)
+toks = 0
+get_nb_columns = 0
+do while(i <= n)
+   do while(line(i:i) == ' ') 
+     i = i + 1
+     if (n < i) return
+   enddo
+   toks = toks + 1
+   get_nb_columns = toks
+   do
+     i = i + 1
+     if (n < i) return
+     if (line(i:i) == ' ') exit
+   enddo
+enddo
+end function get_nb_columns 
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -307,7 +399,6 @@ allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
 allocate(spec2(nb_species+1))
 allocate(ia(nb_species+1))
-allocate(ielm(NB_PRIME_ELEMENTS,nb_species))
 
 allocate(xj(nb_reactions))
 allocate(a(nb_reactions))
@@ -329,6 +420,10 @@ allocate(formula(nb_reactions))
 allocate(num(nb_reactions))
 allocate(react(nb_reactions, 7))
 allocate(symbol(7,nb_reactions))
+
+allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
+allocate(ispelm(NB_PRIME_ELEMENTS))
+allocate(ielm(NB_PRIME_ELEMENTS,nb_species))
 
 
 

@@ -22,6 +22,8 @@ Error 3: More elements than NB_PRIME_ELEMENTS
 
 Error 4: When reordering reactions, it seems that some reactions misses or not expected
 
-Error 5 : In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code
+Error 5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code
+
+Error 6: The number of prime elements do not match in input files *_species.in
 
 */

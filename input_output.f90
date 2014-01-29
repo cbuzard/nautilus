@@ -238,8 +238,6 @@ integer, dimension(nb_species_for_grain) :: ICG2
 integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_grain) :: IELM2 
 
 
-
-
 ! Reading list of species for gas phase
 filename = 'gas_species.in'
 inquire(file=filename, exist=isDefined)
@@ -937,44 +935,5 @@ close(13)
 
 return
 end subroutine write_abundances
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!> @author 
-!> Christophe Cossou
-!
-!> @date 2014
-!
-! DESCRIPTION: 
-!> @brief For a given line passed as an argument, return the number of columns on this line
-!! i.e, the number of tokens separated by spaces.
-!
-!> @return number of columns (separated by spaces) on the input string
-!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-integer function get_nb_columns(line)
-implicit none
-
-character, intent(in) :: line*(*)
-integer :: i, n, toks
-
-i = 1
-n = len_trim(line)
-toks = 0
-get_nb_columns = 0
-do while(i <= n)
-   do while(line(i:i) == ' ') 
-     i = i + 1
-     if (n < i) return
-   enddo
-   toks = toks + 1
-   get_nb_columns = toks
-   do
-     i = i + 1
-     if (n < i) return
-     if (line(i:i) == ' ') exit
-   enddo
-enddo
-end function get_nb_columns 
-
 
 end module input_output
