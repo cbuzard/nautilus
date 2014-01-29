@@ -234,9 +234,10 @@ use global_variables
 implicit none
 
 ! Locals
-real(double_precision), dimension(NB_PRIME_ELEMENTS) :: MASS
+real(double_precision), dimension(NB_PRIME_ELEMENTS) :: elemental_mass
 real(double_precision) :: MSUM
-integer :: ILAB, KSUM, j, k, i, isptemp
+integer :: ILAB, j, k, i, isptemp
+integer :: KSUM ! sum of number of primary element composing the species. If equal to 1, the current species is elemental
 
 ! Set elements' characteristics=========================================
 ! --- Find the atomic species associated with a given element
@@ -244,7 +245,7 @@ integer :: ILAB, KSUM, j, k, i, isptemp
 ILAB=1
 do J=1,nb_species
   KSUM=0
-  ! ------ Calculate species' mass
+  ! ------ Calculate species' elemental_mass
   do K=1,NB_PRIME_ELEMENTS
     KSUM=KSUM+IELM(K,J)
   enddo
@@ -266,6 +267,8 @@ do J=1,nb_species
   endif
 enddo
 
+
+
 ! --- Re-arrange order of elements to match IELM columns (reactions file)
 do J=1,NB_PRIME_ELEMENTS-1
   if (IELM(J,ISPELM(J)).NE.1) then
@@ -279,22 +282,22 @@ do J=1,NB_PRIME_ELEMENTS-1
   endif
 enddo
 
-! --- Set elements' masses
+! --- Set elements' elemental_masses
 do I=1,NB_PRIME_ELEMENTS
-  if (species_name(ISPELM(I)).EQ.'H          ') MASS(I)=1.d0
-  if (species_name(ISPELM(I)).EQ.'D          ') MASS(I)=2.d0
-  if (species_name(ISPELM(I)).EQ.'He         ') MASS(I)=4.d0
-  if (species_name(ISPELM(I)).EQ.'C          ') MASS(I)=12.d0
-  if (species_name(ISPELM(I)).EQ.'N          ') MASS(I)=14.d0
-  if (species_name(ISPELM(I)).EQ.'O          ') MASS(I)=16.d0
-  if (species_name(ISPELM(I)).EQ.'Na         ') MASS(I)=23.d0
-  if (species_name(ISPELM(I)).EQ.'Mg         ') MASS(I)=24.d0
-  if (species_name(ISPELM(I)).EQ.'Si         ') MASS(I)=28.d0
-  if (species_name(ISPELM(I)).EQ.'P          ') MASS(I)=31.d0
-  if (species_name(ISPELM(I)).EQ.'S          ') MASS(I)=32.d0
-  if (species_name(ISPELM(I)).EQ.'Cl         ') MASS(I)=35.d0
-  if (species_name(ISPELM(I)).EQ.'Fe         ') MASS(I)=56.d0
-  if (species_name(ISPELM(I)).EQ.'F          ') MASS(I)=19.d0
+  if (species_name(ISPELM(I)).EQ.'H          ') elemental_mass(i) = 1.d0
+  if (species_name(ISPELM(I)).EQ.'D          ') elemental_mass(i) = 2.d0
+  if (species_name(ISPELM(I)).EQ.'He         ') elemental_mass(i) = 4.d0
+  if (species_name(ISPELM(I)).EQ.'C          ') elemental_mass(i) = 12.d0
+  if (species_name(ISPELM(I)).EQ.'N          ') elemental_mass(i) = 14.d0
+  if (species_name(ISPELM(I)).EQ.'O          ') elemental_mass(i) = 16.d0
+  if (species_name(ISPELM(I)).EQ.'Na         ') elemental_mass(i) = 23.d0
+  if (species_name(ISPELM(I)).EQ.'Mg         ') elemental_mass(i) = 24.d0
+  if (species_name(ISPELM(I)).EQ.'Si         ') elemental_mass(i) = 28.d0
+  if (species_name(ISPELM(I)).EQ.'P          ') elemental_mass(i) = 31.d0
+  if (species_name(ISPELM(I)).EQ.'S          ') elemental_mass(i) = 32.d0
+  if (species_name(ISPELM(I)).EQ.'Cl         ') elemental_mass(i) = 35.d0
+  if (species_name(ISPELM(I)).EQ.'Fe         ') elemental_mass(i) = 56.d0
+  if (species_name(ISPELM(I)).EQ.'F          ') elemental_mass(i) = 19.d0
 enddo
 
 ! Set species' characteristics==========================================
@@ -311,10 +314,10 @@ YCO    = 'CO         '
 
 ! --- Set reference species
 do I=1,nb_species 
-  ! ------ Calculate masses
+  ! ------ Calculate elemental_masses
   MSUM=0.d0
   do K=1,NB_PRIME_ELEMENTS 
-    MSUM=MSUM+MASS(K)*IELM(K,I) 
+    MSUM=MSUM+elemental_mass(K)*IELM(K,I) 
   enddo 
   AWT(I)=MSUM
   if (species_name(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
@@ -324,8 +327,8 @@ enddo
 
 ! Initialize the Av/NH ratio
 ! Can be scaled for different dust/gas ratios
-! Here initial_dtg_mass_ratio is the original dust/gas mass ratio (from nls_control.d)
-! initial_dtg_mass_ratio is changed later into the dust/hydrogen mass ratio
+! Here initial_dtg_elemental_mass_ratio is the original dust/gas elemental_mass ratio (from nls_control.d)
+! initial_dtg_elemental_mass_ratio is changed later into the dust/hydrogen elemental_mass ratio
 
 AV_NH_ratio = 5.34d-22 * (initial_dtg_mass_ratio / 1.d-2)
 
@@ -378,6 +381,8 @@ TIME=0.0d0
 ! Compute elemental abundances
 call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
 
+call write_elemental_abundances(filename='elemental_abundances.out', el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
+
 ! Recompute initial_dtg_mass_ratio to remove He
 ! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
 do i=1,NB_PRIME_ELEMENTS
@@ -405,12 +410,12 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
   abundances(:)=temp_abundances(:) 
 
   return 
-  end subroutine start
+end subroutine start
 
-  ! ======================================================================
-  ! ======================================================================
+! ======================================================================
+! ======================================================================
 
-  subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
   
@@ -578,6 +583,8 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 
   ! Check for conservation
   call get_elemental_abundance(all_abundances=temp_abundances, el_abundances=elemental_abundance)
+  
+  call write_elemental_abundances(filename='elemental_abundances.tmp', el_abundances=elemental_abundance)
 
   do k=1,NB_PRIME_ELEMENTS
     if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 

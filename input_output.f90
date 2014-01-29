@@ -672,6 +672,42 @@ end subroutine write_species
 !> @date 2014
 !
 ! DESCRIPTION: 
+!> @brief Write the list of elemental species with their abundances and mass.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine write_elemental_abundances(filename, el_abundances)
+
+use global_variables
+
+implicit none
+
+! Input
+character(len=*), intent(in) :: filename !< [in] the name of the output file
+real(double_precision), intent(in), dimension(NB_PRIME_ELEMENTS) :: el_abundances !< [in] Elemental abundances, either initial or current ones
+
+! Locals
+integer :: i
+
+open(10, file=filename)
+write(10, '(a)') '! Species name ; abundance (relative to H)'
+do i=1, NB_PRIME_ELEMENTS
+  
+  write(10, '(a,es10.4e2, f4.1)'), species_name(ISPELM(i)), el_abundances(i)
+  
+enddo
+close(10)
+
+return
+end subroutine write_elemental_abundances
+
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
 !> @brief subroutine that try to split the line in two part, given a 
 !! separator value (set in parameter of the subroutine)
 !
