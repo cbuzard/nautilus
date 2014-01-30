@@ -283,7 +283,7 @@ do J=1,nb_species
   KSUM=0
   ! ------ Calculate species' elemental_mass
   do K=1,NB_PRIME_ELEMENTS
-    KSUM=KSUM+IELM(K,J)
+    KSUM=KSUM+species_composition(K,J)
   enddo
   ! ------ Check for atomic species
   if ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
@@ -305,11 +305,11 @@ enddo
 
 
 
-! --- Re-arrange order of elements to match IELM columns (reactions file)
+! --- Re-arrange order of elements to match species_composition columns (reactions file)
 do J=1,NB_PRIME_ELEMENTS-1
-  if (IELM(J,PRIME_ELEMENT_IDX(J)).NE.1) then
+  if (species_composition(J,PRIME_ELEMENT_IDX(J)).NE.1) then
     do K=J+1,NB_PRIME_ELEMENTS
-      if (IELM(J,PRIME_ELEMENT_IDX(K)).EQ.1) then
+      if (species_composition(J,PRIME_ELEMENT_IDX(K)).EQ.1) then
         ISPTEMP=PRIME_ELEMENT_IDX(K)
         mass_tmp = elemental_mass(k)
         name_tmp = element_name(k)
@@ -343,7 +343,7 @@ do I=1,nb_species
   ! ------ Calculate elemental_masses
   MSUM=0.d0
   do K=1,NB_PRIME_ELEMENTS 
-    MSUM=MSUM+elemental_mass(K)*IELM(K,I) 
+    MSUM=MSUM+elemental_mass(K)*species_composition(K,I) 
   enddo 
   AWT(I)=MSUM
   if (species_name(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
@@ -600,7 +600,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
     enddo
     do I=1,nb_species
       do K=1,CONSERVATION_TYPE
-        if (I.NE.PRIME_ELEMENT_IDX(K)) elemental_abundance(K)=elemental_abundance(K)+IELM(K,I)*temp_abundances(I)
+        if (I.NE.PRIME_ELEMENT_IDX(K)) elemental_abundance(K)=elemental_abundance(K)+species_composition(K,I)*temp_abundances(I)
       enddo
     enddo
     do K=1,CONSERVATION_TYPE
@@ -667,7 +667,7 @@ el_abundances(1:NB_PRIME_ELEMENTS) = 0.0d0
 
 do i=1,nb_species
   do j=1,NB_PRIME_ELEMENTS
-    el_abundances(j) = el_abundances(j) + IELM(j,i) * all_abundances(i)
+    el_abundances(j) = el_abundances(j) + species_composition(j,i) * all_abundances(i)
   enddo
 enddo
 
@@ -990,7 +990,7 @@ end subroutine SHIELDINGSETUP
 
     ATOMS=0
     do K=1,NB_PRIME_ELEMENTS
-      ATOMS=ATOMS+IELM(K,N4)
+      ATOMS=ATOMS+species_composition(K,N4)
     enddo
 
     SUM2=1.0D+0-(SUM1/DHFSUM)

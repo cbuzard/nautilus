@@ -119,7 +119,7 @@ ARRK									a-coefficient for RRK-style formation-desorption, it is the ratio o
 --network data--
 SPEC				tab(nb_species)			chemical species
 ICG					tab(nb_species)			charge carried by the species
-IELM				tab(NB_PRIME_ELEMENTS:nb_species)    number of elements that compose the species 
+species_composition				tab(NB_PRIME_ELEMENTS:nb_species)    number of elements that compose the species 
 											(H,He,C,N,O,Si,S,Fe,Na,Mg,Cl,P)
 SYMBOLUO			tab(8:nb_reactions)		reactions. 3 reagents + 5 products (unordered)
 SYMBOL				tab(8:nb_species)		the same tab as symboluo but itype ordered
@@ -273,8 +273,8 @@ zstepsize								Spatial resolution
 
 ==called in INITIAL==
 KSUM									number of elements in the species
-PRIME_ELEMENT_IDX				tab(NB_PRIME_ELEMENTS)			corresponding lines (in IELM) of the NB_PRIME_ELEMENTS elements
-ISPE									corresponding line (in IELM) of the electron
+PRIME_ELEMENT_IDX				tab(NB_PRIME_ELEMENTS)			corresponding lines (in species_composition) of the NB_PRIME_ELEMENTS elements
+ISPE									corresponding line (in species_composition) of the electron
 Mass				tab(NB_PRIME_ELEMENTS)			mass number (A) of the NB_PRIME_ELEMENTS elements									
 
 
@@ -568,9 +568,9 @@ reorder reactions by type
 calculate the number of elements in each chemical species and then check for gas phase neutral monoatomic species (i.e. an element)
 if the Xth element is found line Y, it marks the number line in the Xth column of PRIME_ELEMENT_IDX (then stop when all elements have been found)
 mark the line number of the electron in ISPE
-Re-arrange order of elements to match IELM columns (reactions file), the first element is H, then He, then ...
+Re-arrange order of elements to match species_composition columns (reactions file), the first element is H, then He, then ...
 
-set elements' masses (in amu) of the IELM elements in amu
+set elements' masses (in amu) of the species_composition elements in amu
 
 set species' masses (in amu) by calculation of the total mass number of the species in AWT
 	for the electron AWT = 1/1836 in amu

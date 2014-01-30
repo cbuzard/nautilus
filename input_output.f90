@@ -231,11 +231,11 @@ logical :: isDefined
 ! Variables for the unordered reaction file
 character(len=11), dimension(nb_species_for_gas) :: gas_species_label 
 integer, dimension(nb_species_for_gas) :: ICG1 
-integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_gas) :: IELM1 
+integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_gas) :: gas_species_composition 
 
 character(len=11), dimension(nb_species_for_grain) :: surface_species_label 
 integer, dimension(nb_species_for_grain) :: ICG2 
-integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_grain) :: IELM2 
+integer, dimension(NB_PRIME_ELEMENTS, nb_species_for_grain) :: grain_species_composition 
 
 
 ! Reading list of species for gas phase
@@ -260,7 +260,7 @@ if (isDefined) then
     
     if (line.ne.'') then
       i = i + 1
-      read(line, '(A11,i3,13(I3))')  gas_species_label(I),ICG1(I),(IELM1(K,I),K=1,NB_PRIME_ELEMENTS) 
+      read(line, '(A11,i3,13(I3))')  gas_species_label(I),ICG1(I),(gas_species_composition(K,I),K=1,NB_PRIME_ELEMENTS) 
     
     end if
   end do
@@ -294,7 +294,7 @@ if (isDefined) then
     
     if (line.ne.'') then
       i = i + 1
-      read(line, '(A11,i3,13(I3))')  surface_species_label(I),ICG2(I),(IELM2(K,I),K=1,NB_PRIME_ELEMENTS) 
+      read(line, '(A11,i3,13(I3))')  surface_species_label(I),ICG2(I),(grain_species_composition(K,I),K=1,NB_PRIME_ELEMENTS) 
     
     end if
   end do
@@ -311,14 +311,14 @@ do I=1,nb_species_for_gas
   species_name(I)=gas_species_label(I)
   ICG(I)=ICG1(I)
   do k=1,NB_PRIME_ELEMENTS
-    IELM(K,I)=IELM1(K,I)
+    species_composition(K,I)=gas_species_composition(K,I)
   enddo
 enddo
 do I=1,nb_species_for_grain 
   species_name(nb_species_for_gas+I)=surface_species_label(I)
   ICG(nb_species_for_gas+I)=ICG2(I)
   do k=1,NB_PRIME_ELEMENTS
-    IELM(K,nb_species_for_gas+I)=IELM2(K,I)
+    species_composition(K,nb_species_for_gas+I)=grain_species_composition(K,I)
   enddo
 enddo
 

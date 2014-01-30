@@ -124,7 +124,7 @@ integer, allocatable, dimension(:) :: jsp2
 integer, allocatable, dimension(:) :: FORMULA
 integer, allocatable, dimension(:) :: NUM
 integer, allocatable, dimension(:) :: icg
-integer, allocatable, dimension(:,:) :: IELM
+integer, allocatable, dimension(:,:) :: species_composition !< number of atom of each element composition the given species. Size (NB_PRIME_ELEMENTS,nb_species)
 integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < Tell for each prime element its index in the global array of all elements. Size (NB_PRIME_ELEMENTS)
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
@@ -406,7 +406,7 @@ allocate(symbol(7,nb_reactions))
 
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
-allocate(ielm(NB_PRIME_ELEMENTS,nb_species))
+allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
 
 
 
