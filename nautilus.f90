@@ -136,8 +136,7 @@ endif
 call mesh()
 
 ! Initialization of elemental/chemical quantities
-
-call initial()
+call index_datas()
 
 timestep=0
 call start(TOUT)
@@ -227,9 +226,20 @@ if (nptmax.eq.1) call write_abundances('abundances.tmp')
 
 contains
 
-! ======================================================================
-! ======================================================================
-subroutine INITIAL()
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Read and retrieve information for species. 
+!! Save index for prime elements in the full species array
+!!
+!! Save other interesting index for special species
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine index_datas()
 use global_variables
 
 implicit none
@@ -292,24 +302,6 @@ do J=1,NB_PRIME_ELEMENTS-1
   endif
 enddo
 
-!~ ! --- Set elements' elemental_masses
-!~ do I=1,NB_PRIME_ELEMENTS
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'H          ') elemental_mass(i) = 1.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'D          ') elemental_mass(i) = 2.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'He         ') elemental_mass(i) = 4.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'C          ') elemental_mass(i) = 12.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'N          ') elemental_mass(i) = 14.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'O          ') elemental_mass(i) = 16.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Na         ') elemental_mass(i) = 23.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Mg         ') elemental_mass(i) = 24.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Si         ') elemental_mass(i) = 28.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'P          ') elemental_mass(i) = 31.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'S          ') elemental_mass(i) = 32.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Cl         ') elemental_mass(i) = 35.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Fe         ') elemental_mass(i) = 56.d0
-!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'F          ') elemental_mass(i) = 19.d0
-!~ enddo
-
 ! Set species' characteristics==========================================
 ! --- Set special species labels
 YH     = 'H          '
@@ -366,7 +358,7 @@ nb_sites_per_grain = SITE_DENSITY*4.d0*PI*grain_radius**2
 call grainrate()
 
 return 
-end subroutine initial
+end subroutine index_datas
 
 ! ======================================================================
 ! ======================================================================

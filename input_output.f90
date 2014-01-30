@@ -869,7 +869,8 @@ end subroutine read_abundances
 !> @date 2014
 !
 ! DESCRIPTION: 
-!> @brief Read number, name and mass of all elements (basic brick for molecules)
+!> @brief Read name and mass of all 'basic' elements (basic brick for molecules
+!! such as H, He and so on).
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine read_element_in()
@@ -946,6 +947,7 @@ if (isDefined) then
   close(10)
 endif
 
+! Other operations are done once species from gas and grain are read, because we need the indexes of all prime element in those arrays
 
 return
 end subroutine read_element_in

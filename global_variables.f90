@@ -404,7 +404,6 @@ allocate(num(nb_reactions))
 allocate(react(7,nb_reactions))
 allocate(symbol(7,nb_reactions))
 
-!~ allocate(elemental_mass(NB_PRIME_ELEMENTS))
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(ielm(NB_PRIME_ELEMENTS,nb_species))

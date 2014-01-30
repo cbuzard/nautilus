@@ -12,6 +12,32 @@ Modified rates following Caselli et al. (1998)\n
 Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)\n
 Turbulent mixing implemented through first order operator splitting\n
 
+@section Input files
+
+All parameters file can have comments, either a full line or the end of a line. The comment character being the '!' character. 
+Blanck lines are ignored
+
+parameters.in : parameter file of the code, with various flags
+
+abundances.in : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
+that do not exist in this file.
+
+activation_energies.in : Activation energy for endothermic reactions
+
+element.in : name and mass in AMU of all elemental species existing in the simulation
+
+gas_reactions.in : Reaction that occurs in gas phase
+
+gas_species.in : species that are involved in gas phase reactions
+
+grain_reactions.in : Reactions that occurs on grain surface
+
+grain_species.in : Species that are involved in grain surface reactions
+
+surface_parameters.in : various energies and parameters for diffusion and movements on the grain surface
+
+
+
 @section Errors
 
 Error 1: Missing input file.
