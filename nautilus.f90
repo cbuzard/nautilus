@@ -743,7 +743,7 @@ end subroutine SHIELDINGSETUP
     
     
     ! Reading list of species for gas phase
-    filename = 'desorption_rates.in'
+    filename = 'surface_parameters.in'
     inquire(file=filename, exist=isDefined)
     if (isDefined) then
       call get_linenumber(filename=filename, nb_lines=NGS)
