@@ -695,6 +695,14 @@ end subroutine SHIELDINGSETUP
 
     real(double_precision) :: cond
     integer :: i, j,k,l,n4, n5, n6
+    
+    character(len=80) :: filename !< name of the file to be read
+    character(len=80) :: line
+    character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
+    integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+    integer :: error !< to store the state of a read instruction
+
+    logical :: isDefined
 
     ! Set accretion rate====================================================
 
@@ -732,19 +740,41 @@ end subroutine SHIELDINGSETUP
 
 
     ! Read in molecular information for surface rates=======================
-    open(unit=10, file='desorption_rates.in', status='OLD')
-    read(10,*)
+    
+    
+    ! Reading list of species for gas phase
+    filename = 'desorption_rates.in'
+    inquire(file=filename, exist=isDefined)
+    if (isDefined) then
+      call get_linenumber(filename=filename, nb_lines=NGS)
 
-    ! --- Read info into dummy arrays
-    NGS=0
-    do I=1,nb_species
-      700    CONTINUE
-      read(10,'(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)') GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
-      if (GSPEC(I).EQ.'X          ') GOTO 700
-      if (GSPEC(I).EQ.'           ') EXIT
-      NGS=NGS+1
-    enddo
-    close(10)
+      open(10, file=filename, status='old')
+      
+      i = 0
+      do
+        read(10, '(a)', iostat=error) line
+        if (error /= 0) exit
+          
+        ! We get only what is on the left of an eventual comment parameter
+          comment_position = index(line, comment_character)
+        
+        ! if there are comments on the current line, we get rid of them
+        if (comment_position.ne.0) then
+          line = line(1:comment_position - 1)
+        end if
+        
+        if (line.ne.'') then
+          i = i + 1
+          read(line, '(A11,I4,F7.0,F6.0,D8.1,27X,F8.2)') GSPEC(I),INT1(I),REA1(I),REA2(I),REA3(I),REA4(I)
+        
+        end if
+      end do
+      close(10)
+      
+    else
+      write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+      call exit(1)
+    end if
     
     open(unit=10, file='activation_energies.in', status='OLD')
     ! --- Read activation energies into dummy arrays
