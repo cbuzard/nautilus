@@ -94,27 +94,10 @@ integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
 real(double_precision) :: T, TOUT, TIN
 
-call read_element_in()
-
-call get_array_sizes()
+call initialisation()
 
 allocate(temp_abundances(nb_species))
 
-call initialize_global_arrays()
-
-call read_parameters_in()
-
-call read_species()
-
-call read_reactions()
-
-
-
-call write_parameters()
-
-call read_abundances()
-
-call get_gas_surface_species()
 
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag
@@ -132,29 +115,7 @@ else
   liw = 31 + 3 * NJAC*nb_species + 21 * nb_species
 endif
 
-! Build spatial mesh 
-call mesh()
 
-! Initialization of elemental/chemical quantities
-call index_datas()
-
-timestep=0
-call start(TOUT)
-
-! 1D physical structure (nls_phys_1D)
-call phys_1D()
-
-! Write species name/index correspondance
-call write_species()
-
-! Initialize indices of reactants and products 
-
-call chemsetup()
-
-! Initializing ZXN
-do ipts=1,nptmax
-  ZXN(:,ipts) = abundances(:)
-enddo
 
 ! Initializing T
 ! T = local, TIME = global
@@ -225,6 +186,69 @@ enddo
 if (nptmax.eq.1) call write_abundances('abundances.tmp')
 
 contains
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Routine that contain all initialisation that needs to be done in the code
+!! before the integration
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine initialisation()
+use global_variables
+
+implicit none
+
+
+call read_element_in()
+
+call get_array_sizes()
+
+call initialize_global_arrays()
+
+call read_parameters_in()
+
+call read_species()
+
+call read_reactions()
+
+
+
+call write_parameters()
+
+call read_abundances()
+
+call get_gas_surface_species()
+
+! Build spatial mesh 
+call mesh()
+
+! Initialization of elemental/chemical quantities
+call index_datas()
+
+timestep=0
+call start(TOUT)
+
+! 1D physical structure (nls_phys_1D)
+call phys_1D()
+
+! Write species name/index correspondance
+call write_species()
+
+! Initialize indices of reactants and products 
+
+call chemsetup()
+
+! Initializing ZXN
+do ipts=1,nptmax
+  ZXN(:,ipts) = abundances(:)
+enddo
+
+end subroutine initialisation
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
