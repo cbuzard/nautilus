@@ -36,7 +36,22 @@ grain_species.in : Species that are involved in grain surface reactions
 
 surface_parameters.in : various energies and parameters for diffusion and movements on the grain surface
 
+@section Output files
 
+*.out files are output files. *.tmp files are file that are generated at each timestep, either to continue a 
+simulation or check if there is a problem
+
+abundances.*.out : writing in binary format the abundances of all species at each timestep (one file per timestep-output
+
+abundances.tmp : writing in ASCII format the abundances of all species at the current timestep-output
+
+rates.*.out : writing in binary format the critical reactions rates
+
+info.out : writing information on the code, in particular about the code version (commit ID and branch)
+
+species.out : Writing the list of species and their corresponding index
+
+elemental_abundances.tmp/out : writing information about prime elements, their total abundances and mass
 
 @section Errors
 

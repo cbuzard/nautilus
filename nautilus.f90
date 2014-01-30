@@ -40,39 +40,56 @@
 ! Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)
 ! Turbulent mixing implemented through first order operator splitting
 ! 
-! Files:
-! nautilus.f90          The main program
-! nls_control.d         Control parameters
-! nls_header_mod.f90    Declarations and constants
-! nls_io.f90            Input/output
-! nls_odes.f90          Rate equations and jacobian
-! nls_phys_1D.f90       1D structure (overwrites some parameters)
-! nls_mesh.f90          1D mesh
-! nls_diffusion.f90     Turbulent diffusion routines
-!
-! opkd*.f               Odepack files
-! 
-! nls_surf_input.d      Surface parameters (desorption energies, etc..)
-! gg_react_osu_03_2008  Chemical network
-! gg_photodiss*         H2 and CO photodissociation
-! nls_init.d            Initial abundances (must be present even if IREAD=0)
-!
-! nlso_srates.d         Output of some surface quantities (incomplete)
-! nlso_tail.d           Chemical compasition at the last timestep (if used in 0D)
-! output_1D.******      1D outputs (binaries) 
-! rates1D.******        Outputs of the rate coefficients for 1 specific mesh point
-! nlso_mod.d            Output of the modified rate coefficients (not checked)
-! nlso_spec.d           List of species with their names and numbers
-! 
 ! April 2011 VW  An appoximative calculation of the X-ray ionization rate 
 ! have been added according to Glasgold at al. (1999)
+!
+! INPUT FILES
+! 
+! All parameters file can have comments, either a full line or the end of a line. The comment character being the '!' character. 
+! Blanck lines are ignored
+! 
+! parameters.in : parameter file of the code, with various flags
+! 
+! abundances.in : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
+! that do not exist in this file.
+! 
+! activation_energies.in : Activation energy for endothermic reactions
+! 
+! element.in : name and mass in AMU of all elemental species existing in the simulation
+! 
+! gas_reactions.in : Reaction that occurs in gas phase
+! 
+! gas_species.in : species that are involved in gas phase reactions
+! 
+! grain_reactions.in : Reactions that occurs on grain surface
+! 
+! grain_species.in : Species that are involved in grain surface reactions
+! 
+! surface_parameters.in : various energies and parameters for diffusion and movements on the grain surface
+!
+! OUTPUT FILES
+! *.out files are output files. *.tmp files are file that are generated at each timestep, either to continue a 
+! simulation or check if there is a problem
+!
+! abundances.*.out : writing in binary format the abundances of all species at each timestep (one file per timestep-output
+!
+! abundances.tmp : writing in ASCII format the abundances of all species at the current timestep-output
+!
+! rates.*.out : writing in binary format the critical reactions rates
+!
+! info.out : writing information on the code, in particular about the code version (commit ID and branch)
+!
+! species.out : Writing the list of species and their corresponding index
+!
+! elemental_abundances.tmp/out : writing information about prime elements, their total abundances and mass
+!
+!
 ! 
 ! -----------------------------------------------------------------------
 
 PROGRAM Gasgrain
 
 use global_variables
-
 use diffusion
 use input_output
 use model_1D
@@ -247,6 +264,9 @@ call chemsetup()
 do ipts=1,nptmax
   ZXN(:,ipts) = abundances(:)
 enddo
+
+! Write information about the code at the very end of initialisation
+call write_general_infos()
 
 end subroutine initialisation
 

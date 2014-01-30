@@ -12,3 +12,4 @@ latex
 *.tmp
 *.out
 nautilus_original/nautilus
+git_infos.f90

@@ -34,31 +34,116 @@ problem_message = "The script can take various arguments :" + "\n" + \
 " Example : " + "\n" + \
 " Makefile.py gdb"
 
-# We get arguments from the script
-for arg in sys.argv[1:]:
-  try:
-    (key, value) = arg.split("=")
-  except:
-    key = arg
-  if (key == 'debug'):
-    debug = True
-  elif (key == 'force'):
-    force = True
-  elif (key == 'gdb'):
-    gdb = True
-  elif (key == 'profiling'):
-    profiling = True
-  elif (key == 'help'):
-    isProblem = True
+def run_command(commande):
+  """lance une commande qui sera typiquement soit une liste, soit une 
+  commande seule. La fonction renvoit un tuple avec la sortie, 
+  l'erreur et le code de retour"""
+  if (type(commande)==list):
+    process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+  elif (type(commande)==str):
+    process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
   else:
-    print("the key '%s' does not match" % key)
-    isProblem = True
+    raise TypeError("The command is neither a string nor a list.")
+  (process_stdout, process_stderr) = process.communicate()
+  returncode = process.poll()
+  # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
+  return (process_stdout, process_stderr, returncode)
 
-if isProblem:
-  print(problem_message)
-  exit()
+def get_current_branch():
+  """function that return as a string the current branch of the git repository"""
+  (stdout, stderr, returnCode) = run_command("git branch")
+  
+  if (returnCode != 0):
+    return None
+  
+  lines = stdout.split("\n")
+  for line in lines:
+    if (line[0] == '*'):
+      return line[2:]
 
-def run(commande):
+def get_current_revision():
+  """function that return as a string the current revision of the git repository"""
+  (stdout, stderr, returnCode) = run_command("git log|head -1")
+  
+  if (returnCode != 0):
+    return None
+  
+  commit = stdout.split()[1]
+  return commit
+
+def is_non_committed_modifs():
+  """function that return as a boolean if theere is non committed modifications in the repository"""
+  (stdout, stderr, returnCode) = run_command("git diff|wc -l")
+  
+  if (returnCode != 0):
+    return None
+  
+  nbLines = int(stdout)
+  
+  return (nbLines != 0)
+  
+def list_tag(commit):
+  """list the tags that exists linking towar the considered commit
+  
+  Return :
+  The list of tags corresponding to 'commit'. If none, an empty list is returned.
+  """
+  (stdout, stderr, returnCode) = run_command("git tag -l --contains %s" % commit)
+  
+  tags = stdout.split("\n")[0:-1] # We do not include the extra "" in the end.
+  
+  return tags 
+
+def write_infos_in_f90_file(main_branch='master'):
+  """This function will create a fortran file that will store, as variable, some infos about a git repository"""
+  
+  F90_BEGIN = """!******************************************************************************
+! MODULE: git_infos
+!******************************************************************************
+!
+! DESCRIPTION: 
+!> @brief Automatically generated module (with Makefile.py) that contain
+!! information on code version and branch name. 
+!
+!> @warning Do not modify this file manually !
+!
+!******************************************************************************
+module git_infos
+implicit none
+
+"""
+
+  F90_END = "\nend module git_infos"
+
+  
+  branch = get_current_branch()
+  commit = get_current_revision()
+  isModifs = is_non_committed_modifs()
+  tags = list_tag(commit)
+  
+  if (branch != main_branch):
+    print("Warning: The current branch is %s" % branch)
+  
+  f90source = open("git_infos.f90", 'w')
+  f90source.write(F90_BEGIN)
+  f90source.write("character(len=40), parameter :: commit = '%s' !< commit ID when binary was compiled \n" % commit)
+  f90source.write("character(len=%d), parameter :: branch = '%s' !< branch name when compilation occured\n" % (len(branch), branch))
+  if (isModifs):
+    f90source.write("character(len=80), parameter :: modifs = '/!\ There is non committed modifications'\n")
+  else:
+    f90source.write("character(len=80), parameter :: modifs = 'This is a pure version (without any local modifs)'\n")
+    
+  
+  if (len(tags)==0):
+    tag_text = "There is no tag"
+  else:
+    tag_text = " ; ".join(tags)
+  
+  f90source.write("character(len=%d), parameter :: tags = '%s'\n" % (len(tag_text), tag_text))
+  f90source.write(F90_END)
+  f90source.close()
+  
+def run_compilation(commande):
   """lance une commande qui sera typiquement soit une liste, soit une 
   commande seule. La fonction renvoit un tuple avec la sortie, 
   l'erreur et le code de retour"""
@@ -92,6 +177,32 @@ def run(commande):
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
   return (process_stdout, process_stderr, returnCode)
 
+# We get arguments from the script
+for arg in sys.argv[1:]:
+  try:
+    (key, value) = arg.split("=")
+  except:
+    key = arg
+  if (key == 'debug'):
+    debug = True
+  elif (key == 'force'):
+    force = True
+  elif (key == 'gdb'):
+    gdb = True
+  elif (key == 'profiling'):
+    profiling = True
+  elif (key == 'help'):
+    isProblem = True
+  else:
+    print("the key '%s' does not match" % key)
+    isProblem = True
+
+if isProblem:
+  print(problem_message)
+  exit()
+
+write_infos_in_f90_file(main_branch='master')
+
 if debug:
   OPTIONS = DEBUG_OPTIONS
 else:
@@ -108,13 +219,13 @@ if profiling:
 if os.path.isfile(LOG_NAME):
   os.remove(LOG_NAME)
 
-compilation_order = ["-c numerical_types.f90 iso_fortran_env.f90", "-c global_variables.f90", 
+compilation_order = ["-c numerical_types.f90 iso_fortran_env.f90 git_infos.f90", "-c global_variables.f90", 
 "-c shielding.f90 diffusion.f90 input_output.f90 model_1D.f90 ode_solver.f90", 
 "-o nautilus nautilus.f90 opk*.f90 *.o"]
 
 for order in compilation_order:
   command = "%s %s %s" % (COMPILATOR, OPTIONS, order)
   print(command)
-  (process_stdout, process_stderr, returncode) = run(command)
+  (process_stdout, process_stderr, returncode) = run_compilation(command)
 
 #~ pdb.set_trace()
