@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Script that run a mercury simulation and test if the outputs and binaries have correct behaviour. 
-# Of course, everything is not tested, but it is planed to test as many things as possible
 
 __author__ = "Christophe Cossou <cossou@obs.u-bordeaux1.fr>"
 __date__ = "21 Juillet 2011"
 __version__ = "$Revision: 2.6.2 $"
-__credits__ = """We run a test simulation and erase all the files created after the tests. The simulations files are thought to be 
-in a "simu_test" subdirectory of the directory were are the sources (and binaries) of mercury (and this script)"""
+__credits__ = """Script that suppress all labels for loops in a F77 style source code. 
+This only works if no do while loops, or exotics loops exists"""
 
 import shutil
 import re
@@ -25,10 +23,7 @@ def changeDo(line):
   del(tmp[1])
   # When splitting, the \n disappear
   tmp.append("\n")
-  #~ try:
-    #~ del(tmp[1])
-  #~ except:
-    #~ pdb.set_trace()
+
   
   return " ".join(tmp)
 

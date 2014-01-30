@@ -1,10 +1,10 @@
 #!/bin/bash
 # script to clean files from a nautilus simulation
-# version 1.0
+# version 1.1
 
 function clean {
-    rm output_1D.*
-    rm rates1D.*
+    rm *.out
+    rm *.tmp
     
     # To delete the stderr and stdout of a bash scheduler of the server. 
     # The last "." is very important, in order to avoid suppression of the submission script itself.
