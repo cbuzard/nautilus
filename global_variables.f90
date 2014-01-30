@@ -417,7 +417,7 @@ allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
 allocate(formula(nb_reactions))
 allocate(num(nb_reactions))
-allocate(react(nb_reactions, 7))
+allocate(react(7,nb_reactions))
 allocate(symbol(7,nb_reactions))
 
 allocate(elemental_mass(NB_PRIME_ELEMENTS))

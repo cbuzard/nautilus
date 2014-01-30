@@ -14,14 +14,18 @@ implicit none
 ! Locals
 integer :: I,J,L
 
+integer :: no_species
+
+no_species = nb_species + 1
+
 ! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
-REACT(1:nb_reactions, 1:7) = nb_species + 1
+REACT(1:7, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
-  do J=1,nb_reactions
+  do J=1,nb_species
 
     do L=1,7
-      if (SYMBOL(L,I).EQ.species_name(J)) REACT(I,L)=J
+      if (SYMBOL(L,I).EQ.species_name(J)) REACT(L,I)=J
     enddo
 
   enddo
@@ -43,14 +47,14 @@ real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundance
 real(double_precision), intent(out), dimension(nb_species) :: YDOT
 
 ! Locals
-integer :: NSP1
+integer :: no_species
 real(double_precision), dimension(nb_species+1) :: YD2
 !REAL(KIND=16), dimension(nb_species+1) :: YD2
 integer :: i
 integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
 real(double_precision) :: rate
 
-NSP1=nb_species+1
+no_species=nb_species+1
 
 ydot(:)=0.d0
 yd2(:)=0.d0
@@ -58,24 +62,24 @@ yd2(:)=0.d0
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
 
-  IR1=REACT(I,1)
-  IR2=REACT(I,2)
-  IR3=REACT(I,3)
+  IR1=REACT(1, i)
+  IR2=REACT(2, i)
+  IR3=REACT(3, i)
 
-  IPROD1=REACT(I,4)
-  IPROD2=REACT(I,5)
-  IPROD3=REACT(I,6)
-  IPROD4=REACT(I,7)
+  IPROD1=REACT(4, i)
+  IPROD2=REACT(5, i)
+  IPROD3=REACT(6, i)
+  IPROD4=REACT(7, i)
 
-  if (IR3.ne.NSP1) then
+  if (IR3.ne.no_species) then
     RATE=XK(I)*Y(IR1)*Y(IR2)*Y(IR3)*XNT*XNT
   endif
 
-  if ((IR3.eq.NSP1).and.(IR2.ne.NSP1)) then
+  if ((IR3.eq.no_species).and.(IR2.ne.no_species)) then
     RATE=XK(I)*Y(IR1)*Y(IR2)*XNT
   endif
 
-  if (IR2.eq.NSP1) then
+  if (IR2.eq.no_species) then
     RATE=XK(I)*Y(IR1)  
   endif
 
@@ -106,7 +110,7 @@ real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundance
 real(double_precision), intent(out), dimension(nb_species) :: PDJ
 
 ! Locals
-integer :: NSP1
+integer :: no_species
 
 real(double_precision), dimension(nb_species+1) :: PDJ2
 !REAL(KIND=16), dimension(nb_species+1) :: PDJ2
@@ -114,22 +118,22 @@ integer :: i
 integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
 integer :: NUMBERJAC
 
-NSP1=nb_species+1
+no_species=nb_species+1
 
 PDJ2(:)=0.d0
 
 do I=1,nb_reactions
   !write(*,*) I
 
-  IR1=REACT(I,1)
-  IR2=REACT(I,2)
-  IR3=REACT(I,3)
-  IPROD1=REACT(I,4)
-  IPROD2=REACT(I,5)
-  IPROD3=REACT(I,6)
-  IPROD4=REACT(I,7)
+  IR1=REACT(1, i)
+  IR2=REACT(2, i)
+  IR3=REACT(3, i)
+  IPROD1=REACT(4, i)
+  IPROD2=REACT(5, i)
+  IPROD3=REACT(6, i)
+  IPROD4=REACT(7, i)
 
-  if (IR3.ne.NSP1) then
+  if (IR3.ne.no_species) then
 
     if (IR1.eq.J) then 
       PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
@@ -163,7 +167,7 @@ do I=1,nb_reactions
 
   endif
 
-  if ((IR3.eq.NSP1).and.(IR2.ne.NSP1)) then
+  if ((IR3.eq.no_species).and.(IR2.ne.no_species)) then
 
     if (IR1.eq.J) then 
       PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR2)*XNT
@@ -185,7 +189,7 @@ do I=1,nb_reactions
 
   endif
 
-  if (IR2.eq.NSP1) then
+  if (IR2.eq.no_species) then
 
     if (IR1.eq.J) then 
 
