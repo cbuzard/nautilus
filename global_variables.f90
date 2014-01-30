@@ -64,6 +64,7 @@ real(double_precision), allocatable, dimension(:) :: AWT
 real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< Store abundances for all 
 !! elemental species before running the simulation. Size (NB_PRIME_ELEMENTS)
 real(double_precision), allocatable, dimension(:) :: elemental_mass !< elemental mass. Size (NB_PRIME_ELEMENTS)
+character(len=11), allocatable, dimension(:) :: element_name !< elemental mass. Size (NB_PRIME_ELEMENTS)
 real(double_precision), allocatable, dimension(:) :: RDIF1
 real(double_precision), allocatable, dimension(:) :: RDIF2
 real(double_precision), allocatable, dimension(:) :: EX1
@@ -263,23 +264,6 @@ subroutine get_array_sizes()
 
 implicit none
 
-character(len=80) :: filename_gas = 'gas_species.in'
-character(len=80) :: filename_grain = 'grain_species.in'
-
-integer :: nb_columns_gas
-integer :: nb_columns_grain
-
-! We get the number of prime elements
-nb_columns_gas = get_nb_columns(filename_gas)
-nb_columns_grain = get_nb_columns(filename_grain)
-
-if (nb_columns_gas.ne.nb_columns_grain) then
-  write (Error_unit,*) 'The number of prime elements is different in "', trim(filename_gas), '" and "', trim(filename_grain), '".'
-  call exit(6)
-endif
-
-NB_PRIME_ELEMENTS = nb_columns_gas - 2 ! One column for electrons, one for species name. The others are prime elements
-
 ! We get the number of reactions and species
 call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
 call get_linenumber(filename='gas_reactions.in', nb_lines=nb_gas_phase_reactions)
@@ -420,7 +404,7 @@ allocate(num(nb_reactions))
 allocate(react(7,nb_reactions))
 allocate(symbol(7,nb_reactions))
 
-allocate(elemental_mass(NB_PRIME_ELEMENTS))
+!~ allocate(elemental_mass(NB_PRIME_ELEMENTS))
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(ielm(NB_PRIME_ELEMENTS,nb_species))

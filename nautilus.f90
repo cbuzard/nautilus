@@ -94,6 +94,8 @@ integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
 real(double_precision) :: T, TOUT, TIN
 
+call read_element_in()
+
 call get_array_sizes()
 
 allocate(temp_abundances(nb_species))
@@ -236,6 +238,8 @@ implicit none
 real(double_precision) :: MSUM
 integer :: ILAB, j, k, i, isptemp
 integer :: KSUM ! sum of number of primary element composing the species. If equal to 1, the current species is elemental
+real(double_precision) :: mass_tmp !< temporary value to exchange two index in the mass array
+character(len=11) :: name_tmp !< temporary value to exchange two index in the name array
 
 ! Set elements' characteristics=========================================
 ! --- Find the atomic species associated with a given element
@@ -273,30 +277,38 @@ do J=1,NB_PRIME_ELEMENTS-1
     do K=J+1,NB_PRIME_ELEMENTS
       if (IELM(J,PRIME_ELEMENT_IDX(K)).EQ.1) then
         ISPTEMP=PRIME_ELEMENT_IDX(K)
+        mass_tmp = elemental_mass(k)
+        name_tmp = element_name(k)
+        
+        elemental_mass(k) = elemental_mass(j)
+        element_name(k)  = element_name(j)
         PRIME_ELEMENT_IDX(K)=PRIME_ELEMENT_IDX(J)
+        
+        elemental_mass(k) = mass_tmp
+        element_name(k) = name_tmp
         PRIME_ELEMENT_IDX(J)=ISPTEMP
       endif
     enddo
   endif
 enddo
 
-! --- Set elements' elemental_masses
-do I=1,NB_PRIME_ELEMENTS
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'H          ') elemental_mass(i) = 1.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'D          ') elemental_mass(i) = 2.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'He         ') elemental_mass(i) = 4.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'C          ') elemental_mass(i) = 12.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'N          ') elemental_mass(i) = 14.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'O          ') elemental_mass(i) = 16.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Na         ') elemental_mass(i) = 23.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Mg         ') elemental_mass(i) = 24.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Si         ') elemental_mass(i) = 28.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'P          ') elemental_mass(i) = 31.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'S          ') elemental_mass(i) = 32.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Cl         ') elemental_mass(i) = 35.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Fe         ') elemental_mass(i) = 56.d0
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'F          ') elemental_mass(i) = 19.d0
-enddo
+!~ ! --- Set elements' elemental_masses
+!~ do I=1,NB_PRIME_ELEMENTS
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'H          ') elemental_mass(i) = 1.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'D          ') elemental_mass(i) = 2.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'He         ') elemental_mass(i) = 4.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'C          ') elemental_mass(i) = 12.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'N          ') elemental_mass(i) = 14.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'O          ') elemental_mass(i) = 16.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Na         ') elemental_mass(i) = 23.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Mg         ') elemental_mass(i) = 24.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Si         ') elemental_mass(i) = 28.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'P          ') elemental_mass(i) = 31.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'S          ') elemental_mass(i) = 32.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Cl         ') elemental_mass(i) = 35.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'Fe         ') elemental_mass(i) = 56.d0
+!~   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.'F          ') elemental_mass(i) = 19.d0
+!~ enddo
 
 ! Set species' characteristics==========================================
 ! --- Set special species labels

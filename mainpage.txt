@@ -24,6 +24,6 @@ Error 4: When reordering reactions, it seems that some reactions misses or not e
 
 Error 5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code
 
-Error 6: The number of prime elements do not match in input files *_species.in
+Error 6: The number of prime elements in input files *_species.in do not match with the real one coming from element.in
 
 */

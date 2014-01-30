@@ -864,6 +864,94 @@ end subroutine read_abundances
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Read number, name and mass of all elements (basic brick for molecules)
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine read_element_in()
+! Writes 1D outputs
+use global_variables
+
+implicit none
+
+! Locals
+character(len=80), parameter :: filename='element.in'
+integer :: i, j
+
+integer :: nb_lines
+
+character(len=80) :: line
+character(len=1), parameter :: comment_character = '!' ! character that will indicate that the rest of the line is a comment
+integer :: comment_position ! the index of the comment character on the line. if zero, there is none on the current string
+integer :: error ! to store the state of a read instruction
+
+logical :: isDefined
+
+character(len=80) :: filename_gas = 'gas_species.in'
+character(len=80) :: filename_grain = 'grain_species.in'
+
+integer :: nb_columns_gas
+integer :: nb_columns_grain
+
+inquire(file=filename, exist=isDefined)
+
+call get_linenumber(filename, NB_PRIME_ELEMENTS)
+
+! We get the number of prime elements
+nb_columns_gas = get_nb_columns(filename_gas)
+
+if ((nb_columns_gas - 2).ne.NB_PRIME_ELEMENTS) then
+  write (Error_unit,'(a,i2,a,a,a,i2,a)') 'The number of prime elements is different in "element.in" (', NB_PRIME_ELEMENTS, &
+  ') and "', trim(filename_gas), '" (', nb_columns_gas-2, ') .'
+  call exit(6)
+endif
+
+nb_columns_grain = get_nb_columns(filename_grain)
+
+if ((nb_columns_grain - 2).ne.NB_PRIME_ELEMENTS) then
+  write (Error_unit,'(a,i2,a,a,a,i2,a)') 'The number of prime elements is different in "element.in" (', NB_PRIME_ELEMENTS, &
+  ') and "', trim(filename_grain), '" (', nb_columns_grain-2, ') .'
+  call exit(6)
+endif
+
+! We allocate global variables
+allocate(element_name(NB_PRIME_ELEMENTS))
+allocate(elemental_mass(NB_PRIME_ELEMENTS))
+
+if (isDefined) then
+
+  open(10, file=filename, status='old')
+  i = 1
+  do 
+    read(10, '(a)', iostat=error) line
+    if (error /= 0) exit
+      
+    ! We get only what is on the left of an eventual comment parameter
+      comment_position = index(line, comment_character)
+    
+    ! if there are comments on the current line, we get rid of them
+    if (comment_position.ne.0) then
+      line = line(1:comment_position - 1)
+    end if
+    
+    if (line.ne.'') then
+      read(line, '(a, f8.3)') element_name(i), elemental_mass(i)
+      i = i + 1
+    endif
+  enddo
+  close(10)
+endif
+
+
+return
+end subroutine read_element_in
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
 !> Franck Hersant
 !
 !> @date 2000
