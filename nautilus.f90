@@ -146,9 +146,6 @@ call phys_1D()
 ! Write species name/index correspondance
 call write_species()
 
-! Global variable for the current spatial point
-iptstore=1
-
 ! Initialize indices of reactants and products 
 
 call chemsetup()
@@ -649,29 +646,12 @@ enddo
 end subroutine get_elemental_abundance
 
   ! ======================================================================
-  ! Dummy jacobians when the code is run with mf=222
-  ! Not to use unless, the solver has big problems converging
-  ! ======================================================================
-  !      subroutine DUMMY 
-  !      implicit none
-  !      integer :: N,J
-  !      real(double_precision) :: T,Y,IAN, JAN, PDJ 
-
-  !      entry jac (N,T,Y,ML,MU,PD,NROWPD)
-  !      entry jac (N, T, Y, J, IAN, JAN, PDJ)
-  !      return
-
-  !      END
-
-
-
-  ! ======================================================================
   ! Computes the H2 and CO column density for their self-shielding
   ! for each ipts, the column density is incremented recursively
   ! from the results for NH2 and NCO computed by RATCON2 the spatial step before
   ! NB: ZN is shifted with respect to N
   ! ======================================================================
-  subroutine SHIELDINGSETUP()
+subroutine SHIELDINGSETUP()
 
   use global_variables
   implicit none
@@ -692,7 +672,7 @@ end subroutine get_elemental_abundance
   endif
 
   return
-  end subroutine SHIELDINGSETUP
+end subroutine SHIELDINGSETUP
 
 
 
@@ -752,7 +732,7 @@ end subroutine get_elemental_abundance
 
 
     ! Read in molecular information for surface rates=======================
-    open(unit=10, file='nls_surf_fev2012.dat', status='OLD')
+    open(unit=10, file='desorption_rates.in', status='OLD')
     read(10,*)
 
     ! --- Read info into dummy arrays
@@ -764,8 +744,9 @@ end subroutine get_elemental_abundance
       if (GSPEC(I).EQ.'           ') EXIT
       NGS=NGS+1
     enddo
-
-
+    close(10)
+    
+    open(unit=10, file='activation_energies.in', status='OLD')
     ! --- Read activation energies into dummy arrays
     read(10,'(I4)') NEA
     do J=1,NEA
