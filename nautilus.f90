@@ -776,13 +776,38 @@ end subroutine SHIELDINGSETUP
       call exit(1)
     end if
     
-    open(unit=10, file='activation_energies.in', status='OLD')
-    ! --- Read activation energies into dummy arrays
-    read(10,'(I4)') NEA
-    do J=1,NEA
-      read(10,'(5A11,D9.2)') (GSread(L,J),L=1,5),REA5(J)
-    enddo
-    close(10)
+    filename = 'activation_energies.in'
+    inquire(file=filename, exist=isDefined)
+    if (isDefined) then
+      call get_linenumber(filename=filename, nb_lines=NEA)
+
+      open(10, file=filename, status='old')
+      
+      i = 0
+      do
+        read(10, '(a)', iostat=error) line
+        if (error /= 0) exit
+          
+        ! We get only what is on the left of an eventual comment parameter
+          comment_position = index(line, comment_character)
+        
+        ! if there are comments on the current line, we get rid of them
+        if (comment_position.ne.0) then
+          line = line(1:comment_position - 1)
+        end if
+        
+        if (line.ne.'') then
+          i = i + 1
+          read(line, '(5A11,D9.2)') (GSread(L,i),L=1,5),REA5(i)
+        
+        end if
+      end do
+      close(10)
+      
+    else
+      write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+      call exit(1)
+    end if
 
     ! --- Transfer from dummies to arrays with correct species numbers
     do I=1,nb_species
