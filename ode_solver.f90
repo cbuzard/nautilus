@@ -63,7 +63,7 @@ integer :: no_species
 real(double_precision), dimension(nb_species+1) :: YD2
 !REAL(KIND=16), dimension(nb_species+1) :: YD2
 integer :: i
-integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
+integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 real(double_precision) :: rate
 
 no_species=nb_species+1
@@ -74,34 +74,34 @@ yd2(:)=0.d0
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
 
-  IR1 = reaction_substances(1, i)
-  IR2 = reaction_substances(2, i)
-  IR3 = reaction_substances(3, i)
+  reactant1_idx = reaction_substances(1, i)
+  reactant2_idx = reaction_substances(2, i)
+  reactant3_idx = reaction_substances(3, i)
 
-  IPROD1 = reaction_substances(4, i)
-  IPROD2 = reaction_substances(5, i)
-  IPROD3 = reaction_substances(6, i)
-  IPROD4 = reaction_substances(7, i)
+  product1_idx = reaction_substances(4, i)
+  product2_idx = reaction_substances(5, i)
+  product3_idx = reaction_substances(6, i)
+  product4_idx = reaction_substances(7, i)
 
-  if (IR3.ne.no_species) then
-    RATE=XK(I)*Y(IR1)*Y(IR2)*Y(IR3)*XNT*XNT
+  if (reactant3_idx.ne.no_species) then
+    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
   endif
 
-  if ((IR3.eq.no_species).and.(IR2.ne.no_species)) then
-    RATE=XK(I)*Y(IR1)*Y(IR2)*XNT
+  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
+    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
   endif
 
-  if (IR2.eq.no_species) then
-    RATE=XK(I)*Y(IR1)  
+  if (reactant2_idx.eq.no_species) then
+    RATE=XK(I)*Y(reactant1_idx)  
   endif
 
-  YD2(IPROD1)=YD2(IPROD1)+RATE
-  YD2(IPROD2)=YD2(IPROD2)+RATE
-  YD2(IPROD3)=YD2(IPROD3)+RATE
-  YD2(IPROD4)=YD2(IPROD4)+RATE
-  YD2(IR1)=YD2(IR1)-RATE
-  YD2(IR2)=YD2(IR2)-RATE
-  YD2(IR3)=YD2(IR3)-RATE
+  YD2(product1_idx)=YD2(product1_idx)+RATE
+  YD2(product2_idx)=YD2(product2_idx)+RATE
+  YD2(product3_idx)=YD2(product3_idx)+RATE
+  YD2(product4_idx)=YD2(product4_idx)+RATE
+  YD2(reactant1_idx)=YD2(reactant1_idx)-RATE
+  YD2(reactant2_idx)=YD2(reactant2_idx)-RATE
+  YD2(reactant3_idx)=YD2(reactant3_idx)-RATE
 enddo   
 
 YDOT(1:nb_species)=YD2(1:nb_species)
@@ -127,88 +127,88 @@ integer :: no_species
 real(double_precision), dimension(nb_species+1) :: PDJ2
 !REAL(KIND=16), dimension(nb_species+1) :: PDJ2
 integer :: i
-integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
+integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 integer :: NUMBERJAC
 
-no_species=nb_species+1
+no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
 
 PDJ2(:) = 0.d0
 
 do I=1,nb_reactions
 
-  IR1 = reaction_substances(1, i)
-  IR2 = reaction_substances(2, i)
-  IR3 = reaction_substances(3, i)
-  IPROD1 = reaction_substances(4, i)
-  IPROD2 = reaction_substances(5, i)
-  IPROD3 = reaction_substances(6, i)
-  IPROD4 = reaction_substances(7, i)
+  reactant1_idx = reaction_substances(1, i)
+  reactant2_idx = reaction_substances(2, i)
+  reactant3_idx = reaction_substances(3, i)
+  product1_idx = reaction_substances(4, i)
+  product2_idx = reaction_substances(5, i)
+  product3_idx = reaction_substances(6, i)
+  product4_idx = reaction_substances(7, i)
 
-  if (IR3.ne.no_species) then
+  if (reactant3_idx.ne.no_species) then
 
-    if (IR1.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IR3)=PDJ2(IR3)-XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
+    if (reactant1_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant3_idx)=PDJ2(reactant3_idx)-XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
     endif
 
-    if (IR2.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IR3)=PDJ2(IR3)-XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
+    if (reactant2_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant3_idx)=PDJ2(reactant3_idx)-XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
     endif
 
-    if (IR3.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IR3)=PDJ2(IR3)-XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-    endif
-
-  endif
-
-  if ((IR3.eq.no_species).and.(IR2.ne.no_species)) then
-
-    if (IR1.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR2)*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR2)*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR2)*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR2)*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR2)*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR2)*XNT
-    endif
-
-    if (IR2.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR1)*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR1)*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR1)*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR1)*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR1)*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR1)*XNT
+    if (reactant3_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(reactant3_idx)=PDJ2(reactant3_idx)-XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
     endif
 
   endif
 
-  if (IR2.eq.no_species) then
+  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
 
-    if (IR1.eq.J) then 
+    if (reactant1_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant2_idx)*XNT
+    endif
 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)
+    if (reactant2_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant1_idx)*XNT
+    endif
+
+  endif
+
+  if (reactant2_idx.eq.no_species) then
+
+    if (reactant1_idx.eq.J) then 
+
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)
     endif
 
   endif
