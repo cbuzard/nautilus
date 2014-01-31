@@ -28,7 +28,8 @@ contains
 !> @date 2000
 !
 ! DESCRIPTION: 
-!> @brief Read all reactions both for gas phase and grain surface
+!> @brief Read all reactions both for gas phase and grain surface and order them
+! by ITYPE
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine read_reactions()
