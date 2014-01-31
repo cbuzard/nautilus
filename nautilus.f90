@@ -295,7 +295,7 @@ call phys_1D()
 call write_species()
 
 ! Initialize indices of reactants and products 
-call chemsetup()
+call set_chemical_reactants()
 
 ! Initializing ZXN
 do ipts=1,nptmax

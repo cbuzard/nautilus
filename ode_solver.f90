@@ -6,9 +6,19 @@ implicit none
 
 contains
 
-subroutine CHEMSETUP()
-! Initialize the reactants and products
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Initialize reactants and products of all reactions
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine set_chemical_reactants()
 use global_variables
+
 implicit none
 
 ! Locals
@@ -19,20 +29,22 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
-REACT(1:7, 1:nb_reactions) = no_species
+reaction_substances(1:7, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
     do L=1,7
-      if (SYMBOL(L,I).EQ.species_name(J)) REACT(L,I)=J
+      if (SYMBOL(L,I).EQ.species_name(J)) then
+        reaction_substances(L,I) = J
+      endif
     enddo
 
   enddo
 enddo   
 
 return
-end subroutine CHEMSETUP
+end subroutine set_chemical_reactants
 
 subroutine FCHEMVW(N,Y,YDOT)
 ! Computes the chemical evolution
@@ -62,14 +74,14 @@ yd2(:)=0.d0
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
 
-  IR1=REACT(1, i)
-  IR2=REACT(2, i)
-  IR3=REACT(3, i)
+  IR1 = reaction_substances(1, i)
+  IR2 = reaction_substances(2, i)
+  IR3 = reaction_substances(3, i)
 
-  IPROD1=REACT(4, i)
-  IPROD2=REACT(5, i)
-  IPROD3=REACT(6, i)
-  IPROD4=REACT(7, i)
+  IPROD1 = reaction_substances(4, i)
+  IPROD2 = reaction_substances(5, i)
+  IPROD3 = reaction_substances(6, i)
+  IPROD4 = reaction_substances(7, i)
 
   if (IR3.ne.no_species) then
     RATE=XK(I)*Y(IR1)*Y(IR2)*Y(IR3)*XNT*XNT
@@ -120,18 +132,17 @@ integer :: NUMBERJAC
 
 no_species=nb_species+1
 
-PDJ2(:)=0.d0
+PDJ2(:) = 0.d0
 
 do I=1,nb_reactions
-  !write(*,*) I
 
-  IR1=REACT(1, i)
-  IR2=REACT(2, i)
-  IR3=REACT(3, i)
-  IPROD1=REACT(4, i)
-  IPROD2=REACT(5, i)
-  IPROD3=REACT(6, i)
-  IPROD4=REACT(7, i)
+  IR1 = reaction_substances(1, i)
+  IR2 = reaction_substances(2, i)
+  IR3 = reaction_substances(3, i)
+  IPROD1 = reaction_substances(4, i)
+  IPROD2 = reaction_substances(5, i)
+  IPROD3 = reaction_substances(6, i)
+  IPROD4 = reaction_substances(7, i)
 
   if (IR3.ne.no_species) then
 
