@@ -436,7 +436,7 @@ enddo
 nb_sites_per_grain = SITE_DENSITY*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
-call grainrate()
+call init_reaction_rates()
 
 return 
 end subroutine index_datas
@@ -732,7 +732,7 @@ end subroutine SHIELDINGSETUP
 !! from datafiles
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-  subroutine GRAINRATE()
+  subroutine init_reaction_rates()
     use global_variables
     
     implicit none
@@ -1093,7 +1093,7 @@ enddo
 !      endif
 
 return
-end subroutine grainrate
+end subroutine init_reaction_rates
 
 ! ======================================================================
 ! ======================================================================
