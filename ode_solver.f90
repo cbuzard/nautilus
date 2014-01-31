@@ -46,69 +46,6 @@ enddo
 return
 end subroutine set_chemical_reactants
 
-subroutine FCHEMVW(N,Y,YDOT)
-! Computes the chemical evolution
-use global_variables
-implicit none
-
-! Inputs
-integer, intent(in) :: N
-real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-
-! Outputs
-real(double_precision), intent(out), dimension(nb_species) :: YDOT
-
-! Locals
-integer :: no_species
-real(double_precision), dimension(nb_species+1) :: YD2
-!REAL(KIND=16), dimension(nb_species+1) :: YD2
-integer :: i
-integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
-real(double_precision) :: rate
-
-no_species=nb_species+1
-
-ydot(:)=0.d0
-yd2(:)=0.d0
-
-! The differential equations are calculated in a loop here
-do I=1,nb_reactions
-
-  reactant1_idx = reaction_substances(1, i)
-  reactant2_idx = reaction_substances(2, i)
-  reactant3_idx = reaction_substances(3, i)
-
-  product1_idx = reaction_substances(4, i)
-  product2_idx = reaction_substances(5, i)
-  product3_idx = reaction_substances(6, i)
-  product4_idx = reaction_substances(7, i)
-
-  if (reactant3_idx.ne.no_species) then
-    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
-  endif
-
-  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
-    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
-  endif
-
-  if (reactant2_idx.eq.no_species) then
-    RATE=XK(I)*Y(reactant1_idx)  
-  endif
-
-  YD2(product1_idx)=YD2(product1_idx)+RATE
-  YD2(product2_idx)=YD2(product2_idx)+RATE
-  YD2(product3_idx)=YD2(product3_idx)+RATE
-  YD2(product4_idx)=YD2(product4_idx)+RATE
-  YD2(reactant1_idx)=YD2(reactant1_idx)-RATE
-  YD2(reactant2_idx)=YD2(reactant2_idx)-RATE
-  YD2(reactant3_idx)=YD2(reactant3_idx)-RATE
-enddo   
-
-YDOT(1:nb_species)=YD2(1:nb_species)
-
-return
-end subroutine FCHEMVW
-
 subroutine JACVW(Y,J,PDJ)
 ! Computes columns of the chemical jacobian
 use global_variables
@@ -290,25 +227,71 @@ end subroutine JAC
   
   ! ======================================================================
   ! ======================================================================
-subroutine FCHEM (N,T,Y,YP)
-  use global_variables
-  
-  implicit none
+subroutine FCHEM (N,T,Y,YDOT)
+! Computes the chemical evolution
+use global_variables
+implicit none
 
-  ! Inputs
-  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-  real(double_precision), intent(in) :: T
-  
-  ! Outputs
-  real(double_precision), intent(out), dimension(nb_species) :: YP
-  
-  ! Locals
-  integer :: N
+! Inputs
+integer, intent(in) :: N
+real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
+real(double_precision), intent(in) :: T ! Not used by the code, but needed for the ODEPACK call format expected for FCHEM
 
-  call ratcon2(y)
-  call fchemvw(n,y,yp) 
+! Outputs
+real(double_precision), intent(out), dimension(nb_species) :: YDOT
 
-  return
+! Locals
+integer :: no_species
+real(double_precision), dimension(nb_species+1) :: YD2
+!REAL(KIND=16), dimension(nb_species+1) :: YD2
+integer :: i
+integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+real(double_precision) :: rate
+
+call ratcon2(y)
+
+
+no_species=nb_species+1
+
+ydot(:)=0.d0
+yd2(:)=0.d0
+
+! The differential equations are calculated in a loop here
+do I=1,nb_reactions
+
+  reactant1_idx = reaction_substances(1, i)
+  reactant2_idx = reaction_substances(2, i)
+  reactant3_idx = reaction_substances(3, i)
+
+  product1_idx = reaction_substances(4, i)
+  product2_idx = reaction_substances(5, i)
+  product3_idx = reaction_substances(6, i)
+  product4_idx = reaction_substances(7, i)
+
+  if (reactant3_idx.ne.no_species) then
+    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+  endif
+
+  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
+    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
+  endif
+
+  if (reactant2_idx.eq.no_species) then
+    RATE=XK(I)*Y(reactant1_idx)  
+  endif
+
+  YD2(product1_idx)=YD2(product1_idx)+RATE
+  YD2(product2_idx)=YD2(product2_idx)+RATE
+  YD2(product3_idx)=YD2(product3_idx)+RATE
+  YD2(product4_idx)=YD2(product4_idx)+RATE
+  YD2(reactant1_idx)=YD2(reactant1_idx)-RATE
+  YD2(reactant2_idx)=YD2(reactant2_idx)-RATE
+  YD2(reactant3_idx)=YD2(reactant3_idx)-RATE
+enddo   
+
+YDOT(1:nb_species)=YD2(1:nb_species)
+
+return
 end subroutine FCHEM
 
   ! ======================================================================
