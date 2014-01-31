@@ -178,7 +178,7 @@ do while (t.lt.0.9*STOP_TIME)
     temp_abundances(:nb_species) = ZXN(:,ipts)
     abundances(:nb_species) = ZXN(:,ipts)
 
-    call evolve (T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+    call integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
@@ -220,25 +220,36 @@ use global_variables
 
 implicit none
 
+! Locals
+integer :: i ! For loops
 
+! Read list of prime elements, including their atomic mass (in AMU)
 call read_element_in()
 
+! Get various size needed for allocatable arrays
 call get_array_sizes()
 
+! Init global allocatable arrays. From now on, we can read data files
 call initialize_global_arrays()
 
+! Read simulation parameters
 call read_parameters_in()
 
+! Read list of species, either for gas or grain reactions
 call read_species()
 
+! Read list of reactions for gas and grains
 call read_reactions()
 
-
-
+! Overwrite the parameter file to update the syntax, organization and add default values for parameters that did not exist or weren't defined
 call write_parameters()
 
+! Set initial abundances. Will define a minimum value for species that are not present in the input file
 call read_abundances()
 
+! From the total list of species, determine the exact number of species that are in gas phase, and on the surface of grains. 
+! This is different from the list in input files were the lists correspond to species NEEDED for reactions in gas phase or on grains. 
+! Gas species can be needed for surface reactions, and vice versa.
 call get_gas_surface_species()
 
 ! Build spatial mesh 
@@ -248,7 +259,34 @@ call mesh()
 call index_datas()
 
 timestep=0
-call start(TOUT)
+
+! Calculate the initial abundances for all elements that compose 
+call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
+
+! Store initial elemental abundances
+call write_elemental_abundances(filename='elemental_abundances.out', el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
+
+! Recompute initial_dtg_mass_ratio to remove He
+! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
+do i=1,NB_PRIME_ELEMENTS
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.YHE) then
+    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
+    ! Mean molecular weight (cgs) 
+    ! Approximated here (the exact calculus would require a sume over AWT
+    ! Used for the diffusion in disks, not for chemistry
+    mean_molecular_weight = 2.d0 + 4.d0*INITIAL_ELEMENTAL_ABUNDANCE(I)/(1.d0+INITIAL_ELEMENTAL_ABUNDANCE(I))
+  endif
+enddo
+
+! Compute the grain abundance
+GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
+
+where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
+
+! Set the electron abundance via conservation===========
+! And check at the same time that nls_init has the same elemental abundance
+! as nls_control
+call check_conservation(abundances(1:nb_species))
 
 ! 1D physical structure (nls_phys_1D)
 call phys_1D()
@@ -257,7 +295,6 @@ call phys_1D()
 call write_species()
 
 ! Initialize indices of reactants and products 
-
 call chemsetup()
 
 ! Initializing ZXN
@@ -404,64 +441,17 @@ call grainrate()
 return 
 end subroutine index_datas
 
-! ======================================================================
-! ======================================================================
-subroutine start(tout)
-
-use global_variables
-
-implicit none
-
-! Output
-real(double_precision), intent(out) :: TOUT
-
-! Locals
-character(len=11), dimension(nb_species) :: SREAD
-real(double_precision), dimension(nb_species) :: temp_abundances
-integer :: i, j, k
-
-! Initialise times======================================================
-TOUT=0.0d0
-TIME=0.0d0
-
-! Compute elemental abundances
-call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
-
-call write_elemental_abundances(filename='elemental_abundances.out', el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
-
-! Recompute initial_dtg_mass_ratio to remove He
-! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
-do i=1,NB_PRIME_ELEMENTS
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.YHE) then
-    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
-    ! Mean molecular weight (cgs) 
-    ! Approximated here (the exact calculus would require a sume over AWT
-    ! Used for the diffusion in disks, not for chemistry
-    mean_molecular_weight = 2.d0 + 4.d0*INITIAL_ELEMENTAL_ABUNDANCE(I)/(1.d0+INITIAL_ELEMENTAL_ABUNDANCE(I))
-  endif
-enddo
-
-! Compute the grain abundance
-
-GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
-
-where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
-
-  ! Set the electron abundance via conservation===========
-  ! And check at the same time that nls_init has the same elemental abundance
-  ! as nls_control
-
-  temp_abundances(:)=abundances(:)
-  call check_conservation(temp_abundances)
-  abundances(:)=temp_abundances(:) 
-
-  return 
-end subroutine start
-
-! ======================================================================
-! ======================================================================
-
-subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Chemically evolve from T to TOUT the given spatial point
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
   
@@ -570,7 +560,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   abundances(:) = temp_abundances(:)
 
   return 
-  end subroutine evolve
+  end subroutine integrate_chemical_scheme
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -693,12 +683,20 @@ enddo
 
 end subroutine get_elemental_abundance
 
-  ! ======================================================================
-  ! Computes the H2 and CO column density for their self-shielding
-  ! for each ipts, the column density is incremented recursively
-  ! from the results for NH2 and NCO computed by RATCON2 the spatial step before
-  ! NB: ZN is shifted with respect to N
-  ! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Computes the H2 and CO column density for their self-shielding
+!! for each ipts, the column density is incremented recursively
+!! from the results for NH2 and NCO computed by RATCON2 the spatial step before
+!
+!> @note ZN is shifted with respect to N
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine SHIELDINGSETUP()
 
   use global_variables
@@ -723,9 +721,17 @@ subroutine SHIELDINGSETUP()
 end subroutine SHIELDINGSETUP
 
 
-
-    ! ======================================================================
-    ! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief compute surface info (thermodynamic, quantum and kinetic data) 
+!! from datafiles
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   subroutine GRAINRATE()
     use global_variables
     
