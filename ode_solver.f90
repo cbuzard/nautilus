@@ -198,8 +198,8 @@ integer, parameter :: dummy_n = 3
 real(double_precision), parameter :: dummy_t = 0.d0
 real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
-call ratcon()
-call ratcon2(Y)
+call set_constant_rates()
+call set_dependant_rates(Y)
 
 k=1
 
@@ -245,7 +245,7 @@ integer :: i
 integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 real(double_precision) :: rate
 
-call ratcon2(y)
+call set_dependant_rates(y)
 
 
 no_species=nb_species+1
@@ -291,15 +291,19 @@ YDOT(1:nb_species)=YD2(1:nb_species)
 return
 end subroutine FCHEM
 
-  ! ======================================================================
-  ! ======================================================================
-  subroutine RATCON()
-
-  ! Reactions coefficient formally dependent on the abundances Y are 
-  ! computed in a companion subroutine: RATCON2
-  ! Grain surface reactions, self shielding, etc...
-  ! VW modification of everything for the new gas-phase network
-  ! Fev 2012
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Valentine Wakelam
+!
+!> @date 2012
+!
+! DESCRIPTION: 
+!> @brief Reactions coefficient formally dependent on the abundances Y are 
+!! computed in a companion subroutine: set_dependant_rates
+!! Grain surface reactions, self shielding, etc...
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine set_constant_rates()
 
   use global_variables 
   
@@ -579,11 +583,20 @@ end subroutine FCHEM
 
 
   return
-  end subroutine RATCON
+  end subroutine set_constant_rates
   
-    ! ======================================================================
-  ! ======================================================================
-  subroutine RATCON2(Y)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Valentine Wakelam
+!
+!> @date 2012
+!
+! DESCRIPTION: 
+!> @brief Set Reactions coefficient formally dependent on the abundances Y. 
+!! Grain surface reactions, self shielding, etc...
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine set_dependant_rates(Y)
 
   use global_variables 
   
@@ -846,7 +859,7 @@ end subroutine FCHEM
   where (XK.lt.RXNMIN) XK=0.d0
 
     return
-    end subroutine ratcon2
+    end subroutine set_dependant_rates
     
   ! ======================================================================
   ! ======================================================================

@@ -518,7 +518,7 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
   if (TESTJAC.eq.1) then
     DUMMYY=1.d-5
-    call ratcon()
+    call set_constant_rates()
     do IDUMMY=1,nb_species
       call get_jacobian(n=dummy_n, t=dummy_t, y=dummyy,j=idummy,ian=dummy_ian, jan=dummy_jan, pdj=dummypdj)
     enddo
@@ -540,8 +540,8 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
       satol(i)=max(atol,1.d-16*temp_abundances(i))
     enddo
 
-    ! ratcond is already called in compute IAJA
-    !      call ratcon(Y)
+    ! set_constant_ratesd is already called in compute IAJA
+    !      call set_constant_rates(Y)
 
     ! Feed IWORK with IA and JA
 
@@ -699,7 +699,7 @@ end subroutine get_elemental_abundance
 ! DESCRIPTION: 
 !> @brief Computes the H2 and CO column density for their self-shielding
 !! for each ipts, the column density is incremented recursively
-!! from the results for NH2 and NCO computed by RATCON2 the spatial step before
+!! from the results for NH2 and NCO computed by set_dependant_rates the spatial step before
 !
 !> @note ZN is shifted with respect to N
 !
