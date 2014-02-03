@@ -302,7 +302,7 @@ GSREAD				tab(5,nb_reactions)		on-grain reactions (2 reagents + 3 products)
 REA5				tab(nb_reactions)			temporary buffer for activation energies of the corresponding on-grain reactions
 EA					tab(nb_reactions)			activation energies of the corresponding on-grain reactions
 
-CHF					tab(nb_species)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
+CHF					tab(nb_species)			SQRT(2.0d0*BOLTZ/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 RQ1					tab(nb_species)			(dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain) quantum mechanical tunneling rate (Watson 1976)
 RQ2					tab(nb_species)			CHF / nb_sites_per_grain.EXP(-2.SITE_SPACING / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
 
@@ -407,7 +407,7 @@ NNZ
 
 ==called in set_constant_rates==
 T300									TEMP/300.D+0
-TI										1.0D+00/TEMP
+TI										1.0d00/TEMP
 TSQ										SQRT(TEMP)
 
 nsta									starting line of the ITYPE=2-12 reaction group

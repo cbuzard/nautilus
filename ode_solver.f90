@@ -317,7 +317,7 @@ end subroutine FCHEM
   real(double_precision), dimension(10) :: distmin, distmax
 
   T300=TEMP/300.D+0
-  TI=1.0D+00/TEMP
+  TI=1.0d00/TEMP
   TSQ=SQRT(TEMP)
 
   ! ====== Rxn ITYPE 0
@@ -576,8 +576,8 @@ end subroutine FCHEM
   ! When dust is turned off, zero all dust rates==========================
   if ((IS_GRAIN_REACTIONS.EQ.0).AND.(timestep.EQ.1)) then
     do J=IRXSTA(14),IRXFIN(99)
-      XK(J)=0.0D+0
-      XJ(J)=0.0D+0
+      XK(J)=0.d0
+      XJ(J)=0.d0
     enddo
   endif
 
@@ -615,7 +615,7 @@ end subroutine FCHEM
   integer :: j, l
 
   T300=TEMP/300.D+0
-  TI=1.0D+00/TEMP
+  TI=1.0d00/TEMP
   TSQ=SQRT(TEMP)
   MONLAY=LAYERS*nb_sites_per_grain/GTODN
 
@@ -720,7 +720,7 @@ end subroutine FCHEM
     do J=IRXSTA(14),IRXFIN(14)
       IMOD1=0
       IMOD2=0
-      BARR=1.0D+0
+      BARR=1.0d0
       ! --------- Calculate activation energy barrier multiplier
       if (EA(J).GE.1.0D-40) then
         ACTIV=EA(J)/DTEMP
@@ -879,72 +879,72 @@ end subroutine FCHEM
   ! Locals
   real(double_precision) :: PICK, TESTREF1, TESTREF2, TESTNUM
 
-  EX1(J)=0.0D+0
-  EX2(J)=0.0D+0
+  EX1(J)=0.d0
+  EX2(J)=0.d0
 
   ! --- Check value of x = t_acc/t_evap
   ! TINEVA = 1/t_evap
   ! TINACC = 1/t_acc
-  if (TINACC(JSP1(J)).GT.0.0D+0) then
+  if (TINACC(JSP1(J)).GT.0.d0) then
     EX1(J)=TINEVA(JSP1(J))/TINACC(JSP1(J))
   endif
-  if (TINACC(JSP2(J)).GT.0.0D+0) then
+  if (TINACC(JSP2(J)).GT.0.d0) then
     EX2(J)=TINEVA(JSP2(J))/TINACC(JSP2(J))
   endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
   ! --- Assign max rates
 
-  if (BARR.EQ.1.0D+0) then
+  if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
-      if (EX1(J).LT.1.0D+0) then
+      if (EX1(J).LT.1.0d0) then
         if (RDIF1(J).GT.TINACC(JSP1(J))) RDIF1(J)=TINACC(JSP1(J))
       endif
-      if (EX1(J).GE.1.0D+0) then
+      if (EX1(J).GE.1.0d0) then
         if (RDIF1(J).GT.TINEVA(JSP1(J))) RDIF1(J)=TINEVA(JSP1(J))
       endif
     endif
 
     if (IMOD2.NE.0) then
-      if (EX2(J).LT.1.0D+0) then
+      if (EX2(J).LT.1.0d0) then
         if (RDIF2(J).GT.TINACC(JSP2(J))) RDIF2(J)=TINACC(JSP2(J))
       endif
-      if (EX2(J).GE.1.0D+0) then
+      if (EX2(J).GE.1.0d0) then
         if (RDIF2(J).GT.TINEVA(JSP2(J))) RDIF2(J)=TINEVA(JSP2(J))
       endif
     endif
   endif
 
   ! --- Species rate to compare chosen by fastest diffusion rate
-  if (BARR.NE.1.0D+0) then
+  if (BARR.NE.1.0d0) then
     PICK=0.d0
 
     TESTREF1=TINACC(JSP1(J))
-    if (EX1(J).GE.1.0D+0) TESTREF1=TINEVA(JSP1(J))
+    if (EX1(J).GE.1.0d0) TESTREF1=TINEVA(JSP1(J))
     TESTREF2=TINACC(JSP2(J))
-    if (EX2(J).GE.1.0D+0) TESTREF2=TINEVA(JSP2(J))
+    if (EX2(J).GE.1.0d0) TESTREF2=TINEVA(JSP2(J))
 
     if (RDIF1(J).GE.RDIF2(J)) then
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD2*GTODN
-      if (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
+      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
       if (TESTNUM.GT.TESTREF1) PICK=1.d0
     endif
     if (RDIF2(J).GT.RDIF1(J)) then
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD1*GTODN
-      if (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
+      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
       if (TESTNUM.GT.TESTREF2) PICK=2.d0
     endif
 
     if (PICK.EQ.1) then
       RDIF1(J)=TESTREF1/BARR/YMOD2/GTODN
-      if (YMOD2*GTODN.LT.1.0D+0) RDIF1(J)=TESTREF1/BARR
-      RDIF2(J)=0.0D+0
+      if (YMOD2*GTODN.LT.1.0d0) RDIF1(J)=TESTREF1/BARR
+      RDIF2(J)=0.d0
     endif
 
     if (PICK.EQ.2) then
       RDIF2(J)=TESTREF2/BARR/YMOD1/GTODN
-      if (YMOD1*GTODN.LT.1.0D+0) RDIF2(J)=TESTREF2/BARR
-      RDIF1(J)=0.0D+0
+      if (YMOD1*GTODN.LT.1.0d0) RDIF2(J)=TESTREF2/BARR
+      RDIF1(J)=0.d0
     endif
 
   endif

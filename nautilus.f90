@@ -603,17 +603,17 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
   enddo
 
   ! --- Conserve electrons
-  CHASUM=0.0D+0
+  CHASUM=0.d0
   do I=1,nb_species
     if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*temp_abundances(I)
   enddo
-  if (CHASUM.LE.0.0D+0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
+  if (CHASUM.LE.0.d0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
   temp_abundances(ISPE)=CHASUM
 
   ! --- Conserve other elements if selected
   if (CONSERVATION_TYPE.GT.0) then
     do K=1,CONSERVATION_TYPE
-      elemental_abundance(K)=0.0D+0
+      elemental_abundance(K)=0.d0
     enddo
     do I=1,nb_species
       do K=1,CONSERVATION_TYPE
@@ -622,7 +622,7 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
     enddo
     do K=1,CONSERVATION_TYPE
       temp_abundances(PRIME_ELEMENT_IDX(K))=INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)
-      if (temp_abundances(PRIME_ELEMENT_IDX(K)).LE.0.0D+0) temp_abundances(PRIME_ELEMENT_IDX(K))=MINIMUM_INITIAL_ABUNDANCE
+      if (temp_abundances(PRIME_ELEMENT_IDX(K)).LE.0.d0) temp_abundances(PRIME_ELEMENT_IDX(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo
   endif
 
@@ -773,7 +773,7 @@ end subroutine SHIELDINGSETUP
     COND=PI*grain_radius*grain_radius*SQRT(8.0d0*K_B/PI/AMU)
 
     ! --- Evaluate sticking coeff and accretion rate factor for each species
-    STICK=0.0D+0
+    STICK=0.d0
     do I=1,nb_species
       if (ICG(I).EQ.0) then
         STICK=sticking_coeff_neutral
@@ -873,10 +873,10 @@ end subroutine SHIELDINGSETUP
     ! --- Transfer from dummies to arrays with correct species numbers
     do I=1,nb_species
       SMASS(I)=0.d0
-      ED(I)=0.0D+0
-      EB(I)=0.0D+0
-      DEB(I)=0.0D+0
-      DHF(I)=0.0D+0
+      ED(I)=0.d0
+      EB(I)=0.d0
+      DEB(I)=0.d0
+      DHF(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=dble(INT1(J))
@@ -885,14 +885,14 @@ end subroutine SHIELDINGSETUP
           DEB(I)=REA3(J)
           DHF(I)=REA4(J)
           if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.&
-          (EBFAC.GE.0.0D+0)) EB(I)=EBFAC*ED(I)
+          (EBFAC.GE.0.d0)) EB(I)=EBFAC*ED(I)
         endif
       enddo
       !IF(species_name(I) == 'JN2O2      ') write(*,*) ED(I)
     enddo
 
     do I=1,nb_reactions
-      EA(I)=0.0D+0
+      EA(I)=0.d0
       do J=1,NEA
         if (SYMBOL(4,I)(:1).EQ.'J') then
           if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
@@ -913,22 +913,22 @@ end subroutine SHIELDINGSETUP
 
     ! Set up constants, quantum rate info===================================
     do I=1,nb_species
-      CHF(I)=0.0D+0
-      RQ1(I)=0.0D+0
-      RQ2(I)=0.0D+0
+      CHF(I)=0.d0
+      RQ1(I)=0.d0
+      RQ2(I)=0.d0
       ! ------ For species which have been assigned surface info, SMASS=/=0
       if (SMASS(I).NE.0) then
         SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
-        CHF(I)=SQRT(2.0D+0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
+        CHF(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
           RQ1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
         else
-          RQ1(I)=0.0D+0
+          RQ1(I)=0.d0
         endif
         RQ2(I)=CHF(I)/nb_sites_per_grain*&
-        EXP(-2.0D+0*SITE_SPACING/H_BARRE*SQRT(2.0D+0*AMU*SMA*K_B*EB(I)))
+        EXP(-2.0d0*SITE_SPACING/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*EB(I)))
       endif
     enddo
 
@@ -936,7 +936,7 @@ end subroutine SHIELDINGSETUP
     do J=1,nb_reactions
 
       ! ------ Initialise all XJ rate factors, and get species 1 & 2
-      XJ(J)=1.0D+0
+      XJ(J)=1.0d0
       JSP1(J)=0
       JSP2(J)=0
       do I=1,nb_species
@@ -960,13 +960,13 @@ end subroutine SHIELDINGSETUP
 
       ! ------ Branching ratio
       if (NPATH.EQ.0) then
-        XJ(J)=0.0D+0
+        XJ(J)=0.d0
       else
         XJ(J)=XJ(J)/dble(NPATH)
       endif
 
       ! ------ Factor of 2 for same species reactions
-      if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
+      if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0d0
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
@@ -1025,7 +1025,7 @@ end subroutine SHIELDINGSETUP
       ATOMS=ATOMS+species_composition(K,N4)
     enddo
 
-    SUM2=1.0D+0-(SUM1/DHFSUM)
+    SUM2=1.0d0-(SUM1/DHFSUM)
     if (ATOMS.EQ.2) SUM2=SUM2**(3*ATOMS-5)
     if (ATOMS.GT.2) SUM2=SUM2**(3*ATOMS-6)
     !         SUM2=SUM2**(3*ATOMS-6)
@@ -1040,45 +1040,45 @@ end subroutine SHIELDINGSETUP
 
     BADFLAG=0
     if (DHF(JSP1(J)).LE.-999.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (DHF(JSP2(J)).LE.-999.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (DHF(N4).LE.-999.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (N5.NE.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (N6.NE.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
 
-    if (EVFRAC.GE.1.0D+0) EVFRAC=1.0D+0
-    if (EVFRAC.LE.0.0D+0) EVFRAC=0.0D+0
-    if (NEVAP.EQ.0) EVFRAC=0.0D+0
-    if (DHFSUM.LE.0.0D+0) EVFRAC=0.0D+0
+    if (EVFRAC.GE.1.0d0) EVFRAC=1.0d0
+    if (EVFRAC.LE.0.d0) EVFRAC=0.d0
+    if (NEVAP.EQ.0) EVFRAC=0.d0
+    if (DHFSUM.LE.0.d0) EVFRAC=0.d0
 
     if (SYMBOL(4,J)(:1).EQ.'J          ') then
-      EVFRAC=1.0D+0-EVFRAC
+      EVFRAC=1.0d0-EVFRAC
     endif
 
     XJ(J)=XJ(J)*EVFRAC
 
     ! ------ Calculate quantum activation energy
     REDMAS = SMASS(JSP1(J)) * SMASS(JSP2(J)) / (SMASS(JSP1(J)) + SMASS(JSP2(J)))
-    ACT1(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0D+0*AMU*REDMAS*K_B*EA(J))
+    ACT1(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*EA(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION
   if (ITYPE(J).EQ.16) then
-    if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.0D+0
+    if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.d0
   endif
 
   ! === ITYPE 99 - ACCRETION
@@ -1093,8 +1093,8 @@ enddo
 
 ! === Zero dummy H2 formation rxns, if necc.
 !      if (IS_GRAIN_REACTIONS.NE.0) then
-!         XJ(1)=0.0D+0
-!         XJ(2)=0.0D+0
+!         XJ(1)=0.d0
+!         XJ(2)=0.d0
 !      endif
 
 return
