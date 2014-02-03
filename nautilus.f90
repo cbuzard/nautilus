@@ -894,14 +894,13 @@ end subroutine SHIELDINGSETUP
     do I=1,nb_reactions
       EA(I)=0.0D+0
       do J=1,NEA
-        if (SYMBOL(4,I)(:1).EQ.'J          ') then
+        if (SYMBOL(4,I)(:1).EQ.'J') then
           if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
           (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
           (SYMBOL(4,I).EQ.GSread(3,J)).AND.&
           (SYMBOL(5,I).EQ.GSread(4,J)).AND.&
           (SYMBOL(6,I).EQ.GSread(5,J))) EA(I)=REA5(J)
-        endif
-        if (SYMBOL(4,I)(:1).NE.'J          ') then
+        else
           if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
           (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
           (SYMBOL(4,I).EQ.GSread(3,J)(2:)).AND.&
