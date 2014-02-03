@@ -963,7 +963,7 @@ end subroutine SHIELDINGSETUP
       if (NPATH.EQ.0) then
         XJ(J)=0.0D+0
       else
-        XJ(J)=XJ(J)/REAL(NPATH)
+        XJ(J)=XJ(J)/dble(NPATH)
       endif
 
       ! ------ Factor of 2 for same species reactions
