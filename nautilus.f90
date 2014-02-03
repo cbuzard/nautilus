@@ -514,7 +514,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
     DUMMYY=1.d-5
     call ratcon()
     do IDUMMY=1,nb_species
-      call jacvw(dummyy,idummy,dummypdj)
+      call jacvw(y=dummyy,j=idummy,pdj=dummypdj)
     enddo
     STOP
   endif

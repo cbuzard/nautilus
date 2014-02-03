@@ -46,6 +46,30 @@ enddo
 return
 end subroutine set_chemical_reactants
 
+  ! ======================================================================
+  ! ======================================================================
+subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
+  use global_variables
+  implicit none
+  
+  ! Inputs
+  integer, intent(in) :: N
+  integer, intent(in) :: J
+  real(double_precision), intent(in) :: T
+  real(double_precision), intent(in), dimension(N) :: IAN
+  real(double_precision), intent(in), dimension(N) :: JAN
+  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
+  
+  ! Outputs
+  real(double_precision), intent(out), dimension(nb_species) :: PDJ
+
+  !      call RATCON2(Y)
+
+  call JACVW(y=Y,j=J,pdj=PDJ) 
+
+  return
+end subroutine JAC
+
 subroutine JACVW(Y,J,PDJ)
 ! Computes columns of the chemical jacobian
 use global_variables
@@ -183,7 +207,7 @@ call ratcon2(Y)
 k=1
 
 do j=1,nb_species
-  call jacvw(Y,j,PDJ)
+  call jacvw(y=Y,j=j,pdj=PDJ)
 
   IA(j)=k
 
@@ -200,30 +224,6 @@ IA(nb_species+1)=k
 
 return
 end subroutine computeIAJA
-
-  ! ======================================================================
-  ! ======================================================================
-subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
-  use global_variables
-  implicit none
-  
-  ! Inputs
-  integer, intent(in) :: N
-  integer, intent(in) :: J
-  real(double_precision), intent(in) :: T
-  real(double_precision), intent(in), dimension(N) :: IAN
-  real(double_precision), intent(in), dimension(N) :: JAN
-  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-  
-  ! Outputs
-  real(double_precision), intent(out), dimension(nb_species) :: PDJ
-
-  !      call RATCON2(Y)
-
-  call JACVW(Y,J,PDJ) 
-
-  return
-end subroutine JAC
   
   ! ======================================================================
   ! ======================================================================
