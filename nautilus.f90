@@ -1073,9 +1073,8 @@ end subroutine SHIELDINGSETUP
     XJ(J)=XJ(J)*EVFRAC
 
     ! ------ Calculate quantum activation energy
-    REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&
-    REAL(SMASS(JSP1(J))+SMASS(JSP2(J)))
-    ACT1(J)=2.0D+0 * ACT/H_BARRE * SQRT(2.0D+0*AMU*REDMAS*K_B*EA(J))
+    REDMAS = SMASS(JSP1(J)) * SMASS(JSP2(J)) / (SMASS(JSP1(J)) + SMASS(JSP2(J)))
+    ACT1(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0D+0*AMU*REDMAS*K_B*EA(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION
