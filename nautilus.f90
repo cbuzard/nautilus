@@ -872,7 +872,7 @@ end subroutine SHIELDINGSETUP
 
     ! --- Transfer from dummies to arrays with correct species numbers
     do I=1,nb_species
-      SMASS(I)=0
+      SMASS(I)=0.d0
       ED(I)=0.0D+0
       EB(I)=0.0D+0
       DEB(I)=0.0D+0
