@@ -879,7 +879,7 @@ end subroutine SHIELDINGSETUP
       DHF(I)=0.0D+0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
-          SMASS(I)=INT1(J)
+          SMASS(I)=dble(INT1(J))
           ED(I)=REA1(J)
           EB(I)=REA2(J)
           DEB(I)=REA3(J)
