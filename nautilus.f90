@@ -633,7 +633,7 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
   do k=1,NB_PRIME_ELEMENTS
     if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 
-      write(Error_unit,*) 'CAUTION : Element ',species_name(PRIME_ELEMENT_IDX(K)), 'is not conserved'
+      write(Error_unit,*) 'Caution: Element ', trim(species_name(PRIME_ELEMENT_IDX(K))), 'is not conserved'
       write(Error_unit,*) 'Relative difference: ', abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)) / &
                            INITIAL_ELEMENTAL_ABUNDANCE(K)
     endif
@@ -833,7 +833,7 @@ end subroutine SHIELDINGSETUP
       close(10)
       
     else
-      write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+      write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
       call exit(1)
     end if
     
@@ -866,7 +866,7 @@ end subroutine SHIELDINGSETUP
       close(10)
       
     else
-      write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+      write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
       call exit(1)
     end if
 

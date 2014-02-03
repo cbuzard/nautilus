@@ -92,7 +92,7 @@ ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J)
   close(10)
   
 else
-  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
   call exit(1)
 end if
 
@@ -126,7 +126,7 @@ ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J)
   close(10)
   
 else
-  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
   call exit(1)
 end if
 
@@ -268,7 +268,7 @@ if (isDefined) then
   close(10)
   
 else
-  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
   call exit(1)
 end if
 
@@ -302,7 +302,7 @@ if (isDefined) then
   close(10)
   
 else
-  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
   call exit(1)
 end if
 
