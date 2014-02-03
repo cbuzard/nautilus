@@ -483,6 +483,12 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
   real(double_precision) :: TIN
 
   integer :: NNZ
+  
+  
+! Dummy parameters for restricted call of get_jacobian
+integer, parameter :: dummy_n = 3
+real(double_precision), parameter :: dummy_t = 0.d0
+real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
   ! Initialize work arrays
 
@@ -508,13 +514,13 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
   temp_abundances(:) = abundances(:)
 
   ! if testjac is 1, print non zero elements per column of the Jacobian
-  ! Done in odes/JACVW
+  ! Done in odes/get_jacobian
 
   if (TESTJAC.eq.1) then
     DUMMYY=1.d-5
     call ratcon()
     do IDUMMY=1,nb_species
-      call jacvw(y=dummyy,j=idummy,pdj=dummypdj)
+      call get_jacobian(n=dummy_n, t=dummy_t, y=dummyy,j=idummy,ian=dummy_ian, jan=dummy_jan, pdj=dummypdj)
     enddo
     STOP
   endif
@@ -544,7 +550,8 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
     iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
     iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(fchem,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
+    call dlsodes(fchem,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
+    satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation

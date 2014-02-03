@@ -489,7 +489,7 @@ time loop (from 0 to 90% of the final time STOP_TIME)
 		store abundances ZXN for a spatial point in Y and XN
 		call evolve		
 			-> call ratcon(DUMMYY)
-			-> call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
+			-> call get_jacobian(DUMMYY,IDUMMY,DUMMYPDJ)
 			-> call shieldingsetup
 			-> call ratcon(Y)
 			-> call computeIAJA
@@ -502,7 +502,7 @@ time loop (from 0 to 90% of the final time STOP_TIME)
 					-> call MODIF(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
 				-> call FCHEMVW(N,Y,YP)
 			-> external JAC
-				-> call JACVW(Y,J,PDJ)
+				-> call get_jacobian(Y,J,PDJ)
 
 ##############################################################################################################
 ==============================================================================================================
@@ -709,7 +709,7 @@ with diffusion ZDT is set to the "smallest timescale you can think of"
 
 create work arrays
 
-! If testjac is 1, print non zero elements per column of the Jacobian (Done in odes/JACVW)
+! If testjac is 1, print non zero elements per column of the Jacobian (Done in odes/get_jacobian)
 call ratcon(DUMMY)
 
 
@@ -724,7 +724,7 @@ call ratcon(DUMMY)
 
 
 
-call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
+call get_jacobian(DUMMYY,IDUMMY,DUMMYPDJ)
 call shieldingsetup
 
 ! Adaptive absolute tolerance to avoid too high precision on very abundant species,
@@ -771,7 +771,7 @@ set XK(J)=A(J)/SITE_DENSITY*1.d4
 when dust is turned off, zero all dust rates
 
 
-========JACVW============================================				nls_odes.f90
+========get_jacobian============================================				nls_odes.f90
 ========SHIELDINGSETUP===================================				nautilus.f90
 ========COMPUTEIAJA======================================				nls_odes.f90
 ========DLSODE===========================================               opkdmain.f

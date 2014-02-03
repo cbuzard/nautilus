@@ -46,37 +46,30 @@ enddo
 return
 end subroutine set_chemical_reactants
 
-  ! ======================================================================
-  ! ======================================================================
-subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
-  use global_variables
-  implicit none
-  
-  ! Inputs
-  integer, intent(in) :: N
-  integer, intent(in) :: J
-  real(double_precision), intent(in) :: T
-  real(double_precision), intent(in), dimension(N) :: IAN
-  real(double_precision), intent(in), dimension(N) :: JAN
-  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-  
-  ! Outputs
-  real(double_precision), intent(out), dimension(nb_species) :: PDJ
-
-  !      call RATCON2(Y)
-
-  call JACVW(y=Y,j=J,pdj=PDJ) 
-
-  return
-end subroutine JAC
-
-subroutine JACVW(Y,J,PDJ)
-! Computes columns of the chemical jacobian
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Valentine Wakelam
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Computes columns of the chemical jacobian
+!
+!> @warning Even if N, T, IAN, and JAN are not actually used, they are needed
+!! because ODEPACK need a routine with a specific format, and specific inputs
+!! and outputs
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_jacobian(N, T, Y, J, IAN, JAN, PDJ)
 use global_variables
 implicit none
 
 ! Inputs
+integer, intent(in) :: N
 integer, intent(in) :: J
+real(double_precision), intent(in) :: T
+real(double_precision), intent(in), dimension(N) :: IAN
+real(double_precision), intent(in), dimension(N) :: JAN
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
 ! Outputs
@@ -86,7 +79,6 @@ real(double_precision), intent(out), dimension(nb_species) :: PDJ
 integer :: no_species
 
 real(double_precision), dimension(nb_species+1) :: PDJ2
-!REAL(KIND=16), dimension(nb_species+1) :: PDJ2
 integer :: i
 integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 integer :: NUMBERJAC
@@ -188,7 +180,7 @@ IF (TESTJAC.EQ.1) then
 endif
 
 return
-end subroutine JACVW
+end subroutine get_jacobian
 
 subroutine computeIAJA(Y)
 use global_variables
@@ -201,13 +193,18 @@ real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundance
 integer :: i,j,k
 real(double_precision), dimension(nb_species) :: PDJ
 
+! Dummy parameters for restricted call of get_jacobian
+integer, parameter :: dummy_n = 3
+real(double_precision), parameter :: dummy_t = 0.d0
+real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
+
 call ratcon()
 call ratcon2(Y)
 
 k=1
 
 do j=1,nb_species
-  call jacvw(y=Y,j=j,pdj=PDJ)
+  call get_jacobian(n=dummy_n, t=dummy_t, y=Y,j=J,ian=dummy_ian, jan=dummy_jan, pdj=PDJ)
 
   IA(j)=k
 
