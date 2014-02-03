@@ -726,7 +726,7 @@ open(10, file=filename)
 write(10, '(a)') '! Species name ; abundance (relative to H) ; mass (AMU)'
 do i=1, NB_PRIME_ELEMENTS
   
-  write(10, '(a,es10.4e2, f8.3)'), species_name(PRIME_ELEMENT_IDX(i)), el_abundances(i), elemental_mass(i)
+  write(10, '(a,es10.4e2, f8.3)') species_name(PRIME_ELEMENT_IDX(i)), el_abundances(i), elemental_mass(i)
   
 enddo
 close(10)
@@ -915,9 +915,7 @@ implicit none
 
 ! Locals
 character(len=80), parameter :: filename='element.in'
-integer :: i, j
-
-integer :: nb_lines
+integer :: i
 
 character(len=80) :: line
 character(len=1), parameter :: comment_character = '!' ! character that will indicate that the rest of the line is a comment
