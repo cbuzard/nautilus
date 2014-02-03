@@ -919,7 +919,7 @@ end subroutine SHIELDINGSETUP
       RQ2(I)=0.0D+0
       ! ------ For species which have been assigned surface info, SMASS=/=0
       if (SMASS(I).NE.0) then
-        SMA=REAL(SMASS(I))
+        SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
         CHF(I)=SQRT(2.0D+0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
         ! --------- Set quantum rates
