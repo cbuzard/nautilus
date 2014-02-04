@@ -13,7 +13,7 @@ DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunrea
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic"
 OPTIMIZATIONS = "-march=native -ffast-math -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
-PROFILING_OPTIONS = "-pg"
+PROFILING_OPTIONS = "-g -pg"
 
 LOG_NAME = "compilation.log"
 
@@ -171,8 +171,8 @@ def run_compilation(commande):
       f = open(LOG_NAME,'a')
       f.write(process_stderr)
       f.close()
-    
-    print("Warnings: see '%s'" % LOG_NAME)
+      
+      print("Warnings: see '%s'" % LOG_NAME)
   
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
   return (process_stdout, process_stderr, returnCode)
