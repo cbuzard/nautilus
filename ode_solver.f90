@@ -811,7 +811,7 @@ end subroutine FCHEM
         ! ------------ Modify rates (RDIF1 & RDIF2) according to their own evap/acc rates
         YMOD1=Y(JSP1(J))
         YMOD2=Y(JSP2(J))
-        call MODIF(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
+        call modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
       endif
 
       DIFF=RDIF1(J)+RDIF2(J)
@@ -861,9 +861,18 @@ end subroutine FCHEM
     return
     end subroutine set_dependant_rates
     
-  ! ======================================================================
-  ! ======================================================================
-  subroutine MODIF(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Modify some reaction rates ont he grain surface (itype=14) in
+!! various conditions. Test to estimates the fastest process and replace them.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
   use global_variables
   
   implicit none
@@ -950,6 +959,6 @@ end subroutine FCHEM
   endif
 
   return
-  end subroutine MODIF
+  end subroutine modify_specific_rates
 
 end module ode_solver
