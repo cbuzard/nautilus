@@ -1,6 +1,40 @@
 /**
 
 @mainpage Nautilus documentation
+@verbatim
+-----------------------------------------------------------------------
+  #     #     #     #     #  #######  ###  #        #     #   #####   
+  ##    #    # #    #     #     #      #   #        #     #  #     #  
+  # #   #   #   #   #     #     #      #   #        #     #  #        
+  #  #  #  #     #  #     #     #      #   #        #     #   #####   
+  #   # #  #######  #     #     #      #   #        #     #        #  
+  #    ##  #     #  #     #     #      #   #        #     #  #     #  
+  #     #  #     #   #####      #     ###  #######   #####    #####   
+-----------------------------------------------------------------------
+                           ?
+~~~~~~~~~~~~~~~~~~~~~~~~~~~|^"~~~~~~~~~~~~~~~~~~~~~~~~~o~~~~~~~~~~~
+       o                   |                  o      __o
+        o                  |                 o     |X__>
+      ___o                 |                __o
+    (X___>--             __|__            |X__>     o
+                        |     \                   __o
+                        |      \                |X__>
+ _______________________|_______\________________
+<                                                \____________   _
+ \                                                            \ (_)
+  \    O       O       O                                       >=)
+   \__________________________________________________________/ (_)
+
+                           ___
+                          / o \
+                     __   \   /   _
+                       \__/ | \__/ \
+                      \___//|\\___/\
+                       ___/ | \___
+                            |     \
+                           /
+@endverbatim
+
 @tableofcontents
 
 @section section1 Introduction
@@ -10,49 +44,36 @@ Rate equations from Hasegawa & Herbst (1992). Modified rates following Caselli e
 Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)\n
 Turbulent mixing implemented through first order operator splitting\n
 
+@section section_example How To Use
+A folder containing an example simulation is available in example_simulation/
+
+
 @section section_input Input files
 
-All parameters file can have comments, either a full line or the end of a line. The comment character being the '!' character. 
+Input files have a <b>*.in</b> extension. All parameters file can have comments, either a full line or the end of a line. The comment character being the '!' character. 
 Blanck lines are ignored
 
-<b>parameters.in</b> : parameter file of the code, with various flags
-
-<b>abundances.in</b> : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
-that do not exist in this file.
-
-<b>element.in</b> : name and mass in AMU of all elemental species existing in the simulation
-
-<b>gas_reactions.in</b> : Reaction that occurs in gas phase
-
-<b>gas_species.in</b> : species that are involved in gas phase reactions
-
-<b>grain_reactions.in</b> : Reactions that occurs on grain surface
-
-<b>grain_species.in</b> : Species that are involved in grain surface reactions
-
-<b>activation_energies.in</b> : Activation energy for endothermic reactions
-
-<b>surface_parameters.in</b> : various energies and parameters for diffusion and movements on the grain surface
+@li <b>parameters.in</b> : parameter file of the code, with various flags
+@li <b>abundances.in</b> : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied 
+for those that do not exist in this file.
+@li <b>element.in</b> : name and mass in AMU of all elemental species existing in the simulation
+@li <b>gas_reactions.in</b> : Reaction that occurs in gas phase
+@li <b>gas_species.in</b> : species that are involved in gas phase reactions
+@li <b>grain_reactions.in</b> : Reactions that occurs on grain surface
+@li <b>grain_species.in</b> : Species that are involved in grain surface reactions
+@li <b>activation_energies.in</b> : Activation energy for endothermic reactions
+@li <b>surface_parameters.in</b> : various energies and parameters for diffusion and movements on the grain surface
 
 @section section_output Output files
 
-*.out files are output files. *.tmp files are file that are generated at each timestep, either to continue a 
+@li <b>*.out</b> files are output files. <b>*.tmp</b> files are file that are generated at each timestep, either to continue a 
 simulation or check if there is a problem
-
-<b>abundances.*.out</b> : writing in binary format the abundances of all species at each timestep (one file per timestep-output
-
-<b>abundances.tmp</b> : writing in ASCII format the abundances of all species at the current timestep-output
-
-<b>rates.*.out</b> : writing in binary format the critical reactions rates
-
-<b>info.out</b> : writing information on the code, in particular about the code version (commit ID and branch)
-
-<b>species.out</b> : Writing the list of species and their corresponding index
-
-<b>elemental_abundances.tmp/out</b> : writing information about prime elements, their total abundances and mass
-
-@section section_example How To Use
-A folder containing an example simulation is available in example_simulation/
+@li <b>abundances.*.out</b> : writing in binary format the abundances of all species at each timestep (one file per timestep-output)
+@li <b>abundances.tmp</b> : writing in ASCII format the abundances of all species at the current timestep-output
+@li <b>rates.*.out</b> : writing in binary format the critical reactions rates
+@li <b>info.out</b> : writing information on the code, in particular about the code version (commit ID and branch)
+@li <b>species.out</b> : Writing the list of species and their corresponding index
+@li <b>elemental_abundances.tmp/out</b> : writing information about prime elements, their total abundances and mass
 
 @section section_errors Errors
 
@@ -68,4 +89,21 @@ Error 5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by
 
 Error 6: The number of prime elements in input files *_species.in do not match with the real one coming from element.in
 
+@section section_warning Warnings
+A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
+(even though this is a problem for readability). 
+
+The most problematic is a call of DPREP in the subroutine DIPREP, in opkda1. 
+
+The error returned is the following:
+@verbatim
+LYH), RWORK(LSAVF), RWORK(LEWT), RWORK(LACOR), IA, JA, IC, JC, RWORK(LWM), RWOR
+                                                                           1                              
+Error: Type mismatch in argument 'iwk' at (1); passed REAL(8) to INTEGER(4)
+opkda1.f90:1214.93:
+
+, RWORK(LYH), RWORK(LSAVF), RWORK(LEWT), RWORK(LACOR), IA, JA, RWORK(LWM), RWOR
+                                                                           1                  
+Error: Type mismatch in argument 'iwk' at (1); passed REAL(8) to INTEGER(4)
+@endverbatim
 */
