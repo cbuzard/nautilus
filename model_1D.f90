@@ -19,7 +19,7 @@ if (nptmax.ne.1) then
   !zstepsize = abs(zspace(2)-zspace(1))
   zstepsize=2./(2*nptmax-1) * BOX_SIZE
 else
-  zstepsize = 0.
+  zstepsize = 0.d0
 endif
 
 return

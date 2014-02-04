@@ -173,7 +173,7 @@ integer :: ipts
 
 ! For FCHEMVW
 
-integer, allocatable, dimension(:,:) :: REACT
+integer, allocatable, dimension(:,:) :: reaction_substances !< for all reactions, list for reactants (first 3) and products (last 4). Size (7, nb_reactions)
 
 ! For IA and JA
 
@@ -328,7 +328,7 @@ if (isDefined) then
   enddo
   close(10)
 else
-  write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
   call exit(1)
 endif
 
@@ -401,7 +401,7 @@ allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
 allocate(formula(nb_reactions))
 allocate(num(nb_reactions))
-allocate(react(7,nb_reactions))
+allocate(reaction_substances(7,nb_reactions))
 allocate(symbol(7,nb_reactions))
 
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))

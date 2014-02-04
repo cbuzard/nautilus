@@ -178,7 +178,7 @@ do while (t.lt.0.9*STOP_TIME)
     temp_abundances(:nb_species) = ZXN(:,ipts)
     abundances(:nb_species) = ZXN(:,ipts)
 
-    call evolve (T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+    call integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
@@ -220,25 +220,36 @@ use global_variables
 
 implicit none
 
+! Locals
+integer :: i ! For loops
 
+! Read list of prime elements, including their atomic mass (in AMU)
 call read_element_in()
 
+! Get various size needed for allocatable arrays
 call get_array_sizes()
 
+! Init global allocatable arrays. From now on, we can read data files
 call initialize_global_arrays()
 
+! Read simulation parameters
 call read_parameters_in()
 
+! Read list of species, either for gas or grain reactions
 call read_species()
 
+! Read list of reactions for gas and grains
 call read_reactions()
 
-
-
+! Overwrite the parameter file to update the syntax, organization and add default values for parameters that did not exist or weren't defined
 call write_parameters()
 
+! Set initial abundances. Will define a minimum value for species that are not present in the input file
 call read_abundances()
 
+! From the total list of species, determine the exact number of species that are in gas phase, and on the surface of grains. 
+! This is different from the list in input files were the lists correspond to species NEEDED for reactions in gas phase or on grains. 
+! Gas species can be needed for surface reactions, and vice versa.
 call get_gas_surface_species()
 
 ! Build spatial mesh 
@@ -248,7 +259,34 @@ call mesh()
 call index_datas()
 
 timestep=0
-call start(TOUT)
+
+! Calculate the initial abundances for all elements that compose 
+call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
+
+! Store initial elemental abundances
+call write_elemental_abundances(filename='elemental_abundances.out', el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
+
+! Recompute initial_dtg_mass_ratio to remove He
+! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
+do i=1,NB_PRIME_ELEMENTS
+  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.YHE) then
+    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
+    ! Mean molecular weight (cgs) 
+    ! Approximated here (the exact calculus would require a sume over AWT
+    ! Used for the diffusion in disks, not for chemistry
+    mean_molecular_weight = 2.d0 + 4.d0*INITIAL_ELEMENTAL_ABUNDANCE(I)/(1.d0+INITIAL_ELEMENTAL_ABUNDANCE(I))
+  endif
+enddo
+
+! Compute the grain abundance
+GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
+
+where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
+
+! Set the electron abundance via conservation===========
+! And check at the same time that nls_init has the same elemental abundance
+! as nls_control
+call check_conservation(abundances(1:nb_species))
 
 ! 1D physical structure (nls_phys_1D)
 call phys_1D()
@@ -257,8 +295,7 @@ call phys_1D()
 call write_species()
 
 ! Initialize indices of reactants and products 
-
-call chemsetup()
+call set_chemical_reactants()
 
 ! Initializing ZXN
 do ipts=1,nptmax
@@ -399,69 +436,22 @@ enddo
 nb_sites_per_grain = SITE_DENSITY*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
-call grainrate()
+call init_reaction_rates()
 
 return 
 end subroutine index_datas
 
-! ======================================================================
-! ======================================================================
-subroutine start(tout)
-
-use global_variables
-
-implicit none
-
-! Output
-real(double_precision), intent(out) :: TOUT
-
-! Locals
-character(len=11), dimension(nb_species) :: SREAD
-real(double_precision), dimension(nb_species) :: temp_abundances
-integer :: i, j, k
-
-! Initialise times======================================================
-TOUT=0.0d0
-TIME=0.0d0
-
-! Compute elemental abundances
-call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
-
-call write_elemental_abundances(filename='elemental_abundances.out', el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
-
-! Recompute initial_dtg_mass_ratio to remove He
-! In the following, initial_dtg_mass_ratio is used as a H/dust mass ratio
-do i=1,NB_PRIME_ELEMENTS
-  if (species_name(PRIME_ELEMENT_IDX(I)).EQ.YHE) then
-    initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
-    ! Mean molecular weight (cgs) 
-    ! Approximated here (the exact calculus would require a sume over AWT
-    ! Used for the diffusion in disks, not for chemistry
-    mean_molecular_weight = 2.d0 + 4.d0*INITIAL_ELEMENTAL_ABUNDANCE(I)/(1.d0+INITIAL_ELEMENTAL_ABUNDANCE(I))
-  endif
-enddo
-
-! Compute the grain abundance
-
-GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
-
-where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
-
-  ! Set the electron abundance via conservation===========
-  ! And check at the same time that nls_init has the same elemental abundance
-  ! as nls_control
-
-  temp_abundances(:)=abundances(:)
-  call check_conservation(temp_abundances)
-  abundances(:)=temp_abundances(:) 
-
-  return 
-end subroutine start
-
-! ======================================================================
-! ======================================================================
-
-subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Chemically evolve from T to TOUT the given spatial point
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   use global_variables
   
@@ -493,6 +483,12 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   real(double_precision) :: TIN
 
   integer :: NNZ
+  
+  
+! Dummy parameters for restricted call of get_jacobian
+integer, parameter :: dummy_n = 3
+real(double_precision), parameter :: dummy_t = 0.d0
+real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
   ! Initialize work arrays
 
@@ -518,13 +514,13 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   temp_abundances(:) = abundances(:)
 
   ! if testjac is 1, print non zero elements per column of the Jacobian
-  ! Done in odes/JACVW
+  ! Done in odes/get_jacobian
 
   if (TESTJAC.eq.1) then
     DUMMYY=1.d-5
-    call ratcon()
+    call set_constant_rates()
     do IDUMMY=1,nb_species
-      call jacvw(dummyy,idummy,dummypdj)
+      call get_jacobian(n=dummy_n, t=dummy_t, y=dummyy,j=idummy,ian=dummy_ian, jan=dummy_jan, pdj=dummypdj)
     enddo
     STOP
   endif
@@ -544,8 +540,8 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
       satol(i)=max(atol,1.d-16*temp_abundances(i))
     enddo
 
-    ! ratcond is already called in compute IAJA
-    !      call ratcon(Y)
+    ! set_constant_ratesd is already called in compute IAJA
+    !      call set_constant_rates(Y)
 
     ! Feed IWORK with IA and JA
 
@@ -554,7 +550,8 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
     iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
     iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(fchem,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf)       
+    call dlsodes(fchem,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
+    satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
@@ -570,7 +567,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   abundances(:) = temp_abundances(:)
 
   return 
-  end subroutine evolve
+  end subroutine integrate_chemical_scheme
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -606,17 +603,17 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
   enddo
 
   ! --- Conserve electrons
-  CHASUM=0.0D+0
+  CHASUM=0.d0
   do I=1,nb_species
     if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*temp_abundances(I)
   enddo
-  if (CHASUM.LE.0.0D+0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
+  if (CHASUM.LE.0.d0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
   temp_abundances(ISPE)=CHASUM
 
   ! --- Conserve other elements if selected
   if (CONSERVATION_TYPE.GT.0) then
     do K=1,CONSERVATION_TYPE
-      elemental_abundance(K)=0.0D+0
+      elemental_abundance(K)=0.d0
     enddo
     do I=1,nb_species
       do K=1,CONSERVATION_TYPE
@@ -625,7 +622,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
     enddo
     do K=1,CONSERVATION_TYPE
       temp_abundances(PRIME_ELEMENT_IDX(K))=INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)
-      if (temp_abundances(PRIME_ELEMENT_IDX(K)).LE.0.0D+0) temp_abundances(PRIME_ELEMENT_IDX(K))=MINIMUM_INITIAL_ABUNDANCE
+      if (temp_abundances(PRIME_ELEMENT_IDX(K)).LE.0.d0) temp_abundances(PRIME_ELEMENT_IDX(K))=MINIMUM_INITIAL_ABUNDANCE
     enddo
   endif
 
@@ -636,7 +633,7 @@ subroutine evolve(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
   do k=1,NB_PRIME_ELEMENTS
     if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 
-      write(Error_unit,*) 'CAUTION : Element ',species_name(PRIME_ELEMENT_IDX(K)), 'is not conserved'
+      write(Error_unit,*) 'Caution: Element ', trim(species_name(PRIME_ELEMENT_IDX(K))), 'is not conserved'
       write(Error_unit,*) 'Relative difference: ', abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K)) / &
                            INITIAL_ELEMENTAL_ABUNDANCE(K)
     endif
@@ -693,12 +690,20 @@ enddo
 
 end subroutine get_elemental_abundance
 
-  ! ======================================================================
-  ! Computes the H2 and CO column density for their self-shielding
-  ! for each ipts, the column density is incremented recursively
-  ! from the results for NH2 and NCO computed by RATCON2 the spatial step before
-  ! NB: ZN is shifted with respect to N
-  ! ======================================================================
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief Computes the H2 and CO column density for their self-shielding
+!! for each ipts, the column density is incremented recursively
+!! from the results for NH2 and NCO computed by set_dependant_rates the spatial step before
+!
+!> @note ZN is shifted with respect to N
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine SHIELDINGSETUP()
 
   use global_variables
@@ -723,10 +728,18 @@ subroutine SHIELDINGSETUP()
 end subroutine SHIELDINGSETUP
 
 
-
-    ! ======================================================================
-    ! ======================================================================
-  subroutine GRAINRATE()
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2000
+!
+! DESCRIPTION: 
+!> @brief compute surface info (thermodynamic, quantum and kinetic data) 
+!! from datafiles
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine init_reaction_rates()
     use global_variables
     
     implicit none
@@ -760,7 +773,7 @@ end subroutine SHIELDINGSETUP
     COND=PI*grain_radius*grain_radius*SQRT(8.0d0*K_B/PI/AMU)
 
     ! --- Evaluate sticking coeff and accretion rate factor for each species
-    STICK=0.0D+0
+    STICK=0.d0
     do I=1,nb_species
       if (ICG(I).EQ.0) then
         STICK=sticking_coeff_neutral
@@ -820,7 +833,7 @@ end subroutine SHIELDINGSETUP
       close(10)
       
     else
-      write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+      write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
       call exit(1)
     end if
     
@@ -853,42 +866,41 @@ end subroutine SHIELDINGSETUP
       close(10)
       
     else
-      write (Error_unit,*) 'Error: The file ', filename,' does not exist.'
+      write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
       call exit(1)
     end if
 
     ! --- Transfer from dummies to arrays with correct species numbers
     do I=1,nb_species
-      SMASS(I)=0
-      ED(I)=0.0D+0
-      EB(I)=0.0D+0
-      DEB(I)=0.0D+0
-      DHF(I)=0.0D+0
+      SMASS(I)=0.d0
+      ED(I)=0.d0
+      EB(I)=0.d0
+      DEB(I)=0.d0
+      DHF(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
-          SMASS(I)=INT1(J)
+          SMASS(I)=dble(INT1(J))
           ED(I)=REA1(J)
           EB(I)=REA2(J)
           DEB(I)=REA3(J)
           DHF(I)=REA4(J)
           if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.&
-          (EBFAC.GE.0.0D+0)) EB(I)=EBFAC*ED(I)
+          (EBFAC.GE.0.d0)) EB(I)=EBFAC*ED(I)
         endif
       enddo
       !IF(species_name(I) == 'JN2O2      ') write(*,*) ED(I)
     enddo
 
     do I=1,nb_reactions
-      EA(I)=0.0D+0
+      EA(I)=0.d0
       do J=1,NEA
-        if (SYMBOL(4,I)(:1).EQ.'J          ') then
+        if (SYMBOL(4,I)(:1).EQ.'J') then
           if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
           (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
           (SYMBOL(4,I).EQ.GSread(3,J)).AND.&
           (SYMBOL(5,I).EQ.GSread(4,J)).AND.&
           (SYMBOL(6,I).EQ.GSread(5,J))) EA(I)=REA5(J)
-        endif
-        if (SYMBOL(4,I)(:1).NE.'J          ') then
+        else
           if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
           (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
           (SYMBOL(4,I).EQ.GSread(3,J)(2:)).AND.&
@@ -901,22 +913,22 @@ end subroutine SHIELDINGSETUP
 
     ! Set up constants, quantum rate info===================================
     do I=1,nb_species
-      CHF(I)=0.0D+0
-      RQ1(I)=0.0D+0
-      RQ2(I)=0.0D+0
+      CHF(I)=0.d0
+      RQ1(I)=0.d0
+      RQ2(I)=0.d0
       ! ------ For species which have been assigned surface info, SMASS=/=0
       if (SMASS(I).NE.0) then
-        SMA=REAL(SMASS(I))
+        SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
-        CHF(I)=SQRT(2.0D+0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
+        CHF(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
           RQ1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
         else
-          RQ1(I)=0.0D+0
+          RQ1(I)=0.d0
         endif
         RQ2(I)=CHF(I)/nb_sites_per_grain*&
-        EXP(-2.0D+0*SITE_SPACING/H_BARRE*SQRT(2.0D+0*AMU*SMA*K_B*EB(I)))
+        EXP(-2.0d0*SITE_SPACING/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*EB(I)))
       endif
     enddo
 
@@ -924,7 +936,7 @@ end subroutine SHIELDINGSETUP
     do J=1,nb_reactions
 
       ! ------ Initialise all XJ rate factors, and get species 1 & 2
-      XJ(J)=1.0D+0
+      XJ(J)=1.0d0
       JSP1(J)=0
       JSP2(J)=0
       do I=1,nb_species
@@ -948,13 +960,13 @@ end subroutine SHIELDINGSETUP
 
       ! ------ Branching ratio
       if (NPATH.EQ.0) then
-        XJ(J)=0.0D+0
+        XJ(J)=0.d0
       else
-        XJ(J)=XJ(J)/REAL(NPATH)
+        XJ(J)=XJ(J)/dble(NPATH)
       endif
 
       ! ------ Factor of 2 for same species reactions
-      if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0D+0
+      if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0d0
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
@@ -1013,7 +1025,7 @@ end subroutine SHIELDINGSETUP
       ATOMS=ATOMS+species_composition(K,N4)
     enddo
 
-    SUM2=1.0D+0-(SUM1/DHFSUM)
+    SUM2=1.0d0-(SUM1/DHFSUM)
     if (ATOMS.EQ.2) SUM2=SUM2**(3*ATOMS-5)
     if (ATOMS.GT.2) SUM2=SUM2**(3*ATOMS-6)
     !         SUM2=SUM2**(3*ATOMS-6)
@@ -1028,46 +1040,45 @@ end subroutine SHIELDINGSETUP
 
     BADFLAG=0
     if (DHF(JSP1(J)).LE.-999.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (DHF(JSP2(J)).LE.-999.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (DHF(N4).LE.-999.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (N5.NE.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
     if (N6.NE.0) then
-      EVFRAC=0.0D+0
+      EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
 
-    if (EVFRAC.GE.1.0D+0) EVFRAC=1.0D+0
-    if (EVFRAC.LE.0.0D+0) EVFRAC=0.0D+0
-    if (NEVAP.EQ.0) EVFRAC=0.0D+0
-    if (DHFSUM.LE.0.0D+0) EVFRAC=0.0D+0
+    if (EVFRAC.GE.1.0d0) EVFRAC=1.0d0
+    if (EVFRAC.LE.0.d0) EVFRAC=0.d0
+    if (NEVAP.EQ.0) EVFRAC=0.d0
+    if (DHFSUM.LE.0.d0) EVFRAC=0.d0
 
     if (SYMBOL(4,J)(:1).EQ.'J          ') then
-      EVFRAC=1.0D+0-EVFRAC
+      EVFRAC=1.0d0-EVFRAC
     endif
 
     XJ(J)=XJ(J)*EVFRAC
 
     ! ------ Calculate quantum activation energy
-    REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&
-    REAL(SMASS(JSP1(J))+SMASS(JSP2(J)))
-    ACT1(J)=2.0D+0 * ACT/H_BARRE * SQRT(2.0D+0*AMU*REDMAS*K_B*EA(J))
+    REDMAS = SMASS(JSP1(J)) * SMASS(JSP2(J)) / (SMASS(JSP1(J)) + SMASS(JSP2(J)))
+    ACT1(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*EA(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION
   if (ITYPE(J).EQ.16) then
-    if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.0D+0
+    if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.d0
   endif
 
   ! === ITYPE 99 - ACCRETION
@@ -1082,12 +1093,12 @@ enddo
 
 ! === Zero dummy H2 formation rxns, if necc.
 !      if (IS_GRAIN_REACTIONS.NE.0) then
-!         XJ(1)=0.0D+0
-!         XJ(2)=0.0D+0
+!         XJ(1)=0.d0
+!         XJ(2)=0.d0
 !      endif
 
 return
-end subroutine grainrate
+end subroutine init_reaction_rates
 
 ! ======================================================================
 ! ======================================================================

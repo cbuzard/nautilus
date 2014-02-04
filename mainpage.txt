@@ -1,8 +1,9 @@
 /**
 
 @mainpage Nautilus documentation
+@tableofcontents
 
-@section Introduction
+@section section1 Introduction
 
 A fast 1D gas-grain chemical model by FH (2008)\n
 Based upon the OSU gas-grain chemical model\n
@@ -12,48 +13,51 @@ Modified rates following Caselli et al. (1998)\n
 Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)\n
 Turbulent mixing implemented through first order operator splitting\n
 
-@section Input files
+@section section_input Input files
 
 All parameters file can have comments, either a full line or the end of a line. The comment character being the '!' character. 
 Blanck lines are ignored
 
-parameters.in : parameter file of the code, with various flags
+<b>parameters.in</b> : parameter file of the code, with various flags
 
-abundances.in : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
+<b>abundances.in</b> : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
 that do not exist in this file.
 
-activation_energies.in : Activation energy for endothermic reactions
+<b>activation_energies.in</b> : Activation energy for endothermic reactions
 
-element.in : name and mass in AMU of all elemental species existing in the simulation
+<b>element.in</b> : name and mass in AMU of all elemental species existing in the simulation
 
-gas_reactions.in : Reaction that occurs in gas phase
+<b>gas_reactions.in</b> : Reaction that occurs in gas phase
 
-gas_species.in : species that are involved in gas phase reactions
+<b>gas_species.in</b> : species that are involved in gas phase reactions
 
-grain_reactions.in : Reactions that occurs on grain surface
+<b>grain_reactions.in</b> : Reactions that occurs on grain surface
 
-grain_species.in : Species that are involved in grain surface reactions
+<b>grain_species.in</b> : Species that are involved in grain surface reactions
 
-surface_parameters.in : various energies and parameters for diffusion and movements on the grain surface
+<b>surface_parameters.in</b> : various energies and parameters for diffusion and movements on the grain surface
 
-@section Output files
+@section section_output Output files
 
 *.out files are output files. *.tmp files are file that are generated at each timestep, either to continue a 
 simulation or check if there is a problem
 
-abundances.*.out : writing in binary format the abundances of all species at each timestep (one file per timestep-output
+<b>abundances.*.out</b> : writing in binary format the abundances of all species at each timestep (one file per timestep-output
 
-abundances.tmp : writing in ASCII format the abundances of all species at the current timestep-output
+<b>abundances.tmp</b> : writing in ASCII format the abundances of all species at the current timestep-output
 
-rates.*.out : writing in binary format the critical reactions rates
+<b>rates.*.out</b> : writing in binary format the critical reactions rates
 
-info.out : writing information on the code, in particular about the code version (commit ID and branch)
+<b>info.out</b> : writing information on the code, in particular about the code version (commit ID and branch)
 
-species.out : Writing the list of species and their corresponding index
+<b>species.out</b> : Writing the list of species and their corresponding index
 
-elemental_abundances.tmp/out : writing information about prime elements, their total abundances and mass
+<b>elemental_abundances.tmp/out</b> : writing information about prime elements, their total abundances and mass
 
-@section Errors
+@section section_example How To Use
+A folder containing an example simulation is available in example_simulation/
+
+@section section_errors Errors
 
 Error 1: Missing input file.
 

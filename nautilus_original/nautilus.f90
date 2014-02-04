@@ -1627,8 +1627,8 @@
 !       stop
 
 ! ------ Calculate quantum activation energy
-         REDMAS=REAL(SMASS(JSP1(J))*SMASS(JSP2(J)))/&
-                REAL(SMASS(JSP1(J))+SMASS(JSP2(J)))
+         REDMAS=SMASS(JSP1(J))*SMASS(JSP2(J))/&
+                (SMASS(JSP1(J))+SMASS(JSP2(J)))
          ACT1(J)=2.0D+0 * ACT/HBAR * SQRT(2.0D+0*AMU*REDMAS*BOLTZ*EA(J))
       ENDIF
 

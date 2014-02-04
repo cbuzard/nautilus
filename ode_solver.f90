@@ -6,9 +6,19 @@ implicit none
 
 contains
 
-subroutine CHEMSETUP()
-! Initialize the reactants and products
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Initialize reactants and products of all reactions
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine set_chemical_reactants()
 use global_variables
+
 implicit none
 
 ! Locals
@@ -19,91 +29,47 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
-REACT(1:7, 1:nb_reactions) = no_species
+reaction_substances(1:7, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
     do L=1,7
-      if (SYMBOL(L,I).EQ.species_name(J)) REACT(L,I)=J
+      if (SYMBOL(L,I).EQ.species_name(J)) then
+        reaction_substances(L,I) = J
+      endif
     enddo
 
   enddo
 enddo   
 
 return
-end subroutine CHEMSETUP
+end subroutine set_chemical_reactants
 
-subroutine FCHEMVW(N,Y,YDOT)
-! Computes the chemical evolution
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Valentine Wakelam
+!
+!> @date 2003
+!
+! DESCRIPTION: 
+!> @brief Computes columns of the chemical jacobian
+!
+!> @warning Even if N, T, IAN, and JAN are not actually used, they are needed
+!! because ODEPACK need a routine with a specific format, and specific inputs
+!! and outputs
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_jacobian(N, T, Y, J, IAN, JAN, PDJ)
 use global_variables
 implicit none
 
 ! Inputs
 integer, intent(in) :: N
-real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-
-! Outputs
-real(double_precision), intent(out), dimension(nb_species) :: YDOT
-
-! Locals
-integer :: no_species
-real(double_precision), dimension(nb_species+1) :: YD2
-!REAL(KIND=16), dimension(nb_species+1) :: YD2
-integer :: i
-integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
-real(double_precision) :: rate
-
-no_species=nb_species+1
-
-ydot(:)=0.d0
-yd2(:)=0.d0
-
-! The differential equations are calculated in a loop here
-do I=1,nb_reactions
-
-  IR1=REACT(1, i)
-  IR2=REACT(2, i)
-  IR3=REACT(3, i)
-
-  IPROD1=REACT(4, i)
-  IPROD2=REACT(5, i)
-  IPROD3=REACT(6, i)
-  IPROD4=REACT(7, i)
-
-  if (IR3.ne.no_species) then
-    RATE=XK(I)*Y(IR1)*Y(IR2)*Y(IR3)*XNT*XNT
-  endif
-
-  if ((IR3.eq.no_species).and.(IR2.ne.no_species)) then
-    RATE=XK(I)*Y(IR1)*Y(IR2)*XNT
-  endif
-
-  if (IR2.eq.no_species) then
-    RATE=XK(I)*Y(IR1)  
-  endif
-
-  YD2(IPROD1)=YD2(IPROD1)+RATE
-  YD2(IPROD2)=YD2(IPROD2)+RATE
-  YD2(IPROD3)=YD2(IPROD3)+RATE
-  YD2(IPROD4)=YD2(IPROD4)+RATE
-  YD2(IR1)=YD2(IR1)-RATE
-  YD2(IR2)=YD2(IR2)-RATE
-  YD2(IR3)=YD2(IR3)-RATE
-enddo   
-
-YDOT(1:nb_species)=YD2(1:nb_species)
-
-return
-end subroutine FCHEMVW
-
-subroutine JACVW(Y,J,PDJ)
-! Computes columns of the chemical jacobian
-use global_variables
-implicit none
-
-! Inputs
 integer, intent(in) :: J
+real(double_precision), intent(in) :: T
+real(double_precision), intent(in), dimension(N) :: IAN
+real(double_precision), intent(in), dimension(N) :: JAN
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
 ! Outputs
@@ -113,91 +79,89 @@ real(double_precision), intent(out), dimension(nb_species) :: PDJ
 integer :: no_species
 
 real(double_precision), dimension(nb_species+1) :: PDJ2
-!REAL(KIND=16), dimension(nb_species+1) :: PDJ2
 integer :: i
-integer :: IR1, IR2, IR3, IPROD1, IPROD2, IPROD3, IPROD4
+integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 integer :: NUMBERJAC
 
-no_species=nb_species+1
+no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
 
-PDJ2(:)=0.d0
+PDJ2(:) = 0.d0
 
 do I=1,nb_reactions
-  !write(*,*) I
 
-  IR1=REACT(1, i)
-  IR2=REACT(2, i)
-  IR3=REACT(3, i)
-  IPROD1=REACT(4, i)
-  IPROD2=REACT(5, i)
-  IPROD3=REACT(6, i)
-  IPROD4=REACT(7, i)
+  reactant1_idx = reaction_substances(1, i)
+  reactant2_idx = reaction_substances(2, i)
+  reactant3_idx = reaction_substances(3, i)
+  product1_idx = reaction_substances(4, i)
+  product2_idx = reaction_substances(5, i)
+  product3_idx = reaction_substances(6, i)
+  product4_idx = reaction_substances(7, i)
 
-  if (IR3.ne.no_species) then
+  if (reactant3_idx.ne.no_species) then
 
-    if (IR1.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
-      PDJ2(IR3)=PDJ2(IR3)-XK(I)*Y(IR2)*Y(IR3)*XNT*XNT
+    if (reactant1_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant3_idx)=PDJ2(reactant3_idx)-XK(I)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
     endif
 
-    if (IR2.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
-      PDJ2(IR3)=PDJ2(IR3)-XK(I)*Y(IR1)*Y(IR3)*XNT*XNT
+    if (reactant2_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
+      PDJ2(reactant3_idx)=PDJ2(reactant3_idx)-XK(I)*Y(reactant1_idx)*Y(reactant3_idx)*XNT*XNT
     endif
 
-    if (IR3.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-      PDJ2(IR3)=PDJ2(IR3)-XK(I)*Y(IR1)*Y(IR2)*XNT*XNT
-    endif
-
-  endif
-
-  if ((IR3.eq.no_species).and.(IR2.ne.no_species)) then
-
-    if (IR1.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR2)*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR2)*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR2)*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR2)*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR2)*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR2)*XNT
-    endif
-
-    if (IR2.eq.J) then 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)*Y(IR1)*XNT
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)*Y(IR1)*XNT
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)*Y(IR1)*XNT
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)*Y(IR1)*XNT
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)*Y(IR1)*XNT
-      PDJ2(IR2)=PDJ2(IR2)-XK(I)*Y(IR1)*XNT
+    if (reactant3_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
+      PDJ2(reactant3_idx)=PDJ2(reactant3_idx)-XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT*XNT
     endif
 
   endif
 
-  if (IR2.eq.no_species) then
+  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
 
-    if (IR1.eq.J) then 
+    if (reactant1_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant2_idx)*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant2_idx)*XNT
+    endif
 
-      PDJ2(IPROD1)=PDJ2(IPROD1)+XK(I)
-      PDJ2(IPROD2)=PDJ2(IPROD2)+XK(I)
-      PDJ2(IPROD3)=PDJ2(IPROD3)+XK(I)
-      PDJ2(IPROD4)=PDJ2(IPROD4)+XK(I)
-      PDJ2(IR1)=PDJ2(IR1)-XK(I)
+    if (reactant2_idx.eq.J) then 
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)*Y(reactant1_idx)*XNT
+      PDJ2(reactant2_idx)=PDJ2(reactant2_idx)-XK(I)*Y(reactant1_idx)*XNT
+    endif
+
+  endif
+
+  if (reactant2_idx.eq.no_species) then
+
+    if (reactant1_idx.eq.J) then 
+
+      PDJ2(product1_idx)=PDJ2(product1_idx)+XK(I)
+      PDJ2(product2_idx)=PDJ2(product2_idx)+XK(I)
+      PDJ2(product3_idx)=PDJ2(product3_idx)+XK(I)
+      PDJ2(product4_idx)=PDJ2(product4_idx)+XK(I)
+      PDJ2(reactant1_idx)=PDJ2(reactant1_idx)-XK(I)
     endif
 
   endif
@@ -216,7 +180,7 @@ IF (TESTJAC.EQ.1) then
 endif
 
 return
-end subroutine JACVW
+end subroutine get_jacobian
 
 subroutine computeIAJA(Y)
 use global_variables
@@ -229,13 +193,18 @@ real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundance
 integer :: i,j,k
 real(double_precision), dimension(nb_species) :: PDJ
 
-call ratcon()
-call ratcon2(Y)
+! Dummy parameters for restricted call of get_jacobian
+integer, parameter :: dummy_n = 3
+real(double_precision), parameter :: dummy_t = 0.d0
+real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
+
+call set_constant_rates()
+call set_dependant_rates(Y)
 
 k=1
 
 do j=1,nb_species
-  call jacvw(Y,j,PDJ)
+  call get_jacobian(n=dummy_n, t=dummy_t, y=Y,j=J,ian=dummy_ian, jan=dummy_jan, pdj=PDJ)
 
   IA(j)=k
 
@@ -252,63 +221,89 @@ IA(nb_species+1)=k
 
 return
 end subroutine computeIAJA
-
-  ! ======================================================================
-  ! ======================================================================
-subroutine JAC(N, T, Y, J, IAN, JAN, PDJ)
-  use global_variables
-  implicit none
-  
-  ! Inputs
-  integer, intent(in) :: N
-  integer, intent(in) :: J
-  real(double_precision), intent(in) :: T
-  real(double_precision), intent(in), dimension(N) :: IAN
-  real(double_precision), intent(in), dimension(N) :: JAN
-  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-  
-  ! Outputs
-  real(double_precision), intent(out), dimension(nb_species) :: PDJ
-
-  !      call RATCON2(Y)
-
-  call JACVW(Y,J,PDJ) 
-
-  return
-end subroutine JAC
   
   ! ======================================================================
   ! ======================================================================
-subroutine FCHEM (N,T,Y,YP)
-  use global_variables
-  
-  implicit none
+subroutine FCHEM (N,T,Y,YDOT)
+! Computes the chemical evolution
+use global_variables
+implicit none
 
-  ! Inputs
-  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-  real(double_precision), intent(in) :: T
-  
-  ! Outputs
-  real(double_precision), intent(out), dimension(nb_species) :: YP
-  
-  ! Locals
-  integer :: N
+! Inputs
+integer, intent(in) :: N
+real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
+real(double_precision), intent(in) :: T ! Not used by the code, but needed for the ODEPACK call format expected for FCHEM
 
-  call ratcon2(y)
-  call fchemvw(n,y,yp) 
+! Outputs
+real(double_precision), intent(out), dimension(nb_species) :: YDOT
 
-  return
+! Locals
+integer :: no_species
+real(double_precision), dimension(nb_species+1) :: YD2
+!REAL(KIND=16), dimension(nb_species+1) :: YD2
+integer :: i
+integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+real(double_precision) :: rate
+
+call set_dependant_rates(y)
+
+
+no_species=nb_species+1
+
+ydot(:)=0.d0
+yd2(:)=0.d0
+
+! The differential equations are calculated in a loop here
+do I=1,nb_reactions
+
+  reactant1_idx = reaction_substances(1, i)
+  reactant2_idx = reaction_substances(2, i)
+  reactant3_idx = reaction_substances(3, i)
+
+  product1_idx = reaction_substances(4, i)
+  product2_idx = reaction_substances(5, i)
+  product3_idx = reaction_substances(6, i)
+  product4_idx = reaction_substances(7, i)
+
+  if (reactant3_idx.ne.no_species) then
+    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+  endif
+
+  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
+    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
+  endif
+
+  if (reactant2_idx.eq.no_species) then
+    RATE=XK(I)*Y(reactant1_idx)  
+  endif
+
+  YD2(product1_idx)=YD2(product1_idx)+RATE
+  YD2(product2_idx)=YD2(product2_idx)+RATE
+  YD2(product3_idx)=YD2(product3_idx)+RATE
+  YD2(product4_idx)=YD2(product4_idx)+RATE
+  YD2(reactant1_idx)=YD2(reactant1_idx)-RATE
+  YD2(reactant2_idx)=YD2(reactant2_idx)-RATE
+  YD2(reactant3_idx)=YD2(reactant3_idx)-RATE
+enddo   
+
+YDOT(1:nb_species)=YD2(1:nb_species)
+
+return
 end subroutine FCHEM
 
-  ! ======================================================================
-  ! ======================================================================
-  subroutine RATCON()
-
-  ! Reactions coefficient formally dependent on the abundances Y are 
-  ! computed in a companion subroutine: RATCON2
-  ! Grain surface reactions, self shielding, etc...
-  ! VW modification of everything for the new gas-phase network
-  ! Fev 2012
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Valentine Wakelam
+!
+!> @date 2012
+!
+! DESCRIPTION: 
+!> @brief Reactions coefficient formally dependent on the abundances Y are 
+!! computed in a companion subroutine: set_dependant_rates
+!! Grain surface reactions, self shielding, etc...
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine set_constant_rates()
 
   use global_variables 
   
@@ -322,7 +317,7 @@ end subroutine FCHEM
   real(double_precision), dimension(10) :: distmin, distmax
 
   T300=TEMP/300.D+0
-  TI=1.0D+00/TEMP
+  TI=1.0d00/TEMP
   TSQ=SQRT(TEMP)
 
   ! ====== Rxn ITYPE 0
@@ -581,18 +576,27 @@ end subroutine FCHEM
   ! When dust is turned off, zero all dust rates==========================
   if ((IS_GRAIN_REACTIONS.EQ.0).AND.(timestep.EQ.1)) then
     do J=IRXSTA(14),IRXFIN(99)
-      XK(J)=0.0D+0
-      XJ(J)=0.0D+0
+      XK(J)=0.d0
+      XJ(J)=0.d0
     enddo
   endif
 
 
   return
-  end subroutine RATCON
+  end subroutine set_constant_rates
   
-    ! ======================================================================
-  ! ======================================================================
-  subroutine RATCON2(Y)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Valentine Wakelam
+!
+!> @date 2012
+!
+! DESCRIPTION: 
+!> @brief Set Reactions coefficient formally dependent on the abundances Y. 
+!! Grain surface reactions, self shielding, etc...
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine set_dependant_rates(Y)
 
   use global_variables 
   
@@ -611,7 +615,7 @@ end subroutine FCHEM
   integer :: j, l
 
   T300=TEMP/300.D+0
-  TI=1.0D+00/TEMP
+  TI=1.0d00/TEMP
   TSQ=SQRT(TEMP)
   MONLAY=LAYERS*nb_sites_per_grain/GTODN
 
@@ -716,7 +720,7 @@ end subroutine FCHEM
     do J=IRXSTA(14),IRXFIN(14)
       IMOD1=0
       IMOD2=0
-      BARR=1.0D+0
+      BARR=1.0d0
       ! --------- Calculate activation energy barrier multiplier
       if (EA(J).GE.1.0D-40) then
         ACTIV=EA(J)/DTEMP
@@ -855,7 +859,7 @@ end subroutine FCHEM
   where (XK.lt.RXNMIN) XK=0.d0
 
     return
-    end subroutine ratcon2
+    end subroutine set_dependant_rates
     
   ! ======================================================================
   ! ======================================================================
@@ -875,72 +879,72 @@ end subroutine FCHEM
   ! Locals
   real(double_precision) :: PICK, TESTREF1, TESTREF2, TESTNUM
 
-  EX1(J)=0.0D+0
-  EX2(J)=0.0D+0
+  EX1(J)=0.d0
+  EX2(J)=0.d0
 
   ! --- Check value of x = t_acc/t_evap
   ! TINEVA = 1/t_evap
   ! TINACC = 1/t_acc
-  if (TINACC(JSP1(J)).GT.0.0D+0) then
+  if (TINACC(JSP1(J)).GT.0.d0) then
     EX1(J)=TINEVA(JSP1(J))/TINACC(JSP1(J))
   endif
-  if (TINACC(JSP2(J)).GT.0.0D+0) then
+  if (TINACC(JSP2(J)).GT.0.d0) then
     EX2(J)=TINEVA(JSP2(J))/TINACC(JSP2(J))
   endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
   ! --- Assign max rates
 
-  if (BARR.EQ.1.0D+0) then
+  if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
-      if (EX1(J).LT.1.0D+0) then
+      if (EX1(J).LT.1.0d0) then
         if (RDIF1(J).GT.TINACC(JSP1(J))) RDIF1(J)=TINACC(JSP1(J))
       endif
-      if (EX1(J).GE.1.0D+0) then
+      if (EX1(J).GE.1.0d0) then
         if (RDIF1(J).GT.TINEVA(JSP1(J))) RDIF1(J)=TINEVA(JSP1(J))
       endif
     endif
 
     if (IMOD2.NE.0) then
-      if (EX2(J).LT.1.0D+0) then
+      if (EX2(J).LT.1.0d0) then
         if (RDIF2(J).GT.TINACC(JSP2(J))) RDIF2(J)=TINACC(JSP2(J))
       endif
-      if (EX2(J).GE.1.0D+0) then
+      if (EX2(J).GE.1.0d0) then
         if (RDIF2(J).GT.TINEVA(JSP2(J))) RDIF2(J)=TINEVA(JSP2(J))
       endif
     endif
   endif
 
   ! --- Species rate to compare chosen by fastest diffusion rate
-  if (BARR.NE.1.0D+0) then
+  if (BARR.NE.1.0d0) then
     PICK=0.d0
 
     TESTREF1=TINACC(JSP1(J))
-    if (EX1(J).GE.1.0D+0) TESTREF1=TINEVA(JSP1(J))
+    if (EX1(J).GE.1.0d0) TESTREF1=TINEVA(JSP1(J))
     TESTREF2=TINACC(JSP2(J))
-    if (EX2(J).GE.1.0D+0) TESTREF2=TINEVA(JSP2(J))
+    if (EX2(J).GE.1.0d0) TESTREF2=TINEVA(JSP2(J))
 
     if (RDIF1(J).GE.RDIF2(J)) then
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD2*GTODN
-      if (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
+      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
       if (TESTNUM.GT.TESTREF1) PICK=1.d0
     endif
     if (RDIF2(J).GT.RDIF1(J)) then
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD1*GTODN
-      if (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
+      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
       if (TESTNUM.GT.TESTREF2) PICK=2.d0
     endif
 
     if (PICK.EQ.1) then
       RDIF1(J)=TESTREF1/BARR/YMOD2/GTODN
-      if (YMOD2*GTODN.LT.1.0D+0) RDIF1(J)=TESTREF1/BARR
-      RDIF2(J)=0.0D+0
+      if (YMOD2*GTODN.LT.1.0d0) RDIF1(J)=TESTREF1/BARR
+      RDIF2(J)=0.d0
     endif
 
     if (PICK.EQ.2) then
       RDIF2(J)=TESTREF2/BARR/YMOD1/GTODN
-      if (YMOD1*GTODN.LT.1.0D+0) RDIF2(J)=TESTREF2/BARR
-      RDIF1(J)=0.0D+0
+      if (YMOD1*GTODN.LT.1.0d0) RDIF2(J)=TESTREF2/BARR
+      RDIF1(J)=0.d0
     endif
 
   endif

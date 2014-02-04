@@ -302,7 +302,7 @@ GSREAD				tab(5,nb_reactions)		on-grain reactions (2 reagents + 3 products)
 REA5				tab(nb_reactions)			temporary buffer for activation energies of the corresponding on-grain reactions
 EA					tab(nb_reactions)			activation energies of the corresponding on-grain reactions
 
-CHF					tab(nb_species)			SQRT(2.0D+0*BOLTZ/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
+CHF					tab(nb_species)			SQRT(2.0d0*BOLTZ/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA) characteristic vibration frequency for the adsorbed species as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 RQ1					tab(nb_species)			(dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain) quantum mechanical tunneling rate (Watson 1976)
 RQ2					tab(nb_species)			CHF / nb_sites_per_grain.EXP(-2.SITE_SPACING / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2) quantum mechanical tunneling rate (Hasegawa & Herbst 1992)
 
@@ -405,9 +405,9 @@ satol				tab(nb_species)
 NNZ
 
 
-==called in RATCON==
+==called in set_constant_rates==
 T300									TEMP/300.D+0
-TI										1.0D+00/TEMP
+TI										1.0d00/TEMP
 TSQ										SQRT(TEMP)
 
 nsta									starting line of the ITYPE=2-12 reaction group
@@ -417,7 +417,7 @@ TINDIF				tab(nb_species)			thermal diffusion rate (s-1)
 TINEVA				tab(nb_species)			evaporation rate (s-1)
 
 
-==called in RATCON2==
+==called in set_dependant_rates==
 TETABIS									selfshielding parameter
 TETABIS1								selfshielding factor
 TETABIS2								"
@@ -488,21 +488,21 @@ time loop (from 0 to 90% of the final time STOP_TIME)
 	spatial loop (from 1 to nptmax)
 		store abundances ZXN for a spatial point in Y and XN
 		call evolve		
-			-> call ratcon(DUMMYY)
-			-> call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
+			-> call set_constant_rates(DUMMYY)
+			-> call get_jacobian(DUMMYY,IDUMMY,DUMMYPDJ)
 			-> call shieldingsetup
-			-> call ratcon(Y)
+			-> call set_constant_rates(Y)
 			-> call computeIAJA
 			-> call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 			-> call CONSERVE(Y)
 	
 
 			-> external FCHEM
-				-> call RATCON2(Y)
+				-> call set_dependant_rates(Y)
 					-> call MODIF(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
 				-> call FCHEMVW(N,Y,YP)
 			-> external JAC
-				-> call JACVW(Y,J,PDJ)
+				-> call get_jacobian(Y,J,PDJ)
 
 ##############################################################################################################
 ==============================================================================================================
@@ -709,8 +709,8 @@ with diffusion ZDT is set to the "smallest timescale you can think of"
 
 create work arrays
 
-! If testjac is 1, print non zero elements per column of the Jacobian (Done in odes/JACVW)
-call ratcon(DUMMY)
+! If testjac is 1, print non zero elements per column of the Jacobian (Done in odes/get_jacobian)
+call set_constant_rates(DUMMY)
 
 
 
@@ -724,12 +724,12 @@ call ratcon(DUMMY)
 
 
 
-call JACVW(DUMMYY,IDUMMY,DUMMYPDJ)
+call get_jacobian(DUMMYY,IDUMMY,DUMMYPDJ)
 call shieldingsetup
 
 ! Adaptive absolute tolerance to avoid too high precision on very abundant species,
 ! H2 for instance. Helps running a bit faster
-call ratcon(Y)
+call set_constant_rates(Y)
 ! Feed IWORK with IA and JA
 call computeIAJA(Y)
 call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
@@ -740,7 +740,7 @@ CALL CONSERVE(Y)
 return XN=Y
 
 
-========RATCON===========================================				nautilus.f90
+========set_constant_rates===========================================				nautilus.f90
 (Y)
 !!compute the rate constants for ITYPE=0-12, 15, 16, 66 and 67
 
@@ -771,7 +771,7 @@ set XK(J)=A(J)/SITE_DENSITY*1.d4
 when dust is turned off, zero all dust rates
 
 
-========JACVW============================================				nls_odes.f90
+========get_jacobian============================================				nls_odes.f90
 ========SHIELDINGSETUP===================================				nautilus.f90
 ========COMPUTEIAJA======================================				nls_odes.f90
 ========DLSODE===========================================               opkdmain.f
@@ -791,10 +791,10 @@ Livermore Solver for Ordinary Differential Equations.
 ========FCHEM============================================				nautilus.f90
 (N,T,YP)
 
-call RATCON2(Y)
+call set_dependant_rates(Y)
 call FCHEMVW(N,Y,YP)
 
-========RATCON2==========================================				nautilus.f90
+========set_dependant_rates==========================================				nautilus.f90
 (Y)
 !!compute the rate constants for ITYPE=13,14,17,18,19,20,99 including selfshielding effetcs
 
