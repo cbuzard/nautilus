@@ -85,7 +85,7 @@ integer :: NUMBERJAC
 
 no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
 
-PDJ2(:) = 0.d0
+PDJ2(1:nb_species+1) = 0.d0
 
 do I=1,nb_reactions
 
@@ -250,8 +250,8 @@ call set_dependant_rates(y)
 
 no_species=nb_species+1
 
-ydot(:)=0.d0
-yd2(:)=0.d0
+ydot(1:nb_species) = 0.d0
+yd2(1:nb_species) = 0.d0
 
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
