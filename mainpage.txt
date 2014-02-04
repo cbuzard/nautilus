@@ -5,11 +5,8 @@
 
 @section section1 Introduction
 
-A fast 1D gas-grain chemical model by FH (2008)\n
-Based upon the OSU gas-grain chemical model\n
-Updated from gg_osu_2006v1d by RTG/VW\n
-Rate equations from Hasegawa & Herbst (1992)\n
-Modified rates following Caselli et al. (1998)\n
+A fast 1D gas-grain chemical model by FH (2008). Based upon the OSU gas-grain chemical model. Updated from gg_osu_2006v1d by RTG/VW. 
+Rate equations from Hasegawa & Herbst (1992). Modified rates following Caselli et al. (1998)\n\n
 Stiff solver for sparse Jacobians: LSODES/ODEPACK (Hindmarsh 1983)\n
 Turbulent mixing implemented through first order operator splitting\n
 
@@ -23,8 +20,6 @@ Blanck lines are ignored
 <b>abundances.in</b> : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
 that do not exist in this file.
 
-<b>activation_energies.in</b> : Activation energy for endothermic reactions
-
 <b>element.in</b> : name and mass in AMU of all elemental species existing in the simulation
 
 <b>gas_reactions.in</b> : Reaction that occurs in gas phase
@@ -34,6 +29,8 @@ that do not exist in this file.
 <b>grain_reactions.in</b> : Reactions that occurs on grain surface
 
 <b>grain_species.in</b> : Species that are involved in grain surface reactions
+
+<b>activation_energies.in</b> : Activation energy for endothermic reactions
 
 <b>surface_parameters.in</b> : various energies and parameters for diffusion and movements on the grain surface
 
