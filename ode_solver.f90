@@ -194,6 +194,16 @@ endif
 return
 end subroutine get_jacobian
 
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2008
+!
+! DESCRIPTION: 
+!> @brief Calculates the position of non-zero values in the jacobian
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine computeIAJA(Y)
 use global_variables
 implicit none
