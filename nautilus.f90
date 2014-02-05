@@ -115,6 +115,9 @@ call initialisation()
 
 allocate(temp_abundances(nb_species))
 
+! TODO to be deleted when test are completed, and routine fully fonctionnal
+call set_relevant_reactions()
+!~ stop
 
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag

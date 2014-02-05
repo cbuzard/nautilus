@@ -84,6 +84,7 @@ real(double_precision), dimension(nb_species+1) :: PDJ2
 integer :: i
 integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 integer :: NUMBERJAC
+integer :: reaction_idx ! The index of a given reaction
 
 ! Temp values to increase speed
 real(double_precision) :: XNT2 ! XNT*XNT, to gain speed
@@ -95,15 +96,16 @@ XNT2 = XNT * XNT
 
 PDJ2(1:nb_species+1) = 0.d0
 
-do I=1,nb_reactions
+do i=1,nb_reactions_using_species(j)
+  reaction_idx = relevant_reactions(i, j) ! j being the species index, given as a parameter
 
-  reactant1_idx = reaction_substances(1, i)
-  reactant2_idx = reaction_substances(2, i)
-  reactant3_idx = reaction_substances(3, i)
-  product1_idx = reaction_substances(4, i)
-  product2_idx = reaction_substances(5, i)
-  product3_idx = reaction_substances(6, i)
-  product4_idx = reaction_substances(7, i)
+  reactant1_idx = reaction_substances(1, reaction_idx)
+  reactant2_idx = reaction_substances(2, reaction_idx)
+  reactant3_idx = reaction_substances(3, reaction_idx)
+  product1_idx = reaction_substances(4, reaction_idx)
+  product2_idx = reaction_substances(5, reaction_idx)
+  product3_idx = reaction_substances(6, reaction_idx)
+  product4_idx = reaction_substances(7, reaction_idx)
   
   ! if statements are written in a specific order to increase speed. The goal is to test first the most probable event, and 
   !! then always go to 'else' statement, not to test if we have already found our case. One, then two bodies reactions are the most 
@@ -112,17 +114,17 @@ do I=1,nb_reactions
   ! One reactant only
   if (reactant2_idx.eq.no_species) then
     if (reactant1_idx.eq.J) then 
-      PDJ2(product1_idx) = PDJ2(product1_idx)+XK(I)
-      PDJ2(product2_idx) = PDJ2(product2_idx)+XK(I)
-      PDJ2(product3_idx) = PDJ2(product3_idx)+XK(I)
-      PDJ2(product4_idx) = PDJ2(product4_idx)+XK(I)
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx)-XK(I)
+      PDJ2(product1_idx) = PDJ2(product1_idx)+XK(reaction_idx)
+      PDJ2(product2_idx) = PDJ2(product2_idx)+XK(reaction_idx)
+      PDJ2(product3_idx) = PDJ2(product3_idx)+XK(reaction_idx)
+      PDJ2(product4_idx) = PDJ2(product4_idx)+XK(reaction_idx)
+      PDJ2(reactant1_idx) = PDJ2(reactant1_idx)-XK(reaction_idx)
     endif
   
   ! Two bodies reaction
   else if (reactant3_idx.eq.no_species) then
     if (reactant1_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant2_idx) * XNT
+      tmp_value = XK(reaction_idx) * Y(reactant2_idx) * XNT
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -132,7 +134,7 @@ do I=1,nb_reactions
     endif
 
     if (reactant2_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant1_idx) * XNT
+      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * XNT
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -144,7 +146,7 @@ do I=1,nb_reactions
   ! Three bodies reaction
   else
     if (reactant1_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant2_idx) * Y(reactant3_idx) * XNT2
+      tmp_value = XK(reaction_idx) * Y(reactant2_idx) * Y(reactant3_idx) * XNT2
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -155,7 +157,7 @@ do I=1,nb_reactions
     endif
 
     if (reactant2_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant1_idx) * Y(reactant3_idx) * XNT2
+      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * Y(reactant3_idx) * XNT2
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -166,7 +168,7 @@ do I=1,nb_reactions
     endif
 
     if (reactant3_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant1_idx) * Y(reactant2_idx) * XNT2
+      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * Y(reactant2_idx) * XNT2
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -193,6 +195,86 @@ endif
 
 return
 end subroutine get_jacobian
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Read the full list of reactions and retrieve, for each species
+!! the list of reactions involving it. This will be used in get_jacobian 
+!! to increase speed. 
+!!\n\n
+!! max_reactions_same_species, and relevant_reactions array are set here.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine set_relevant_reactions()
+use global_variables
+implicit none
+
+! Locals
+integer :: no_species
+
+integer, dimension(nb_reactions, nb_species+1) :: is_species_used ! For each species, tell which reactions use it or not 
+!! (if True, the species is at least one of the reactants)
+
+integer :: i,j, idx
+integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+
+! Temp values to increase speed
+real(double_precision) :: XNT2 ! XNT*XNT, to gain speed
+real(double_precision) :: tmp_value ! To optimize speed, temporary variable is created to avoid multiple calculation of the same thing
+
+no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
+
+XNT2 = XNT * XNT
+
+is_species_used(1:nb_reactions, 1:nb_species+1) = 0
+
+do i=1,nb_reactions
+
+  reactant1_idx = reaction_substances(1, i)
+  reactant2_idx = reaction_substances(2, i)
+  reactant3_idx = reaction_substances(3, i)
+  
+  is_species_used(i, reactant1_idx) = 1
+  is_species_used(i, reactant2_idx) = 1
+  is_species_used(i, reactant3_idx) = 1
+
+enddo
+
+! We get the total number of reactions in which each species can be involved
+nb_reactions_using_species(1:nb_species) = sum(is_species_used(1:nb_reactions, 1:nb_species), 1)
+
+! What is the maximum number of reactions involving one particular species?
+max_reactions_same_species = maxval(nb_reactions_using_species(1:nb_species))
+
+allocate(relevant_reactions(max_reactions_same_species, nb_species))
+
+relevant_reactions(1:max_reactions_same_species, 1:nb_species) = 0 ! For the extra elements (because not all species 
+!! will have 'max_reactions' reactions involving it).
+
+! For each species, we will list the index of reactions involing the given species. Once this list ends, 
+!! the end of the line will only have 0. 
+!! Thus, at least one species will have a full line of meaningfull indexes. 
+do j=1,nb_species
+  idx = 1
+  do i=1, nb_reactions
+    if (is_species_used(i, j).eq.1) then
+      relevant_reactions(idx, j) = i
+      idx = idx + 1
+    endif
+  enddo
+enddo
+!~ 
+!~ write(*,*) max_reactions
+!~ write(*,*) nb_reactions_using_species(1:nb_species)
+
+
+return
+end subroutine set_relevant_reactions
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 

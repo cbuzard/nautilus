@@ -138,6 +138,10 @@ integer :: CONSERVATION_TYPE
 integer :: IMODH
 integer :: IS_ABSORPTION
 
+integer :: max_reactions_same_species !< Maximum number of reactions in which any species will be involved. Used to set the array 'relevant_reactions'
+integer, dimension(:,:), allocatable :: relevant_reactions !< For each species, store the list of reactions involving the species. 
+!! When 0 are encountered for a given species, this means that no more reactions involve it. dimensions : (max_reactions_same_species, nb_species)
+integer, dimension(:), allocatable :: nb_reactions_using_species !< For each species, the number of reactions in which it is used
 
 ! Diffusion and 1D variables
 real(double_precision), dimension(nptmax) :: zspace ! space variables
@@ -382,6 +386,7 @@ allocate(rq2(nb_species))
 allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
 allocate(ia(nb_species+1))
+allocate(nb_reactions_using_species(nb_species))
 
 allocate(xj(nb_reactions))
 allocate(a(nb_reactions))
