@@ -550,7 +550,7 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
     iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
     iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(fchem,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
+    call dlsodes(evolve_chemical_scheme,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
     satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       
 
     ! Whenever the solver fails converging, print the reason.

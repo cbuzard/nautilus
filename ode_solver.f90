@@ -234,17 +234,26 @@ IA(nb_species+1)=k
 return
 end subroutine computeIAJA
   
-  ! ======================================================================
-  ! ======================================================================
-subroutine FCHEM (N,T,Y,YDOT)
-! Computes the chemical evolution
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Franck Hersant
+!
+!> @date 2008
+!
+! DESCRIPTION: 
+!> @brief Computes the chemical evolution. In particular, calculate all the
+!! derivatives for abundances.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine evolve_chemical_scheme(N,T,Y,YDOT)
 use global_variables
+
 implicit none
 
 ! Inputs
 integer, intent(in) :: N
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-real(double_precision), intent(in) :: T ! Not used by the code, but needed for the ODEPACK call format expected for FCHEM
+real(double_precision), intent(in) :: T ! Not used by the code, but needed for the ODEPACK call format expected for FCHEM in dlsodes
 
 ! Outputs
 real(double_precision), intent(out), dimension(nb_species) :: YDOT
@@ -260,7 +269,7 @@ real(double_precision) :: rate
 call set_dependant_rates(y)
 
 
-no_species=nb_species+1
+no_species = nb_species + 1
 
 ydot(1:nb_species) = 0.d0
 yd2(1:nb_species) = 0.d0
@@ -279,30 +288,30 @@ do I=1,nb_reactions
 
   ! One reactant only
   if (reactant2_idx.eq.no_species) then
-    RATE=XK(I)*Y(reactant1_idx)  
+    RATE = XK(I) * Y(reactant1_idx)  
   else
     if (reactant3_idx.eq.no_species) then
       ! Two bodies reactions
-      RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
+      RATE = XK(I) * Y(reactant1_idx) * Y(reactant2_idx) * XNT
     else 
       ! Three bodies reactions
-      RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+      RATE = XK(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * XNT * XNT
     endif
   endif
 
-  YD2(product1_idx)=YD2(product1_idx)+RATE
-  YD2(product2_idx)=YD2(product2_idx)+RATE
-  YD2(product3_idx)=YD2(product3_idx)+RATE
-  YD2(product4_idx)=YD2(product4_idx)+RATE
-  YD2(reactant1_idx)=YD2(reactant1_idx)-RATE
-  YD2(reactant2_idx)=YD2(reactant2_idx)-RATE
-  YD2(reactant3_idx)=YD2(reactant3_idx)-RATE
+  YD2(product1_idx) = YD2(product1_idx) + RATE
+  YD2(product2_idx) = YD2(product2_idx) + RATE
+  YD2(product3_idx) = YD2(product3_idx) + RATE
+  YD2(product4_idx) = YD2(product4_idx) + RATE
+  YD2(reactant1_idx) = YD2(reactant1_idx) - RATE
+  YD2(reactant2_idx) = YD2(reactant2_idx) - RATE
+  YD2(reactant3_idx) = YD2(reactant3_idx) - RATE
 enddo   
 
-YDOT(1:nb_species)=YD2(1:nb_species)
+YDOT(1:nb_species) = YD2(1:nb_species)
 
 return
-end subroutine FCHEM
+end subroutine evolve_chemical_scheme
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
