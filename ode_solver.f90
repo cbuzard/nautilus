@@ -53,7 +53,9 @@ end subroutine set_chemical_reactants
 !> @date 2003
 !
 ! DESCRIPTION: 
-!> @brief Computes columns of the chemical jacobian
+!> @brief Computes columns of the chemical jacobian. This routines is the most
+!! used in term of computing time. Thus, it needs to be optimized 
+!! (around 45% of computing time is spent here).
 !
 !> @warning Even if N, T, IAN, and JAN are not actually used, they are needed
 !! because ODEPACK need a routine with a specific format, and specific inputs
@@ -102,9 +104,45 @@ do I=1,nb_reactions
   product2_idx = reaction_substances(5, i)
   product3_idx = reaction_substances(6, i)
   product4_idx = reaction_substances(7, i)
+  
+  ! if statements are written in a specific order to increase speed. The goal is to test first the most probable event, and 
+  !! then always go to 'else' statement, not to test if we have already found our case. One, then two bodies reactions are the most 
+  !! abundants reactions. 
 
-  if (reactant3_idx.ne.no_species) then
+  ! One reactant only
+  if (reactant2_idx.eq.no_species) then
+    if (reactant1_idx.eq.J) then 
+      PDJ2(product1_idx) = PDJ2(product1_idx)+XK(I)
+      PDJ2(product2_idx) = PDJ2(product2_idx)+XK(I)
+      PDJ2(product3_idx) = PDJ2(product3_idx)+XK(I)
+      PDJ2(product4_idx) = PDJ2(product4_idx)+XK(I)
+      PDJ2(reactant1_idx) = PDJ2(reactant1_idx)-XK(I)
+    endif
+  
+  ! Two bodies reaction
+  else if (reactant3_idx.eq.no_species) then
+    if (reactant1_idx.eq.J) then 
+      tmp_value = XK(I) * Y(reactant2_idx) * XNT
+      PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
+      PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
+      PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
+      PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
+      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
+    endif
 
+    if (reactant2_idx.eq.J) then 
+      tmp_value = XK(I) * Y(reactant1_idx) * XNT
+      PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
+      PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
+      PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
+      PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
+      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
+    endif
+  
+  ! Three bodies reaction
+  else
     if (reactant1_idx.eq.J) then 
       tmp_value = XK(I) * Y(reactant2_idx) * Y(reactant3_idx) * XNT2
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
@@ -136,42 +174,6 @@ do I=1,nb_reactions
       PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
       PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
       PDJ2(reactant3_idx) = PDJ2(reactant3_idx) - tmp_value
-    endif
-
-  endif
-
-  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
-
-    if (reactant1_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant2_idx) * XNT
-      PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
-      PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
-      PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
-      PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
-    endif
-
-    if (reactant2_idx.eq.J) then 
-      tmp_value = XK(I) * Y(reactant1_idx) * XNT
-      PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
-      PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
-      PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
-      PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
-    endif
-
-  endif
-
-  if (reactant2_idx.eq.no_species) then
-
-    if (reactant1_idx.eq.J) then 
-      PDJ2(product1_idx) = PDJ2(product1_idx)+XK(I)
-      PDJ2(product2_idx) = PDJ2(product2_idx)+XK(I)
-      PDJ2(product3_idx) = PDJ2(product3_idx)+XK(I)
-      PDJ2(product4_idx) = PDJ2(product4_idx)+XK(I)
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx)-XK(I)
     endif
 
   endif
