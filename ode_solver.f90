@@ -277,16 +277,17 @@ do I=1,nb_reactions
   product3_idx = reaction_substances(6, i)
   product4_idx = reaction_substances(7, i)
 
-  if (reactant3_idx.ne.no_species) then
-    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
-  endif
-
-  if ((reactant3_idx.eq.no_species).and.(reactant2_idx.ne.no_species)) then
-    RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
-  endif
-
+  ! One reactant only
   if (reactant2_idx.eq.no_species) then
     RATE=XK(I)*Y(reactant1_idx)  
+  else
+    if (reactant3_idx.eq.no_species) then
+      ! Two bodies reactions
+      RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*XNT
+    else 
+      ! Three bodies reactions
+      RATE=XK(I)*Y(reactant1_idx)*Y(reactant2_idx)*Y(reactant3_idx)*XNT*XNT
+    endif
   endif
 
   YD2(product1_idx)=YD2(product1_idx)+RATE
