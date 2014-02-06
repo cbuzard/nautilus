@@ -53,9 +53,7 @@ end subroutine set_chemical_reactants
 !> @date 2003
 !
 ! DESCRIPTION: 
-!> @brief Computes columns of the chemical jacobian. This routines is the most
-!! used in term of computing time. Thus, it needs to be optimized 
-!! (around 45% of computing time is spent here).
+!> @brief Computes a column (for the J-th species) of the chemical jacobian. 
 !
 !> @warning Even if N, T, IAN, and JAN are not actually used, they are needed
 !! because ODEPACK need a routine with a specific format, and specific inputs
@@ -207,45 +205,36 @@ end subroutine get_jacobian
 !! the list of reactions involving it. This will be used in get_jacobian 
 !! to increase speed. 
 !!\n\n
-!! max_reactions_same_species, and relevant_reactions array are set here.
+!! max_reactions_same_species is set here. nb_reactions_using_species and relevant_reactions array are set here.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine set_relevant_reactions()
+subroutine init_relevant_reactions()
 use global_variables
 implicit none
 
 ! Locals
-integer :: no_species
-
 integer, dimension(nb_reactions, nb_species+1) :: is_species_used ! For each species, tell which reactions use it or not 
-!! (if True, the species is at least one of the reactants)
+!! (0 if not used, 1 if used at least once)
 
-integer :: i,j, idx
-integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
-
-! Temp values to increase speed
-real(double_precision) :: XNT2 ! XNT*XNT, to gain speed
-real(double_precision) :: tmp_value ! To optimize speed, temporary variable is created to avoid multiple calculation of the same thing
-
-no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
-
-XNT2 = XNT * XNT
+integer :: reaction, species, idx
+integer :: reactant1_idx, reactant2_idx, reactant3_idx
 
 is_species_used(1:nb_reactions, 1:nb_species+1) = 0
 
-do i=1,nb_reactions
+do reaction=1,nb_reactions
 
-  reactant1_idx = reaction_substances(1, i)
-  reactant2_idx = reaction_substances(2, i)
-  reactant3_idx = reaction_substances(3, i)
+  reactant1_idx = reaction_substances(1, reaction)
+  reactant2_idx = reaction_substances(2, reaction)
+  reactant3_idx = reaction_substances(3, reaction)
   
-  is_species_used(i, reactant1_idx) = 1
-  is_species_used(i, reactant2_idx) = 1
-  is_species_used(i, reactant3_idx) = 1
+  is_species_used(reaction, reactant1_idx) = 1
+  is_species_used(reaction, reactant2_idx) = 1
+  is_species_used(reaction, reactant3_idx) = 1
 
 enddo
 
 ! We get the total number of reactions in which each species can be involved
+! We skip the 'nb_species+1' species that is only a fake species for "no reactant"
 nb_reactions_using_species(1:nb_species) = sum(is_species_used(1:nb_reactions, 1:nb_species), 1)
 
 ! What is the maximum number of reactions involving one particular species?
@@ -256,25 +245,21 @@ allocate(relevant_reactions(max_reactions_same_species, nb_species))
 relevant_reactions(1:max_reactions_same_species, 1:nb_species) = 0 ! For the extra elements (because not all species 
 !! will have 'max_reactions' reactions involving it).
 
-! For each species, we will list the index of reactions involing the given species. Once this list ends, 
-!! the end of the line will only have 0. 
-!! Thus, at least one species will have a full line of meaningfull indexes. 
-do j=1,nb_species
+! For each species, we get the references of reactions that have it as a reactant. The number of reactions is different for each species 
+!! Thus, at least one species will have a full line of meaningfull indexes. The other will have the rest of their line completed by zeros.
+do species=1,nb_species
   idx = 1
-  do i=1, nb_reactions
-    if (is_species_used(i, j).eq.1) then
-      relevant_reactions(idx, j) = i
+  do reaction=1, nb_reactions
+    if (is_species_used(reaction, species).eq.1) then
+      relevant_reactions(idx, species) = reaction
       idx = idx + 1
     endif
   enddo
 enddo
-!~ 
-!~ write(*,*) max_reactions
-!~ write(*,*) nb_reactions_using_species(1:nb_species)
 
 
 return
-end subroutine set_relevant_reactions
+end subroutine init_relevant_reactions
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -337,7 +322,7 @@ end subroutine computeIAJA
 !! derivatives for abundances.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine evolve_chemical_scheme(N,T,Y,YDOT)
+subroutine get_temporal_derivatives(N,T,Y,YDOT)
 use global_variables
 
 implicit none
@@ -403,7 +388,7 @@ enddo
 YDOT(1:nb_species) = YD2(1:nb_species)
 
 return
-end subroutine evolve_chemical_scheme
+end subroutine get_temporal_derivatives
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -982,7 +967,7 @@ end subroutine evolve_chemical_scheme
 !> @date 2003
 !
 ! DESCRIPTION: 
-!> @brief Modify some reaction rates ont he grain surface (itype=14) in
+!> @brief Modify some reaction rates on the grain surface (itype=14) in
 !! various conditions. Test to estimates the fastest process and replace them.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 

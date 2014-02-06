@@ -115,10 +115,6 @@ call initialisation()
 
 allocate(temp_abundances(nb_species))
 
-! TODO to be deleted when test are completed, and routine fully fonctionnal
-call set_relevant_reactions()
-!~ stop
-
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag
 ! NJAC should be around the largest printed value
@@ -299,6 +295,10 @@ call write_species()
 
 ! Initialize indices of reactants and products 
 call set_chemical_reactants()
+
+! Initialize the arrays that list, for each species, the reactions using it as a reactant
+!! max_reactions_same_species is set here. nb_reactions_using_species and relevant_reactions array are set here.
+call init_relevant_reactions()
 
 ! Initializing ZXN
 do ipts=1,nptmax
@@ -553,7 +553,7 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
     iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
     iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
-    call dlsodes(evolve_chemical_scheme,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
+    call dlsodes(get_temporal_derivatives,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
     satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       
 
     ! Whenever the solver fails converging, print the reason.
