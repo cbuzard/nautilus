@@ -112,11 +112,12 @@ do i=1,nb_reactions_using_species(j)
   ! One reactant only
   if (reactant2_idx.eq.no_species) then
     if (reactant1_idx.eq.J) then 
-      PDJ2(product1_idx) = PDJ2(product1_idx)+XK(reaction_idx)
-      PDJ2(product2_idx) = PDJ2(product2_idx)+XK(reaction_idx)
-      PDJ2(product3_idx) = PDJ2(product3_idx)+XK(reaction_idx)
-      PDJ2(product4_idx) = PDJ2(product4_idx)+XK(reaction_idx)
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx)-XK(reaction_idx)
+      tmp_value = XK(reaction_idx)
+      PDJ2(product1_idx)   = PDJ2(product1_idx) + tmp_value
+      PDJ2(product2_idx)   = PDJ2(product2_idx) + tmp_value
+      PDJ2(product3_idx)   = PDJ2(product3_idx) + tmp_value
+      PDJ2(product4_idx)   = PDJ2(product4_idx) + tmp_value
+      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
     endif
   
   ! Two bodies reaction
