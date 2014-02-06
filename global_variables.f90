@@ -170,7 +170,7 @@ integer :: wstep
 integer :: wstepr
 integer :: irateout
 integer :: testjac
-integer :: njac
+integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 integer :: iptstore
 integer :: ipts

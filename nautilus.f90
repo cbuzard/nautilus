@@ -117,7 +117,7 @@ allocate(temp_abundances(nb_species))
 
 ! Dimension of the work arrays for the solver 
 ! The number of non zero values is checked with the testjac flag
-! NJAC should be around the largest printed value
+! nb_nonzeros_values should be around the largest printed value
 
 if (testjac.eq.1) then
   write(*,*) '--------------------------------------------'
@@ -127,8 +127,8 @@ if (testjac.eq.1) then
   lrw = 20 + 9*nb_species*NPTMAX + 10000*nb_species*NPTMAX
   liw = 31 + nb_species*NPTMAX + 10000*nb_species*NPTMAX
 else
-  lrw = 20 + 3 * NJAC*nb_species + 21 * nb_species
-  liw = 31 + 3 * NJAC*nb_species + 21 * nb_species
+  lrw = 20 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
+  liw = 31 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
 endif
 
 

@@ -232,7 +232,7 @@ IS_ABSORPTION									H2 and CO self shielding
       COMMON/RCOEFF/XK
 
 testjac									testing the number of non-zero jacobian elements
-njac									number of non zero jacobian elements (per line)
+nb_nonzeros_values									number of non zero jacobian elements (per line)
 
 ! For IA and JA
 

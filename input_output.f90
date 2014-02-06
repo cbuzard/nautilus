@@ -502,8 +502,8 @@ if (isDefined) then
       case('TESTJAC')
         read(value, '(i5)') TESTJAC
         
-      case('NJAC')
-        read(value, '(i5)') NJAC
+      case('nb_nonzeros_values')
+        read(value, '(i5)') nb_nonzeros_values
          
       case default
         write(*,*) 'Warning: An unknown parameter has been found'
@@ -633,7 +633,8 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'central_mass = ', CENTRAL_MASS, ' ! Central mass (g)'
   write(10,'(a,es10.3e2,a)') 'radial_distance = ', RADIAL_DISTANCE, ' ! Radial distance (cm) for the disk model'
   write(10,'(a,i5,a)') 'TESTJAC = ', TESTJAC, ' ! Testing the number of non-zero jacobian elements ?'
-  write(10,'(a,i5,a)') 'NJAC = ', NJAC, ' ! Number of non-zero jacobian elements (per line, result of TESTJAC=1)'
+  write(10,'(a,i5,a)') 'nb_nonzeros_values = ', nb_nonzeros_values, &
+  ' ! Number of non-zero jacobian elements (per line, result of TESTJAC=1)'
   write(10,*) ''
   close(10)
   
