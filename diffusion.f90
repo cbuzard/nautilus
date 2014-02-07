@@ -12,6 +12,8 @@ use global_variables
 
 implicit none
 
+integer :: ipts ! index for spatial loops
+
 if (nptmax.eq.1) then
 
   diff1D(:)= TURBULENT_DIFFUSIVITY

@@ -111,6 +111,8 @@ integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
 real(double_precision) :: T, TOUT, TIN
 
+integer :: ipts
+
 call initialisation()
 
 allocate(temp_abundances(nb_species))

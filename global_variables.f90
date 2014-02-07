@@ -171,8 +171,7 @@ integer :: wstepr
 integer :: irateout
 integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
-integer :: iptstore
-integer :: ipts
+integer :: iptstore ! the current index of spatial sampling
 
 ! For FCHEMVW
 

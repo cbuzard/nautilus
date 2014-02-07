@@ -9,6 +9,8 @@ subroutine mesh()
 use global_variables
 implicit none
 
+integer :: ipts ! index for spatial loops
+
 do ipts=1,nptmax
   zaspace(ipts) = 1.d0 - 2.d0 * dble(ipts-1) / (2.d0 * nptmax - 1)
 enddo
@@ -33,6 +35,9 @@ use global_variables
 use diffusion
 
 implicit none
+
+integer :: ipts ! index for spatial loops
+
 
 real(double_precision) :: KFACTOR  
 real(double_precision) :: HTAU, TAUEST, NHEST, Hcold
