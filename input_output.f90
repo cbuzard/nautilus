@@ -498,12 +498,6 @@ if (isDefined) then
       
       case('radial_distance')
         read(value, '(e12.6)') RADIAL_DISTANCE
-      
-      case('TESTJAC')
-        read(value, '(i5)') TESTJAC
-        
-      case('nb_nonzeros_values')
-        read(value, '(i5)') nb_nonzeros_values
          
       case default
         write(*,*) 'Warning: An unknown parameter has been found'
@@ -632,9 +626,6 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'box_size = ', BOX_SIZE, ' ! Computing box"s size (cm)'
   write(10,'(a,es10.3e2,a)') 'central_mass = ', CENTRAL_MASS, ' ! Central mass (g)'
   write(10,'(a,es10.3e2,a)') 'radial_distance = ', RADIAL_DISTANCE, ' ! Radial distance (cm) for the disk model'
-  write(10,'(a,i5,a)') 'TESTJAC = ', TESTJAC, ' ! Testing the number of non-zero jacobian elements ?'
-  write(10,'(a,i5,a)') 'nb_nonzeros_values = ', nb_nonzeros_values, &
-  ' ! Number of non-zero jacobian elements (per line, result of TESTJAC=1)'
   write(10,*) ''
   close(10)
   
@@ -669,6 +660,10 @@ use git_infos
   write(10,'(a,a)') 'tags = ', tags
   write(10,'(a,a)') '!', modifs
   write(10,'(a)') ""
+  write(10,'(a)') '!----------------------------'
+  write(10,'(a)') '!      General infos        |'
+  write(10,'(a)') '!----------------------------'
+  write(10,'(a,i5)') 'Maximum number of non-zeros values in jacobian = ', nb_nonzeros_values
   close(10)
   
 end subroutine write_general_infos

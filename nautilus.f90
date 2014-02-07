@@ -115,31 +115,16 @@ call initialisation()
 
 allocate(temp_abundances(nb_species))
 
-! Dimension of the work arrays for the solver 
-! The number of non zero values is checked with the testjac flag
-! nb_nonzeros_values should be around the largest printed value
-
-if (testjac.eq.1) then
-  write(*,*) '--------------------------------------------'
-  write(*,*) 'Dummy run to check'
-  write(*,*) 'the number of non zero elements per column !'
-  write(*,*) '--------------------------------------------'
-  lrw = 20 + 9*nb_species*NPTMAX + 10000*nb_species*NPTMAX
-  liw = 31 + nb_species*NPTMAX + 10000*nb_species*NPTMAX
-else
-  lrw = 20 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
-  liw = 31 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
-endif
-
-
-
 ! Initializing T
 ! T = local, TIME = global
 T = 0.d0
 TIME = 0.d0
 
+lrw = 20 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
+liw = 31 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
+
 ! Allocate the JA array
-allocate(JA(1:liw))
+allocate(JA(liw))
 
 ! The real time loop
 do while (t.lt.0.9*STOP_TIME)
@@ -304,6 +289,10 @@ call init_relevant_reactions()
 do ipts=1,nptmax
   ZXN(:,ipts) = abundances(:)
 enddo
+
+! Calculate the optimum number for temporary solving-arrays in ODEPACK, based on the number of non-zeros values in 
+!! the jacobian
+call count_nonzeros()
 
 ! Write information about the code at the very end of initialisation
 call write_general_infos()
@@ -478,20 +467,12 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
   ! Locals
   integer, dimension(liw) :: IWORK
   real(double_precision), dimension(lrw) :: RWORK
-  real(double_precision), dimension(nb_species) :: DUMMYPDJ, DUMMYY
-  integer IDUMMY
   integer :: i
   real(double_precision), dimension(nb_species) :: satol
 
   real(double_precision) :: TIN
 
   integer :: NNZ
-  
-  
-! Dummy parameters for restricted call of get_jacobian
-integer, parameter :: dummy_n = 3
-real(double_precision), parameter :: dummy_t = 0.d0
-real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
   ! Initialize work arrays
 
@@ -515,18 +496,6 @@ real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
   T = 0.d0      
 
   temp_abundances(:) = abundances(:)
-
-  ! if testjac is 1, print non zero elements per column of the Jacobian
-  ! Done in odes/get_jacobian
-
-  if (TESTJAC.eq.1) then
-    DUMMYY=1.d-5
-    call set_constant_rates()
-    do IDUMMY=1,nb_species
-      call get_jacobian(n=dummy_n, t=dummy_t, y=dummyy,j=idummy,ian=dummy_ian, jan=dummy_jan, pdj=dummypdj)
-    enddo
-    STOP
-  endif
 
   call shieldingsetup()
 

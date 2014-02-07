@@ -48,6 +48,73 @@ end subroutine set_chemical_reactants
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Count the number of non-zeros elements in each line of the jacobian
+!! to dimension the arrays used in ODEPACK.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine count_nonzeros()
+use global_variables
+implicit none
+
+! Locals
+integer :: i
+
+! Dummy parameters for restricted call of get_jacobian
+real(double_precision), dimension(nb_species) :: DUMMYPDJ, DUMMYY
+integer IDUMMY
+integer, parameter :: dummy_n = 3
+real(double_precision), parameter :: dummy_t = 0.d0
+real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
+
+integer :: max_nonzeros, NUMBERJAC
+
+! TODO comment not needed anymore maybe include it in the routine doxygen documentation
+! Dimension of the work arrays for the solver 
+! The number of non zero values is checked with the testjac flag
+! nb_nonzeros_values should be around the largest printed value
+
+! Forced initialisation of global variables that will be needed, especially for the 'set_constant_rates' part. We donc care about specific values, 
+!! all that counts is that we can retrieve the number of non-zeros elements.
+XNT=2.*DENS1D(1)
+TEMP = TEMP1D(1)
+DTEMP = DTEMP1D(1)
+iptstore = 1
+
+max_nonzeros = 0
+
+dummyy(1:nb_species) = 1.d-5
+
+call set_constant_rates()
+call set_dependant_rates(dummyy)
+
+do IDUMMY=1,nb_species
+  call get_jacobian(n=dummy_n, t=dummy_t, y=dummyy,j=idummy,ian=dummy_ian, jan=dummy_jan, pdj=dummypdj)
+    
+  NUMBERJAC=0
+  do i=1,nb_species
+    if (dummypdj(i).ne.0.d0) then
+      NUMBERJAC = NUMBERJAC + 1
+    endif
+  enddo
+
+  if (NUMBERJAC.gt.max_nonzeros) then
+    max_nonzeros = NUMBERJAC
+  endif
+  
+enddo
+
+nb_nonzeros_values = max_nonzeros
+
+return
+end subroutine count_nonzeros
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
 !> Valentine Wakelam
 !
 !> @date 2003
@@ -81,7 +148,6 @@ integer :: no_species
 real(double_precision), dimension(nb_species+1) :: PDJ2
 integer :: i
 integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
-integer :: NUMBERJAC
 integer :: reaction_idx ! The index of a given reaction
 
 ! Temp values to increase speed
@@ -182,15 +248,6 @@ do i=1,nb_reactions_using_species(j)
 enddo
 
 PDJ(1:nb_species)=PDJ2(1:nb_species)
-
-IF (TESTJAC.EQ.1) then
-  NUMBERJAC=0
-  do i=1,nb_species
-    if (PDJ(i).ne.0.d0) NUMBERJAC=NUMBERJAC+1
-  enddo
-  write(*,*)  'Number of non-zero values in JAC: ', NUMBERJAC
-  return
-endif
 
 return
 end subroutine get_jacobian
