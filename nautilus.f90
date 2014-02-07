@@ -111,7 +111,7 @@ integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
 real(double_precision) :: T, TOUT, TIN
 
-integer :: ipts
+integer :: spatial_index ! index for spatial loops
 
 call initialisation()
 
@@ -141,39 +141,39 @@ do while (t.lt.0.9*STOP_TIME)
 
   write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',TIME/TYEAR,' yrs'
 
-  do ipts=1,nptmax ! Start of the spatial loop for chemistry
+  do spatial_index=1,nptmax ! Start of the spatial loop for chemistry
 
-    iptstore = ipts
+    iptstore = spatial_index
 
     ! T being changed in dlsode, needs to be defined again
 
     T=TIN
 
     ! Feed 1D physical structure
-    TAU=TAU1D(ipts)
-    X_IONISATION_RATE=X_IONISATION_RATE1D(ipts)
+    TAU=TAU1D(spatial_index)
+    X_IONISATION_RATE=X_IONISATION_RATE1D(spatial_index)
     ! XNT is the total density of H atoms (both H and H2)
     ! But DENS1D is the real number density
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)
-    XNT=2.*DENS1D(ipts)
-    TEMP=TEMP1D(ipts)
-    DTEMP=DTEMP1D(ipts)
+    XNT=2.*DENS1D(spatial_index)
+    TEMP=TEMP1D(spatial_index)
+    DTEMP=DTEMP1D(spatial_index)
 
     ! Chemical evolution for each spatial point
 
-    temp_abundances(:nb_species) = ZXN(:,ipts)
-    abundances(:nb_species) = ZXN(:,ipts)
+    temp_abundances(:nb_species) = ZXN(:,spatial_index)
+    abundances(:nb_species) = ZXN(:,spatial_index)
 
     call integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
 
     ! Output of the rates once every 10 chemical outputs
-    !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
+    !      if ((mod(it,wstepr).eq.0).and.(spatial_index.eq.irateout)) then
     call write_current_rates()
     !      endif
 
     if (istate.eq.-3) stop
 
-    ZXN(:,ipts) = abundances(:) ! putting back
+    ZXN(:,spatial_index) = abundances(:) ! putting back
 
   enddo ! end of the spatial loop for chemistry 
 
@@ -288,8 +288,8 @@ call set_chemical_reactants()
 call init_relevant_reactions()
 
 ! Initializing ZXN
-do ipts=1,nptmax
-  ZXN(:,ipts) = abundances(:)
+do spatial_index=1,nptmax
+  ZXN(:,spatial_index) = abundances(:)
 enddo
 
 ! Calculate the optimum number for temporary solving-arrays in ODEPACK, based on the number of non-zeros values in 
@@ -529,7 +529,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
-    if (istate.ne.2) write(*,*)  'IPTS = ', ipts, 'ISTATE = ', ISTATE
+    if (istate.ne.2) write(*,*)  'spatial_index = ', spatial_index, 'ISTATE = ', ISTATE
 
     call check_conservation(temp_abundances)
 

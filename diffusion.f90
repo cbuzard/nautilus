@@ -12,7 +12,7 @@ use global_variables
 
 implicit none
 
-integer :: ipts ! index for spatial loops
+integer :: spatial_index ! index for spatial loops
 
 if (nptmax.eq.1) then
 
@@ -35,8 +35,8 @@ else
   ! Alpha diffusivity (for disks)
   if (IS_DIFFUSIVITY.eq.2) then
     Omega2 = GRAVITATIONAL_CONSTANT * CENTRAL_MASS / RADIAL_DISTANCE**3
-    do ipts=1,nptmax
-      diff1D(ipts)=TURBULENT_DIFFUSIVITY*K_B*temp1D(ipts)/(mean_molecular_weight*amu)/sqrt(Omega2)
+    do spatial_index=1,nptmax
+      diff1D(spatial_index)=TURBULENT_DIFFUSIVITY*K_B*temp1D(spatial_index)/(mean_molecular_weight*amu)/sqrt(Omega2)
     enddo
   endif
 

@@ -9,10 +9,10 @@ subroutine mesh()
 use global_variables
 implicit none
 
-integer :: ipts ! index for spatial loops
+integer :: spatial_index ! index for spatial loops
 
-do ipts=1,nptmax
-  zaspace(ipts) = 1.d0 - 2.d0 * dble(ipts-1) / (2.d0 * nptmax - 1)
+do spatial_index=1,nptmax
+  zaspace(spatial_index) = 1.d0 - 2.d0 * dble(spatial_index-1) / (2.d0 * nptmax - 1)
 enddo
 
 zspace(:)=zaspace(:) * BOX_SIZE
@@ -36,7 +36,7 @@ use diffusion
 
 implicit none
 
-integer :: ipts ! index for spatial loops
+integer :: spatial_index ! index for spatial loops
 
 
 real(double_precision) :: KFACTOR  
@@ -93,10 +93,10 @@ if (nptmax.ne.1) then
   ! Overwrite DEnb_species with this estimate
   DEnb_species = 0.8*(RADIAL_DISTANCE/(100.*AU))**(-1.5)/(mean_molecular_weight*amu)/Hcold/sqrt(2.*pi)
 
-  do ipts=1, nptmax
-    !TEMP1D(ipts) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
-    TEMP1D(ipts) = TCOLD + (TWARM-TCOLD) * 0.5d0*(1.d0+tanh((abs(zspace(ipts))-2.d0*Hcold)/(Hcold/3.d0)))
-    !write(*,*) zspace(ipts)/AU,Temp1d(ipts)
+  do spatial_index=1, nptmax
+    !TEMP1D(spatial_index) = 8. + (20. - 8.) * 0.5*(1.+tanh((abs(zspace(ipts))-2.*Hcold)/(Hcold/3.d0)))
+    TEMP1D(spatial_index) = TCOLD + (TWARM-TCOLD) * 0.5d0*(1.d0+tanh((abs(zspace(spatial_index))-2.d0*Hcold)/(Hcold/3.d0)))
+    !write(*,*) zspace(spatial_index)/AU,Temp1d(spatial_index)
   enddo
 
   ! Temperature for dust is the same as gas (FH)
@@ -110,9 +110,10 @@ if (nptmax.ne.1) then
   ! Computation of the density through hydrostatic equilibrium
 
   ld1d(1)=0.d0
-  do ipts=2,nptmax
-    ld1d(ipts) = ld1d(ipts-1) - (log(TEMP1D(ipts))-log(TEMP1D(ipts-1))) - Omega2 * mean_molecular_weight &
-    * amu / (K_B * TEMP1D(ipts)) * zspace(ipts)*(zspace(ipts)-zspace(ipts-1))
+  do spatial_index=2,nptmax
+    ld1d(spatial_index) = ld1d(spatial_index-1) - (log(TEMP1D(spatial_index))-log(TEMP1D(spatial_index-1))) &
+    - Omega2 * mean_molecular_weight &
+    * amu / (K_B * TEMP1D(spatial_index)) * zspace(spatial_index)*(zspace(spatial_index)-zspace(spatial_index-1))
   enddo
 
   DENS1D(1:nptmax) = exp(ld1d(:))
@@ -147,8 +148,9 @@ if (nptmax.ne.1) then
   write(*,*) 'Used TAUBC = ', TAUBC
 
   TAU1D(1)=TAUBC
-  do ipts=2,nptmax
-    TAU1D(ipts) = TAU1D(ipts-1) + DENS1D(ipts) * 2. * KFACTOR * (zspace(ipts-1) - zspace(ipts))
+  do spatial_index=2,nptmax
+    TAU1D(spatial_index) = TAU1D(spatial_index-1) + &
+    DENS1D(spatial_index) * 2. * KFACTOR * (zspace(spatial_index-1) - zspace(spatial_index))
   enddo
 
   ! UV at 4 Hcold
@@ -171,10 +173,10 @@ if (nptmax.ne.1) then
   write(*,*) ZETAZERO
 
 
-  do ipts=1,nptmax
+  do spatial_index=1,nptmax
     ! column density of H above the point ipts
-    COLDENS=TAU1D(ipts)/KFACTOR
-    X_IONISATION_RATE1D(ipts) = ZETAZERO * &
+    COLDENS=TAU1D(spatial_index)/KFACTOR
+    X_IONISATION_RATE1D(spatial_index) = ZETAZERO * &
     (1.d0/(3.d0*COLDENS) * (EXP(-COLDENS*6.d-23*0.5D0**(-3))-EXP(-COLDENS*6.d-23*0.014D0**(-3))) + &
     3.d0/(8.d0*COLDENS) * (EXP(-COLDENS*2.6d-22*7.D0**(-8/3))-EXP(-COLDENS*2.6d-22*0.5D0**(-8/3))) + &
     3.d0/(8.d0*COLDENS) * (1.D0-EXP(-COLDENS*4.4d-22*7.D0**(-8/3))))
