@@ -47,6 +47,53 @@ Turbulent mixing implemented through first order operator splitting\n
 @section section_example How To Use
 A folder containing an example simulation is available in example_simulation/
 
+To use the code, my advice would be to have one folder for the code, in a specific location. Then, in another location, you can 
+create as many folders as you want, with one specific simulation in each folder. 
+
+In my case, I always put my programs in a folder named <b>~/bin</b>. 
+Then, to easily access your program, you can modify your commandline preferences by editing your bash profile <b>~/.bashrc</b>. 
+
+To easily go to your program directory via : 
+@verbatim
+cd $nautilus
+@endverbatim
+add the following line to your bash profile : 
+@code
+export nautilus="$HOME/bin/nautilus"
+@endcode
+
+To launch Nautilus wherever you want in your server via : 
+@verbatim
+nautilus
+@endverbatim
+add the following line to your bash profile : 
+@code
+alias nautilus="$HOME/bin/nautilus/nautilus"
+@endcode
+
+Keep in mind that typing
+@verbatim
+> cd -
+@endverbatim
+in your Terminal, you will go back to the previous directory (not the parent one, the previous one). Typing this command several 
+times allow you to switch easily between two folders.
+
+@section section_commands Basic commands
+
+Compile Nautilus
+@code
+Makefile.py
+@endcode
+
+See all compilation options
+@code
+Makefile.py help
+@endcode
+
+Generate Doxygen documentation (all errors will be stored in a <b>doxygen.log</b> file)
+@code
+doxygen doxygen.conf 2>doxygen.log
+@endcode
 
 @section section_input Input files
 
