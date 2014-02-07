@@ -169,7 +169,6 @@ real(double_precision) :: NH2 ! column density (for the self shielding)
 integer :: wstep
 integer :: wstepr
 integer :: irateout
-integer :: testjac
 integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 integer :: iptstore
