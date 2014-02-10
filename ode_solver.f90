@@ -115,9 +115,9 @@ end subroutine count_nonzeros
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
-!> Valentine Wakelam
+!> Christophe Cossou & Franck Hersant
 !
-!> @date 2003
+!> @date 2014
 !
 ! DESCRIPTION: 
 !> @brief Computes a column (for the J-th species) of the chemical jacobian. 

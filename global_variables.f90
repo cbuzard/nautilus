@@ -179,8 +179,8 @@ integer, allocatable, dimension(:,:) :: reaction_substances !< for all reactions
 
 ! For IA and JA
 
-integer, allocatable, dimension(:) :: IA
-integer, allocatable, dimension(:) :: JA
+integer, allocatable, dimension(:) :: IA !< For each species, the number (minus 1) of non-zeros values for the previous species
+integer, allocatable, dimension(:) :: JA !< List the non-zeros values. For each non-zeros values, tell to what species it correspond 
 
 contains 
 
