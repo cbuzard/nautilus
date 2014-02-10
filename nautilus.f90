@@ -519,10 +519,8 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
 
     ! Feed IWORK with IA and JA
 
-    call computeIAJA(temp_abundances)
-    NNZ=IA(nb_species+1)-1
-    iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
-    iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
+    call computeIAJA(temp_abundances, iwork)
+    
 
     call dlsodes(get_temporal_derivatives,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
     satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       

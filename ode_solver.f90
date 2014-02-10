@@ -329,16 +329,20 @@ end subroutine init_relevant_reactions
 !> @brief Calculates the position of non-zero values in the jacobian
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine computeIAJA(Y)
+subroutine computeIAJA(Y, iwork)
 use global_variables
 implicit none
 
 ! Inputs
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
+! Outputs
+integer, dimension(:) :: iwork
+
 ! Locals
 integer :: i,j,k
 real(double_precision), dimension(nb_species) :: PDJ
+integer :: NNZ
 
 ! Dummy parameters for restricted call of get_jacobian
 integer, parameter :: dummy_n = 3
@@ -365,6 +369,10 @@ do j=1,nb_species
 enddo
 
 IA(nb_species+1)=k
+
+NNZ=IA(nb_species+1)-1
+iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
+iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
 return
 end subroutine computeIAJA
