@@ -143,6 +143,10 @@ integer, dimension(:,:), allocatable :: relevant_reactions !< For each species, 
 !! When 0 are encountered for a given species, this means that no more reactions involve it. dimensions : (max_reactions_same_species, nb_species)
 integer, dimension(:), allocatable :: nb_reactions_using_species !< For each species, the number of reactions in which it is used
 
+integer, dimension(:), allocatable :: IWORK
+real(double_precision), dimension(:), allocatable :: RWORK
+integer :: lrw, liw
+
 ! Diffusion and 1D variables
 real(double_precision), dimension(nptmax) :: zspace ! space variables
 real(double_precision), dimension(nptmax) :: zaspace ! space variables
@@ -177,10 +181,6 @@ integer :: iptstore ! the current index of spatial sampling
 
 integer, allocatable, dimension(:,:) :: reaction_substances !< for all reactions, list for reactants (first 3) and products (last 4). Size (7, nb_reactions)
 
-! For IA and JA
-
-integer, allocatable, dimension(:) :: IA !< For each species, the number (minus 1) of non-zeros values for the previous species
-integer, allocatable, dimension(:) :: JA !< List the non-zeros values. For each non-zeros values, tell to what species it correspond 
 
 contains 
 
@@ -383,7 +383,6 @@ allocate(rq1(nb_species))
 allocate(rq2(nb_species))
 allocate(icg(nb_species))
 allocate(zxn(nb_species, nptmax))
-allocate(ia(nb_species+1))
 allocate(nb_reactions_using_species(nb_species))
 
 allocate(xj(nb_reactions))

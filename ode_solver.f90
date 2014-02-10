@@ -321,23 +321,46 @@ end subroutine init_relevant_reactions
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Initialize working arrays used for ODEPACK. We must know 
+!! in advance the maximum number of non-zeros elements. 
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine initialize_work_arrays()
+use global_variables
+implicit none
+
+lrw = 20 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
+liw = 31 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
+
+allocate(iwork(liw))
+allocate(rwork(lrw))
+
+
+return
+end subroutine initialize_work_arrays
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
 !> Franck Hersant
 !
 !> @date 2008
 !
 ! DESCRIPTION: 
-!> @brief Calculates the position of non-zero values in the jacobian
+!> @brief Calculates the position of non-zero values in the jacobian. 
+!! Set the global variables iwork and rwork
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine computeIAJA(Y, iwork)
+subroutine set_work_arrays(Y)
 use global_variables
 implicit none
 
 ! Inputs
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-
-! Outputs
-integer, dimension(:) :: iwork
 
 ! Locals
 integer :: i,j,k
@@ -349,8 +372,26 @@ integer, parameter :: dummy_n = 3
 real(double_precision), parameter :: dummy_t = 0.d0
 real(double_precision), dimension(dummy_n) :: dummy_ian, dummy_jan
 
+
+! For IA and JA
+integer, dimension(nb_species+1) :: IA !< For each species, the number (minus 1) of non-zeros values for the previous species
+integer, dimension(liw) :: JA !< List the non-zeros values. For each non-zeros values, tell to what species it correspond 
+
 call set_constant_rates()
 call set_dependant_rates(Y)
+
+! Initialize work arrays
+
+iwork(1:liw) = 0
+rwork(1:lrw) = 0.d0
+IWORK(5) = 5
+RWORK(6) = 3.154D14
+IWORK(6) = 10000
+IWORK(7) = 2
+
+if (timestep.eq.1) then
+  IWORK(6)=2000
+endif
 
 k=1
 
@@ -375,8 +416,8 @@ iwork(30+1:30+nb_species+1)=IA(1:nb_species+1)
 iwork(31+nb_species+1:31+nb_species+NNZ)=JA(1:NNZ)
 
 return
-end subroutine computeIAJA
-  
+end subroutine set_work_arrays
+
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
 !> Franck Hersant

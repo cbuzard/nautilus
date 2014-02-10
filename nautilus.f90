@@ -99,8 +99,6 @@ use shielding
 
 implicit none
 
-integer :: lrw, liw
-
 real(double_precision), dimension(:), allocatable :: temp_abundances ! nb_species
 
 integer :: itol = 2
@@ -115,18 +113,14 @@ integer :: spatial_index ! index for spatial loops
 
 call initialisation()
 
+call initialize_work_arrays()
+
 allocate(temp_abundances(nb_species))
 
 ! Initializing T
 ! T = local, TIME = global
 T = 0.d0
 TIME = 0.d0
-
-lrw = 20 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
-liw = 31 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
-
-! Allocate the JA array
-allocate(JA(liw))
 
 ! The real time loop
 do while (t.lt.0.9*STOP_TIME)
@@ -164,7 +158,7 @@ do while (t.lt.0.9*STOP_TIME)
     temp_abundances(:nb_species) = ZXN(:,spatial_index)
     abundances(:nb_species) = ZXN(:,spatial_index)
 
-    call integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+    call integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(spatial_index.eq.irateout)) then
@@ -445,15 +439,13 @@ end subroutine index_datas
 !> @brief Chemically evolve from T to TOUT the given spatial point
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf)
 
   use global_variables
   
   implicit none
   
   ! Inputs
-  integer, intent(in) :: liw
-  integer, intent(in) :: lrw
   integer, intent(in) :: itol
   integer, intent(in) :: itask
   integer, intent(in) :: iopt
@@ -467,27 +459,11 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
   real(double_precision), intent(out), dimension(nb_species) :: temp_abundances
  
   ! Locals
-  integer, dimension(liw) :: IWORK
-  real(double_precision), dimension(lrw) :: RWORK
+
   integer :: i
   real(double_precision), dimension(nb_species) :: satol
 
   real(double_precision) :: TIN
-
-  integer :: NNZ
-
-  ! Initialize work arrays
-
-  iwork(:) = 0
-  rwork(:) = 0.d0
-  IWORK(5) = 5
-  RWORK(6) = 3.154D14
-  IWORK(6) = 10000
-  IWORK(7) = 2
-
-  if (timestep.eq.1) then
-    IWORK(6)=2000
-  endif
   
   ! Changing the time to avoid T + DT = T 
 
@@ -519,7 +495,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
 
     ! Feed IWORK with IA and JA
 
-    call computeIAJA(temp_abundances, iwork)
+    call set_work_arrays(Y=temp_abundances)
     
 
     call dlsodes(get_temporal_derivatives,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&

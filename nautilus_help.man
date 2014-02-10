@@ -492,7 +492,7 @@ time loop (from 0 to 90% of the final time STOP_TIME)
 			-> call get_jacobian(DUMMYY,IDUMMY,DUMMYPDJ)
 			-> call shieldingsetup
 			-> call set_constant_rates(Y)
-			-> call computeIAJA
+			-> call initialize_work_arrays
 			-> call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 			-> call CONSERVE(Y)
 	
@@ -731,7 +731,7 @@ call shieldingsetup
 ! H2 for instance. Helps running a bit faster
 call set_constant_rates(Y)
 ! Feed IWORK with IA and JA
-call computeIAJA(Y)
+call initialize_work_arrays(Y)
 call dlsodes(fchem,nb_species,y,t,tout,itol,RELATIVE_TOLERANCE,satol,itask,istate,iopt,rwork,lrw,iwork,liw,jac,mf) 
 !Whenever the solver fails converging, print the reason.
 ! cf odpkdmain.f for translation
@@ -773,7 +773,7 @@ when dust is turned off, zero all dust rates
 
 ========get_jacobian============================================				nls_odes.f90
 ========SHIELDINGSETUP===================================				nautilus.f90
-========COMPUTEIAJA======================================				nls_odes.f90
+========initialize_work_arrays======================================				nls_odes.f90
 ========DLSODE===========================================               opkdmain.f
 Livermore Solver for Ordinary Differential Equations.
            DLSODE solves the initial-value problem for stiff or
