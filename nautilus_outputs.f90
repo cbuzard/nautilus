@@ -76,11 +76,22 @@ enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
 write(*,'(a,a)') achar(13), 'Reading unformatted outputs... Done'
 
+! Test if the folder exists
+inquire(file='ab', exist=isDefined)
+
+! We create the folder 'ab' if he doesn't exists.
+if (.not.isDefined) then
+  call system("mkdir ab")
+end if
+
+! Remove all existing *.ab if needed. Will return a warning in standard output if nothing exists
+call system("rm ab/*.ab")
+
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Writing *.ab ASCII files...'
 ! We write ASCII output file
 do species=1, nb_species
-  write(filename_output, '(a,a)') trim(species_name(species)), '.ab'
+  write(filename_output, '(a,a,a)') 'ab/', trim(species_name(species)), '.ab'
   open(10, file=filename_output)
   write(10,'(a)') '! time ; Each column is the abundance for several spatial positions'
   do output=1, nb_outputs
