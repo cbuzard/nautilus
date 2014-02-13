@@ -17,17 +17,25 @@ PROFILING_OPTIONS = "-g -pg"
 
 LOG_NAME = "compilation.log"
 
+nautilus_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90 git_infos.f90", "-c global_variables.f90", 
+"-c shielding.f90 diffusion.f90 input_output.f90 model_1D.f90 ode_solver.f90", 
+"-o nautilus nautilus.f90 opk*.f90 *.o"]
+
+output_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90", "-o nautilus_outputs nautilus_outputs.f90 *.o"]
+
 # Parameters
 debug = False
 gdb = False
 profiling = False
 force = False # To force the compilation of every module
+compilation_order = nautilus_order
 
 isProblem = False
 problem_message = "The script can take various arguments :" + "\n" + \
 "(no spaces between the key and the values, only separated by '=')" + "\n" + \
 " * help : display a little help message on HOW to use various options" + "\n" + \
 " * force : To force the compilation of every module even those not modified" + "\n" + \
+" * output : To compile binary abundances instead of Nautilus" + "\n" + \
 " * debug : [%s] activate debug options" % debug + "\n" + \
 " * gdb : [%s] activate options for gdb" % gdb + "\n" + \
 " * profiling : [%s] activate options for profiling" % profiling + "\n" + \
@@ -187,6 +195,8 @@ for arg in sys.argv[1:]:
     debug = True
   elif (key == 'force'):
     force = True
+  elif (key == 'output'):
+    compilation_order = output_order
   elif (key == 'gdb'):
     gdb = True
   elif (key == 'profiling'):
@@ -219,9 +229,7 @@ if profiling:
 if os.path.isfile(LOG_NAME):
   os.remove(LOG_NAME)
 
-compilation_order = ["-c numerical_types.f90 iso_fortran_env.f90 git_infos.f90", "-c global_variables.f90", 
-"-c shielding.f90 diffusion.f90 input_output.f90 model_1D.f90 ode_solver.f90", 
-"-o nautilus nautilus.f90 opk*.f90 *.o"]
+
 
 for order in compilation_order:
   command = "%s %s %s" % (COMPILATOR, OPTIONS, order)

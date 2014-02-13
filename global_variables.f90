@@ -10,6 +10,7 @@
 module global_variables
 use numerical_types
 use iso_fortran_env
+use utilities
 
 implicit none
 integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
@@ -191,71 +192,6 @@ contains
 !> @date 2014
 !
 ! DESCRIPTION: 
-!> @brief Routine to retrieve the number of lines of a given file whose
-!! filename is passed as an argument. 
-!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_linenumber(filename, nb_lines)
-
-  implicit none
-  
-  ! Input
-  character(len=*), intent(in) :: filename !< [in] the filename of the file we want the number of lines
-  
-  ! Output
-  integer, intent(out) :: nb_lines !< [out] the number of line of the input file
-  
-  ! Local
-  integer :: error
-  logical test
-  character(len=80) :: line
-  character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
-  integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
-
-  !------------------------------------------------------------------------------
-  nb_lines = 0
-  
-  ! Read in filenames and check for duplicate filenames
-  inquire (file=filename, exist=test)
-  if (.not.test) then
-    write(Error_Unit,'(a,a,a)') 'Error: the file "',trim(filename),'" does not exist.'
-    call exit(1)
-  end if
-  open(15, file=filename, status='old')
-  
-  error = 0
-  do 
-    read(15,'(a)',iostat=error) line
-    
-    if(error.ne.0) then
-      exit
-    endif
-    
-    ! We get only what is on the left of an eventual comment parameter
-    comment_position = index(line, comment_character)
-    
-    ! if there are comments on the current line, we get rid of them
-    if (comment_position.ne.0) then
-      line = line(1:comment_position - 1)
-    end if
-    
-    
-    
-    if (trim(line).ne.'') then
-      nb_lines = nb_lines + 1
-    endif
-  enddo
-  close(15)
-  
-end subroutine get_linenumber
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!> @author 
-!> Christophe Cossou
-!
-!> @date 2014
-!
-! DESCRIPTION: 
 !> @brief Routine to determine array sizes, namely number of reactions, 
 !! of species, for gas, grain and in total. 
 !! some global size are set (nb_species_for_gas, nb_gas_phase_reactions, nb_species_for_gas, nb_surface_reactions, nb_species, nb_reactions)\n
@@ -279,79 +215,6 @@ nb_species = nb_species_for_gas + nb_species_for_grain ! The total number of spe
 nb_reactions = nb_gas_phase_reactions + nb_surface_reactions ! The total number of reactions, sum of species in gas and grain
 
 end subroutine get_array_sizes
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!> @author 
-!> Christophe Cossou
-!
-!> @date 2014
-!
-! DESCRIPTION: 
-!> @brief For a given line passed as an argument, return the number of columns on this line
-!! i.e, the number of tokens separated by spaces.
-!
-!> @return number of columns (separated by spaces) on the input string
-!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-integer function get_nb_columns(filename)
-implicit none
-
-! Inputs
-character(len=*), intent(in) :: filename !< [in] datafile name we want to get the number of columns
-
-! Locals
-integer :: i, n, toks
-character(len=200) :: line
-character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
-integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
-integer :: error !< to store the state of a read instruction
-
-logical :: isDefined
-
-inquire(file=filename, exist=isDefined)
-if (isDefined) then
-
-  open(10, file=filename, status='old')
-  
-  ! We get the first data line (without taking into account commented or blanck lines)
-  line = ''
-  do while(line.eq.'')
-    read(10, '(a)', iostat=error) line
-    
-    if (error /= 0) exit
-      
-    ! We get only what is on the left of an eventual comment parameter
-    comment_position = index(line, comment_character)
-    
-    ! if there are comments on the current line, we get rid of them
-    if (comment_position.ne.0) then
-      line = line(1:comment_position - 1)
-    end if
-  enddo
-  close(10)
-else
-  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
-  call exit(1)
-endif
-
-i = 1
-n = len_trim(line)
-toks = 0
-get_nb_columns = 0
-do while(i <= n)
-   do while(line(i:i) == ' ') 
-     i = i + 1
-     if (n < i) return
-   enddo
-   toks = toks + 1
-   get_nb_columns = toks
-   do
-     i = i + 1
-     if (n < i) return
-     if (line(i:i) == ' ') exit
-   enddo
-enddo
-end function get_nb_columns 
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 

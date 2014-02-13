@@ -96,6 +96,7 @@ use model_1D
 use ode_solver
 use iso_fortran_env
 use shielding
+use utilities
 
 implicit none
 

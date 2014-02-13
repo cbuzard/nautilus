@@ -15,3 +15,4 @@ nautilus_original/nautilus
 git_infos.f90
 profiling/
 Makefile_val.py
+nautilus_outputs
