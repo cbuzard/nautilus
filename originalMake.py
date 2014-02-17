@@ -24,8 +24,8 @@ FOLDER = "nautilus_original"
 
 os.chdir(FOLDER)
 
-command = "gfortran -march=native -ffast-math -c nls_header_mod.f90"
+command = "gfortran -O3  -ffast-math -c nls_header_mod.f90"
 run(command)
 
-command = "gfortran -march=native -ffast-math -o nautilus opk*.f nautilus.f90 nls*.f90 "
+command = "gfortran -O3  -ffast-math -o nautilus opk*.f nautilus.f90 nls*.f90 "
 run(command)
