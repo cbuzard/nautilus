@@ -123,7 +123,8 @@ integer, allocatable, dimension(:) :: itype
 integer, allocatable, dimension(:) :: jsp1
 integer, allocatable, dimension(:) :: jsp2
 integer, allocatable, dimension(:) :: FORMULA
-integer, allocatable, dimension(:) :: NUM
+integer, allocatable, dimension(:) :: NUM !< index of the reactions (one of the columns of the concerned file, 
+!! declaring a given number for each reaction, like a hashtag.
 integer, allocatable, dimension(:) :: icg
 integer, allocatable, dimension(:,:) :: species_composition !< number of atom of each element composition the given species. Size (NB_PRIME_ELEMENTS,nb_species)
 integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < Tell for each prime element its index in the global array of all elements. Size (NB_PRIME_ELEMENTS)
