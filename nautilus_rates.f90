@@ -14,13 +14,21 @@ integer :: error ! to store the state of a read instruction
 logical :: isDefined
 
 integer :: nptmax = 1
-integer :: nb_outputs !< The total number of outputs
-integer :: nb_species !< the total number of species
+
+character(len=80) :: rate_format
 
 character(len=11), dimension(:), allocatable :: species_name !< species name as a string
 real(double_precision), dimension(:,:,:), allocatable :: abundances !< abundances over time for each species. (nb_outputs, nb_species)
 
-integer :: nb_species_for_gas, nb_species_for_grain !< temporary values to store the total number of species
+! Temporary values to store the total number of species and reactions
+integer :: nb_species_for_grain !< number of species involved in grain surface reactions
+integer :: nb_surface_reactions !< number of reactions on the grain surface
+integer :: nb_species_for_gas !< number of species involved in gas phase reactions
+integer :: nb_gas_phase_reactions !< number of reactions in gas phase
+
+integer :: nb_outputs !< The total number of outputs
+integer :: nb_species !< the total number of species
+integer :: nb_reactions !< the total number of reactions
 
 real(double_precision), dimension(:), allocatable :: time
 real(double_precision), dimension(:,:), allocatable :: temperature
@@ -30,7 +38,7 @@ real(double_precision), dimension(:,:), allocatable :: zeta
 real(double_precision) :: zspace
 
 ! For rates
-real(double_precision), allocatable, dimension(:) :: XK ! (nb_outputs, nb_reactions)
+real(double_precision), allocatable, dimension(:,:) :: XK ! (nb_outputs, nb_reactions)
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
 integer, allocatable, dimension(:) :: NUM !< index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
@@ -52,13 +60,18 @@ nb_outputs = nb_outputs - 1
 
 ! We get the number of reactions and species
 call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
+call get_linenumber(filename='gas_reactions.in', nb_lines=nb_gas_phase_reactions)
+
 call get_linenumber(filename='grain_species.in', nb_lines=nb_species_for_grain)
+call get_linenumber(filename='grain_reactions.in', nb_lines=nb_surface_reactions)
 
 nb_species = nb_species_for_gas + nb_species_for_grain ! The total number of species, sum of species in gas and grain
+nb_reactions = nb_gas_phase_reactions + nb_surface_reactions ! The total number of reactions, sum of species in gas and grain
 
 write(*,'(a, i5)') 'Spatial resolution: ', nptmax
 write(*,'(a, i5)') 'Number of time outputs: ', nb_outputs
 write(*,'(a, i5)') 'Number of species: ', nb_species
+write(*,'(a, i6)') 'Number of reactions: ', nb_reactions
 
 ! We allocate the output arrays
 allocate(species_name(nb_species))
@@ -74,10 +87,10 @@ allocate(abundances(nb_outputs, nb_species+1, nptmax)) ! We create an extra spec
 allocate(symbol(7,nb_reactions))
 allocate(xk(nb_outputs, nb_reactions))
 allocate(num(nb_reactions))
-allocate(reaction_substances(7, nb_reactions))
+allocate(reaction_substances(3, nb_reactions))
 
 ! Outputs
-allocate(reaction_fluxes(nb_outputs, nb_reactions)
+allocate(reaction_fluxes(nb_outputs, nb_reactions))
 
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Reading unformatted outputs...'
@@ -107,26 +120,31 @@ write(*,'(a,a)') achar(13), 'Reading unformatted outputs... Done'
 !! more easily.
 abundances(1:nb_outputs, nb_species+1, 1:nptmax) = 1.d0
 
+! We retrieve indexes of each reactants for each reaction
+call set_only_reactants()
+
+! We write fluxes for all reactions and all output times
 do output=1, nb_outputs
   do reaction=1, nb_reactions
     reactant1 = reaction_substances(1, reaction)
     reactant2 = reaction_substances(2, reaction)
     reactant3 = reaction_substances(3, reaction)
-    
+
     reaction_fluxes(output, reaction) = xk(output, reaction) * abundances(output, reactant1, 1) * &
                                         abundances(output, reactant2, 1) * abundances(output, reactant3, 1)
   enddo
 enddo
 
-
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Writing rates ASCII files...'
+
+write(rate_format, '(a,i5,a)') '(i6,', nb_outputs, '(es12.4e2))'
+
 ! We write ASCII output file
 open(10, file='rates.dat')
 write(10,'(a)') '! reaction index ; Each column is the flux for several output times'
 do reaction=1, nb_reactions
-
-  write(10,*) num(reaction), reaction_fluxes(1:nb_outputs, reaction)
+  write(10,rate_format) num(reaction), reaction_fluxes(1:nb_outputs, reaction)
 enddo
 close(10)
 
@@ -137,16 +155,15 @@ contains
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
-!> Franck Hersant
+!> Christophe Cossou
 !
-!> @date 2003
+!> @date 2014
 !
 ! DESCRIPTION: 
-!> @brief Initialize reactants and products of all reactions
+!> @brief Initialize reactants indexes for all reactions. Usefull to retrieve abundances quickly
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine set_chemical_reactants()
-use global_variables
+subroutine set_only_reactants()
 
 implicit none
 
@@ -158,12 +175,12 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
-reaction_substances(1:7, 1:nb_reactions) = no_species
+reaction_substances(1:3, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
-    do L=1,7
+    do L=1,3
       if (SYMBOL(L,I).EQ.species_name(J)) then
         reaction_substances(L,I) = J
       endif
@@ -173,6 +190,6 @@ do I=1,nb_reactions
 enddo   
 
 return
-end subroutine set_chemical_reactants
+end subroutine set_only_reactants
 
 end program nautilus_rates

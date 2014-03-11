@@ -16,3 +16,4 @@ git_infos.f90
 profiling/
 nautilus_outputs
 *.ab
+nautilus_rates
