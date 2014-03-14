@@ -15,7 +15,7 @@ logical :: isDefined
 
 integer :: nptmax = 1
 
-character(len=80) :: rate_format
+character(len=80) :: rate_format, time_format !< string to store specific format used to output datas
 
 character(len=11), dimension(:), allocatable :: species_name !< species name as a string
 real(double_precision), dimension(:,:,:), allocatable :: abundances !< abundances over time for each species. (nb_outputs, nb_species)
@@ -108,7 +108,7 @@ do output=1,nb_outputs
 
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) species_name(1:nb_species)
-  read(10) symbol(7, 1:nb_reactions)
+  read(10) symbol(1:7, 1:nb_reactions)
   read(10) xk(output,1:nb_reactions)
   read(10) num(1:nb_reactions)
   close(10)
@@ -122,6 +122,15 @@ abundances(1:nb_outputs, nb_species+1, 1:nptmax) = 1.d0
 
 ! We retrieve indexes of each reactants for each reaction
 call set_only_reactants()
+
+! We replace blanck species by 'XXX' for the outputs constrains
+do reaction=1,nb_reactions
+  do species=1,7
+    if (symbol(species, reaction).eq.'   ') then
+      symbol(species, reaction) = 'XXX'
+    endif
+  enddo
+enddo
 
 ! We write fluxes for all reactions and all output times
 do output=1, nb_outputs
@@ -138,13 +147,16 @@ enddo
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Writing rates ASCII files...'
 
-write(rate_format, '(a,i5,a)') '(i6,', nb_outputs, '(es12.4e2))'
+write(rate_format, '(a,i5,a)') '(7(a11," "),', nb_outputs, '(es12.4e2),i5)'
+write(time_format, '(a,i5,a)') '(73(" "),a11,', nb_outputs, '(es12.4e2))'
 
 ! We write ASCII output file
-open(10, file='rates.dat')
-write(10,'(a)') '! reaction index ; Each column is the flux for several output times'
+open(10, file='rates.out')
+! all 7 species involved ('XXX' if no species) ; Each column is the flux for several output times'
+! The first line list time for each column of flux
+write(10, time_format) ' Time (yr)', time(1:nb_outputs)
 do reaction=1, nb_reactions
-  write(10,rate_format) num(reaction), reaction_fluxes(1:nb_outputs, reaction)
+  write(10,rate_format) symbol(1:7, reaction), reaction_fluxes(1:nb_outputs, reaction), num(reaction)
 enddo
 close(10)
 
