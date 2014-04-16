@@ -30,6 +30,7 @@ debug = False
 gdb = False
 profiling = False
 force = False # To force the compilation of every module
+ignoreOpkdWarnings = True
 compilation_order = nautilus_order
 
 isProblem = False
@@ -39,6 +40,7 @@ problem_message = "The script can take various arguments :" + "\n" + \
 " * force : To force the compilation of every module even those not modified" + "\n" + \
 " * output : To compile binary abundances (./nautilus_outputs) instead of Nautilus" + "\n" + \
 " * rates : To compile binary rates (./nautilus_rates) instead of Nautilus" + "\n" + \
+" * opkd : To include warnings of opkd" + "\n" + \
 " * debug : [%s] activate debug options" % debug + "\n" + \
 " * gdb : [%s] activate options for gdb" % gdb + "\n" + \
 " * profiling : [%s] activate options for profiling" % profiling + "\n" + \
@@ -154,6 +156,34 @@ implicit none
   f90source.write(F90_END)
   f90source.close()
   
+  
+def LogPostProcessing():
+  """Function to modify LOG_NAME file in various conditions. 
+  Especially, supress warnings due to opkd package that we cannot modify
+  since this is an unfortunate black box."""
+
+  if ignoreOpkdWarnings:
+    objectFile = open(LOG_NAME, 'r')
+    lines = objectFile.readlines()
+    objectFile.close()
+    
+    new_lines = []
+    i = 0
+    while (i<len(lines)):
+      line = lines[i]
+      
+      if (line.startswith("opkd")):
+        for j in range(5):
+          del(lines[i])
+      else:
+        i += 1
+        new_lines.append(line)
+    
+    objectFile = open(LOG_NAME, 'w')
+    for line in new_lines:
+      objectFile.write(line)
+    objectFile.close()
+  
 def run_compilation(commande):
   """lance une commande qui sera typiquement soit une liste, soit une 
   commande seule. La fonction renvoit un tuple avec la sortie, 
@@ -175,6 +205,7 @@ def run_compilation(commande):
     f.close()
     
     print("Compilation error, see '%s'" % LOG_NAME)
+    LogPostProcessing()
     sys.exit(1)
   else:
     if (len(process_stderr) != 0):
@@ -202,6 +233,8 @@ for arg in sys.argv[1:]:
     compilation_order = output_order
   elif (key == 'rates'):
     compilation_order = rates_order
+  elif (key == 'opkd'):
+    ignoreOpkdWarnings = False
   elif (key == 'gdb'):
     gdb = True
   elif (key == 'profiling'):
@@ -240,5 +273,7 @@ for order in compilation_order:
   command = "%s %s %s" % (COMPILATOR, OPTIONS, order)
   print(command)
   (process_stdout, process_stderr, returncode) = run_compilation(command)
+
+LogPostProcessing()
 
 #~ pdb.set_trace()
