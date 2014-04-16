@@ -163,26 +163,27 @@ def LogPostProcessing():
   since this is an unfortunate black box."""
 
   if ignoreOpkdWarnings:
-    objectFile = open(LOG_NAME, 'r')
-    lines = objectFile.readlines()
-    objectFile.close()
-    
-    new_lines = []
-    i = 0
-    while (i<len(lines)):
-      line = lines[i]
+    if os.path.isfile(LOG_NAME):
+      objectFile = open(LOG_NAME, 'r')
+      lines = objectFile.readlines()
+      objectFile.close()
       
-      if (line.startswith("opkd")):
-        for j in range(5):
-          del(lines[i])
-      else:
-        i += 1
-        new_lines.append(line)
-    
-    objectFile = open(LOG_NAME, 'w')
-    for line in new_lines:
-      objectFile.write(line)
-    objectFile.close()
+      new_lines = []
+      i = 0
+      while (i<len(lines)):
+        line = lines[i]
+        
+        if (line.startswith("opkd")):
+          for j in range(5):
+            del(lines[i])
+        else:
+          i += 1
+          new_lines.append(line)
+      
+      objectFile = open(LOG_NAME, 'w')
+      for line in new_lines:
+        objectFile.write(line)
+      objectFile.close()
   
 def run_compilation(commande):
   """lance une commande qui sera typiquement soit une liste, soit une 
