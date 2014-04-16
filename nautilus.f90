@@ -108,7 +108,7 @@ integer :: istate = 1
 integer :: iopt = 1
 integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
-real(double_precision) :: T, TOUT, TIN
+real(double_precision) :: T, t_stop_step, t_start_step
 
 integer :: spatial_index ! index for spatial loops
 
@@ -131,8 +131,8 @@ do while (t.lt.0.9*STOP_TIME)
 
   timestep = timestep + 1
 
-  ! Store the current time in TIN (for 1D calculation)
-  TIN = T
+  ! Store the current time in t_start_step (for 1D calculation)
+  t_start_step = T
 
   write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',TIME/TYEAR,' yrs'
 
@@ -142,7 +142,7 @@ do while (t.lt.0.9*STOP_TIME)
 
     ! T being changed in dlsode, needs to be defined again
 
-    T=TIN
+    T=t_start_step
 
     ! Feed 1D physical structure
     TAU=TAU1D(spatial_index)
@@ -159,7 +159,7 @@ do while (t.lt.0.9*STOP_TIME)
     temp_abundances(:nb_species) = ZXN(:,spatial_index)
     abundances(:nb_species) = ZXN(:,spatial_index)
 
-    call integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf)
+    call integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
     ! Output of the rates once every 10 chemical outputs
     !      if ((mod(it,wstepr).eq.0).and.(spatial_index.eq.irateout)) then
@@ -437,10 +437,10 @@ end subroutine index_datas
 !> @date 2003
 !
 ! DESCRIPTION: 
-!> @brief Chemically evolve from T to TOUT the given spatial point
+!> @brief Chemically evolve from T to t_stop_step the given spatial point
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,istate,iopt,mf)
+subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
   use global_variables
   
@@ -456,7 +456,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
   ! Outputs
   integer, intent(out) :: istate
   real(double_precision), intent(out) :: t
-  real(double_precision), intent(out) :: TOUT
+  real(double_precision), intent(out) :: t_stop_step
   real(double_precision), intent(out), dimension(nb_species) :: temp_abundances
  
   ! Locals
@@ -464,14 +464,14 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
   integer :: i
   real(double_precision), dimension(nb_species) :: satol
 
-  real(double_precision) :: TIN
+  real(double_precision) :: t_start_step
   
   ! Changing the time to avoid T + DT = T 
 
-  TOUT=TIME
+  t_stop_step=TIME
 
-  TIN = T
-  TOUT = TOUT - TIN
+  t_start_step = T
+  t_stop_step = t_stop_step - t_start_step
   T = 0.d0      
 
   temp_abundances(:) = abundances(:)
@@ -480,7 +480,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
 
   ! Don't stop running, Forrest
 
-  do while (t.lt.tout)
+  do while (t.lt.t_stop_step)
 
     istate = 1
 
@@ -499,7 +499,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
     call set_work_arrays(Y=temp_abundances)
     
 
-    call dlsodes(get_temporal_derivatives,nb_species,temp_abundances,t,tout,itol,RELATIVE_TOLERANCE,&
+    call dlsodes(get_temporal_derivatives,nb_species,temp_abundances,t,t_stop_step,itol,RELATIVE_TOLERANCE,&
     satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       
 
     ! Whenever the solver fails converging, print the reason.
@@ -511,7 +511,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,TOUT,itol,atol,itask,ista
     ! Stop, Forrest
   enddo
 
-  T = TOUT + TIN 
+  T = t_stop_step + t_start_step 
 
   abundances(:) = temp_abundances(:)
 
