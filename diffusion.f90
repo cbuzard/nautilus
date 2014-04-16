@@ -6,45 +6,6 @@ implicit none
 
 contains
 
-subroutine diffusion_setup()
-use global_variables
-! Computes the value of the diffusion coefficient (and its variations in space)
-
-implicit none
-
-integer :: spatial_index ! index for spatial loops
-
-if (nptmax.eq.1) then
-
-  diff1D(:)= TURBULENT_DIFFUSIVITY
-
-  ! No diffusion in 0D
-  if (IS_DIFFUSIVITY.ne.0) then
-    write(*,*) 'No diffusion allowed in 0D. Please change the IS_DIFFUSIVITY value in parameters.in'
-    stop
-  endif
-
-else
-
-  ! No diffusion
-  if (IS_DIFFUSIVITY.eq.0) diff1D(:) = TURBULENT_DIFFUSIVITY ! diffty then only defines the timescale
-
-  ! Constant diffusivity
-  if (IS_DIFFUSIVITY.eq.1) diff1D(:) = TURBULENT_DIFFUSIVITY
-
-  ! Alpha diffusivity (for disks)
-  if (IS_DIFFUSIVITY.eq.2) then
-    Omega2 = GRAVITATIONAL_CONSTANT * CENTRAL_MASS / RADIAL_DISTANCE**3
-    do spatial_index=1,nptmax
-      diff1D(spatial_index)=TURBULENT_DIFFUSIVITY*K_B*temp1D(spatial_index)/(mean_molecular_weight*amu)/sqrt(Omega2)
-    enddo
-  endif
-
-endif
-
-return
-end subroutine diffusion_setup
-
 subroutine zdiffusion()
 use global_variables
 implicit none

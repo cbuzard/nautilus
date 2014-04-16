@@ -47,7 +47,7 @@ TAU1D(:)=INITIAL_VISUAL_EXTINCTION
 DENS1D(:)=initial_gas_density/2.
 X_IONISATION_RATE1D(:)=X_IONISATION_RATE
 
-call diffusion_setup()
+diff1D(:)= TURBULENT_DIFFUSIVITY
 
 return
 end subroutine phys_1D
