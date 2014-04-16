@@ -285,7 +285,13 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 call check_conservation(abundances(1:nb_species))
 
 ! 1D physical structure (nls_phys_1D)
-call phys_1D()
+TEMP1D(:)=initial_gas_temperature
+DTEMP1D(:)=initial_dust_temperature
+TAU1D(:)=INITIAL_VISUAL_EXTINCTION
+DENS1D(:)=initial_gas_density/2.
+X_IONISATION_RATE1D(:)=X_IONISATION_RATE
+
+diff1D(:)= TURBULENT_DIFFUSIVITY
 
 ! Write species name/index correspondance
 call write_species()
