@@ -187,7 +187,7 @@ do while (t.lt.0.9*STOP_TIME)
   enddo ! end of the spatial loop for chemistry 
 
   ! Generic call to zdiffusion, a subroutine calling the chosen numerical scheme 
-  call zdiffusion() ! diffusion 
+!~   call zdiffusion() ! diffusion 
 
   if (mod(timestep,wstep).eq.0) then
     call write_current_output()
