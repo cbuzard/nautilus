@@ -150,7 +150,6 @@ real(double_precision), dimension(:), allocatable :: RWORK
 integer :: lrw, liw
 
 ! Diffusion and 1D variables
-real(double_precision), allocatable, dimension(:,:) ::  ZXN
 real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep
 real(double_precision) :: zstepsize ! Spatial resolution
 real(double_precision) :: BOX_SIZE !< Size of the computing box
@@ -244,7 +243,6 @@ allocate(condsp(nb_species))
 allocate(rq1(nb_species))
 allocate(rq2(nb_species))
 allocate(icg(nb_species))
-allocate(zxn(nb_species, nptmax))
 allocate(nb_reactions_using_species(nb_species))
 
 allocate(xj(nb_reactions))

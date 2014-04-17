@@ -168,8 +168,7 @@ do while (t.lt.0.9*STOP_TIME)
 
     ! Chemical evolution for each spatial point
 
-    temp_abundances(1:nb_species) = ZXN(:,spatial_index)
-    abundances(1:nb_species) = ZXN(:,spatial_index)
+    temp_abundances(1:nb_species) = abundances(1:nb_species)
 
     call integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
@@ -177,8 +176,6 @@ do while (t.lt.0.9*STOP_TIME)
     call write_current_rates()
 
     if (istate.eq.-3) stop
-
-    ZXN(:,spatial_index) = abundances(:) ! putting back
 
   enddo ! end of the spatial loop for chemistry 
 
@@ -294,11 +291,6 @@ call set_chemical_reactants()
 ! Initialize the arrays that list, for each species, the reactions using it as a reactant
 !! max_reactions_same_species is set here. nb_reactions_using_species and relevant_reactions array are set here.
 call init_relevant_reactions()
-
-! Initializing ZXN
-do spatial_index=1,nptmax
-  ZXN(:,spatial_index) = abundances(:)
-enddo
 
 ! Calculate the optimum number for temporary solving-arrays in ODEPACK, based on the number of non-zeros values in 
 !! the jacobian
@@ -489,8 +481,6 @@ subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,ita
 
   temp_abundances(:) = abundances(:)
 
-  call shieldingsetup()
-
   ! Don't stop running, Forrest
 
   do while (t.lt.t_stop_step)
@@ -651,44 +641,6 @@ do i=1,nb_species
 enddo
 
 end subroutine get_elemental_abundance
-
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!> @author 
-!> Franck Hersant
-!
-!> @date 2000
-!
-! DESCRIPTION: 
-!> @brief Computes the H2 and CO column density for their self-shielding
-!! for each ipts, the column density is incremented recursively
-!! from the results for NH2 and NCO computed by set_dependant_rates the spatial step before
-!
-!> @note ZN is shifted with respect to N
-!
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine SHIELDINGSETUP()
-
-  use global_variables
-  implicit none
-  
-  ! Locals
-  real(double_precision) :: XNH2,XNCO
-
-  if (iptstore.eq.1) then
-    ZNH2(iptstore)=0.d0
-    ZNCO(iptstore)=0.d0
-  else
-
-    XNH2=ZXN(indH2,iptstore-1)
-    XNCO=ZXN(indCO,iptstore-1)
-
-    ZNH2(iptstore)=ZNH2(iptstore-1)+H_number_density*zstepsize*XNH2
-    ZNCO(iptstore)=ZNCO(iptstore-1)+H_number_density*zstepsize*XNCO
-  endif
-
-  return
-end subroutine SHIELDINGSETUP
-
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
