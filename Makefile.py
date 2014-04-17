@@ -38,8 +38,10 @@ problem_message = "The script can take various arguments :" + "\n" + \
 "(no spaces between the key and the values, only separated by '=')" + "\n" + \
 " * help : display a little help message on HOW to use various options" + "\n" + \
 " * force : To force the compilation of every module even those not modified" + "\n" + \
-" * output : To compile binary abundances (./nautilus_outputs) instead of Nautilus" + "\n" + \
-" * rates : To compile binary rates (./nautilus_rates) instead of Nautilus" + "\n" + \
+" * all : Compile all programs defined in this script (nautilus, " + "\n" + \
+"         nautilus_outputs and nautilus_rates" + "\n" + \
+" * output : To compile binary abundances (nautilus_outputs) instead of Nautilus" + "\n" + \
+" * rates : To compile binary rates (nautilus_rates) instead of Nautilus" + "\n" + \
 " * opkd : To include warnings of opkd" + "\n" + \
 " * debug : [%s] activate debug options" % debug + "\n" + \
 " * gdb : [%s] activate options for gdb" % gdb + "\n" + \
@@ -234,6 +236,10 @@ for arg in sys.argv[1:]:
     compilation_order = output_order
   elif (key == 'rates'):
     compilation_order = rates_order
+  elif (key == 'all'):
+    compilation_order.extend(output_order)
+    compilation_order.extend(rates_order)
+    
   elif (key == 'opkd'):
     ignoreOpkdWarnings = False
   elif (key == 'gdb'):
