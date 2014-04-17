@@ -80,7 +80,6 @@ integer :: max_nonzeros, NUMBERJAC
 
 ! Forced initialisation of global variables that will be needed, especially for the 'set_constant_rates' part. We donc care about specific values, 
 !! all that counts is that we can retrieve the number of non-zeros elements.
-H_number_density=2.*DENS1D(1)
 iptstore = 1
 
 max_nonzeros = 0
