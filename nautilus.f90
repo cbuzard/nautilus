@@ -157,7 +157,7 @@ do while (t.lt.0.9*STOP_TIME)
     T=t_start_step
 
     ! Feed 1D physical structure
-    TAU=TAU1D(spatial_index)
+    visual_extinction=TAU1D(spatial_index)
     X_IONISATION_RATE=X_IONISATION_RATE1D(spatial_index)
 
     ! Chemical evolution for each spatial point

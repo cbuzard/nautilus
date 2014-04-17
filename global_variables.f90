@@ -100,7 +100,8 @@ real(double_precision) :: gas_temperature !< current gas temperature (K)
 real(double_precision) :: initial_gas_temperature !< initial gas temperature (K), simulation parameter
 real(double_precision) :: dust_temperature !< current dust temperature (K)
 real(double_precision) :: initial_dust_temperature !< initial dust temperature (K), simulation parameter
-real(double_precision) :: TAU
+real(double_precision) :: visual_extinction !< visual extinction of the molecular cloud (or other astronomical object). 
+!! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
 real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: X_IONISATION_RATE

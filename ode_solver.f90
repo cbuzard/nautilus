@@ -738,7 +738,7 @@ end subroutine get_temporal_derivatives
       ! ITYPE 66: CO photodesorption by external UV
       ! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
       do j=irxsta(66),irxfin(66)
-        XK(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*exp(-2.*TAU) 
+        XK(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*exp(-2.*visual_extinction) 
       enddo
 
       ! ========= Rxn ITYPE 67
@@ -833,7 +833,7 @@ end subroutine get_temporal_derivatives
   ! ====== Rxn ITYPE 13
   ! ITYPE 2: Gas phase photodissociations/ionisations by UV
   do J=IRXSTA(3),IRXFIN(3)
-    XK(J)=A(J)*EXP(-C(J)*TAU)*UV_FLUX
+    XK(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
 
     ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
     if (IS_ABSORPTION.EQ.1) then 
@@ -842,7 +842,7 @@ end subroutine get_temporal_derivatives
       if (SYMBOL(1,J).EQ.YH2) then
         TETABIS=1.D0
         if (iptstore.eq.1) then
-          ZNH2(iptstore) = TAU/AV_NH_ratio * XNH2
+          ZNH2(iptstore) = visual_extinction/AV_NH_ratio * XNH2
         endif
         NH2=ZNH2(iptstore)
 
@@ -867,8 +867,8 @@ end subroutine get_temporal_derivatives
         TETABIS3=1.D0
 
         if (iptstore.eq.1) then
-          ZNH2(iptstore) = TAU/AV_NH_ratio * XNH2
-          ZNCO(iptstore) = TAU/AV_NH_ratio * XNCO
+          ZNH2(iptstore) = visual_extinction/AV_NH_ratio * XNH2
+          ZNCO(iptstore) = visual_extinction/AV_NH_ratio * XNCO
         endif
         NH2=ZNH2(iptstore)
         NCO=ZNCO(iptstore)
@@ -884,8 +884,8 @@ end subroutine get_temporal_derivatives
           if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) &
           TETABIS1=T2H2(L)+(NH2-N2H2(L))*(T2H2(L+1)-T2H2(L))&
           /(N2H2(L+1)-N2H2(L))
-          if ((AV2(L).LE.TAU).AND.(AV2(L+1).GE.TAU)) &
-          TETABIS3=T2AV(L)+(TAU-AV2(L))*(T2AV(L+1)-T2AV(L))&
+          if ((AV2(L).LE.visual_extinction).AND.(AV2(L+1).GE.visual_extinction)) &
+          TETABIS3=T2AV(L)+(visual_extinction-AV2(L))*(T2AV(L+1)-T2AV(L))&
           /(AV2(L+1)-AV2(L))
         enddo
 
@@ -894,7 +894,7 @@ end subroutine get_temporal_derivatives
 
         if (NCO.GT.N2CO(NL2)) TETABIS2 = T2CO(NL2)
         if (NH2.GT.N2H2(NL3)) TETABIS1 = T2H2(NL3)
-        if (TAU.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
+        if (visual_extinction.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
 
         XK(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
         XK(J)=XK(J)*UV_FLUX
@@ -1031,7 +1031,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 19: Photodissociations by UV photons on grain surfaces
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
     do J=IRXSTA(19),IRXFIN(20)
-      XK(J)=A(J)*EXP(-C(J)*TAU)*UV_FLUX
+      XK(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
