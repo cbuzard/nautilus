@@ -248,8 +248,8 @@ call read_abundances()
 call get_gas_surface_species()
 
 ! Build spatial mesh 
-call mesh()
-!~ zstepsize = 0.d0
+!~ call mesh()
+zstepsize = 0.d0
 
 ! Initialization of elemental/chemical quantities
 call index_datas()
