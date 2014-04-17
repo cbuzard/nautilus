@@ -160,7 +160,6 @@ real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: IS_DIFFUSIVITY ! Diffusivity flag
 real(double_precision), dimension(nptmax) :: TEMP1D
-real(double_precision), dimension(nptmax) :: DTEMP1D
 real(double_precision), dimension(nptmax) :: DENS1D
 real(double_precision), dimension(nptmax) :: TAU1D
 real(double_precision), dimension(nptmax) :: X_IONISATION_RATE1D ! 1D physical structure

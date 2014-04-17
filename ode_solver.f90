@@ -82,7 +82,6 @@ integer :: max_nonzeros, NUMBERJAC
 !! all that counts is that we can retrieve the number of non-zeros elements.
 H_number_density=2.*DENS1D(1)
 gas_temperature = TEMP1D(1)
-dust_temperature = DTEMP1D(1)
 iptstore = 1
 
 max_nonzeros = 0
