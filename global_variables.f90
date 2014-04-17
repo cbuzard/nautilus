@@ -104,7 +104,6 @@ real(double_precision) :: visual_extinction !< visual extinction of the molecula
 !! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
 real(double_precision) :: CR_IONISATION_RATE
-real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: UV_FLUX
 real(double_precision) :: LAYERS
 real(double_precision) :: SITE_SPACING
@@ -160,7 +159,7 @@ real(double_precision) :: RADIAL_DISTANCE ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: IS_DIFFUSIVITY ! Diffusivity flag
-real(double_precision), dimension(nptmax) :: X_IONISATION_RATE1D ! 1D physical structure
+real(double_precision) :: X_IONISATION_RATE
 real(double_precision), dimension(nptmax) :: DIFF1D ! 1D diffusivity profile
 real(double_precision), dimension(nptmax) :: ZNCO
 real(double_precision), dimension(nptmax) :: ZNH2 ! 1D column density (for the self shielding)

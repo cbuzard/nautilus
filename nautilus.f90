@@ -155,10 +155,7 @@ do while (t.lt.0.9*STOP_TIME)
     ! T being changed in dlsode, needs to be defined again
 
     T=t_start_step
-
-    ! Feed 1D physical structure
-    X_IONISATION_RATE=X_IONISATION_RATE1D(spatial_index)
-
+    
     ! Chemical evolution for each spatial point
 
     temp_abundances(1:nb_species) = abundances(1:nb_species)
@@ -271,7 +268,6 @@ gas_temperature = initial_gas_temperature
 dust_temperature = initial_dust_temperature
 visual_extinction = INITIAL_VISUAL_EXTINCTION
 H_number_density = initial_gas_density
-X_IONISATION_RATE1D(:)=X_IONISATION_RATE
 
 diff1D(:)= TURBULENT_DIFFUSIVITY
 
