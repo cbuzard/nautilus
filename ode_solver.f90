@@ -82,7 +82,7 @@ integer :: max_nonzeros, NUMBERJAC
 !! all that counts is that we can retrieve the number of non-zeros elements.
 H_number_density=2.*DENS1D(1)
 gas_temperature = TEMP1D(1)
-DTEMP = DTEMP1D(1)
+dust_temperature = DTEMP1D(1)
 iptstore = 1
 
 max_nonzeros = 0
@@ -717,8 +717,8 @@ end subroutine get_temporal_derivatives
 
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
-      TINDIF(K)=CHF(K)*EXP(-EB(K)/DTEMP)/nb_sites_per_grain
-      TINEVA(K)=CHF(K)*EXP(-ED(K)/DTEMP)
+      TINDIF(K)=CHF(K)*EXP(-EB(K)/dust_temperature)/nb_sites_per_grain
+      TINEVA(K)=CHF(K)*EXP(-ED(K)/dust_temperature)
     enddo
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
@@ -928,7 +928,7 @@ end subroutine get_temporal_derivatives
       BARR=1.0d0
       ! --------- Calculate activation energy barrier multiplier
       if (EA(J).GE.1.0D-40) then
-        ACTIV=EA(J)/DTEMP
+        ACTIV=EA(J)/dust_temperature
         ! ------------ Choose fastest of classical or tunnelling
         if (ACTIV.GT.ACT1(J)) ACTIV=ACT1(J)
         BARR=EXP(-ACTIV)

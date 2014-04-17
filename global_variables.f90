@@ -98,7 +98,7 @@ real(double_precision) :: H_number_density !< Total H number density (both H and
 real(double_precision) :: initial_gas_density
 real(double_precision) :: gas_temperature
 real(double_precision) :: initial_gas_temperature
-real(double_precision) :: DTEMP
+real(double_precision) :: dust_temperature
 real(double_precision) :: initial_dust_temperature
 real(double_precision) :: TAU
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION

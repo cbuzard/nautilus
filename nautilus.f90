@@ -164,7 +164,7 @@ do while (t.lt.0.9*STOP_TIME)
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)
     H_number_density=2.*DENS1D(spatial_index)
     gas_temperature=TEMP1D(spatial_index)
-    DTEMP=DTEMP1D(spatial_index)
+    dust_temperature=DTEMP1D(spatial_index)
 
     ! Chemical evolution for each spatial point
 
