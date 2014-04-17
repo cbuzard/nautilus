@@ -163,7 +163,6 @@ do while (t.lt.0.9*STOP_TIME)
     ! But DENS1D is the real number density
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)
     H_number_density=2.*DENS1D(spatial_index)
-    gas_temperature=TEMP1D(spatial_index)
 
     ! Chemical evolution for each spatial point
 
@@ -273,7 +272,7 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 call check_conservation(abundances(1:nb_species))
 
 ! 1D physical structure (nls_phys_1D)
-TEMP1D(:)=initial_gas_temperature
+gas_temperature = initial_gas_temperature
 dust_temperature = initial_dust_temperature
 TAU1D(:)=INITIAL_VISUAL_EXTINCTION
 DENS1D(:)=initial_gas_density/2.
