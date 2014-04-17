@@ -1009,7 +1009,7 @@ open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) TIME, species_name
 write(35) TEMP1D, DENS1D, TAU1D, X_IONISATION_RATE1D
-write(35) ZXN
+write(35) abundances
 close(35)
 
 return
