@@ -96,10 +96,10 @@ real(double_precision) :: sticking_coeff_negative
 real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
 real(double_precision) :: H_number_density !< Total H number density (both H and H2)
 real(double_precision) :: initial_gas_density
-real(double_precision) :: gas_temperature
-real(double_precision) :: initial_gas_temperature
-real(double_precision) :: dust_temperature
-real(double_precision) :: initial_dust_temperature
+real(double_precision) :: gas_temperature !< current gas temperature (K)
+real(double_precision) :: initial_gas_temperature !< initial gas temperature (K), simulation parameter
+real(double_precision) :: dust_temperature !< current dust temperature (K)
+real(double_precision) :: initial_dust_temperature !< initial dust temperature (K), simulation parameter
 real(double_precision) :: TAU
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
 real(double_precision) :: CR_IONISATION_RATE
