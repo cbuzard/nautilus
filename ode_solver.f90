@@ -80,7 +80,7 @@ integer :: max_nonzeros, NUMBERJAC
 
 ! Forced initialisation of global variables that will be needed, especially for the 'set_constant_rates' part. We donc care about specific values, 
 !! all that counts is that we can retrieve the number of non-zeros elements.
-XNT=2.*DENS1D(1)
+H_number_density=2.*DENS1D(1)
 TEMP = TEMP1D(1)
 DTEMP = DTEMP1D(1)
 iptstore = 1
@@ -151,12 +151,12 @@ integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_i
 integer :: reaction_idx ! The index of a given reaction
 
 ! Temp values to increase speed
-real(double_precision) :: XNT2 ! XNT*XNT, to gain speed
+real(double_precision) :: H_number_density_squared ! H_number_density*H_number_density, to gain speed
 real(double_precision) :: tmp_value ! To optimize speed, temporary variable is created to avoid multiple calculation of the same thing
 
 no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
 
-XNT2 = XNT * XNT
+H_number_density_squared = H_number_density * H_number_density
 
 PDJ2(1:nb_species+1) = 0.d0
 
@@ -189,7 +189,7 @@ do i=1,nb_reactions_using_species(j)
   ! Two bodies reaction
   else if (reactant3_idx.eq.no_species) then
     if (reactant1_idx.eq.J) then 
-      tmp_value = XK(reaction_idx) * Y(reactant2_idx) * XNT
+      tmp_value = XK(reaction_idx) * Y(reactant2_idx) * H_number_density
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -199,7 +199,7 @@ do i=1,nb_reactions_using_species(j)
     endif
 
     if (reactant2_idx.eq.J) then 
-      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * XNT
+      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * H_number_density
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -211,7 +211,7 @@ do i=1,nb_reactions_using_species(j)
   ! Three bodies reaction
   else
     if (reactant1_idx.eq.J) then 
-      tmp_value = XK(reaction_idx) * Y(reactant2_idx) * Y(reactant3_idx) * XNT2
+      tmp_value = XK(reaction_idx) * Y(reactant2_idx) * Y(reactant3_idx) * H_number_density_squared
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -222,7 +222,7 @@ do i=1,nb_reactions_using_species(j)
     endif
 
     if (reactant2_idx.eq.J) then 
-      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * Y(reactant3_idx) * XNT2
+      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * Y(reactant3_idx) * H_number_density_squared
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -233,7 +233,7 @@ do i=1,nb_reactions_using_species(j)
     endif
 
     if (reactant3_idx.eq.J) then 
-      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * Y(reactant2_idx) * XNT2
+      tmp_value = XK(reaction_idx) * Y(reactant1_idx) * Y(reactant2_idx) * H_number_density_squared
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -476,10 +476,10 @@ do I=1,nb_reactions
   else
     if (reactant3_idx.eq.no_species) then
       ! Two bodies reactions
-      RATE = XK(I) * Y(reactant1_idx) * Y(reactant2_idx) * XNT
+      RATE = XK(I) * Y(reactant1_idx) * Y(reactant2_idx) * H_number_density
     else 
       ! Three bodies reactions
-      RATE = XK(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * XNT * XNT
+      RATE = XK(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * H_number_density * H_number_density
     endif
   endif
 
@@ -539,11 +539,11 @@ end subroutine get_temporal_derivatives
   ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
   if (IS_GRAIN_REACTIONS.eq.0) then
     do J=IRXSTA(10),IRXFIN(10)
-      XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/XNT
+      XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/H_number_density
       !                     write(*,*) 'GTODN', GTODN
     enddo
     do J=IRXSTA(11),IRXFIN(11)       
-      XK(J)=A(J)*(T300**B(J))*XNT/GTODN
+      XK(J)=A(J)*(T300**B(J))*H_number_density/GTODN
     enddo       
   endif
 
@@ -916,7 +916,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 99: Adsorption on grains
     do J=IRXSTA(99),IRXFIN(99)
       ! ========= Set accretion rates
-      TINACC(JSP1(J))=CONDSP(JSP1(J))*TSQ*Y(JSP1(J))*XNT
+      TINACC(JSP1(J))=CONDSP(JSP1(J))*TSQ*Y(JSP1(J))*H_number_density
       TINACC(JSP2(J))=TINACC(JSP1(J))
       XK(J)=A(J)*XJ(J)*TINACC(JSP1(J))/Y(JSP1(J))/GTODN
     enddo
@@ -1022,7 +1022,7 @@ end subroutine get_temporal_derivatives
 
       DIFF=RDIF1(J)+RDIF2(J)
 
-      XK(J)=A(J)*XJ(J)*BARR*DIFF*GTODN/XNT
+      XK(J)=A(J)*XJ(J)*BARR*DIFF*GTODN/H_number_density
       !              XK(J)=0.D0
       ! --------- Allow only 1 monolayer of each to react
       ! Not used for the time being
@@ -1057,7 +1057,7 @@ end subroutine get_temporal_derivatives
   ! VW Fev 2012 - this process has been removed
   !      do j=irxsta(0),irxfin(0)
   !      if ((SYMBOL(1,J).eq.YH).and.(SYMBOL(2,j).eq.YH)) then
-  !      XK(j)=XJ(j)*A(j)*(T300**B(j))*GTODN/XNT/Y(JSP1(j))
+  !      XK(j)=XJ(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))
   !      endif
   !      enddo
 

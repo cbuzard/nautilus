@@ -1078,7 +1078,7 @@ integer :: i
 open(13, file=filename)
 write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
-&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,XNT,TEMP,TAU,CR_IONISATION_RATE
+&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,H_number_density,TEMP,TAU,CR_IONISATION_RATE
 
 do i=1,nb_species
   write(13,'(a," = ",1PE12.5)') species_name(I),abundances(I)

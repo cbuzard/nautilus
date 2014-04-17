@@ -159,10 +159,10 @@ do while (t.lt.0.9*STOP_TIME)
     ! Feed 1D physical structure
     TAU=TAU1D(spatial_index)
     X_IONISATION_RATE=X_IONISATION_RATE1D(spatial_index)
-    ! XNT is the total density of H atoms (both H and H2)
+    ! H_number_density is the total density of H atoms (both H and H2)
     ! But DENS1D is the real number density
     ! Problem with the sound speed if NH > NH2 (cf phys_1D)
-    XNT=2.*DENS1D(spatial_index)
+    H_number_density=2.*DENS1D(spatial_index)
     TEMP=TEMP1D(spatial_index)
     DTEMP=DTEMP1D(spatial_index)
 
@@ -688,8 +688,8 @@ subroutine SHIELDINGSETUP()
     XNH2=ZXN(indH2,iptstore-1)
     XNCO=ZXN(indCO,iptstore-1)
 
-    ZNH2(iptstore)=ZNH2(iptstore-1)+XNT*zstepsize*XNH2
-    ZNCO(iptstore)=ZNCO(iptstore-1)+XNT*zstepsize*XNCO
+    ZNH2(iptstore)=ZNH2(iptstore-1)+H_number_density*zstepsize*XNH2
+    ZNCO(iptstore)=ZNCO(iptstore-1)+H_number_density*zstepsize*XNCO
   endif
 
   return

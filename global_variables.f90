@@ -94,7 +94,7 @@ real(double_precision) :: sticking_coeff_neutral
 real(double_precision) :: sticking_coeff_positive
 real(double_precision) :: sticking_coeff_negative
 real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
-real(double_precision) :: XNT
+real(double_precision) :: H_number_density !< Total H number density (both H and H2)
 real(double_precision) :: initial_gas_density
 real(double_precision) :: TEMP
 real(double_precision) :: initial_gas_temperature
