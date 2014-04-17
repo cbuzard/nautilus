@@ -263,7 +263,7 @@ enddo
 
 open(UNIT=NOUT2,file='output_1D.'//CHARIT//'', form='unformatted')
 
-write(NOUT2) TIME, zspace, SPEC
+write(NOUT2) TIME, SPEC
 write(NOUT2) TEMP1D, DENS1D, TAU1D, ZETAX1D
 write(NOUT2) ZXN
 

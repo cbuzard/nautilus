@@ -15,7 +15,7 @@ do spatial_index=1,nptmax
   zaspace(spatial_index) = 1.d0 - 2.d0 * dble(spatial_index-1) / (2.d0 * nptmax - 1)
 enddo
 
-zspace(:)=zaspace(:) * BOX_SIZE
+!~ zspace(:)=zaspace(:) * BOX_SIZE
 
 zstepsize = 0.d0
 

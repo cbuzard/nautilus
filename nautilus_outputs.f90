@@ -26,7 +26,6 @@ real(double_precision), dimension(:,:), allocatable :: temperature
 real(double_precision), dimension(:,:), allocatable :: density
 real(double_precision), dimension(:,:), allocatable :: visual_extinction !< visual extinction
 real(double_precision), dimension(:,:), allocatable :: zeta
-real(double_precision) :: zspace
 
 ! We calculate the total number of outputs by checking for each file if it exist or not.
 nb_outputs = 0
@@ -68,7 +67,7 @@ do output=1,nb_outputs
   write(filename_output, '(a,i0.6,a)') 'abundances.',output,'.out'
 
   open(10, file=filename_output, status='old', form='unformatted')
-  read(10) time(output), zspace, species_name(1:nb_species)
+  read(10) time(output), species_name(1:nb_species)
   read(10) temperature(1:nptmax, output), density(1:nptmax, output), visual_extinction(1:nptmax, output), zeta(1:nptmax, output)
   read(10) abundances(output,1:nb_species, 1:nptmax)
   close(10)
