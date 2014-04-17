@@ -160,7 +160,6 @@ real(double_precision) :: RADIAL_DISTANCE ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
 integer :: IS_DIFFUSIVITY ! Diffusivity flag
-real(double_precision), dimension(nptmax) :: TAU1D
 real(double_precision), dimension(nptmax) :: X_IONISATION_RATE1D ! 1D physical structure
 real(double_precision), dimension(nptmax) :: DIFF1D ! 1D diffusivity profile
 real(double_precision), dimension(nptmax) :: ZNCO
