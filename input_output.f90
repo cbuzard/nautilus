@@ -823,12 +823,6 @@ call get_linenumber(filename, nb_lines)
 allocate(temp_abundances(nb_lines))
 allocate(temp_names(nb_lines))
 
-!~ open(5, file=filename)
-!~ read(5,15) (temp_names(I),temp_abundances(I),I=1,nb_lines)
-!~ close(5)
-!~ 15 format(A11,3X,E12.6)
-
-
   !------------------------------------------------------------------------------
   
 inquire(file=filename, exist=isDefined)

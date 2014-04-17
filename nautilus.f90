@@ -168,24 +168,19 @@ do while (t.lt.0.9*STOP_TIME)
 
     ! Chemical evolution for each spatial point
 
-    temp_abundances(:nb_species) = ZXN(:,spatial_index)
-    abundances(:nb_species) = ZXN(:,spatial_index)
+    temp_abundances(1:nb_species) = ZXN(:,spatial_index)
+    abundances(1:nb_species) = ZXN(:,spatial_index)
 
     call integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
     ! Output of the rates once every 10 chemical outputs
-    !      if ((mod(it,wstepr).eq.0).and.(spatial_index.eq.irateout)) then
     call write_current_rates()
-    !      endif
 
     if (istate.eq.-3) stop
 
     ZXN(:,spatial_index) = abundances(:) ! putting back
 
   enddo ! end of the spatial loop for chemistry 
-
-  ! Generic call to zdiffusion, a subroutine calling the chosen numerical scheme 
-!~   call zdiffusion() ! diffusion 
 
   if (mod(timestep,wstep).eq.0) then
     call write_current_output()
@@ -246,7 +241,6 @@ call read_abundances()
 call get_gas_surface_species()
 
 ! Build spatial mesh 
-!~ call mesh()
 zstepsize = 0.d0
 
 ! Initialization of elemental/chemical quantities
