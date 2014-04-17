@@ -18,7 +18,7 @@ PROFILING_OPTIONS = "-g -pg"
 LOG_NAME = "compilation.log"
 
 nautilus_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90 git_infos.f90", "-c global_variables.f90", 
-"-c shielding.f90 diffusion.f90 input_output.f90 ode_solver.f90", 
+"-c shielding.f90 input_output.f90 ode_solver.f90", 
 "-o nautilus nautilus.f90 opk*.f90 *.o"]
 
 output_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90", "-o nautilus_outputs nautilus_outputs.f90 *.o"]

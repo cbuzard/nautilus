@@ -90,9 +90,7 @@
 PROGRAM Gasgrain
 
 use global_variables
-!~ use diffusion
 use input_output
-!~ use model_1D
 use ode_solver
 use iso_fortran_env
 use shielding
