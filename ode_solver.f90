@@ -81,7 +81,7 @@ integer :: max_nonzeros, NUMBERJAC
 ! Forced initialisation of global variables that will be needed, especially for the 'set_constant_rates' part. We donc care about specific values, 
 !! all that counts is that we can retrieve the number of non-zeros elements.
 H_number_density=2.*DENS1D(1)
-TEMP = TEMP1D(1)
+gas_temperature = TEMP1D(1)
 DTEMP = DTEMP1D(1)
 iptstore = 1
 
@@ -522,9 +522,9 @@ end subroutine get_temporal_derivatives
   integer, dimension(10) :: indice
   real(double_precision), dimension(10) :: distmin, distmax
 
-  T300=TEMP/300.D+0
-  TI=1.0d00/TEMP
-  TSQ=SQRT(TEMP)
+  T300=gas_temperature/300.D+0
+  TI=1.0d00/gas_temperature
+  TSQ=SQRT(gas_temperature)
 
   ! ====== Rxn ITYPE 0
   ! ITYPE 0: Gas phase reactions with GRAINS =) 
@@ -539,8 +539,7 @@ end subroutine get_temporal_derivatives
   ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
   if (IS_GRAIN_REACTIONS.eq.0) then
     do J=IRXSTA(10),IRXFIN(10)
-      XK(J)=A(J)*1.186D7*exp(225.D0/TEMP)**(-1)*GTODN/H_number_density
-      !                     write(*,*) 'GTODN', GTODN
+      XK(J)=A(J)*1.186D7*exp(225.D0/gas_temperature)**(-1)*GTODN/H_number_density
     enddo
     do J=IRXSTA(11),IRXFIN(11)       
       XK(J)=A(J)*(T300**B(J))*H_number_density/GTODN
@@ -574,32 +573,32 @@ end subroutine get_temporal_derivatives
     !---------------  KOOIJ FORMULA
     if (FORMULA(J).eq.3) then
 
-      XK(J)=A(J)*(T300**B(J))*EXP(-C(J)/TEMP)
+      XK(J)=A(J)*(T300**B(J))*EXP(-C(J)/gas_temperature)
 
       !              Check for temperature bounderies
-      if (TEMP.LT.Tmin(J)) XK(J)=A(J)*((Tmin(J)/300.D0)**B(J))*EXP(-C(J)/Tmin(J))
-      if (TEMP.GT.Tmax(J)) XK(J)=A(J)*((Tmax(J)/300.D0)**B(J))*EXP(-C(J)/Tmax(J))
+      if (gas_temperature.LT.Tmin(J)) XK(J)=A(J)*((Tmin(J)/300.D0)**B(J))*EXP(-C(J)/Tmin(J))
+      if (gas_temperature.GT.Tmax(J)) XK(J)=A(J)*((Tmax(J)/300.D0)**B(J))*EXP(-C(J)/Tmax(J))
 
       !              Check for the presence of several rate coefficients present in the network for the
       !              the same reaction
       if (NUM(J+1).EQ.NUM(J)) then
         INDICE(W)=J
-        distmin(w)=tmin(j)-temp
-        distmax(w)=temp-tmax(j)
+        distmin(w)=tmin(j)-gas_temperature
+        distmax(w)=gas_temperature-tmax(j)
         W = W + 1
       endif
 
       if ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=tmin(j)-temp
-        distmax(w)=temp-tmax(j)
+        distmin(w)=tmin(j)-gas_temperature
+        distmax(w)=gas_temperature-tmax(j)
 
         do M=1,W
           N=INDICE(M)
           !IF(IT==1) write(*,*) N,M, SYMBOL(:,N), tmin(N), tmax(N),distmin(M),distmax(M)
-          if (TEMP.LT.Tmin(N)) XK(N)=0.d0
-          if (TEMP.GT.Tmax(N)) XK(N)=0.d0
+          if (gas_temperature.LT.Tmin(N)) XK(N)=0.d0
+          if (gas_temperature.GT.Tmax(N)) XK(N)=0.d0
         enddo
 
         if (maxval(XK(indice(1:w))).lt.1.d-99) then
@@ -622,31 +621,31 @@ end subroutine get_temporal_derivatives
 
     !---------------  IONPOL1 FORMULA
     if (FORMULA(J).EQ.4) then
-      XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TEMP)**0.5))
+      XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/gas_temperature)**0.5))
 
       !              Check for temperature bounderies
-      if (TEMP.LT.Tmin(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/Tmin(J))**0.5))
-      if (TEMP.GT.Tmax(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TMAX(J))**0.5))
+      if (gas_temperature.LT.Tmin(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/Tmin(J))**0.5))
+      if (gas_temperature.GT.Tmax(J)) XK(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TMAX(J))**0.5))
 
       !              Check for the presence of several rate coefficients present in the network for the
       !              the same reaction
       if (NUM(J+1).EQ.NUM(J)) then
         INDICE(W)=J
-        distmin(w)=tmin(j)-temp
-        distmax(w)=temp-tmax(j)
+        distmin(w)=tmin(j)-gas_temperature
+        distmax(w)=gas_temperature-tmax(j)
         W = W + 1
       endif
 
       if ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=tmin(j)-temp
-        distmax(w)=temp-tmax(j)
+        distmin(w)=tmin(j)-gas_temperature
+        distmax(w)=gas_temperature-tmax(j)
 
         do M=1,W
           N=INDICE(M)
-          if (TEMP.LT.Tmin(N)) XK(N)= 0.d0
-          if (TEMP.GT.Tmax(N)) XK(N)= 0.d0
+          if (gas_temperature.LT.Tmin(N)) XK(N)= 0.d0
+          if (gas_temperature.GT.Tmax(N)) XK(N)= 0.d0
         enddo
 
         if (maxval(XK(indice(1:w))).lt.1.d-99) then
@@ -668,31 +667,31 @@ end subroutine get_temporal_derivatives
 
     !---------------  IONPOL2 FORMULA
     if (FORMULA(J).EQ.5) then
-      XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TEMP)**0.5)+(C(J)**2*300.d0/(10.526*TEMP)))
+      XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/gas_temperature)**0.5)+(C(J)**2*300.d0/(10.526*gas_temperature)))
 
       !               Check for temperature bounderies
-      if (TEMP.LT.Tmin(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*TMIN(J))))
-      if (TEMP.GT.Tmax(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*TMAX(J))))
+      if (gas_temperature.LT.Tmin(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*TMIN(J))))
+      if (gas_temperature.GT.Tmax(J)) XK(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*TMAX(J))))
 
       !               Check for the presence of several rate coefficients present in the network for the
       !               the same reaction
       if (NUM(J+1).EQ.NUM(J)) then
         INDICE(W)=J
-        distmin(w)=tmin(j)-temp
-        distmax(w)=temp-tmax(j)
+        distmin(w)=tmin(j)-gas_temperature
+        distmax(w)=gas_temperature-tmax(j)
         W = W + 1
       endif
 
       if ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=tmin(j)-temp
-        distmax(w)=temp-tmax(j)
+        distmin(w)=tmin(j)-gas_temperature
+        distmax(w)=gas_temperature-tmax(j)
 
         do M=1,W
           N=INDICE(M)
-          if (TEMP.LT.Tmin(N)) XK(N)=       0.d0
-          if (TEMP.GT.Tmax(N)) XK(N)=       0.d0
+          if (gas_temperature.LT.Tmin(N)) XK(N)=       0.d0
+          if (gas_temperature.GT.Tmax(N)) XK(N)=       0.d0
         enddo
 
         if (maxval(XK(indice(1:w))).lt.1.d-99) then
@@ -820,9 +819,9 @@ end subroutine get_temporal_derivatives
   integer IMOD1,IMOD2
   integer :: j, l
 
-  T300=TEMP/300.D+0
-  TI=1.0d00/TEMP
-  TSQ=SQRT(TEMP)
+  T300=gas_temperature/300.D+0
+  TI=1.0d00/gas_temperature
+  TSQ=SQRT(gas_temperature)
   MONLAY=LAYERS*nb_sites_per_grain/GTODN
 
   XNH2=Y(indH2)
