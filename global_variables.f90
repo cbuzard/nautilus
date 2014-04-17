@@ -150,7 +150,6 @@ real(double_precision), dimension(:), allocatable :: RWORK
 integer :: lrw, liw
 
 ! Diffusion and 1D variables
-real(double_precision), dimension(nptmax) :: zspace ! space variables
 real(double_precision), dimension(nptmax) :: zaspace ! space variables
 real(double_precision), allocatable, dimension(:,:) ::  ZXN
 real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep
