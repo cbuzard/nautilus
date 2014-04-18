@@ -492,8 +492,8 @@ else
   write (*,*) 'Warning: The file "parameters.in" does not exist. Default values have been used'
 end if
 
-START_TIME = START_TIME * TYEAR
-STOP_TIME = STOP_TIME * TYEAR
+START_TIME = START_TIME * YEAR
+STOP_TIME = STOP_TIME * YEAR
 
 return
 end subroutine read_parameters_in
@@ -580,8 +580,8 @@ use global_variables
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
   write(10,'(a,i4,a)') 'output_per_decade = ', OUTPUT_PER_DECADE, ' ! outputs per decade (Only without diffusion)'
-  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/TYEAR, ' ! first output time, after zero (yrs)'
-  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/TYEAR, ' ! last output time (yrs)'
+  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! first output time, after zero (yrs)'
+  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! last output time (yrs)'
   write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
   write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
   write(10,'(a)') ""
