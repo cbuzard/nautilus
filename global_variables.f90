@@ -111,7 +111,7 @@ real(double_precision) :: CRFE
 real(double_precision) :: EBFAC
 real(double_precision) :: START_TIME !< Start time of the simulation (in seconds)
 real(double_precision) :: STOP_TIME !< Stop time of the simulation (in seconds)
-real(double_precision) :: TIME !< Global current time of the simulation (in seconds)
+real(double_precision) :: current_time !< Global current time of the simulation (in seconds)
 real(double_precision) :: ARRK
 
 integer, allocatable, dimension(:) :: itype

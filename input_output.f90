@@ -964,7 +964,7 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
 
 open(UNIT=35, file=filename_output, form='unformatted')
 
-write(35) TIME, species_name
+write(35) current_time, species_name
 write(35) gas_temperature, 0.5d0 * H_number_density, visual_extinction, X_IONISATION_RATE
 write(35) abundances
 close(35)
@@ -1035,7 +1035,8 @@ integer :: i
 open(13, file=filename)
 write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
-&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,TIME,H_number_density,gas_temperature,visual_extinction,CR_IONISATION_RATE
+&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,current_time,H_number_density,&
+gas_temperature,visual_extinction,CR_IONISATION_RATE
 
 do i=1,nb_species
   write(13,'(a," = ",1PE12.5)') species_name(I),abundances(I)

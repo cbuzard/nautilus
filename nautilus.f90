@@ -111,28 +111,28 @@ call initialisation()
 call initialize_work_arrays()
 
 ! Initializing T
-! T = local, TIME = global
+! T = local, current_time = global
 T = 0.d0
-TIME = 0.d0
+current_time = 0.d0
 
 ! The real time loop
 do while (t.lt.0.9*STOP_TIME)
 
   ! Log spacing of time outputs when there is no diffusion
-  if (TIME.gt.1.d-2) then
-    DIFFUSIVE_TIMESTEP = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
+  if (current_time.gt.1.d-2) then
+    DIFFUSIVE_TIMESTEP = current_time*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
   else
     DIFFUSIVE_TIMESTEP = 1.d0 * YEAR
   endif
   
-  TIME = T + DIFFUSIVE_TIMESTEP ! Final time for chemistry T -> T + DIFFUSIVE_TIMESTEP
+  current_time = T + DIFFUSIVE_TIMESTEP ! Final time for chemistry T -> T + DIFFUSIVE_TIMESTEP
 
   timestep = timestep + 1
 
   ! Store the current time in t_start_step (for 1D calculation)
   t_start_step = T
 
-  write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',TIME/YEAR,' yrs'
+  write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',current_time/YEAR,' yrs'
 
   ! T being changed in dlsode, needs to be defined again
 
@@ -429,7 +429,7 @@ subroutine integrate_chemical_scheme(T,t_stop_step,itol,atol,itask,istate,iopt,m
   
   ! Changing the time to avoid T + DT = T 
 
-  t_stop_step=TIME
+  t_stop_step=current_time
 
   t_start_step = T
   t_stop_step = t_stop_step - t_start_step
