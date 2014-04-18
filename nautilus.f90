@@ -211,9 +211,6 @@ call read_abundances()
 ! Gas species can be needed for surface reactions, and vice versa.
 call get_gas_surface_species()
 
-! Build spatial mesh 
-zstepsize = 0.d0
-
 ! Initialization of elemental/chemical quantities
 call index_datas()
 
