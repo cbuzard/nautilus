@@ -177,7 +177,7 @@
       Y(:nsmax) = ZXN(:,ipts)
       XN(:nsmax) = ZXN(:,ipts)
 
-      call evolve (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+      call evolve (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw, ZDT)
 
 ! Output of the rates once every 10 chemical outputs
 !      if ((mod(it,wstepr).eq.0).and.(ipts.eq.irateout)) then
@@ -446,7 +446,7 @@
 ! ======================================================================
 ! ======================================================================
 
-      SUBROUTINE EVOLVE (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw)
+      SUBROUTINE EVOLVE (T,Y,TOUT,itol,atol,itask,istate,iopt,mf,liw,lrw, delta_t)
 
       use header
       use unitvar
@@ -464,7 +464,7 @@
       real(kind=8) :: atol
       real(kind=8), dimension(nsmax) :: satol
 
-      real(kind=8) :: T, TOUT, TIN
+      real(kind=8) :: T, TOUT, TIN, delta_t
 
       integer :: NNZ
 
@@ -484,10 +484,10 @@
 
 ! Changing the time to avoid T + DT = T 
 
-      TOUT=TIME
+      TOUT=delta_t
 
-      TIN = T
-      TOUT = TOUT - TIN
+      TIN = 0.D0
+!~       TOUT = TOUT - TIN
       T = 0.d0      
 
       Y(:) = XN(:)
@@ -540,7 +540,7 @@
 ! Stop, Forrest
       enddo
 
-      T = TOUT + TIN 
+      T = TIME 
 
       XN=Y
 
