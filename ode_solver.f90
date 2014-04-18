@@ -841,10 +841,8 @@ end subroutine get_temporal_derivatives
       ! ====== Compute the H2 self-shielding
       if (SYMBOL(1,J).EQ.YH2) then
         TETABIS=1.D0
-        if (iptstore.eq.1) then
-          ZNH2(iptstore) = visual_extinction/AV_NH_ratio * XNH2
-        endif
-        NH2=ZNH2(iptstore)
+
+        NH2 = visual_extinction/AV_NH_ratio * XNH2
 
         ! ======= Linear extrapolation of the shielding factors
         do L=1,NL1-1
@@ -866,12 +864,8 @@ end subroutine get_temporal_derivatives
         TETABIS2=1.D0
         TETABIS3=1.D0
 
-        if (iptstore.eq.1) then
-          ZNH2(iptstore) = visual_extinction/AV_NH_ratio * XNH2
-          ZNCO(iptstore) = visual_extinction/AV_NH_ratio * XNCO
-        endif
-        NH2=ZNH2(iptstore)
-        NCO=ZNCO(iptstore)
+        NH2 = visual_extinction/AV_NH_ratio * XNH2
+        NCO = visual_extinction/AV_NH_ratio * XNCO
 
         ! ======= Linear extrapolation of the three shileding factors
         do L=1,NL2-1
