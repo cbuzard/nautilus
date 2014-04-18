@@ -485,9 +485,6 @@ if (isDefined) then
       
       case('turbulent_diffusivity')
         read(value, '(e12.6)') TURBULENT_DIFFUSIVITY
-      
-      case('box_size')
-        read(value, '(e12.6)') BOX_SIZE
         
       case('central_mass')
         read(value, '(e12.6)') CENTRAL_MASS
@@ -613,7 +610,6 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'turbulent_diffusivity = ', TURBULENT_DIFFUSIVITY, &
   ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
-  write(10,'(a,es10.3e2,a)') 'box_size = ', BOX_SIZE, ' ! Computing box"s size (cm)'
   write(10,'(a,es10.3e2,a)') 'central_mass = ', CENTRAL_MASS, ' ! Central mass (g)'
   write(10,'(a,es10.3e2,a)') 'radial_distance = ', RADIAL_DISTANCE, ' ! Radial distance (cm) for the disk model'
   write(10,*) ''
