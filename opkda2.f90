@@ -624,6 +624,7 @@ SUBROUTINE DAXPY (N, DA, DX, INCX, DY, INCY)
 !   920310  Corrected definition of LX in DESCRIPTION.  (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DAXPY
+integer n, incx, incy, i, ix, iy, m, mp1, ns
 DOUBLE PRECISION DX(*), DY(*), DA
 !***FIRST EXECUTABLE STATEMENT  DAXPY
 IF (N.LE.0 .OR. DA.EQ.0.0D0) RETURN
@@ -713,6 +714,7 @@ SUBROUTINE DCOPY (N, DX, INCX, DY, INCY)
 !   920310  Corrected definition of LX in DESCRIPTION.  (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DCOPY
+integer n, incx, incy, i, ix, iy, m, mp1, ns
 DOUBLE PRECISION DX(*), DY(*)
 !***FIRST EXECUTABLE STATEMENT  DCOPY
 IF (N .LE. 0) RETURN
@@ -805,6 +807,7 @@ DOUBLE PRECISION FUNCTION DDOT (N, DX, INCX, DY, INCY)
 !   920310  Corrected definition of LX in DESCRIPTION.  (WRB)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DDOT
+integer n, incx, incy, i, ix, iy, m, mp1, ns
 DOUBLE PRECISION DX(*), DY(*)
 !***FIRST EXECUTABLE STATEMENT  DDOT
 DDOT = 0.0D0
@@ -923,6 +926,7 @@ DOUBLE PRECISION FUNCTION DNRM2 (N, DX, INCX)
 !   920501  Reformatted the REFERENCES section.  (WRB)
 !***END PROLOGUE  DNRM2
 INTEGER NEXT
+integer n, incx, i, j, nn
 DOUBLE PRECISION DX(*), CUTLO, CUTHI, HITEST, SUM, XMAX, ZERO, ONE
 SAVE CUTLO, CUTHI, ZERO, ONE
 DATA ZERO, ONE /0.0D0, 1.0D0/

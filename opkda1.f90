@@ -2035,7 +2035,7 @@ subroutine odrv(n, ia,ja,a, p,ip, nsp,isp, path, flag)
 !
 !-----------------------------------------------------------------------
 !
-integer  ia(*), ja(*),  p(*), ip(*),  isp(*),  path,  flag,v, l, head,  tmp, q
+integer  ia(*), ja(*),  p(*), ip(*),  isp(*),  path,  flag,v, l, head,  tmp, q, n, nsp, max, next
 !...  real  a(*)
 double precision  a(*)
 logical  dflag
@@ -2161,6 +2161,7 @@ subroutine md(n, ia,ja, max, v,l, head,last,next, mark, flag)
 !-----------------------------------------------------------------------
 !
 integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*),mark(*),  flag,  tag, dmin, vk,ek, tail
+integer n, max, k
 equivalence  (vk,ek)
 !
 !----initialization
@@ -2214,6 +2215,7 @@ subroutine mdi(n, ia,ja, max,v,l, head,last,next, mark,tag, flag)
 !  mdi -- initialization
 !***********************************************************************
 integer  ia(*), ja(*),  v(*), l(*),  head(*), last(*), next(*), mark(*), tag,  flag,  sfs, vi,dvi, vj
+integer n, max, j, jmax, jmin, k, kmax, lvk, nextvi
 !
 !----initialize degrees, element lists, and degree lists
 do 1 vi=1,n
@@ -2334,6 +2336,7 @@ subroutine mdp(k,ek,tail, v,l, head,last,next, mark)
 !  mdp -- purge inactive elements and do mass elimination
 !***********************************************************************
 integer  ek, tail,  v(*), l(*),  head(*), last(*), next(*),mark(*),  tag, free, li,vi,lvi,evi, s,ls,es, ilp,ilpmax
+integer k, i
 !
 !----initialize tag
 tag = mark(ek)
@@ -2421,6 +2424,7 @@ subroutine mdu(ek,dmin, v,l, head,last,next, mark)
 !  mdu -- update degrees of uneliminated vertices in ek
 !***********************************************************************
 integer  ek, dmin,  v(*), l(*),  head(*), last(*), next(*),mark(*),  tag, vi,evi,dvi, s,vs,es, b,vb, ilp,ilpmax,blp,blpmax
+integer i
 equivalence  (vs, es)
 !
 !----initialize tag
@@ -2530,6 +2534,7 @@ subroutine sro(n, ip, ia,ja,a, q, r, dflag)
 !-----------------------------------------------------------------------
 !
 integer  ip(*),  ia(*), ja(*),  q(*), r(*)
+integer n, i, ilast, j, jak, jdummy, jmin, jmax, k
 !...  real  a(*),  ak
 double precision  a(*),  ak
 logical  dflag
@@ -2767,6 +2772,7 @@ subroutine cdrv(n, r,c,ic, ia,ja,a, b, z, nsp,isp,rsp,esp, path, flag)
 !    in subroutine nnfc and the line following that.
 !
 integer  r(*), c(*), ic(*),  ia(*), ja(*),  isp(*), esp,  path,flag,  d, u, q, row, tmp, ar,  umax
+integer n, nsp, i, ijl, iju, il, ira, irac, irl, iru, iu, j, jl, jlmax, jra, jrl, jru, ju, jumax, jutmp, l, lmax, lratio, max
 !     real  a(*), b(*), z(*), rsp(*)
 double precision  a(*), b(*), z(*), rsp(*)
 !
@@ -3053,6 +3059,7 @@ subroutine nroc (n, ic, ia, ja, a, jar, ar, p, flag)
 !       -           size = n.
 !
 integer  ic(*), ia(*), ja(*), jar(*), p(*), flag
+integer n, i, j, jmax, jmin, k, newj
 !     real  a(*), ar(*)
 double precision  a(*), ar(*)
 !
@@ -3146,6 +3153,8 @@ integer cend, qm, rend, rk, vj
 integer ia(*), ja(*), ira(*), jra(*), il(*), jl(*), ijl(*)
 integer iu(*), ju(*), iju(*), irl(*), jrl(*), iru(*), jru(*)
 integer r(*), ic(*), q(*), irac(*), flag
+integer n, jlmax, jumax, i, i1, iak, irai, irll, irul, j, jaiak, jairai, jlmin, jtmp, jumin, juptr
+integer k, lasti, lastid, long, luk, m, jlptr, jmax, jmin, np1
 !
 !  ******  initialize pointers  ****************************************
 np1 = n + 1
@@ -3447,6 +3456,7 @@ subroutine nnfc(n, r,c,ic, ia,ja,a, z, b,lmax,il,jl,ijl,l, d, umax,iu,ju,iju,u,r
 integer rk,umax
 integer  r(*), c(*), ic(*), ia(*), ja(*), il(*), jl(*), ijl(*)
 integer  iu(*), ju(*), iju(*), irl(*), jrl(*), flag
+integer n, lmax, i, i1, i2, ijlb, j, jmax, jmin, k, mu
 !     real  a(*), l(*), d(*), u(*), z(*), b(*), row(*)
 !     real tmp(*), lki, sum, dk
 double precision  a(*), l(*), d(*), u(*), z(*), b(*), row(*)
@@ -3583,6 +3593,7 @@ subroutine nnsc(n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
 !      u or l  to be used.
 !
 integer r(*), c(*), il(*), jl(*), ijl(*), iu(*), ju(*), iju(*)
+integer n, i, j, jmax, jmin, k, ml, mu
 !     real l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk, sum
 double precision  l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
 !
@@ -3635,6 +3646,7 @@ subroutine nntc(n, r, c, il, jl, ijl, l, d, iu, ju, iju, u, z, b, tmp)
 !      u or l  to be used.
 !
 integer r(*), c(*), il(*), jl(*), ijl(*), iu(*), ju(*), iju(*)
+integer n, i, j, jmax, jmin, k, ml, mu
 !     real l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
 double precision l(*), d(*), u(*), b(*), z(*), tmp(*), tmpk,sum
 !
