@@ -152,7 +152,6 @@ integer :: lrw, liw
 ! Diffusion and 1D variables
 real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep
 real(double_precision) :: zstepsize ! Spatial resolution
-real(double_precision) :: TURBULENT_DIFFUSIVITY !< Turbulent diffusivity
 real(double_precision) :: CENTRAL_MASS !< Central mass in g
 real(double_precision) :: RADIAL_DISTANCE ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
