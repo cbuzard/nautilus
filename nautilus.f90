@@ -135,7 +135,7 @@ do while (t.lt.0.9*STOP_TIME)
   else
     ! Diffusion controlled timestep
     ! Required for the Operator splitting procedure
-    DIFFUSIVE_TIMESTEP = (BOX_SIZE/nptmax)**2 / maxval(diff1D) ! smallest timescale you can think of
+    DIFFUSIVE_TIMESTEP = (BOX_SIZE/nptmax)**2 / TURBULENT_DIFFUSIVITY ! smallest timescale you can think of
     DIFFUSIVE_TIMESTEP = 0.25d0 * DIFFUSIVE_TIMESTEP ! To ensure a good numerical precision
   endif
   
@@ -268,8 +268,6 @@ gas_temperature = initial_gas_temperature
 dust_temperature = initial_dust_temperature
 visual_extinction = INITIAL_VISUAL_EXTINCTION
 H_number_density = initial_gas_density
-
-diff1D(:)= TURBULENT_DIFFUSIVITY
 
 ! Write species name/index correspondance
 call write_species()
