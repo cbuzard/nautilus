@@ -150,8 +150,6 @@ do while (t.lt.0.9*STOP_TIME)
 
   do spatial_index=1,nptmax ! Start of the spatial loop for chemistry
 
-    iptstore = spatial_index
-
     ! T being changed in dlsode, needs to be defined again
 
     T=t_start_step
