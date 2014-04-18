@@ -476,9 +476,6 @@ if (isDefined) then
       case('WSTEPR')
         read(value, '(i5)') WSTEPR
       
-      case('IRATEOUT')
-        read(value, '(i5)') IRATEOUT
-      
       ! Initial abundances
       case('minimum_initial_abundance')
         read(value, '(e12.6)') MINIMUM_INITIAL_ABUNDANCE
@@ -587,7 +584,6 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/TYEAR, ' ! last output time (yrs)'
   write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
   write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
-  write(10,'(a,i5,a)') 'IRATEOUT = ', IRATEOUT, ' ! Spatial point for the rate output'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*     Initial Abundances    *"

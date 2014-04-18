@@ -65,7 +65,6 @@ start_time =  1.000E+00 ! first output time, after zero (yrs)
 stop_time =  1.000E+01 ! last output time (yrs)
 WSTEP =     1 ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)
 WSTEPR =    10 ! Outputs every WSTEPR timesteps for the rate coefficients
-IRATEOUT =     1 ! Spatial point for the rate output
 
 !*****************************
 !*     Initial Abundances    *
