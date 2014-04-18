@@ -151,8 +151,6 @@ integer :: lrw, liw
 
 ! Diffusion and 1D variables
 real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep
-real(double_precision) :: Denb_species ! Maximum density of the profile
-real(double_precision) :: TAUBC ! Av at the edge of the computing box
 real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: NCO ! column density (for the self shielding)
 real(double_precision) :: NH2 ! column density (for the self shielding)
