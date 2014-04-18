@@ -98,8 +98,6 @@ use utilities
 
 implicit none
 
-real(double_precision), dimension(:), allocatable :: temp_abundances ! nb_species
-
 integer :: itol = 2
 integer :: itask = 1
 integer :: istate = 1
@@ -111,8 +109,6 @@ real(double_precision) :: T, t_stop_step, t_start_step
 call initialisation()
 
 call initialize_work_arrays()
-
-allocate(temp_abundances(nb_species))
 
 ! Initializing T
 ! T = local, TIME = global
@@ -142,11 +138,7 @@ do while (t.lt.0.9*STOP_TIME)
 
   T=t_start_step
   
-  ! Chemical evolution for each spatial point
-
-  temp_abundances(1:nb_species) = abundances(1:nb_species)
-
-  call integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
+  call integrate_chemical_scheme(T,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
   ! Output of the rates once every 10 chemical outputs
   call write_current_rates()
@@ -409,7 +401,7 @@ end subroutine index_datas
 !> @brief Chemically evolve from T to t_stop_step the given spatial point
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
+subroutine integrate_chemical_scheme(T,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
   use global_variables
   
@@ -426,12 +418,12 @@ subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,ita
   integer, intent(out) :: istate
   real(double_precision), intent(out) :: t
   real(double_precision), intent(out) :: t_stop_step
-  real(double_precision), intent(out), dimension(nb_species) :: temp_abundances
  
   ! Locals
 
   integer :: i
   real(double_precision), dimension(nb_species) :: satol
+  real(double_precision), dimension(nb_species) :: temp_abundances
 
   real(double_precision) :: t_start_step
   
@@ -443,9 +435,7 @@ subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,ita
   t_stop_step = t_stop_step - t_start_step
   T = 0.d0      
 
-  temp_abundances(:) = abundances(:)
-
-  ! Don't stop running, Forrest
+  temp_abundances(1:nb_species) = abundances(1:nb_species)
 
   do while (t.lt.t_stop_step)
 
@@ -457,9 +447,6 @@ subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,ita
     do i=1,nb_species
       satol(i)=max(atol,1.d-16*temp_abundances(i))
     enddo
-
-    ! set_constant_ratesd is already called in compute IAJA
-    !      call set_constant_rates(Y)
 
     ! Feed IWORK with IA and JA
 
@@ -477,12 +464,11 @@ subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,ita
 
     call check_conservation(temp_abundances)
 
-    ! Stop, Forrest
   enddo
 
   T = t_stop_step + t_start_step 
 
-  abundances(:) = temp_abundances(:)
+  abundances(1:nb_species) = temp_abundances(1:nb_species)
 
   return 
   end subroutine integrate_chemical_scheme
