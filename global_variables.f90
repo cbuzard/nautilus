@@ -13,7 +13,6 @@ use iso_fortran_env
 use utilities
 
 implicit none
-integer, parameter :: nptmax = 1 ! number of space points (TODO : allocatable)
 integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species
 integer :: nb_gaseous_species !< number of species that are gaseous
@@ -114,9 +113,9 @@ real(double_precision) :: TSMAX
 real(double_precision) :: CRT
 real(double_precision) :: CRFE
 real(double_precision) :: EBFAC
-real(double_precision) :: START_TIME
-real(double_precision) :: STOP_TIME
-real(double_precision) :: TIME
+real(double_precision) :: START_TIME !< Start time of the simulation (in seconds)
+real(double_precision) :: STOP_TIME !< Stop time of the simulation (in seconds)
+real(double_precision) :: TIME !< Global current time of the simulation (in seconds)
 real(double_precision) :: ARRK
 
 integer, allocatable, dimension(:) :: itype
