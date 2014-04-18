@@ -104,15 +104,12 @@ integer :: istate = 1
 integer :: iopt = 1
 integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
-!~ real(double_precision) :: T, t_stop_step, t_start_step
 
 call initialisation()
 
 call initialize_work_arrays()
 
-! Initializing T
-! T = local, current_time = global
-!~ T = 0.d0
+! Initializing global time
 current_time = 0.d0
 
 ! The real time loop
@@ -126,18 +123,10 @@ do while (current_time.lt.0.9*STOP_TIME)
   endif
   
   current_time = current_time + DIFFUSIVE_TIMESTEP ! Final time for chemistry T -> T + DIFFUSIVE_TIMESTEP
-
   timestep = timestep + 1
-
-  ! Store the current time in t_start_step (for 1D calculation)
-!~   t_start_step = T
 
   write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',current_time/YEAR,' yrs'
 
-  ! T being changed in dlsode, needs to be defined again
-
-!~   T=t_start_step
-  
   call integrate_chemical_scheme(DIFFUSIVE_TIMESTEP,itol,atol,itask,istate,iopt,mf)
 
   ! Output of the rates once every 10 chemical outputs
@@ -398,7 +387,7 @@ end subroutine index_datas
 !> @date 2003
 !
 ! DESCRIPTION: 
-!> @brief Chemically evolve from T to t_stop_step the given spatial point
+!> @brief Chemically evolve for a given time delta_t
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
@@ -408,6 +397,7 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
   implicit none
   
   ! Inputs
+  real(double_precision), intent(in) :: delta_t !<[in] time during which we must integrate
   integer, intent(in) :: itol
   integer, intent(in) :: itask
   integer, intent(in) :: iopt
@@ -416,25 +406,17 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
 
   ! Outputs
   integer, intent(out) :: istate
-  real(double_precision), intent(in) :: delta_t
-  real(double_precision) :: t
-!~   real(double_precision), intent(out) :: t_stop_step
  
   ! Locals
-
   integer :: i
+  real(double_precision) :: t !< The local time, starting from 0 to delta_t
   real(double_precision), dimension(nb_species) :: satol
   real(double_precision), dimension(nb_species) :: temp_abundances
 
-  real(double_precision) :: t_start_step
   real(double_precision) :: t_stop_step
-  ! Changing the time to avoid T + DT = T 
 
-  t_stop_step=delta_t
-
-  t_start_step = 0.d0
-!~   t_stop_step = t_stop_step - t_start_step
-  t = 0.d0      
+  t_stop_step = delta_t
+  t = 0.d0
 
   temp_abundances(1:nb_species) = abundances(1:nb_species)
 
