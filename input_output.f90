@@ -482,12 +482,6 @@ if (isDefined) then
       ! Initial abundances
       case('minimum_initial_abundance')
         read(value, '(e12.6)') MINIMUM_INITIAL_ABUNDANCE
-        
-      case('central_mass')
-        read(value, '(e12.6)') CENTRAL_MASS
-      
-      case('radial_distance')
-        read(value, '(e12.6)') RADIAL_DISTANCE
          
       case default
         write(*,*) 'Warning: An unknown parameter has been found'
@@ -600,14 +594,6 @@ use global_variables
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'minimum_initial_abundance = ', MINIMUM_INITIAL_ABUNDANCE, ' ! default minimum initial frac abun'
-  write(10,'(a)') ""
-  write(10,'(a)') "!*****************************"
-  write(10,'(a)') "!*       1D parameters       *"
-  write(10,'(a)') "!*****************************"
-  write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'central_mass = ', CENTRAL_MASS, ' ! Central mass (g)'
-  write(10,'(a,es10.3e2,a)') 'radial_distance = ', RADIAL_DISTANCE, ' ! Radial distance (cm) for the disk model'
-  write(10,*) ''
   close(10)
   
 end subroutine write_parameters

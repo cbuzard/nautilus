@@ -72,11 +72,3 @@ IRATEOUT =     1 ! Spatial point for the rate output
 !*****************************
 
 minimum_initial_abundance =  1.000E-40 ! default minimum initial frac abun
-
-!*****************************
-!*       1D parameters       *
-!*****************************
-
-central_mass =  1.054E+33 ! Central mass (g)
-radial_distance =  1.500E+15 ! Radial distance (cm) for the disk model
- 
