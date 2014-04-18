@@ -108,8 +108,6 @@ integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
 real(double_precision) :: T, t_stop_step, t_start_step
 
-integer :: spatial_index ! index for spatial loops
-
 call initialisation()
 
 call initialize_work_arrays()
@@ -148,24 +146,20 @@ do while (t.lt.0.9*STOP_TIME)
 
   write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',TIME/TYEAR,' yrs'
 
-  do spatial_index=1,nptmax ! Start of the spatial loop for chemistry
+  ! T being changed in dlsode, needs to be defined again
 
-    ! T being changed in dlsode, needs to be defined again
+  T=t_start_step
+  
+  ! Chemical evolution for each spatial point
 
-    T=t_start_step
-    
-    ! Chemical evolution for each spatial point
+  temp_abundances(1:nb_species) = abundances(1:nb_species)
 
-    temp_abundances(1:nb_species) = abundances(1:nb_species)
+  call integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
 
-    call integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,itask,istate,iopt,mf)
+  ! Output of the rates once every 10 chemical outputs
+  call write_current_rates()
 
-    ! Output of the rates once every 10 chemical outputs
-    call write_current_rates()
-
-    if (istate.eq.-3) stop
-
-  enddo ! end of the spatial loop for chemistry 
+  if (istate.eq.-3) stop
 
   if (mod(timestep,wstep).eq.0) then
     call write_current_output()
@@ -492,7 +486,9 @@ subroutine integrate_chemical_scheme(T,temp_abundances,t_stop_step,itol,atol,ita
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
-    if (istate.ne.2) write(*,*)  'spatial_index = ', spatial_index, 'ISTATE = ', ISTATE
+    if (istate.ne.2) then
+      write(*,*)  'ISTATE = ', ISTATE
+    endif
 
     call check_conservation(temp_abundances)
 
