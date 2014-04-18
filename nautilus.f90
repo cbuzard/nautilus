@@ -227,10 +227,6 @@ call write_elemental_abundances(filename='elemental_abundances.out', el_abundanc
 do i=1,NB_PRIME_ELEMENTS
   if (species_name(PRIME_ELEMENT_IDX(I)).EQ.YHE) then
     initial_dtg_mass_ratio = initial_dtg_mass_ratio*(1.d0+4*INITIAL_ELEMENTAL_ABUNDANCE(I))
-    ! Mean molecular weight (cgs) 
-    ! Approximated here (the exact calculus would require a sume over AWT
-    ! Used for the diffusion in disks, not for chemistry
-    mean_molecular_weight = 2.d0 + 4.d0*INITIAL_ELEMENTAL_ABUNDANCE(I)/(1.d0+INITIAL_ELEMENTAL_ABUNDANCE(I))
   endif
 enddo
 
