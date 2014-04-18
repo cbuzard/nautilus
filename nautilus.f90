@@ -122,19 +122,11 @@ TIME = 0.d0
 ! The real time loop
 do while (t.lt.0.9*STOP_TIME)
 
-  ! Determination of the diffusive timestep, modification of the global parameter DIFFUSIVE_TIMESTEP
-  if (IS_DIFFUSIVITY.eq.0) then
-    ! Log spacing of time outputs when there is no diffusion
-    if (TIME.gt.1.d-2) then
-      DIFFUSIVE_TIMESTEP = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
-    else
-      DIFFUSIVE_TIMESTEP = 1.d0 * TYEAR
-    endif
+  ! Log spacing of time outputs when there is no diffusion
+  if (TIME.gt.1.d-2) then
+    DIFFUSIVE_TIMESTEP = TIME*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
   else
-    ! Diffusion controlled timestep
-    ! Required for the Operator splitting procedure
-    DIFFUSIVE_TIMESTEP = (BOX_SIZE/nptmax)**2 / TURBULENT_DIFFUSIVITY ! smallest timescale you can think of
-    DIFFUSIVE_TIMESTEP = 0.25d0 * DIFFUSIVE_TIMESTEP ! To ensure a good numerical precision
+    DIFFUSIVE_TIMESTEP = 1.d0 * TYEAR
   endif
   
   TIME = T + DIFFUSIVE_TIMESTEP ! Final time for chemistry T -> T + DIFFUSIVE_TIMESTEP
@@ -167,7 +159,7 @@ do while (t.lt.0.9*STOP_TIME)
 
 enddo
 
-if (nptmax.eq.1) call write_abundances('abundances.tmp')
+call write_abundances('abundances.tmp')
 
 contains
 

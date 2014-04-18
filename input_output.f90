@@ -483,10 +483,6 @@ if (isDefined) then
       case('minimum_initial_abundance')
         read(value, '(e12.6)') MINIMUM_INITIAL_ABUNDANCE
       
-      ! 1D Parameters
-      case('is_diffusivity')
-        read(value, '(i5)') IS_DIFFUSIVITY
-      
       case('turbulent_diffusivity')
         read(value, '(e12.6)') TURBULENT_DIFFUSIVITY
       
@@ -510,11 +506,6 @@ if (isDefined) then
 else
   write (*,*) 'Warning: The file "parameters.in" does not exist. Default values have been used'
 end if
-
-if ((IS_DIFFUSIVITY.lt.0).or.(IS_DIFFUSIVITY.gt.2)) then
-  write(Error_unit,*) 'This value for IS_DIFFUSIVITY is not implemented: ',IS_DIFFUSIVITY
-  call exit(5)
-endif
 
 START_TIME = START_TIME * TYEAR
 STOP_TIME = STOP_TIME * TYEAR
@@ -620,7 +611,6 @@ use global_variables
   write(10,'(a)') "!*       1D parameters       *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i5,a)') 'is_diffusivity = ', IS_DIFFUSIVITY, ' ! Diffusivity flag (1. constant 2. alpha)'
   write(10,'(a,es10.3e2,a)') 'turbulent_diffusivity = ', TURBULENT_DIFFUSIVITY, &
   ' ! Turbulent diffusivity (cgs if 1) (value or parameter)'
   write(10,'(a,es10.3e2,a)') 'box_size = ', BOX_SIZE, ' ! Computing box"s size (cm)'

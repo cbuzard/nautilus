@@ -158,7 +158,6 @@ real(double_precision) :: CENTRAL_MASS !< Central mass in g
 real(double_precision) :: RADIAL_DISTANCE ! Radial distance
 real(double_precision) :: Denb_species ! Maximum density of the profile
 real(double_precision) :: TAUBC ! Av at the edge of the computing box
-integer :: IS_DIFFUSIVITY ! Diffusivity flag
 real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: NCO ! column density (for the self shielding)
 real(double_precision) :: NH2 ! column density (for the self shielding)

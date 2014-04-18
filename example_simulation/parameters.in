@@ -77,7 +77,6 @@ minimum_initial_abundance =  1.000E-40 ! default minimum initial frac abun
 !*       1D parameters       *
 !*****************************
 
-is_diffusivity =     0 ! Diffusivity flag (1. constant 2. alpha)
 turbulent_diffusivity =  1.000E-02 ! Turbulent diffusivity (cgs if 1) (value or parameter)
 box_size =  4.500E+14 ! Computing box"s size (cm)
 central_mass =  1.054E+33 ! Central mass (g)
