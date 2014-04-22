@@ -345,7 +345,7 @@ enddo
 AV_NH_ratio = 5.34d-22 * (initial_dtg_mass_ratio / 1.d-2)
 
 ! Find ITYPE first and last reactions===================================
-do I=0,NITYPE-1
+do I=0,MAX_NUMBER_REACTION_TYPE-1
   IRXSTA(I)=0
   IRXFIN(I)=0
   do J=1,nb_reactions

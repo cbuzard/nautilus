@@ -22,7 +22,6 @@ integer :: nb_species_for_grain !< number of species involved in grain surface r
 integer :: nb_surface_reactions !< number of reactions on the grain surface
 integer :: nb_species_for_gas !< number of species involved in gas phase reactions
 integer :: nb_gas_phase_reactions !< number of reactions in gas phase
-integer, parameter :: NITYPE=100
 real(double_precision), parameter :: RXNMIN=1.0D-99 !< Minimum rate coefficient (Below, coefficients are forced to 0)
 real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
 real(double_precision), parameter :: PI = 3.1415926535898d0 !< The number Pi
@@ -133,8 +132,9 @@ real(double_precision) :: ARRK
 
 
 integer :: ISPE
-integer, dimension(0:nitype-1) :: IRXSTA
-integer, dimension(0:nitype-1) :: IRXFIN
+integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
+integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: IRXSTA !< list of id start for each reaction type given their type number
+integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: IRXFIN !< list of id stop for each reaction type given their type number
 integer :: timestep
 integer :: OUTPUT_PER_DECADE
 

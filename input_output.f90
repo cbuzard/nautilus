@@ -161,7 +161,7 @@ enddo
 
 ! Reorder reaction file entries with ITYPE
 jk=1
-do i=0,nitype
+do i=0,MAX_NUMBER_REACTION_TYPE
   do j=1,nb_reactions
     if (itypeuo(j).eq.i) then
       SYMBOL(:,jk)=SYMBOLUO(:,j)     
