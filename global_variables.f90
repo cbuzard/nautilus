@@ -34,41 +34,33 @@ real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in 
 
 real(double_precision) :: RELATIVE_TOLERANCE
 
-character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
+! Name of key species
+character(len=11) :: YJH !< Hydrogen on grains
+character(len=11) :: YJH2 ! Dihydrogen on grains
+character(len=11) :: YH !< Gas phase Hydrogen
+character(len=11) :: YH2 ! Gas phase Dihydrogen
+character(len=11) :: YHE !< Gas phase Helium
+character(len=11) :: YHEP !< Gas phase Helium+
+character(len=11) :: YE !< Gas phase electrons
+character(len=11) :: YGRAIN !< Grain
+character(len=11) :: YCO !< Gas phase CO
 
-character(len=11), allocatable, dimension(:,:) :: SYMBOL !< dim(7,nb_reactions)
-character(len=11) :: YJH
-character(len=11) :: YJH2
-character(len=11) :: YH
-character(len=11) :: YH2
-character(len=11) :: YHE
-character(len=11) :: YHEP
-character(len=11) :: YE
-character(len=11) :: YGRAIN
-character(len=11) :: YCO
-integer :: INDCO
-integer :: INDH2
-integer :: INDHE
+integer :: INDCO !< Index corresponding to CO in nb_species length arrays
+integer :: INDH2 !< Index corresponding to H2 in nb_species length arrays
+integer :: INDHE !< Index corresponding to He in nb_species length arrays
 
-real(double_precision), allocatable, dimension(:) :: XJ !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: XK !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: abundances !< Species abundances dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: AWT !< dim(nb_species)
+! Arrays about prime elements
 real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< dim(NB_PRIME_ELEMENTS) Store abundances for all 
 !! elemental species before running the simulation.
 real(double_precision), allocatable, dimension(:) :: elemental_mass !< dim(NB_PRIME_ELEMENTS) elemental mass.
 character(len=11), allocatable, dimension(:) :: element_name !< dim(NB_PRIME_ELEMENTS) elemental mass.
-real(double_precision), allocatable, dimension(:) :: RDIF1 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: RDIF2 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: EA !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: ACT1 !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENTS) Tell for each prime element its index in the global array of all elements.
+
+! Arrays about species
+character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
+integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
+real(double_precision), allocatable, dimension(:) :: abundances !< dim(nb_species) Species abundances
+real(double_precision), allocatable, dimension(:) :: AWT !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: TINDIF !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: TINACC !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: TINEVA !< dim(nb_species)
@@ -80,6 +72,31 @@ real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species)
+integer, allocatable, dimension(:) :: icg !< dim(nb_species)
+
+! Arrays about reactions
+character(len=11), allocatable, dimension(:,:) :: SYMBOL !< dim(7,nb_reactions)
+integer, allocatable, dimension(:,:) :: reaction_substances !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
+real(double_precision), allocatable, dimension(:) :: XJ !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: XK !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: RDIF1 !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: RDIF2 !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: EA !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: ACT1 !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: itype !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: jsp1 !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: jsp2 !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: FORMULA !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: NUM !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
+!! declaring a given number for each reaction, like a hashtag.
+
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN
 real(double_precision) :: AV_NH_ratio
@@ -91,10 +108,10 @@ real(double_precision) :: sticking_coeff_negative
 real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
 real(double_precision) :: H_number_density !< Total H number density (both H and H2)
 real(double_precision) :: initial_gas_density
-real(double_precision) :: gas_temperature !< current gas temperature (K)
-real(double_precision) :: initial_gas_temperature !< initial gas temperature (K), simulation parameter
-real(double_precision) :: dust_temperature !< current dust temperature (K)
-real(double_precision) :: initial_dust_temperature !< initial dust temperature (K), simulation parameter
+real(double_precision) :: gas_temperature !< current gas temperature [K]
+real(double_precision) :: initial_gas_temperature !< initial gas temperature [K], simulation parameter
+real(double_precision) :: dust_temperature !< current dust temperature [K]
+real(double_precision) :: initial_dust_temperature !< initial dust temperature [K], simulation parameter
 real(double_precision) :: visual_extinction !< visual extinction of the molecular cloud (or other astronomical object). 
 !! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
@@ -114,15 +131,7 @@ real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
 real(double_precision) :: ARRK
 
-integer, allocatable, dimension(:) :: itype !< dim(nb_reactions)
-integer, allocatable, dimension(:) :: jsp1 !< dim(nb_reactions)
-integer, allocatable, dimension(:) :: jsp2 !< dim(nb_reactions)
-integer, allocatable, dimension(:) :: FORMULA !< dim(nb_reactions)
-integer, allocatable, dimension(:) :: NUM !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
-!! declaring a given number for each reaction, like a hashtag.
-integer, allocatable, dimension(:) :: icg !< dim(nb_species)
-integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
-integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENTS) Tell for each prime element its index in the global array of all elements.
+
 integer :: ISPE
 integer, dimension(0:nitype-1) :: IRXSTA
 integer, dimension(0:nitype-1) :: IRXFIN
@@ -135,28 +144,25 @@ integer :: CONSERVATION_TYPE
 integer :: IMODH
 integer :: IS_ABSORPTION
 
+! About the optimization so that, for each species, we only check the reactions we know the species is involved.
 integer :: max_reactions_same_species !< Maximum number of reactions in which any species will be involved. Used to set the array 'relevant_reactions'
 integer, dimension(:,:), allocatable :: relevant_reactions !< dim(max_reactions_same_species, nb_species) For each species, store the list of reactions involving the species. 
 !! When 0 are encountered for a given species, this means that no more reactions involve it. dimensions : (max_reactions_same_species, nb_species)
 integer, dimension(:), allocatable :: nb_reactions_using_species !< dim(nb_species) For each species, the number of reactions in which it is used
 
-integer, dimension(:), allocatable :: IWORK
-real(double_precision), dimension(:), allocatable :: RWORK
+! For LSODES
+integer, dimension(:), allocatable :: IWORK !< dim(liw)
+real(double_precision), dimension(:), allocatable :: RWORK !< dim(lrw)
 integer :: lrw, liw
 
 ! Diffusion and 1D variables
-real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep
+real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep [s]
 real(double_precision) :: X_IONISATION_RATE
-real(double_precision) :: NCO ! column density (for the self shielding)
-real(double_precision) :: NH2 ! column density (for the self shielding)
+real(double_precision) :: NCO ! column density [cm-2] (for the self shielding)
+real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)
 integer :: wstep
 integer :: wstepr
 integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
-
-! For FCHEMVW
-
-integer, allocatable, dimension(:,:) :: reaction_substances !< for all reactions, list for reactants (first 3) and products (last 4). Size (7, nb_reactions)
-
 
 contains 
 
