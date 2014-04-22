@@ -323,16 +323,6 @@ do J=1,NB_PRIME_ELEMENTS-1
 enddo
 
 ! Set species' characteristics==========================================
-! --- Set special species labels
-YH     = 'H          '
-YJH    = 'JH         '
-YH2    = 'H2         '
-YJH2   = 'JH2        '
-YHE    = 'He         '
-YHEP   = 'He+        '
-YE     = 'e-         '
-YGRAIN = 'GRAIN0     '
-YCO    = 'CO         '
 
 ! --- Set reference species
 do I=1,nb_species 
