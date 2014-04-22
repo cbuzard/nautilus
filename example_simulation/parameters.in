@@ -9,12 +9,6 @@
 !# bigger than that, even on line with a parameter to read.
 
 !*****************************
-!*     Solver Parameters     *
-!*****************************
-
-relative_tolerance =  1.000E-04 ! Relative tolerance
-
-!*****************************
 !*          Switches         *
 !*****************************
 
@@ -65,9 +59,5 @@ stop_time =  1.000E+01 ! last output time [yrs]
 output_per_decade =    2 ! outputs per decade (Only without diffusion)
 WSTEP =     1 ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)
 WSTEPR =    10 ! Outputs every WSTEPR timesteps for the rate coefficients
-
-!*****************************
-!*     Initial Abundances    *
-!*****************************
-
-minimum_initial_abundance =  1.000E-40 ! default minimum initial frac abun
+relative_tolerance =  1.000E-04 ! Relative tolerance of the solver
+minimum_initial_abundance =  1.000E-40 ! default minimum initial fraction abundance

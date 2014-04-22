@@ -527,12 +527,6 @@ use global_variables
   write(10,'(a)') "!# bigger than that, even on line with a parameter to read."
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
-  write(10,'(a)') "!*     Solver Parameters     *"
-  write(10,'(a)') "!*****************************"
-  write(10,'(a)') ""
-  write(10,'(a,es10.3e2, a)') 'relative_tolerance = ',RELATIVE_TOLERANCE, ' ! Relative tolerance'
-  write(10,'(a)') ""
-  write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*          Switches         *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
@@ -584,12 +578,9 @@ use global_variables
   write(10,'(a,i4,a)') 'output_per_decade = ', OUTPUT_PER_DECADE, ' ! outputs per decade (Only without diffusion)'
   write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
   write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
-  write(10,'(a)') ""
-  write(10,'(a)') "!*****************************"
-  write(10,'(a)') "!*     Initial Abundances    *"
-  write(10,'(a)') "!*****************************"
-  write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'minimum_initial_abundance = ', MINIMUM_INITIAL_ABUNDANCE, ' ! default minimum initial frac abun'
+  write(10,'(a,es10.3e2, a)') 'relative_tolerance = ',RELATIVE_TOLERANCE, ' ! Relative tolerance of the solver'
+  write(10,'(a,es10.3e2,a)') 'minimum_initial_abundance = ', MINIMUM_INITIAL_ABUNDANCE, ' ! default minimum initial &
+                             &fraction abundance'
   close(10)
   
 end subroutine write_parameters

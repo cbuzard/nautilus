@@ -133,10 +133,9 @@ real(double_precision) :: ARRK
 
 integer :: ISPE
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
+! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: IRXSTA !< list of id start for each reaction type given their type number
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: IRXFIN !< list of id stop for each reaction type given their type number
-integer :: timestep
-integer :: OUTPUT_PER_DECADE
 
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION
@@ -151,18 +150,21 @@ integer, dimension(:,:), allocatable :: relevant_reactions !< dim(max_reactions_
 integer, dimension(:), allocatable :: nb_reactions_using_species !< dim(nb_species) For each species, the number of reactions in which it is used
 
 ! For LSODES
+integer :: lrw, liw
 integer, dimension(:), allocatable :: IWORK !< dim(liw)
 real(double_precision), dimension(:), allocatable :: RWORK !< dim(lrw)
-integer :: lrw, liw
+integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 ! Diffusion and 1D variables
 real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep [s]
 real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: NCO ! column density [cm-2] (for the self shielding)
 real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)
+
+integer :: timestep
+integer :: OUTPUT_PER_DECADE
 integer :: wstep
 integer :: wstepr
-integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 contains 
 
