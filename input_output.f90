@@ -547,41 +547,41 @@ use global_variables
   write(10,'(a)') "!*    Gas phase parameters   *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'initial_gas_density = ', initial_gas_density, ' ! initial gas density (part/cm-3)'
-  write(10,'(a,es10.3e2,a)') 'initial_gas_temperature = ', initial_gas_temperature, ' ! initial gas temperature (K)'
+  write(10,'(a,es10.3e2,a)') 'initial_gas_density = ', initial_gas_density, ' ! initial gas density [part/cm-3]'
+  write(10,'(a,es10.3e2,a)') 'initial_gas_temperature = ', initial_gas_temperature, ' ! initial gas temperature [K]'
   write(10,'(a,es10.3e2,a)') 'initial_visual_extinction = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
-  write(10,'(a,es10.3e2,a)') 'cr_ionisation_rate = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate (1.3e-17 standard value)'
-  write(10,'(a,es10.3e2,a)') 'x_ionisation_rate = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays (s-1)'
+  write(10,'(a,es10.3e2,a)') 'cr_ionisation_rate = ', CR_IONISATION_RATE, ' ! cosmic ray ionisation rate [s-1] (standard=1.3e-17)'
+  write(10,'(a,es10.3e2,a)') 'x_ionisation_rate = ', X_IONISATION_RATE, ' ! Ionisation rate due to X-rays [s-1]'
   write(10,'(a,es10.3e2,a)') 'uv_flux = ', UV_FLUX, ' ! Scale factor for the UV flux, in unit of the reference flux (1.=nominal)'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*      Grain parameters     *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'initial_dust_temperature = ', initial_dust_temperature, ' ! initial dust temp'
+  write(10,'(a,es10.3e2,a)') 'initial_dust_temperature = ', initial_dust_temperature, ' ! initial dust temperature [K]'
   write(10,'(a,es10.3e2,a)') 'initial_dtg_mass_ratio = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
   write(10,'(a,es10.3e2,a)') 'sticking_coeff_neutral = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
   write(10,'(a,es10.3e2,a)') 'sticking_coeff_positive = ', sticking_coeff_positive, ' ! sticking coeff for positive species'
   write(10,'(a,es10.3e2,a)') 'sticking_coeff_negative = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
   write(10,'(a,es10.3e2,a)') 'grain_density = ', GRAIN_DENSITY, ' ! mass density of grain material'
-  write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius (cm)'
-  write(10,'(a,es10.3e2,a)') 'site_spacing = ', SITE_SPACING, ' ! site spacing (cm)'
-  write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density (cm-2)'
+  write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius [cm]'
+  write(10,'(a,es10.3e2,a)') 'site_spacing = ', SITE_SPACING, ' ! site spacing [cm]'
+  write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density [cm-2]'
   write(10,'(a,es10.3e2,a)') 'EBFAC = ', EBFAC, ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
-  write(10,'(a,es10.3e2,a)') 'TSMAX = ', TSMAX, ' ! peak grain temp (CR heating)'
-  write(10,'(a,es10.3e2,a)') 'CRT = ', CRT, ' ! duration (s) of peak grain T'
-  write(10,'(a,es10.3e2,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter s-1 grain-1 (for 0.1 micron grain)'
+  write(10,'(a,es10.3e2,a)') 'TSMAX = ', TSMAX, ' ! peak grain temperature [K] (CR heating)'
+  write(10,'(a,es10.3e2,a)') 'CRT = ', CRT, ' ! duration [s] of peak grain temperature'
+  write(10,'(a,es10.3e2,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)'
   write(10,'(a,es10.3e2,a)') 'LAYERS = ', LAYERS, ' ! number of monolayers for ITYPE 17-20 currently not used in the code'
   write(10,'(a,es10.3e2,a)') 'ARRK = ', ARRK, ' ! a-coefficient for RRK-style formation-desorption'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
-  write(10,'(a)') "!*        Output times       *"
+  write(10,'(a)') "!*  Integration and Outputs  *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
+  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! first output time, after zero [yrs]'
+  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! last output time [yrs]'
   write(10,'(a,i4,a)') 'output_per_decade = ', OUTPUT_PER_DECADE, ' ! outputs per decade (Only without diffusion)'
-  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! first output time, after zero (yrs)'
-  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! last output time (yrs)'
   write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
   write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
   write(10,'(a)') ""
