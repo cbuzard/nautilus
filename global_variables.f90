@@ -76,8 +76,8 @@ real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species)
 integer, allocatable, dimension(:) :: icg !< dim(nb_species)
 
 ! Arrays about reactions
-character(len=11), allocatable, dimension(:,:) :: SYMBOL !< dim(7,nb_reactions)
-integer, allocatable, dimension(:,:) :: reaction_substances_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
+character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
+integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
 real(double_precision), allocatable, dimension(:) :: XJ !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions)
@@ -247,8 +247,8 @@ allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
 allocate(formula(nb_reactions))
 allocate(num(nb_reactions))
-allocate(reaction_substances_ID(7,nb_reactions))
-allocate(symbol(7,nb_reactions))
+allocate(REACTION_SUBSTANCES_ID(7,nb_reactions))
+allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
 
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))

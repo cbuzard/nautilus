@@ -164,7 +164,7 @@ jk=1
 do i=0,MAX_NUMBER_REACTION_TYPE
   do j=1,nb_reactions
     if (itypeuo(j).eq.i) then
-      SYMBOL(:,jk)=SYMBOLUO(:,j)     
+      REACTION_SUBSTANCES_NAMES(:,jk)=SYMBOLUO(:,j)     
       A(jk)=AUO(j)
       B(jk)=BUO(j)
       C(jk)=CUO(j)
@@ -188,9 +188,9 @@ endif
 !       replace the species names by blanks for non chemical species                                                                        
 do j=1,nb_reactions-1
   do i=1,7
-    select case(symbol(i,j))
+    select case(REACTION_SUBSTANCES_NAMES(i,j))
       case ('CR', 'CRP', 'Photon')
-        symbol(i,j) = '           '
+        REACTION_SUBSTANCES_NAMES(i,j) = '           '
     end select
   enddo
 
@@ -990,7 +990,7 @@ write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
 open(45, file=filename_output, form='unformatted')
 
 write(45) species_name
-write(45) SYMBOL
+write(45) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
 write(45) XK
 write(45) NUM
 

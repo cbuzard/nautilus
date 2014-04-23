@@ -732,21 +732,21 @@ end subroutine get_elemental_abundance
     do I=1,nb_reactions
       EA(I)=0.d0
       do J=1,NEA
-        if (SYMBOL(4,I)(:1).EQ.'J') then
-          if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
-          (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
-          (SYMBOL(4,I).EQ.GSread(3,J)).AND.&
-          (SYMBOL(5,I).EQ.GSread(4,J)).AND.&
-          (SYMBOL(6,I).EQ.GSread(5,J))) EA(I)=REA5(J)
+        if (REACTION_SUBSTANCES_NAMES(4,I)(:1).EQ.'J') then
+          if ((REACTION_SUBSTANCES_NAMES(1,I).EQ.GSread(1,J)).AND.&
+          (REACTION_SUBSTANCES_NAMES(2,I).EQ.GSread(2,J)).AND.&
+          (REACTION_SUBSTANCES_NAMES(4,I).EQ.GSread(3,J)).AND.&
+          (REACTION_SUBSTANCES_NAMES(5,I).EQ.GSread(4,J)).AND.&
+          (REACTION_SUBSTANCES_NAMES(6,I).EQ.GSread(5,J))) EA(I)=REA5(J)
         else
-          if ((SYMBOL(1,I).EQ.GSread(1,J)).AND.&
-          (SYMBOL(2,I).EQ.GSread(2,J)).AND.&
-          (SYMBOL(4,I).EQ.GSread(3,J)(2:)).AND.&
-          (SYMBOL(5,I).EQ.GSread(4,J)(2:)).AND.&
-          (SYMBOL(6,I).EQ.GSread(5,J)(2:))) EA(I)=REA5(J)
+          if ((REACTION_SUBSTANCES_NAMES(1,I).EQ.GSread(1,J)).AND.&
+          (REACTION_SUBSTANCES_NAMES(2,I).EQ.GSread(2,J)).AND.&
+          (REACTION_SUBSTANCES_NAMES(4,I).EQ.GSread(3,J)(2:)).AND.&
+          (REACTION_SUBSTANCES_NAMES(5,I).EQ.GSread(4,J)(2:)).AND.&
+          (REACTION_SUBSTANCES_NAMES(6,I).EQ.GSread(5,J)(2:))) EA(I)=REA5(J)
         endif
       enddo
-      !IF(symbol(4,i) == 'JO2H       ') write(*,*)  symbol(:,i), Ea(i)
+      !IF(REACTION_SUBSTANCES_NAMES(4,i) == 'JO2H       ') write(*,*)  REACTION_SUBSTANCES_NAMES(:,i), Ea(i)
     enddo
 
     ! Set up constants, quantum rate info===================================
@@ -778,8 +778,8 @@ end subroutine get_elemental_abundance
       JSP1(J)=0
       JSP2(J)=0
       do I=1,nb_species
-        if (SYMBOL(1,J).EQ.species_name(I)) JSP1(J)=I
-        if (SYMBOL(2,J).EQ.species_name(I)) JSP2(J)=I
+        if (REACTION_SUBSTANCES_NAMES(1,J).EQ.species_name(I)) JSP1(J)=I
+        if (REACTION_SUBSTANCES_NAMES(2,J).EQ.species_name(I)) JSP2(J)=I
       enddo
 
       ! === ITYPE 14 - SURFACE REACTIONS
@@ -788,11 +788,11 @@ end subroutine get_elemental_abundance
 
         ! ------ Check for branching
         do K=1,nb_reactions
-          if (((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
-          (SYMBOL(2,J).EQ.SYMBOL(2,K))).OR.&
-          ((SYMBOL(2,J).EQ.SYMBOL(1,K)).AND.&
-          (SYMBOL(1,J).EQ.SYMBOL(2,K)))) then
-          if (SYMBOL(4,K)(:1).EQ.'J          ') NPATH=NPATH+1
+          if (((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K))).OR.&
+          ((REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)))) then
+          if (REACTION_SUBSTANCES_NAMES(4,K)(:1).EQ.'J          ') NPATH=NPATH+1
         endif
       enddo
 
@@ -809,21 +809,21 @@ end subroutine get_elemental_abundance
       ! ------ Calculate evaporation fraction
       NEVAP=0
       do K=1,nb_reactions
-        if ((SYMBOL(4,J)(:1).EQ.'J          ').AND.(A(K).NE.0.d0)) then
-          if ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
-          (SYMBOL(2,J).EQ.SYMBOL(2,K)).AND.&
-          (SYMBOL(4,J)(2:).EQ.SYMBOL(4,K)).AND.&
-          (SYMBOL(5,J)(2:).EQ.SYMBOL(5,K)).AND.&
-          (SYMBOL(6,J)(2:).EQ.SYMBOL(6,K)).AND.&
-          (SYMBOL(4,K)(:1).NE.'J          ')) NEVAP=NEVAP+1
+        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).EQ.'J          ').AND.(A(K).NE.0.d0)) then
+          if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(4,J)(2:).EQ.REACTION_SUBSTANCES_NAMES(4,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(5,J)(2:).EQ.REACTION_SUBSTANCES_NAMES(5,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(6,J)(2:).EQ.REACTION_SUBSTANCES_NAMES(6,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(4,K)(:1).NE.'J          ')) NEVAP=NEVAP+1
         endif
-        if ((SYMBOL(4,J)(:1).NE.'J          ').AND.(A(J).NE.0.d0)) then
-          if ((SYMBOL(1,J).EQ.SYMBOL(1,K)).AND.&
-          (SYMBOL(2,J).EQ.SYMBOL(2,K)).AND.&
-          (SYMBOL(4,J).EQ.SYMBOL(4,K)(2:)).AND.&
-          (SYMBOL(5,J).EQ.SYMBOL(5,K)(2:)).AND.&
-          (SYMBOL(6,J).EQ.SYMBOL(6,K)(2:)).AND.&
-          (SYMBOL(4,K)(:1).EQ.'J          ')) NEVAP=NEVAP+1
+        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).NE.'J          ').AND.(A(J).NE.0.d0)) then
+          if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)).AND.&
+          (REACTION_SUBSTANCES_NAMES(4,J).EQ.REACTION_SUBSTANCES_NAMES(4,K)(2:)).AND.&
+          (REACTION_SUBSTANCES_NAMES(5,J).EQ.REACTION_SUBSTANCES_NAMES(5,K)(2:)).AND.&
+          (REACTION_SUBSTANCES_NAMES(6,J).EQ.REACTION_SUBSTANCES_NAMES(6,K)(2:)).AND.&
+          (REACTION_SUBSTANCES_NAMES(4,K)(:1).EQ.'J          ')) NEVAP=NEVAP+1
         endif
       enddo
 
@@ -831,16 +831,16 @@ end subroutine get_elemental_abundance
       N5=0
       N6=0
       do I=nb_gaseous_species+1,nb_species
-        if (SYMBOL(4,J)(:1).EQ.'J          ') then
-          if (SYMBOL(4,J).EQ.species_name(I)) N4=I
-          if (SYMBOL(5,J).EQ.species_name(I)) N5=I
-          if (SYMBOL(6,J).EQ.species_name(I)) N6=I
+        if (REACTION_SUBSTANCES_NAMES(4,J)(:1).EQ.'J          ') then
+          if (REACTION_SUBSTANCES_NAMES(4,J).EQ.species_name(I)) N4=I
+          if (REACTION_SUBSTANCES_NAMES(5,J).EQ.species_name(I)) N5=I
+          if (REACTION_SUBSTANCES_NAMES(6,J).EQ.species_name(I)) N6=I
         endif
-        if ((SYMBOL(4,J)(:1).NE.'J          ').AND.&
-        (SYMBOL(4,J)(:1).NE.'X          ')) then
-        if (SYMBOL(4,J).EQ.species_name(I)(2:)) N4=I
-        if (SYMBOL(5,J).EQ.species_name(I)(2:)) N5=I
-        if (SYMBOL(6,J).EQ.species_name(I)(2:)) N6=I
+        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).NE.'J          ').AND.&
+        (REACTION_SUBSTANCES_NAMES(4,J)(:1).NE.'X          ')) then
+        if (REACTION_SUBSTANCES_NAMES(4,J).EQ.species_name(I)(2:)) N4=I
+        if (REACTION_SUBSTANCES_NAMES(5,J).EQ.species_name(I)(2:)) N5=I
+        if (REACTION_SUBSTANCES_NAMES(6,J).EQ.species_name(I)(2:)) N6=I
       endif
     enddo
 
@@ -871,7 +871,7 @@ end subroutine get_elemental_abundance
     EVFRAC=SUM2/(1+SUM2)
 
     !        V.W. Jul 2006 f=evfrac=0.009 for H2O (Kroes & Anderson 2006) 
-    !         if (SYMBOL(4,J).EQ.'H2O     ') then
+    !         if (REACTION_SUBSTANCES_NAMES(4,J).EQ.'H2O     ') then
     !                 EVFRAC=0.009
     !                EVFRAC_H2O=0.009
     !         endif
@@ -903,7 +903,7 @@ end subroutine get_elemental_abundance
     if (NEVAP.EQ.0) EVFRAC=0.d0
     if (DHFSUM.LE.0.d0) EVFRAC=0.d0
 
-    if (SYMBOL(4,J)(:1).EQ.'J          ') then
+    if (REACTION_SUBSTANCES_NAMES(4,J)(:1).EQ.'J          ') then
       EVFRAC=1.0d0-EVFRAC
     endif
 
@@ -923,7 +923,7 @@ end subroutine get_elemental_abundance
   if (ITYPE(J).EQ.99) then
     ! ------ Save tag of resultant grain surface species
     do I=1,nb_species
-      if (SYMBOL(4,J).EQ.species_name(I)) JSP2(J)=I
+      if (REACTION_SUBSTANCES_NAMES(4,J).EQ.species_name(I)) JSP2(J)=I
     enddo
   endif
 
