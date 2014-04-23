@@ -73,7 +73,7 @@ real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species)
-integer, allocatable, dimension(:) :: icg !< dim(nb_species)
+integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
@@ -226,7 +226,7 @@ allocate(chf(nb_species))
 allocate(condsp(nb_species))
 allocate(rq1(nb_species))
 allocate(rq2(nb_species))
-allocate(icg(nb_species))
+allocate(SPECIES_CHARGE(nb_species))
 allocate(nb_reactions_using_species(nb_species))
 
 allocate(xj(nb_reactions))

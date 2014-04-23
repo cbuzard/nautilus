@@ -310,14 +310,14 @@ end if
 ! putting everything back into the big tables
 do I=1,nb_species_for_gas 
   species_name(I)=gas_species_label(I)
-  ICG(I)=ICG1(I)
+  SPECIES_CHARGE(I)=ICG1(I)
   do k=1,NB_PRIME_ELEMENTS
     species_composition(K,I)=gas_species_composition(K,I)
   enddo
 enddo
 do I=1,nb_species_for_grain 
   species_name(nb_species_for_gas+I)=surface_species_label(I)
-  ICG(nb_species_for_gas+I)=ICG2(I)
+  SPECIES_CHARGE(nb_species_for_gas+I)=ICG2(I)
   do k=1,NB_PRIME_ELEMENTS
     species_composition(K,nb_species_for_gas+I)=grain_species_composition(K,I)
   enddo

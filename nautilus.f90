@@ -283,7 +283,7 @@ do J=1,nb_species
     KSUM=KSUM+species_composition(K,J)
   enddo
   ! ------ Check for atomic species
-  if ((KSUM.EQ.1).AND.(ICG(J).EQ.0).AND.&
+  if ((KSUM.EQ.1).AND.(SPECIES_CHARGE(J).EQ.0).AND.&
   (species_name(J)(:1).NE.'J          ').AND.(species_name(J)(:1).NE.'X          ')) then
     if (ILAB.GT.NB_PRIME_ELEMENTS) then
       write(Error_unit, *) '***More fundamental elements than NB_PRIME_ELEMENTS***'
@@ -481,7 +481,7 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
   ! --- Conserve electrons
   CHASUM=0.d0
   do I=1,nb_species
-    if (I.NE.INDEL) CHASUM=CHASUM+ICG(I)*temp_abundances(I)
+    if (I.NE.INDEL) CHASUM=CHASUM+SPECIES_CHARGE(I)*temp_abundances(I)
   enddo
   if (CHASUM.LE.0.d0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
   temp_abundances(INDEL)=CHASUM
@@ -613,13 +613,13 @@ end subroutine get_elemental_abundance
     ! --- Evaluate sticking coeff and accretion rate factor for each species
     STICK=0.d0
     do I=1,nb_species
-      if (ICG(I).EQ.0) then
+      if (SPECIES_CHARGE(I).EQ.0) then
         STICK=sticking_coeff_neutral
       endif 
-      if (ICG(I).GT.0) then 
+      if (SPECIES_CHARGE(I).GT.0) then 
         STICK=sticking_coeff_positive 
       endif
-      if (ICG(I).LT.0) then 
+      if (SPECIES_CHARGE(I).LT.0) then 
         STICK=sticking_coeff_negative 
       endif
       !         if (species_name(I).EQ.YH2)      STICK=0.D+0 
