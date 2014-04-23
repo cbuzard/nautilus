@@ -350,8 +350,8 @@ do I=0,MAX_NUMBER_REACTION_TYPE-1
   type_id_start(I)=0
   type_id_stop(I)=0
   do J=1,nb_reactions
-    if ((ITYPE(J).EQ.I).AND.(type_id_start(I).EQ.0)) type_id_start(I)=J
-    if (ITYPE(J).EQ.I) type_id_stop(I)=J
+    if ((REACTION_TYPE(J).EQ.I).AND.(type_id_start(I).EQ.0)) type_id_start(I)=J
+    if (REACTION_TYPE(J).EQ.I) type_id_stop(I)=J
   enddo
 enddo
 
@@ -783,7 +783,7 @@ end subroutine get_elemental_abundance
       enddo
 
       ! === ITYPE 14 - SURFACE REACTIONS
-      if (ITYPE(J).EQ.14) then
+      if (REACTION_TYPE(J).EQ.14) then
         NPATH=0
 
         ! ------ Check for branching
@@ -915,12 +915,12 @@ end subroutine get_elemental_abundance
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION
-  if (ITYPE(J).EQ.16) then
+  if (REACTION_TYPE(J).EQ.16) then
     if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.d0
   endif
 
   ! === ITYPE 99 - ACCRETION
-  if (ITYPE(J).EQ.99) then
+  if (REACTION_TYPE(J).EQ.99) then
     ! ------ Save tag of resultant grain surface species
     do I=1,nb_species
       if (REACTION_SUBSTANCES_NAMES(4,J).EQ.species_name(I)) JSP2(J)=I
