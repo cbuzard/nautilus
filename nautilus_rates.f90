@@ -85,7 +85,7 @@ allocate(abundances(nb_outputs, nb_species+1, nptmax)) ! We create an extra spec
 
 allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
 allocate(xk(nb_outputs, nb_reactions))
-allocate(num(nb_reactions))
+allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(3, nb_reactions))
 
 ! Outputs
@@ -109,7 +109,7 @@ do output=1,nb_outputs
   read(10) species_name(1:nb_species)
   read(10) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
   read(10) xk(output,1:nb_reactions)
-  read(10) num(1:nb_reactions)
+  read(10) REACTION_ID(1:nb_reactions)
   close(10)
 enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
@@ -155,7 +155,7 @@ open(10, file='rates.out')
 ! The first line list time for each column of flux
 write(10, time_format) ' Time (yr)', time(1:nb_outputs)
 do reaction=1, nb_reactions
-  write(10,rate_format) REACTION_SUBSTANCES_NAMES(1:7, reaction), reaction_fluxes(1:nb_outputs, reaction), num(reaction)
+  write(10,rate_format) REACTION_SUBSTANCES_NAMES(1:7, reaction), reaction_fluxes(1:nb_outputs, reaction), REACTION_ID(reaction)
 enddo
 close(10)
 

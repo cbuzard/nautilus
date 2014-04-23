@@ -577,14 +577,14 @@ end subroutine get_temporal_derivatives
 
       !              Check for the presence of several rate coefficients present in the network for the
       !              the same reaction
-      if (NUM(J+1).EQ.NUM(J)) then
+      if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
         distmax(w)=gas_temperature-tmax(j)
         W = W + 1
       endif
 
-      if ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) then
+      if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
@@ -625,14 +625,14 @@ end subroutine get_temporal_derivatives
 
       !              Check for the presence of several rate coefficients present in the network for the
       !              the same reaction
-      if (NUM(J+1).EQ.NUM(J)) then
+      if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
         distmax(w)=gas_temperature-tmax(j)
         W = W + 1
       endif
 
-      if ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) then
+      if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
@@ -671,14 +671,14 @@ end subroutine get_temporal_derivatives
 
       !               Check for the presence of several rate coefficients present in the network for the
       !               the same reaction
-      if (NUM(J+1).EQ.NUM(J)) then
+      if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
         distmax(w)=gas_temperature-tmax(j)
         W = W + 1
       endif
 
-      if ((NUM(J+1).NE.NUM(J)).AND.(W.NE.1)) then
+      if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature

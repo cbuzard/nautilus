@@ -172,7 +172,7 @@ do i=0,MAX_NUMBER_REACTION_TYPE
       Tmin(jk) = dble(TminUO(j))
       Tmax(jk) = dble(TmaxUO(j))
       FORMULA(jk) = FORMULAUO(J)
-      NUM(jk) = NUMUO(j)
+      REACTION_ID(jk) = NUMUO(j)
       jk=jk+1
     endif
   enddo
@@ -992,7 +992,7 @@ open(45, file=filename_output, form='unformatted')
 write(45) species_name
 write(45) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
 write(45) XK
-write(45) NUM
+write(45) REACTION_ID
 
 close(45)
 

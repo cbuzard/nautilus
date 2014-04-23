@@ -95,7 +95,7 @@ integer, allocatable, dimension(:) :: itype !< dim(nb_reactions)
 integer, allocatable, dimension(:) :: jsp1 !< dim(nb_reactions)
 integer, allocatable, dimension(:) :: jsp2 !< dim(nb_reactions)
 integer, allocatable, dimension(:) :: FORMULA !< dim(nb_reactions)
-integer, allocatable, dimension(:) :: NUM !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
+integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
 
 real(double_precision) :: initial_dtg_mass_ratio
@@ -246,7 +246,7 @@ allocate(itype(nb_reactions))
 allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
 allocate(formula(nb_reactions))
-allocate(num(nb_reactions))
+allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(7,nb_reactions))
 allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
 
