@@ -156,7 +156,6 @@ real(double_precision), dimension(:), allocatable :: RWORK !< dim(lrw)
 integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 ! Diffusion and 1D variables
-real(double_precision) :: DIFFUSIVE_TIMESTEP ! diffusive timestep [s]
 real(double_precision) :: X_IONISATION_RATE
 real(double_precision) :: NCO ! column density [cm-2] (for the self shielding)
 real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)

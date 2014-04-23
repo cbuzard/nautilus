@@ -104,6 +104,7 @@ integer :: istate = 1
 integer :: iopt = 1
 integer :: mf = 21
 real(double_precision) :: atol = 1.d-99
+real(double_precision) :: integration_timestep !< Timestep of the present step, starting from current_time [s]
 
 call initialisation()
 
@@ -117,17 +118,17 @@ do while (current_time.lt.0.9*STOP_TIME)
 
   ! Log spacing of time outputs when there is no diffusion
   if (current_time.gt.1.d-2) then
-    DIFFUSIVE_TIMESTEP = current_time*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
+    integration_timestep = current_time*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
   else
-    DIFFUSIVE_TIMESTEP = 1.d0 * YEAR
+    integration_timestep = 1.d0 * YEAR
   endif
   
-  current_time = current_time + DIFFUSIVE_TIMESTEP ! Final time for chemistry T -> T + DIFFUSIVE_TIMESTEP
+  current_time = current_time + integration_timestep ! Final time for chemistry T -> T + integration_timestep
   timestep = timestep + 1
 
   write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',current_time/YEAR,' yrs'
 
-  call integrate_chemical_scheme(DIFFUSIVE_TIMESTEP,itol,atol,itask,istate,iopt,mf)
+  call integrate_chemical_scheme(integration_timestep,itol,atol,itask,istate,iopt,mf)
 
   ! Output of the rates once every 10 chemical outputs
   call write_current_rates()
