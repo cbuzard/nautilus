@@ -22,7 +22,7 @@ integer :: nb_species_for_grain !< number of species involved in grain surface r
 integer :: nb_surface_reactions !< number of reactions on the grain surface
 integer :: nb_species_for_gas !< number of species involved in gas phase reactions
 integer :: nb_gas_phase_reactions !< number of reactions in gas phase
-real(double_precision), parameter :: RXNMIN=1.0D-99 !< Minimum rate coefficient (Below, coefficients are forced to 0)
+real(double_precision), parameter :: MINIMUM_RATE_COEFFICIENT=1.0D-99 !< Minimum rate coefficient (Below, coefficients are forced to 0)
 real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
 real(double_precision), parameter :: PI = 3.1415926535898d0 !< The number Pi
 real(double_precision), parameter :: H_BARRE = 1.054571628d-27 !< Reduced Planck constant h/2*pi in CGS (g cm2 s-1)

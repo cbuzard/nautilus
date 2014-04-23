@@ -1051,7 +1051,7 @@ end subroutine get_temporal_derivatives
   !      enddo
 
   ! if rate acoefficients are too small, put them to 0
-  where (XK.lt.RXNMIN) XK=0.d0
+  where (XK.lt.MINIMUM_RATE_COEFFICIENT) XK=0.d0
 
     return
     end subroutine set_dependant_rates
