@@ -294,8 +294,8 @@ do J=1,nb_species
   endif
 
   ! ------ Check for electron species number
-  IF (species_name(J).EQ.'e-         ') then
-    ISPE=J
+  IF (species_name(J).EQ.YE) then
+    INDEL=J
   endif
 enddo
 
@@ -480,10 +480,10 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
   ! --- Conserve electrons
   CHASUM=0.d0
   do I=1,nb_species
-    if (I.NE.ISPE) CHASUM=CHASUM+ICG(I)*temp_abundances(I)
+    if (I.NE.INDEL) CHASUM=CHASUM+ICG(I)*temp_abundances(I)
   enddo
   if (CHASUM.LE.0.d0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
-  temp_abundances(ISPE)=CHASUM
+  temp_abundances(INDEL)=CHASUM
 
   ! --- Conserve other elements if selected
   if (CONSERVATION_TYPE.GT.0) then

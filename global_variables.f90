@@ -47,6 +47,8 @@ character(len=11) :: YCO    = 'CO         ' !< Gas phase CO
 integer :: INDCO !< Index corresponding to CO in nb_species length arrays
 integer :: INDH2 !< Index corresponding to H2 in nb_species length arrays
 integer :: INDHE !< Index corresponding to He in nb_species length arrays
+integer :: INDEL !< Index corresponding to e- in nb_species length arrays
+
 
 ! Arrays about prime elements
 real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< dim(NB_PRIME_ELEMENTS) Store abundances for all 
@@ -130,8 +132,6 @@ real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
 real(double_precision) :: ARRK
 
-
-integer :: ISPE
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_start !< list of id start for each reaction type given their type number
