@@ -41,7 +41,7 @@ real(double_precision), allocatable, dimension(:,:) :: XK ! (nb_outputs, nb_reac
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
 integer, allocatable, dimension(:) :: NUM !< index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
-integer, allocatable, dimension(:,:) :: reaction_substances
+integer, allocatable, dimension(:,:) :: reaction_substances_ID
 
 ! Output of the code
 real(double_precision), allocatable, dimension(:,:) :: reaction_fluxes
@@ -86,7 +86,7 @@ allocate(abundances(nb_outputs, nb_species+1, nptmax)) ! We create an extra spec
 allocate(symbol(7,nb_reactions))
 allocate(xk(nb_outputs, nb_reactions))
 allocate(num(nb_reactions))
-allocate(reaction_substances(3, nb_reactions))
+allocate(reaction_substances_ID(3, nb_reactions))
 
 ! Outputs
 allocate(reaction_fluxes(nb_outputs, nb_reactions))
@@ -134,9 +134,9 @@ enddo
 ! We write fluxes for all reactions and all output times
 do output=1, nb_outputs
   do reaction=1, nb_reactions
-    reactant1 = reaction_substances(1, reaction)
-    reactant2 = reaction_substances(2, reaction)
-    reactant3 = reaction_substances(3, reaction)
+    reactant1 = reaction_substances_ID(1, reaction)
+    reactant2 = reaction_substances_ID(2, reaction)
+    reactant3 = reaction_substances_ID(3, reaction)
 
     reaction_fluxes(output, reaction) = xk(output, reaction) * abundances(output, reactant1, 1) * &
                                         abundances(output, reactant2, 1) * abundances(output, reactant3, 1)
@@ -186,14 +186,14 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
-reaction_substances(1:3, 1:nb_reactions) = no_species
+reaction_substances_ID(1:3, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
     do L=1,3
       if (SYMBOL(L,I).EQ.species_name(J)) then
-        reaction_substances(L,I) = J
+        reaction_substances_ID(L,I) = J
       endif
     enddo
 

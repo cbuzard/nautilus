@@ -18,9 +18,9 @@ integer :: nb_species !< total number of species
 integer :: nb_gaseous_species !< number of species that are gaseous
 integer :: nb_surface_species !< number of species that are on the surface of grains
 integer :: NB_PRIME_ELEMENTS !< Number of prime element that compose molecules, such as H, He, C and so on.
-integer :: nb_species_for_grain !< number of species involved in grain surface reactions
+integer :: nb_species_for_grain !< number of species involved in grain surface reactions (can be gas or grain phase elements)
 integer :: nb_surface_reactions !< number of reactions on the grain surface
-integer :: nb_species_for_gas !< number of species involved in gas phase reactions
+integer :: nb_species_for_gas !< number of species involved in gas phase reactions (can be gas or grain phase elements)
 integer :: nb_gas_phase_reactions !< number of reactions in gas phase
 real(double_precision), parameter :: MINIMUM_RATE_COEFFICIENT=1.0D-99 !< Minimum rate coefficient (Below, coefficients are forced to 0)
 real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
@@ -77,7 +77,7 @@ integer, allocatable, dimension(:) :: icg !< dim(nb_species)
 
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: SYMBOL !< dim(7,nb_reactions)
-integer, allocatable, dimension(:,:) :: reaction_substances !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
+integer, allocatable, dimension(:,:) :: reaction_substances_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
 real(double_precision), allocatable, dimension(:) :: XJ !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions)
@@ -247,7 +247,7 @@ allocate(jsp1(nb_reactions))
 allocate(jsp2(nb_reactions))
 allocate(formula(nb_reactions))
 allocate(num(nb_reactions))
-allocate(reaction_substances(7,nb_reactions))
+allocate(reaction_substances_ID(7,nb_reactions))
 allocate(symbol(7,nb_reactions))
 
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))

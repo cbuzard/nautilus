@@ -29,14 +29,14 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
-reaction_substances(1:7, 1:nb_reactions) = no_species
+reaction_substances_ID(1:7, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
     do L=1,7
       if (SYMBOL(L,I).EQ.species_name(J)) then
-        reaction_substances(L,I) = J
+        reaction_substances_ID(L,I) = J
       endif
     enddo
 
@@ -159,13 +159,13 @@ PDJ2(1:nb_species+1) = 0.d0
 do i=1,nb_reactions_using_species(j)
   reaction_idx = relevant_reactions(i, j) ! j being the species index, given as a parameter
 
-  reactant1_idx = reaction_substances(1, reaction_idx)
-  reactant2_idx = reaction_substances(2, reaction_idx)
-  reactant3_idx = reaction_substances(3, reaction_idx)
-  product1_idx = reaction_substances(4, reaction_idx)
-  product2_idx = reaction_substances(5, reaction_idx)
-  product3_idx = reaction_substances(6, reaction_idx)
-  product4_idx = reaction_substances(7, reaction_idx)
+  reactant1_idx = reaction_substances_ID(1, reaction_idx)
+  reactant2_idx = reaction_substances_ID(2, reaction_idx)
+  reactant3_idx = reaction_substances_ID(3, reaction_idx)
+  product1_idx = reaction_substances_ID(4, reaction_idx)
+  product2_idx = reaction_substances_ID(5, reaction_idx)
+  product3_idx = reaction_substances_ID(6, reaction_idx)
+  product4_idx = reaction_substances_ID(7, reaction_idx)
   
   ! if statements are written in a specific order to increase speed. The goal is to test first the most probable event, and 
   !! then always go to 'else' statement, not to test if we have already found our case. One, then two bodies reactions are the most 
@@ -277,9 +277,9 @@ is_species_used(1:nb_reactions, 1:nb_species+1) = 0
 
 do reaction=1,nb_reactions
 
-  reactant1_idx = reaction_substances(1, reaction)
-  reactant2_idx = reaction_substances(2, reaction)
-  reactant3_idx = reaction_substances(3, reaction)
+  reactant1_idx = reaction_substances_ID(1, reaction)
+  reactant2_idx = reaction_substances_ID(2, reaction)
+  reactant3_idx = reaction_substances_ID(3, reaction)
   
   is_species_used(reaction, reactant1_idx) = 1
   is_species_used(reaction, reactant2_idx) = 1
@@ -457,14 +457,14 @@ yd2(1:nb_species) = 0.d0
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
 
-  reactant1_idx = reaction_substances(1, i)
-  reactant2_idx = reaction_substances(2, i)
-  reactant3_idx = reaction_substances(3, i)
+  reactant1_idx = reaction_substances_ID(1, i)
+  reactant2_idx = reaction_substances_ID(2, i)
+  reactant3_idx = reaction_substances_ID(3, i)
 
-  product1_idx = reaction_substances(4, i)
-  product2_idx = reaction_substances(5, i)
-  product3_idx = reaction_substances(6, i)
-  product4_idx = reaction_substances(7, i)
+  product1_idx = reaction_substances_ID(4, i)
+  product2_idx = reaction_substances_ID(5, i)
+  product3_idx = reaction_substances_ID(6, i)
+  product4_idx = reaction_substances_ID(7, i)
 
   ! One reactant only
   if (reactant2_idx.eq.no_species) then
