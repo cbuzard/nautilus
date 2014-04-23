@@ -134,7 +134,7 @@ real(double_precision) :: ARRK
 integer :: ISPE
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
-integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: IRXSTA !< list of id start for each reaction type given their type number
+integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_start !< list of id start for each reaction type given their type number
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: IRXFIN !< list of id stop for each reaction type given their type number
 
 integer :: IS_GRAIN_REACTIONS

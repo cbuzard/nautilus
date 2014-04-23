@@ -524,7 +524,7 @@ end subroutine get_temporal_derivatives
 
   ! ====== Rxn ITYPE 0
   ! ITYPE 0: Gas phase reactions with GRAINS =) 
-  do J=IRXSTA(0),IRXFIN(0)
+  do J=type_id_start(0),IRXFIN(0)
     XK(J)=A(J)*(T300**B(J))
   enddo
 
@@ -534,10 +534,10 @@ end subroutine get_temporal_derivatives
   ! ====== Rxn ITYPE 10 and 11
   ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
   if (IS_GRAIN_REACTIONS.eq.0) then
-    do J=IRXSTA(10),IRXFIN(10)
+    do J=type_id_start(10),IRXFIN(10)
       XK(J)=A(J)*1.186D7*exp(225.D0/gas_temperature)**(-1)*GTODN/H_number_density
     enddo
-    do J=IRXSTA(11),IRXFIN(11)       
+    do J=type_id_start(11),IRXFIN(11)       
       XK(J)=A(J)*(T300**B(J))*H_number_density/GTODN
     enddo       
   endif
@@ -546,10 +546,10 @@ end subroutine get_temporal_derivatives
   ! ====== Rxn ITYPE 1
   ! ITYPE 1: Photodissoc/ionisation with cosmic rays
   ! Add X-rays in case X_IONISATION_RATE is not 0
-  do J=IRXSTA(1),IRXFIN(1)
+  do J=type_id_start(1),IRXFIN(1)
     XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
-  do J=IRXSTA(2),IRXFIN(2)
+  do J=type_id_start(2),IRXFIN(2)
     XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
 
@@ -561,10 +561,10 @@ end subroutine get_temporal_derivatives
   distmin(:)=9999.d0
   distmax(:)=9999.d0
   do J=4,8
-    if ((IRXSTA(J).NE.0).AND.(NSTA.EQ.0)) NSTA=J
+    if ((type_id_start(J).NE.0).AND.(NSTA.EQ.0)) NSTA=J
     if (IRXFIN(J).NE.0) NFIN=J
   enddo
-  do J=IRXSTA(NSTA),IRXFIN(NFIN)
+  do J=type_id_start(NSTA),IRXFIN(NFIN)
 
     !---------------  KOOIJ FORMULA
     if (FORMULA(J).eq.3) then
@@ -719,39 +719,39 @@ end subroutine get_temporal_derivatives
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
     ! ITYPE 15: Thermal evaporation
-    do J=IRXSTA(15),IRXFIN(15)
+    do J=type_id_start(15),IRXFIN(15)
       XK(J)=A(J)*XJ(J)*TINEVA(JSP1(J))
     enddo
 
     ! ========= Rxn ITYPE 16
     ! ITYPE 16: Cosmic-ray evaporation
-    do J=IRXSTA(16),IRXFIN(16)
+    do J=type_id_start(16),IRXFIN(16)
       XK(J)=A(J)*XJ(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
       *CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
     enddo
 
 
     ! Photodesorption, when used appears through ITYPES 66 and 67
-    if (irxsta(66).ne.0) then
+    if (type_id_start(66).ne.0) then
       ! ========= Rxn ITYPE 66
       ! ITYPE 66: CO photodesorption by external UV
       ! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
-      do j=irxsta(66),irxfin(66)
+      do j=type_id_start(66),irxfin(66)
         XK(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*exp(-2.*visual_extinction) 
       enddo
 
       ! ========= Rxn ITYPE 67
       ! ITYPE 67: CO photodesorption by CR generated UV
-      do j=irxsta(67),irxfin(67)
+      do j=type_id_start(67),irxfin(67)
         XK(J)=A(J)/SITE_DENSITY*1.d4
       enddo
 
     endif
 
-    if (irxsta(98).ne.0) then
+    if (type_id_start(98).ne.0) then
       ! ========= Rxn ITYPE 98 test the storage of H2S under a refractory form
       ! ITYPE 98: storage of H2S under a refractory form
-      do j=irxsta(98),irxfin(98)
+      do j=type_id_start(98),irxfin(98)
         XK(J)=A(J)*(T300**B(J))*EXP(-C(J)*TI)
       enddo
     endif
@@ -760,14 +760,14 @@ end subroutine get_temporal_derivatives
     ! ====== Rxn ITYPE 17
     ! ITYPE 17: Photodissociations by Cosmic rays on grain surfaces
     ! Add X-rays in case X_IONISATION_RATE is not 0
-    do J=IRXSTA(17),IRXFIN(17)
+    do J=type_id_start(17),IRXFIN(17)
       XK(J)=A(J)*(CR_IONISATION_RATE + X_IONISATION_RATE)
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
     ! ====== Rxn ITYPE 18
     ! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces
-    do J=IRXSTA(18),IRXFIN(18)
+    do J=type_id_start(18),IRXFIN(18)
       XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
@@ -776,7 +776,7 @@ end subroutine get_temporal_derivatives
 
   ! When dust is turned off, zero all dust rates==========================
   if ((IS_GRAIN_REACTIONS.EQ.0).AND.(timestep.EQ.1)) then
-    do J=IRXSTA(14),IRXFIN(99)
+    do J=type_id_start(14),IRXFIN(99)
       XK(J)=0.d0
       XJ(J)=0.d0
     enddo
@@ -831,7 +831,7 @@ end subroutine get_temporal_derivatives
   !
   ! ====== Rxn ITYPE 13
   ! ITYPE 2: Gas phase photodissociations/ionisations by UV
-  do J=IRXSTA(3),IRXFIN(3)
+  do J=type_id_start(3),IRXFIN(3)
     XK(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
 
     ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
@@ -903,7 +903,7 @@ end subroutine get_temporal_derivatives
 
     ! ====== Rxn ITYPE 99
     ! ITYPE 99: Adsorption on grains
-    do J=IRXSTA(99),IRXFIN(99)
+    do J=type_id_start(99),IRXFIN(99)
       ! ========= Set accretion rates
       TINACC(JSP1(J))=CONDSP(JSP1(J))*TSQ*Y(JSP1(J))*H_number_density
       TINACC(JSP2(J))=TINACC(JSP1(J))
@@ -912,7 +912,7 @@ end subroutine get_temporal_derivatives
 
     ! ====== Rxn ITYPE 14
     ! ITYPE 14: Grain surface reactions
-    do J=IRXSTA(14),IRXFIN(14)
+    do J=type_id_start(14),IRXFIN(14)
       IMOD1=0
       IMOD2=0
       BARR=1.0d0
@@ -1023,18 +1023,18 @@ end subroutine get_temporal_derivatives
     ! ====== Rxn ITYPE 19 - 20
     ! ITYPE 19: Photodissociations by UV photons on grain surfaces
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
-    do J=IRXSTA(19),IRXFIN(20)
+    do J=type_id_start(19),IRXFIN(20)
       XK(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
       !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
     ! Useful for testing
     ! To disable some reaction types
-    !do j=irxsta(14),irxfin(15)
+    !do j=type_id_start(14),irxfin(15)
     !xk(j)=0.
     !enddo
 
-    !do j=irxsta(17),irxfin(20)
+    !do j=type_id_start(17),irxfin(20)
     !xk(j)=0.
     !enddo
   endif
@@ -1044,7 +1044,7 @@ end subroutine get_temporal_derivatives
   ! XJ(1) and XJ(2) are zero if IS_GRAIN_REACTIONS=1
   ! cf GRAINRATE
   ! VW Fev 2012 - this process has been removed
-  !      do j=irxsta(0),irxfin(0)
+  !      do j=type_id_start(0),irxfin(0)
   !      if ((SYMBOL(1,J).eq.YH).and.(SYMBOL(2,j).eq.YH)) then
   !      XK(j)=XJ(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))
   !      endif

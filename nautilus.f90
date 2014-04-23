@@ -346,10 +346,10 @@ AV_NH_ratio = 5.34d-22 * (initial_dtg_mass_ratio / 1.d-2)
 
 ! Find ITYPE first and last reactions===================================
 do I=0,MAX_NUMBER_REACTION_TYPE-1
-  IRXSTA(I)=0
+  type_id_start(I)=0
   IRXFIN(I)=0
   do J=1,nb_reactions
-    if ((ITYPE(J).EQ.I).AND.(IRXSTA(I).EQ.0)) IRXSTA(I)=J
+    if ((ITYPE(J).EQ.I).AND.(type_id_start(I).EQ.0)) type_id_start(I)=J
     if (ITYPE(J).EQ.I) IRXFIN(I)=J
   enddo
 enddo
