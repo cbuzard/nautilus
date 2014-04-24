@@ -500,7 +500,8 @@ end subroutine get_temporal_derivatives
 !> @date 2012
 !
 ! DESCRIPTION: 
-!> @brief Reactions coefficient formally dependent on the abundances Y are 
+!> @brief Constant reactions rates with respect to abundances. 
+!! Reactions coefficient formally dependent on the abundances Y are 
 !! computed in a companion subroutine: set_dependant_rates
 !! Grain surface reactions, self shielding, etc...
 !
@@ -567,7 +568,7 @@ end subroutine get_temporal_derivatives
   do J=type_id_start(NSTA),type_id_stop(NFIN)
 
     !---------------  KOOIJ FORMULA
-    if (FORMULA(J).eq.3) then
+    if (RATE_FORMULA(J).eq.3) then
 
       reaction_rates(J)=A(J)*(T300**B(J))*EXP(-C(J)/gas_temperature)
 
@@ -616,7 +617,7 @@ end subroutine get_temporal_derivatives
     endif
 
     !---------------  IONPOL1 FORMULA
-    if (FORMULA(J).EQ.4) then
+    if (RATE_FORMULA(J).EQ.4) then
       reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/gas_temperature)**0.5))
 
       ! Check for temperature bounderies
@@ -662,7 +663,7 @@ end subroutine get_temporal_derivatives
     endif
 
     !---------------  IONPOL2 FORMULA
-    if (FORMULA(J).EQ.5) then
+    if (RATE_FORMULA(J).EQ.5) then
       
       ! Check for temperature boundaries and apply the formula in consequence
       if (gas_temperature.LT.Tmin(J)) then

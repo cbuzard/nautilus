@@ -171,7 +171,7 @@ do i=0,MAX_NUMBER_REACTION_TYPE
       REACTION_TYPE(jk)=itypeuo(j)
       Tmin(jk) = dble(TminUO(j))
       Tmax(jk) = dble(TmaxUO(j))
-      FORMULA(jk) = FORMULAUO(J)
+      RATE_FORMULA(jk) = FORMULAUO(J)
       REACTION_ID(jk) = NUMUO(j)
       jk=jk+1
     endif

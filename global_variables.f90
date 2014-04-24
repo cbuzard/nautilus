@@ -94,7 +94,8 @@ real(double_precision), allocatable, dimension(:) :: ACT1 !< dim(nb_reactions)
 integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For each reaction, what is its type (cosmic ray evaporation, etc...)
 integer, allocatable, dimension(:) :: reactant_1_idx !< dim(nb_reactions) Index of the first reactant species involved in the reaction
 integer, allocatable, dimension(:) :: reactant_2_idx !< dim(nb_reactions) Index of the second reactant species involved in the reaction
-integer, allocatable, dimension(:) :: FORMULA !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: RATE_FORMULA !< dim(nb_reactions) The index tracing the formula used for each specific 
+!! reaction, defining its reaction rates in function of temperature and abundances.
 integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
 
@@ -244,7 +245,7 @@ allocate(act1(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
 allocate(reactant_1_idx(nb_reactions))
 allocate(reactant_2_idx(nb_reactions))
-allocate(formula(nb_reactions))
+allocate(RATE_FORMULA(nb_reactions))
 allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(7,nb_reactions))
 allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
