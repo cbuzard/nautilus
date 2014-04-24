@@ -724,14 +724,14 @@ end subroutine get_temporal_derivatives
     ! ========= Rxn ITYPE 15 - thermal evaporation
     ! ITYPE 15: Thermal evaporation
     do J=type_id_start(15),type_id_stop(15)
-      reaction_rates(J)=A(J)*branching_ratio(J)*TINEVA(JSP1(J))
+      reaction_rates(J)=A(J)*branching_ratio(J)*TINEVA(reactant_1_idx(J))
     enddo
 
     ! ========= Rxn ITYPE 16
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
       reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
-      *CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
+      *CHF(reactant_1_idx(J))*CRFE*CRT*EXP(-ED(reactant_1_idx(J))/TSMAX)
     enddo
 
 
@@ -906,9 +906,9 @@ end subroutine get_temporal_derivatives
     ! ITYPE 99: Adsorption on grains
     do J=type_id_start(99),type_id_stop(99)
       ! ========= Set accretion rates
-      TINACC(JSP1(J))=CONDSP(JSP1(J))*TSQ*Y(JSP1(J))*H_number_density
-      TINACC(JSP2(J))=TINACC(JSP1(J))
-      reaction_rates(J)=A(J)*branching_ratio(J)*TINACC(JSP1(J))/Y(JSP1(J))/GTODN
+      TINACC(reactant_1_idx(J))=CONDSP(reactant_1_idx(J))*TSQ*Y(reactant_1_idx(J))*H_number_density
+      TINACC(reactant_2_idx(J))=TINACC(reactant_1_idx(J))
+      reaction_rates(J)=A(J)*branching_ratio(J)*TINACC(reactant_1_idx(J))/Y(reactant_1_idx(J))/GTODN
     enddo
 
     ! ====== Rxn ITYPE 14
@@ -926,8 +926,8 @@ end subroutine get_temporal_derivatives
       endif
 
       ! --------- Thermal hopping diffusion method
-      RDIF1(J)=TINDIF(JSP1(J))
-      RDIF2(J)=TINDIF(JSP2(J))
+      RDIF1(J)=TINDIF(reactant_1_idx(J))
+      RDIF2(J)=TINDIF(reactant_2_idx(J))
 
       ! --------- Check for JH,JH2
       if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
@@ -940,26 +940,26 @@ end subroutine get_temporal_derivatives
         ! ------------ QM1 - Tunnelling (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.1) then
           if ((IMOD1.NE.0).AND.&
-          (RQ1(JSP1(J)).GT.RDIF1(J))) RDIF1(J)=RQ1(JSP1(J))
+          (RQ1(reactant_1_idx(J)).GT.RDIF1(J))) RDIF1(J)=RQ1(reactant_1_idx(J))
           if ((IMOD2.NE.0).AND.&
-          (RQ1(JSP2(J)).GT.RDIF2(J))) RDIF2(J)=RQ1(JSP2(J))
+          (RQ1(reactant_2_idx(J)).GT.RDIF2(J))) RDIF2(J)=RQ1(reactant_2_idx(J))
         endif
         ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.2) then
           if ((IMOD1.NE.0).AND.&
-          (RQ2(JSP1(J)).GT.RDIF1(J))) RDIF1(J)=RQ2(JSP1(J))
+          (RQ2(reactant_1_idx(J)).GT.RDIF1(J))) RDIF1(J)=RQ2(reactant_1_idx(J))
           if ((IMOD2.NE.0).AND.&
-          (RQ2(JSP2(J)).GT.RDIF2(J))) RDIF2(J)=RQ2(JSP2(J))
+          (RQ2(reactant_2_idx(J)).GT.RDIF2(J))) RDIF2(J)=RQ2(reactant_2_idx(J))
         endif
         ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
         if (GRAIN_TUNNELING_DIFFUSION.EQ.3) then
           if (IMOD1.NE.0) then
-            if (RQ1(JSP1(J)).GT.RDIF1(J)) RDIF1(J)=RQ1(JSP1(J))
-            if (RQ2(JSP1(J)).GT.RDIF1(J)) RDIF1(J)=RQ2(JSP1(J))
+            if (RQ1(reactant_1_idx(J)).GT.RDIF1(J)) RDIF1(J)=RQ1(reactant_1_idx(J))
+            if (RQ2(reactant_1_idx(J)).GT.RDIF1(J)) RDIF1(J)=RQ2(reactant_1_idx(J))
           endif
           if (IMOD2.NE.0) then
-            if (RQ1(JSP2(J)).GT.RDIF2(J)) RDIF2(J)=RQ1(JSP2(J))
-            if (RQ2(JSP2(J)).GT.RDIF2(J)) RDIF2(J)=RQ2(JSP2(J))
+            if (RQ1(reactant_2_idx(J)).GT.RDIF2(J)) RDIF2(J)=RQ1(reactant_2_idx(J))
+            if (RQ2(reactant_2_idx(J)).GT.RDIF2(J)) RDIF2(J)=RQ2(reactant_2_idx(J))
           endif
         endif
       endif
@@ -1005,8 +1005,8 @@ end subroutine get_temporal_derivatives
         endif
 
         ! ------------ Modify rates (RDIF1 & RDIF2) according to their own evap/acc rates
-        YMOD1=Y(JSP1(J))
-        YMOD2=Y(JSP2(J))
+        YMOD1=Y(reactant_1_idx(J))
+        YMOD2=Y(reactant_2_idx(J))
         call modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
       endif
 
@@ -1041,7 +1041,7 @@ end subroutine get_temporal_derivatives
   ! VW Fev 2012 - this process has been removed
   !      do j=type_id_start(0),type_id_stop(0)
   !      if ((REACTION_SUBSTANCES_NAMES(1,J).eq.YH).and.(REACTION_SUBSTANCES_NAMES(2,j).eq.YH)) then
-  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))
+  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(reactant_1_idx(j))
   !      endif
   !      enddo
 
@@ -1084,11 +1084,11 @@ end subroutine get_temporal_derivatives
   ! --- Check value of x = t_acc/t_evap
   ! TINEVA = 1/t_evap
   ! TINACC = 1/t_acc
-  if (TINACC(JSP1(J)).GT.0.d0) then
-    EX1(J)=TINEVA(JSP1(J))/TINACC(JSP1(J))
+  if (TINACC(reactant_1_idx(J)).GT.0.d0) then
+    EX1(J)=TINEVA(reactant_1_idx(J))/TINACC(reactant_1_idx(J))
   endif
-  if (TINACC(JSP2(J)).GT.0.d0) then
-    EX2(J)=TINEVA(JSP2(J))/TINACC(JSP2(J))
+  if (TINACC(reactant_2_idx(J)).GT.0.d0) then
+    EX2(J)=TINEVA(reactant_2_idx(J))/TINACC(reactant_2_idx(J))
   endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1097,19 +1097,19 @@ end subroutine get_temporal_derivatives
   if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
       if (EX1(J).LT.1.0d0) then
-        if (RDIF1(J).GT.TINACC(JSP1(J))) RDIF1(J)=TINACC(JSP1(J))
+        if (RDIF1(J).GT.TINACC(reactant_1_idx(J))) RDIF1(J)=TINACC(reactant_1_idx(J))
       endif
       if (EX1(J).GE.1.0d0) then
-        if (RDIF1(J).GT.TINEVA(JSP1(J))) RDIF1(J)=TINEVA(JSP1(J))
+        if (RDIF1(J).GT.TINEVA(reactant_1_idx(J))) RDIF1(J)=TINEVA(reactant_1_idx(J))
       endif
     endif
 
     if (IMOD2.NE.0) then
       if (EX2(J).LT.1.0d0) then
-        if (RDIF2(J).GT.TINACC(JSP2(J))) RDIF2(J)=TINACC(JSP2(J))
+        if (RDIF2(J).GT.TINACC(reactant_2_idx(J))) RDIF2(J)=TINACC(reactant_2_idx(J))
       endif
       if (EX2(J).GE.1.0d0) then
-        if (RDIF2(J).GT.TINEVA(JSP2(J))) RDIF2(J)=TINEVA(JSP2(J))
+        if (RDIF2(J).GT.TINEVA(reactant_2_idx(J))) RDIF2(J)=TINEVA(reactant_2_idx(J))
       endif
     endif
   endif
@@ -1118,10 +1118,10 @@ end subroutine get_temporal_derivatives
   if (BARR.NE.1.0d0) then
     PICK=0.d0
 
-    TESTREF1=TINACC(JSP1(J))
-    if (EX1(J).GE.1.0d0) TESTREF1=TINEVA(JSP1(J))
-    TESTREF2=TINACC(JSP2(J))
-    if (EX2(J).GE.1.0d0) TESTREF2=TINEVA(JSP2(J))
+    TESTREF1=TINACC(reactant_1_idx(J))
+    if (EX1(J).GE.1.0d0) TESTREF1=TINEVA(reactant_1_idx(J))
+    TESTREF2=TINACC(reactant_2_idx(J))
+    if (EX2(J).GE.1.0d0) TESTREF2=TINEVA(reactant_2_idx(J))
 
     if (RDIF1(J).GE.RDIF2(J)) then
       TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD2*GTODN

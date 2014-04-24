@@ -773,11 +773,11 @@ end subroutine get_elemental_abundance
 
       ! ------ Initialise all branching_ratio rate factors, and get species 1 & 2
       branching_ratio(J)=1.0d0
-      JSP1(J)=0
-      JSP2(J)=0
+      reactant_1_idx(J)=0
+      reactant_2_idx(J)=0
       do I=1,nb_species
-        if (REACTION_SUBSTANCES_NAMES(1,J).EQ.species_name(I)) JSP1(J)=I
-        if (REACTION_SUBSTANCES_NAMES(2,J).EQ.species_name(I)) JSP2(J)=I
+        if (REACTION_SUBSTANCES_NAMES(1,J).EQ.species_name(I)) reactant_1_idx(J)=I
+        if (REACTION_SUBSTANCES_NAMES(2,J).EQ.species_name(I)) reactant_2_idx(J)=I
       enddo
 
       ! === ITYPE 14 - SURFACE REACTIONS
@@ -802,7 +802,7 @@ end subroutine get_elemental_abundance
       endif
 
       ! ------ Factor of 2 for same species reactions
-      if (JSP1(J).EQ.JSP2(J)) branching_ratio(J)=branching_ratio(J)/2.0d0
+      if (reactant_1_idx(J).EQ.reactant_2_idx(J)) branching_ratio(J)=branching_ratio(J)/2.0d0
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
@@ -842,7 +842,7 @@ end subroutine get_elemental_abundance
       endif
     enddo
 
-    DHFSUM=DHF(JSP1(J))+DHF(JSP2(J))-DHF(N4)
+    DHFSUM=DHF(reactant_1_idx(J))+DHF(reactant_2_idx(J))-DHF(N4)
     if (N5.NE.0) DHFSUM=DHFSUM-DHF(N5)
     if (N6.NE.0) DHFSUM=DHFSUM-DHF(N6)
     ! ------ Convert from kcal to J, from J to K
@@ -875,11 +875,11 @@ end subroutine get_elemental_abundance
     !         endif
 
     BADFLAG=0
-    if (DHF(JSP1(J)).LE.-999.0) then
+    if (DHF(reactant_1_idx(J)).LE.-999.0) then
       EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
-    if (DHF(JSP2(J)).LE.-999.0) then
+    if (DHF(reactant_2_idx(J)).LE.-999.0) then
       EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
@@ -908,20 +908,20 @@ end subroutine get_elemental_abundance
     branching_ratio(J)=branching_ratio(J)*EVFRAC
 
     ! ------ Calculate quantum activation energy
-    REDMAS = SMASS(JSP1(J)) * SMASS(JSP2(J)) / (SMASS(JSP1(J)) + SMASS(JSP2(J)))
+    REDMAS = SMASS(reactant_1_idx(J)) * SMASS(reactant_2_idx(J)) / (SMASS(reactant_1_idx(J)) + SMASS(reactant_2_idx(J)))
     ACT1(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*EA(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION
   if (REACTION_TYPE(J).EQ.16) then
-    if (SMASS(JSP1(J)).EQ.0) branching_ratio(J)=0.d0
+    if (SMASS(reactant_1_idx(J)).EQ.0) branching_ratio(J)=0.d0
   endif
 
   ! === ITYPE 99 - ACCRETION
   if (REACTION_TYPE(J).EQ.99) then
     ! ------ Save tag of resultant grain surface species
     do I=1,nb_species
-      if (REACTION_SUBSTANCES_NAMES(4,J).EQ.species_name(I)) JSP2(J)=I
+      if (REACTION_SUBSTANCES_NAMES(4,J).EQ.species_name(I)) reactant_2_idx(J)=I
     enddo
   endif
 

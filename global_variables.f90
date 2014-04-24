@@ -78,10 +78,10 @@ integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< elect
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
 integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
-real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
+real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
+real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
+real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
 real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: RDIF1 !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: RDIF2 !< dim(nb_reactions)
@@ -92,8 +92,8 @@ real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: ACT1 !< dim(nb_reactions)
 integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For each reaction, what is its type (cosmic ray evaporation, etc...)
-integer, allocatable, dimension(:) :: jsp1 !< dim(nb_reactions)
-integer, allocatable, dimension(:) :: jsp2 !< dim(nb_reactions)
+integer, allocatable, dimension(:) :: reactant_1_idx !< dim(nb_reactions) Index of the first reactant species involved in the reaction
+integer, allocatable, dimension(:) :: reactant_2_idx !< dim(nb_reactions) Index of the second reactant species involved in the reaction
 integer, allocatable, dimension(:) :: FORMULA !< dim(nb_reactions)
 integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
@@ -242,8 +242,8 @@ allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
 allocate(act1(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
-allocate(jsp1(nb_reactions))
-allocate(jsp2(nb_reactions))
+allocate(reactant_1_idx(nb_reactions))
+allocate(reactant_2_idx(nb_reactions))
 allocate(formula(nb_reactions))
 allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(7,nb_reactions))
