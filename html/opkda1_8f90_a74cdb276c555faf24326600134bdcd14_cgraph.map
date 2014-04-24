@@ -1,0 +1,9 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$opkda1_8f90.html#a1059f4dfdb79464c751483a531be9e93" title="DATV" alt="" coords="155,5,213,35"/>
+<area shape="rect" id="node5" href="$opkda2_8f90.html#a4bccdfd342c4859fb72167730096409d" title="DCOPY" alt="" coords="279,32,348,61"/>
+<area shape="rect" id="node7" href="$opkda2_8f90.html#aab33f5d0b86ce882c644ed8ebef0d37a" title="DAXPY" alt="" coords="280,160,347,189"/>
+<area shape="rect" id="node10" href="$opkda1_8f90.html#ab6be03ae71a3f731496689113ba0a157" title="DHELS" alt="" coords="151,160,217,189"/>
+<area shape="rect" id="node13" href="$opkda1_8f90.html#ab655b24fce4c48246492a9b1e72b8110" title="DHEQR" alt="" coords="149,213,219,243"/>
+<area shape="rect" id="node15" href="$opkda1_8f90.html#ab3dd861c694c7f803018e8620382a3df" title="DORTHOG" alt="" coords="139,267,229,296"/>
+<area shape="rect" id="node18" href="$opkda2_8f90.html#a01717dda8d7fc23df8e65fb4ab83c243" title="DSCAL" alt="" coords="151,320,217,349"/>
+</map>

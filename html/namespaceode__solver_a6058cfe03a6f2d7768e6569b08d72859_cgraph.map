@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5" title="Set Reactions coefficient formally dependent on the abundances Y. Grain surface reactions, self shielding, etc..." alt="" coords="295,5,508,35"/>
+<area shape="rect" id="node5" href="$namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251" title="Modify some reaction rates on the grain surface (itype=14) in various conditions. Test to estimates t..." alt="" coords="559,5,777,35"/>
+</map>

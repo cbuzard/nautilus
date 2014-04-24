@@ -7,7 +7,6 @@ filename
 *.log
 *.o
 nlso_tail.d
-html
 *.tmp
 *.out
 nautilus_original/nautilus

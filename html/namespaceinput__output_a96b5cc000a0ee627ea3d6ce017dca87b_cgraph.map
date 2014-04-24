@@ -1,0 +1,4 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$namespaceglobal__variables.html#ac6cfcd2a7ad13915cc6185b38f035318" title="Routine to retrieve the number of lines of a given file whose filename is passed as an argument..." alt="" coords="255,5,465,35"/>
+<area shape="rect" id="node5" href="$namespaceglobal__variables.html#a4cea57c4f69201490bef8ac69b93879e" title="For a given line passed as an argument, return the number of columns on this line i..." alt="" coords="251,59,469,88"/>
+</map>

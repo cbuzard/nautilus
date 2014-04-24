@@ -1,0 +1,19 @@
+digraph G
+{
+  edge [fontname="Helvetica",fontsize="10",labelfontname="Helvetica",labelfontsize="10"];
+  node [fontname="Helvetica",fontsize="10",shape=record];
+  rankdir=LR;
+  Node1 [label="DHESL",height=0.2,width=0.4,color="black", fillcolor="grey75", style="filled" fontcolor="black"];
+  Node1 -> Node2 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node2 [label="DSPIOM",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$opkda1_8f.html#abee56e608d953c8f2187dbf9fe897ef5"];
+  Node2 -> Node3 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node3 [label="DSOLPK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$opkda1_8f.html#af331105343b0c9a91b55e7ad201199c0"];
+  Node3 -> Node4 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node4 [label="DSTODPK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$opkda1_8f.html#ac316a22658cc40e317285fa52583a0bc"];
+  Node4 -> Node5 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node5 [label="DLSODPK",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$opkdmain_8f.html#abfd1fd76148d80747a6fd105a6c3cca8"];
+  Node3 -> Node6 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node6 [label="DSTOKA",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$opkda1_8f.html#aa5d15943200f3d1261087a7d67337822"];
+  Node6 -> Node7 [dir=back,color="midnightblue",fontsize="10",style="solid",fontname="Helvetica"];
+  Node7 [label="DLSODKR",height=0.2,width=0.4,color="black", fillcolor="white", style="filled",URL="$opkdmain_8f.html#afd6a4d460cf75c6278c36e819dc9c763"];
+}
