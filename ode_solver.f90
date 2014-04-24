@@ -571,12 +571,12 @@ end subroutine get_temporal_derivatives
 
       reaction_rates(J)=A(J)*(T300**B(J))*EXP(-C(J)/gas_temperature)
 
-      !              Check for temperature bounderies
+      ! Check for temperature bounderies
       if (gas_temperature.LT.Tmin(J)) reaction_rates(J)=A(J)*((Tmin(J)/300.D0)**B(J))*EXP(-C(J)/Tmin(J))
       if (gas_temperature.GT.Tmax(J)) reaction_rates(J)=A(J)*((Tmax(J)/300.D0)**B(J))*EXP(-C(J)/Tmax(J))
 
-      !              Check for the presence of several rate coefficients present in the network for the
-      !              the same reaction
+      ! Check for the presence of several rate coefficients present in the network for the
+      ! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
@@ -619,12 +619,12 @@ end subroutine get_temporal_derivatives
     if (FORMULA(J).EQ.4) then
       reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/gas_temperature)**0.5))
 
-      !              Check for temperature bounderies
+      ! Check for temperature bounderies
       if (gas_temperature.LT.Tmin(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/Tmin(J))**0.5))
       if (gas_temperature.GT.Tmax(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TMAX(J))**0.5))
 
-      !              Check for the presence of several rate coefficients present in the network for the
-      !              the same reaction
+      ! Check for the presence of several rate coefficients present in the network for the
+      ! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
         distmin(w)=tmin(j)-gas_temperature
@@ -1013,7 +1013,7 @@ end subroutine get_temporal_derivatives
       DIFF=RDIF1(J)+RDIF2(J)
 
       reaction_rates(J)=A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
-      !              reaction_rates(J)=0.D0
+      ! reaction_rates(J)=0.D0
     enddo
 
     ! ====== Rxn ITYPE 19 - 20
