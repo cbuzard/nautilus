@@ -313,7 +313,7 @@
             MSUM=MSUM+MASS(K)*IELM(K,I) 
          ENDDO 
          AWT(I)=MSUM
-         IF (SPEC(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
+         IF (SPEC(I).EQ.YE) AWT(I)=0.000548579909 ! electron mass in amu
          IF (SPEC(I).EQ.YGRAIN .OR. SPEC(I).EQ.'GRAIN-      ')&
                     AWT(I)=4.0*PI*RD*RD*RD*RHOD/3.0/AMU
       ENDDO
