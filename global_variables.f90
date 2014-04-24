@@ -34,10 +34,10 @@ real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in 
 real(double_precision) :: RELATIVE_TOLERANCE
 
 ! Name of key species
-character(len=11) :: YH     = 'H          ' !< Hydrogen on grains
-character(len=11) :: YJH    = 'JH         ' !< Dihydrogen on grains
-character(len=11) :: YH2    = 'H2         ' !< Gas phase Hydrogen
-character(len=11) :: YJH2   = 'JH2        ' !< Gas phase Dihydrogen
+character(len=11) :: YH     = 'H          ' !< Gas phase Hydrogen
+character(len=11) :: YJH    = 'JH         ' !< Hydrogen on grains
+character(len=11) :: YH2    = 'H2         ' !< Gas phase Dihydrogen
+character(len=11) :: YJH2   = 'JH2        ' !< Dihydrogen on grains
 character(len=11) :: YHE    = 'He         ' !< Gas phase Helium
 character(len=11) :: YHEP   = 'He+        ' !< Gas phase Helium+
 character(len=11) :: YE     = 'e-         ' !< Gas phase electrons
