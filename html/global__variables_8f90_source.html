@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>Nautilus: global_variables.f90 Source File</title>
+<title>&lt;a href= http://code.google.com/p/nautilus/&gt;Nautilus&lt;/a&gt;: global_variables.f90 Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -19,7 +19,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Nautilus</div>
+   <div id="projectname"><a href= http://code.google.com/p/nautilus/>Nautilus</a></div>
    <div id="projectbrief">1D gas-grain chemical model</div>
   </td>
  </tr>
@@ -160,7 +160,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00101"></a><a class="code" href="namespaceglobal__variables.html#a5d6fa69c3d28ad6c2b7c4f81b8892056">00101</a> <span class="keywordtype">real(double_precision)</span> :: initial_dtg_mass_ratio
 <a name="l00102"></a><a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">00102</a> <span class="keywordtype">real(double_precision)</span> :: GTODN
 <a name="l00103"></a><a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">00103</a> <span class="keywordtype">real(double_precision)</span> :: AV_NH_ratio
-<a name="l00104"></a><a class="code" href="namespaceglobal__variables.html#ad293e774768851488b5ef7ced6737d6e">00104</a> <span class="keywordtype">real(double_precision)</span> :: grain_radius
+<a name="l00104"></a><a class="code" href="namespaceglobal__variables.html#ad293e774768851488b5ef7ced6737d6e">00104</a> <span class="keywordtype">real(double_precision)</span> :: grain_radius <span class="comment">!&lt; Grain radius [cm]</span>
 <a name="l00105"></a><a class="code" href="namespaceglobal__variables.html#a39748bb1d51771921d9535a649cd94c1">00105</a> <span class="keywordtype">real(double_precision)</span> :: GRAIN_DENSITY
 <a name="l00106"></a><a class="code" href="namespaceglobal__variables.html#afa6a1fd623df40f14f9e409dbdf8b97a">00106</a> <span class="keywordtype">real(double_precision)</span> :: sticking_coeff_neutral
 <a name="l00107"></a><a class="code" href="namespaceglobal__variables.html#a7def8dd1c727f4b7bc6979144ed911bb">00107</a> <span class="keywordtype">real(double_precision)</span> :: sticking_coeff_positive
@@ -177,147 +177,146 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00118"></a><a class="code" href="namespaceglobal__variables.html#a9ea77b72e491267d134633833dd9c04b">00118</a> <span class="keywordtype">real(double_precision)</span> :: INITIAL_VISUAL_EXTINCTION
 <a name="l00119"></a><a class="code" href="namespaceglobal__variables.html#abcb701fe084819f14c57fb80f7c2b849">00119</a> <span class="keywordtype">real(double_precision)</span> :: CR_IONISATION_RATE
 <a name="l00120"></a><a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">00120</a> <span class="keywordtype">real(double_precision)</span> :: UV_FLUX
-<a name="l00121"></a><a class="code" href="namespaceglobal__variables.html#abed081160b86611bd15a79c7b089e0e0">00121</a> <span class="keywordtype">real(double_precision)</span> :: LAYERS
-<a name="l00122"></a><a class="code" href="namespaceglobal__variables.html#a0ec834d8661f622f7cded94b4e688305">00122</a> <span class="keywordtype">real(double_precision)</span> :: SITE_SPACING
-<a name="l00123"></a><a class="code" href="namespaceglobal__variables.html#a933099f4d1ff4364609731cc121b2aff">00123</a> <span class="keywordtype">real(double_precision)</span> :: SITE_DENSITY
-<a name="l00124"></a><a class="code" href="namespaceglobal__variables.html#ad8d5a490d2fca20f34af76035faa7fa3">00124</a> <span class="keywordtype">real(double_precision)</span> :: nb_sites_per_grain
-<a name="l00125"></a><a class="code" href="namespaceglobal__variables.html#a43f199f97074dc5d35bc1da7154da4a5">00125</a> <span class="keywordtype">real(double_precision)</span> :: ACT
-<a name="l00126"></a><a class="code" href="namespaceglobal__variables.html#aea0bc9655f317d234b736a84f543ed8e">00126</a> <span class="keywordtype">real(double_precision)</span> :: TSMAX
-<a name="l00127"></a><a class="code" href="namespaceglobal__variables.html#af73315edf994ae08c8c9b0c7921e06a7">00127</a> <span class="keywordtype">real(double_precision)</span> :: CRT
-<a name="l00128"></a><a class="code" href="namespaceglobal__variables.html#a403f3bbb5987b974e2929ce8aa4b930b">00128</a> <span class="keywordtype">real(double_precision)</span> :: CRFE
-<a name="l00129"></a><a class="code" href="namespaceglobal__variables.html#aa0637cca025d18b6f92c6c2626610f4b">00129</a> <span class="keywordtype">real(double_precision)</span> :: EBFAC
-<a name="l00130"></a><a class="code" href="namespaceglobal__variables.html#a380ca9245a00380e4b33dae98b1cd3d6">00130</a> <span class="keywordtype">real(double_precision)</span> :: START_TIME <span class="comment">!&lt; Start time of the simulation [s]</span>
-<a name="l00131"></a><a class="code" href="namespaceglobal__variables.html#aa52731cb1a97233e90cf65f7ae79fa0d">00131</a> <span class="keywordtype">real(double_precision)</span> :: STOP_TIME <span class="comment">!&lt; Stop time of the simulation [s]</span>
-<a name="l00132"></a><a class="code" href="namespaceglobal__variables.html#a6b6d04c38cdb015e56dc5231a8e3c882">00132</a> <span class="keywordtype">real(double_precision)</span> :: current_time <span class="comment">!&lt; Global current time of the simulation [s]</span>
-<a name="l00133"></a><a class="code" href="namespaceglobal__variables.html#ad0f77444a6d11b73e500069d421b1198">00133</a> <span class="keywordtype">real(double_precision)</span> :: ARRK
-<a name="l00134"></a>00134 
-<a name="l00135"></a><a class="code" href="namespaceglobal__variables.html#a5287d7c37c7a666300985cd2241c7e4f">00135</a> <span class="keywordtype">integer</span>, <span class="keywordtype">parameter</span> :: MAX_NUMBER_REACTION_TYPE=100 <span class="comment">!&lt; Max number of various reaction type</span>
-<a name="l00136"></a>00136 <span class="comment">! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.</span>
-<a name="l00137"></a><a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">00137</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(0:MAX_NUMBER_REACTION_TYPE-1)</span> :: type_id_start <span class="comment">!&lt; list of id start for each reaction type given their type number</span>
-<a name="l00138"></a><a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">00138</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(0:MAX_NUMBER_REACTION_TYPE-1)</span> :: type_id_stop <span class="comment">!&lt; list of id stop for each reaction type given their type number</span>
-<a name="l00139"></a>00139 
-<a name="l00140"></a><a class="code" href="namespaceglobal__variables.html#aad1529a525462ea536c9fa3f8a6d7595">00140</a> <span class="keywordtype">integer</span> :: IS_GRAIN_REACTIONS
-<a name="l00141"></a><a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">00141</a> <span class="keywordtype">integer</span> :: GRAIN_TUNNELING_DIFFUSION
-<a name="l00142"></a><a class="code" href="namespaceglobal__variables.html#ade63b37eca05f951b05b1dc0248ffc3f">00142</a> <span class="keywordtype">integer</span> :: CONSERVATION_TYPE
-<a name="l00143"></a><a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">00143</a> <span class="keywordtype">integer</span> :: IMODH
-<a name="l00144"></a><a class="code" href="namespaceglobal__variables.html#af8a4262f63596ad8657d1cf0ac3b3840">00144</a> <span class="keywordtype">integer</span> :: IS_ABSORPTION
-<a name="l00145"></a>00145 
-<a name="l00146"></a>00146 <span class="comment">! About the optimization so that, for each species, we only check the reactions we know the species is involved.</span>
-<a name="l00147"></a><a class="code" href="namespaceglobal__variables.html#a57473363de41374f2a30bcb0bb498e94">00147</a> <span class="keywordtype">integer</span> :: max_reactions_same_species <span class="comment">!&lt; Maximum number of reactions in which any species will be involved. Used to set the array &#39;relevant_reactions&#39;</span>
-<a name="l00148"></a><a class="code" href="namespaceglobal__variables.html#a76e501e660f37a222b9cedb83599d22c">00148</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(:,:)</span>, <span class="keywordtype">allocatable</span> :: relevant_reactions <span class="comment">!&lt; dim(max_reactions_same_species, nb_species) For each species, store the list of reactions involving the species. </span>
-<a name="l00149"></a>00149 <span class="comment">!! When 0 are encountered for a given species, this means that no more reactions involve it. dimensions : (max_reactions_same_species, nb_species)</span>
-<a name="l00150"></a><a class="code" href="namespaceglobal__variables.html#a5272ac866f093cc83feb14708002dd40">00150</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(:)</span>, <span class="keywordtype">allocatable</span> :: nb_reactions_using_species <span class="comment">!&lt; dim(nb_species) For each species, the number of reactions in which it is used</span>
-<a name="l00151"></a>00151 
-<a name="l00152"></a>00152 <span class="comment">! For LSODES</span>
-<a name="l00153"></a><a class="code" href="namespaceglobal__variables.html#ae85f1490b4545b6142ecdfa4ae710309">00153</a> <span class="keywordtype">integer</span> :: lrw, liw
-<a name="l00154"></a><a class="code" href="namespaceglobal__variables.html#ad2ab051c914a40f8c5f1afbcc7b0d1cd">00154</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(:)</span>, <span class="keywordtype">allocatable</span> :: IWORK <span class="comment">!&lt; dim(liw)</span>
-<a name="l00155"></a><a class="code" href="namespaceglobal__variables.html#a9f741fdb815ceee60ca6562d733196b8">00155</a> <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">dimension(:)</span>, <span class="keywordtype">allocatable</span> :: RWORK <span class="comment">!&lt; dim(lrw)</span>
-<a name="l00156"></a><a class="code" href="namespaceglobal__variables.html#aa0be0f02b1f6186d5f588b6b461281ea">00156</a> <span class="keywordtype">integer</span> :: nb_nonzeros_values <span class="comment">!&lt; number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed</span>
-<a name="l00157"></a>00157 
-<a name="l00158"></a>00158 <span class="comment">! Diffusion and 1D variables</span>
-<a name="l00159"></a><a class="code" href="namespaceglobal__variables.html#a9ac1774271a2c98792808fb4ac91a316">00159</a> <span class="keywordtype">real(double_precision)</span> :: X_IONISATION_RATE
-<a name="l00160"></a><a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">00160</a> <span class="keywordtype">real(double_precision)</span> :: NCO <span class="comment">! column density [cm-2] (for the self shielding)</span>
-<a name="l00161"></a><a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">00161</a> <span class="keywordtype">real(double_precision)</span> :: NH2 <span class="comment">! column density [cm-2] (for the self shielding)</span>
-<a name="l00162"></a>00162 
-<a name="l00163"></a><a class="code" href="namespaceglobal__variables.html#aa4c5d6aebbab967a09d481f86f109eb3">00163</a> <span class="keywordtype">integer</span> :: timestep
-<a name="l00164"></a><a class="code" href="namespaceglobal__variables.html#aed1b3729555ef930a63d546483070ed3">00164</a> <span class="keywordtype">integer</span> :: OUTPUT_PER_DECADE
-<a name="l00165"></a><a class="code" href="namespaceglobal__variables.html#a7077f24ce940dd688e02b0e229b6b2cf">00165</a> <span class="keywordtype">integer</span> :: wstep
-<a name="l00166"></a><a class="code" href="namespaceglobal__variables.html#a2b22590c37328f882fdd6a948b45239a">00166</a> <span class="keywordtype">integer</span> :: wstepr
-<a name="l00167"></a>00167 
-<a name="l00168"></a>00168 <span class="keyword">contains</span> 
-<a name="l00169"></a>00169 
-<a name="l00170"></a>00170 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<a name="l00183"></a><a class="code" href="namespaceglobal__variables.html#ab2cadfd3c1baf79993639b9632cddb16">00183</a> <span class="keyword">subroutine </span><a class="code" href="namespaceglobal__variables.html#ab2cadfd3c1baf79993639b9632cddb16">get_array_sizes</a>()
-<a name="l00184"></a>00184 
-<a name="l00185"></a>00185 <span class="keyword">implicit none</span>
-<a name="l00186"></a>00186 
-<a name="l00187"></a>00187 <span class="comment">! We get the number of reactions and species</span>
-<a name="l00188"></a>00188 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_species.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a9eb4858dc86bcaf6f75a2b2a77786097">nb_species_for_gas</a>)
-<a name="l00189"></a>00189 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_reactions.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a1386249b61536332c06b75ca9fd9ed45">nb_gas_phase_reactions</a>)
-<a name="l00190"></a>00190 
-<a name="l00191"></a>00191 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_species.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a123983c27b5980f7064915557e53f63a">nb_species_for_grain</a>)
-<a name="l00192"></a>00192 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_reactions.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a7776be480fd35a80eb7077912c2ff212">nb_surface_reactions</a>)
+<a name="l00121"></a><a class="code" href="namespaceglobal__variables.html#a0ec834d8661f622f7cded94b4e688305">00121</a> <span class="keywordtype">real(double_precision)</span> :: SITE_SPACING
+<a name="l00122"></a><a class="code" href="namespaceglobal__variables.html#a933099f4d1ff4364609731cc121b2aff">00122</a> <span class="keywordtype">real(double_precision)</span> :: SITE_DENSITY
+<a name="l00123"></a><a class="code" href="namespaceglobal__variables.html#ad8d5a490d2fca20f34af76035faa7fa3">00123</a> <span class="keywordtype">real(double_precision)</span> :: nb_sites_per_grain
+<a name="l00124"></a><a class="code" href="namespaceglobal__variables.html#a43f199f97074dc5d35bc1da7154da4a5">00124</a> <span class="keywordtype">real(double_precision)</span> :: ACT
+<a name="l00125"></a><a class="code" href="namespaceglobal__variables.html#aea0bc9655f317d234b736a84f543ed8e">00125</a> <span class="keywordtype">real(double_precision)</span> :: TSMAX
+<a name="l00126"></a><a class="code" href="namespaceglobal__variables.html#af73315edf994ae08c8c9b0c7921e06a7">00126</a> <span class="keywordtype">real(double_precision)</span> :: CRT
+<a name="l00127"></a><a class="code" href="namespaceglobal__variables.html#a403f3bbb5987b974e2929ce8aa4b930b">00127</a> <span class="keywordtype">real(double_precision)</span> :: CRFE
+<a name="l00128"></a><a class="code" href="namespaceglobal__variables.html#aa0637cca025d18b6f92c6c2626610f4b">00128</a> <span class="keywordtype">real(double_precision)</span> :: EBFAC
+<a name="l00129"></a><a class="code" href="namespaceglobal__variables.html#a380ca9245a00380e4b33dae98b1cd3d6">00129</a> <span class="keywordtype">real(double_precision)</span> :: START_TIME <span class="comment">!&lt; Start time of the simulation [s]</span>
+<a name="l00130"></a><a class="code" href="namespaceglobal__variables.html#aa52731cb1a97233e90cf65f7ae79fa0d">00130</a> <span class="keywordtype">real(double_precision)</span> :: STOP_TIME <span class="comment">!&lt; Stop time of the simulation [s]</span>
+<a name="l00131"></a><a class="code" href="namespaceglobal__variables.html#a6b6d04c38cdb015e56dc5231a8e3c882">00131</a> <span class="keywordtype">real(double_precision)</span> :: current_time <span class="comment">!&lt; Global current time of the simulation [s]</span>
+<a name="l00132"></a><a class="code" href="namespaceglobal__variables.html#ad0f77444a6d11b73e500069d421b1198">00132</a> <span class="keywordtype">real(double_precision)</span> :: ARRK
+<a name="l00133"></a>00133 
+<a name="l00134"></a><a class="code" href="namespaceglobal__variables.html#a5287d7c37c7a666300985cd2241c7e4f">00134</a> <span class="keywordtype">integer</span>, <span class="keywordtype">parameter</span> :: MAX_NUMBER_REACTION_TYPE=100 <span class="comment">!&lt; Max number of various reaction type</span>
+<a name="l00135"></a>00135 <span class="comment">! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.</span>
+<a name="l00136"></a><a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">00136</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(0:MAX_NUMBER_REACTION_TYPE-1)</span> :: type_id_start <span class="comment">!&lt; list of id start for each reaction type given their type number</span>
+<a name="l00137"></a><a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">00137</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(0:MAX_NUMBER_REACTION_TYPE-1)</span> :: type_id_stop <span class="comment">!&lt; list of id stop for each reaction type given their type number</span>
+<a name="l00138"></a>00138 
+<a name="l00139"></a><a class="code" href="namespaceglobal__variables.html#aad1529a525462ea536c9fa3f8a6d7595">00139</a> <span class="keywordtype">integer</span> :: IS_GRAIN_REACTIONS
+<a name="l00140"></a><a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">00140</a> <span class="keywordtype">integer</span> :: GRAIN_TUNNELING_DIFFUSION
+<a name="l00141"></a><a class="code" href="namespaceglobal__variables.html#ade63b37eca05f951b05b1dc0248ffc3f">00141</a> <span class="keywordtype">integer</span> :: CONSERVATION_TYPE
+<a name="l00142"></a><a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">00142</a> <span class="keywordtype">integer</span> :: IMODH
+<a name="l00143"></a><a class="code" href="namespaceglobal__variables.html#af8a4262f63596ad8657d1cf0ac3b3840">00143</a> <span class="keywordtype">integer</span> :: IS_ABSORPTION
+<a name="l00144"></a>00144 
+<a name="l00145"></a>00145 <span class="comment">! About the optimization so that, for each species, we only check the reactions we know the species is involved.</span>
+<a name="l00146"></a><a class="code" href="namespaceglobal__variables.html#a57473363de41374f2a30bcb0bb498e94">00146</a> <span class="keywordtype">integer</span> :: max_reactions_same_species <span class="comment">!&lt; Maximum number of reactions in which any species will be involved. Used to set the array &#39;relevant_reactions&#39;</span>
+<a name="l00147"></a><a class="code" href="namespaceglobal__variables.html#a76e501e660f37a222b9cedb83599d22c">00147</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(:,:)</span>, <span class="keywordtype">allocatable</span> :: relevant_reactions <span class="comment">!&lt; dim(max_reactions_same_species, nb_species) For each species, store the list of reactions involving the species. </span>
+<a name="l00148"></a>00148 <span class="comment">!! When 0 are encountered for a given species, this means that no more reactions involve it. dimensions : (max_reactions_same_species, nb_species)</span>
+<a name="l00149"></a><a class="code" href="namespaceglobal__variables.html#a5272ac866f093cc83feb14708002dd40">00149</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(:)</span>, <span class="keywordtype">allocatable</span> :: nb_reactions_using_species <span class="comment">!&lt; dim(nb_species) For each species, the number of reactions in which it is used</span>
+<a name="l00150"></a>00150 
+<a name="l00151"></a>00151 <span class="comment">! For LSODES</span>
+<a name="l00152"></a><a class="code" href="namespaceglobal__variables.html#ae85f1490b4545b6142ecdfa4ae710309">00152</a> <span class="keywordtype">integer</span> :: lrw, liw
+<a name="l00153"></a><a class="code" href="namespaceglobal__variables.html#ad2ab051c914a40f8c5f1afbcc7b0d1cd">00153</a> <span class="keywordtype">integer</span>, <span class="keywordtype">dimension(:)</span>, <span class="keywordtype">allocatable</span> :: IWORK <span class="comment">!&lt; dim(liw)</span>
+<a name="l00154"></a><a class="code" href="namespaceglobal__variables.html#a9f741fdb815ceee60ca6562d733196b8">00154</a> <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">dimension(:)</span>, <span class="keywordtype">allocatable</span> :: RWORK <span class="comment">!&lt; dim(lrw)</span>
+<a name="l00155"></a><a class="code" href="namespaceglobal__variables.html#aa0be0f02b1f6186d5f588b6b461281ea">00155</a> <span class="keywordtype">integer</span> :: nb_nonzeros_values <span class="comment">!&lt; number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed</span>
+<a name="l00156"></a>00156 
+<a name="l00157"></a>00157 <span class="comment">! Diffusion and 1D variables</span>
+<a name="l00158"></a><a class="code" href="namespaceglobal__variables.html#a9ac1774271a2c98792808fb4ac91a316">00158</a> <span class="keywordtype">real(double_precision)</span> :: X_IONISATION_RATE
+<a name="l00159"></a><a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">00159</a> <span class="keywordtype">real(double_precision)</span> :: NCO <span class="comment">! column density [cm-2] (for the self shielding)</span>
+<a name="l00160"></a><a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">00160</a> <span class="keywordtype">real(double_precision)</span> :: NH2 <span class="comment">! column density [cm-2] (for the self shielding)</span>
+<a name="l00161"></a>00161 
+<a name="l00162"></a><a class="code" href="namespaceglobal__variables.html#aa4c5d6aebbab967a09d481f86f109eb3">00162</a> <span class="keywordtype">integer</span> :: timestep
+<a name="l00163"></a><a class="code" href="namespaceglobal__variables.html#aed1b3729555ef930a63d546483070ed3">00163</a> <span class="keywordtype">integer</span> :: OUTPUT_PER_DECADE
+<a name="l00164"></a><a class="code" href="namespaceglobal__variables.html#a7077f24ce940dd688e02b0e229b6b2cf">00164</a> <span class="keywordtype">integer</span> :: wstep
+<a name="l00165"></a><a class="code" href="namespaceglobal__variables.html#a2b22590c37328f882fdd6a948b45239a">00165</a> <span class="keywordtype">integer</span> :: wstepr
+<a name="l00166"></a>00166 
+<a name="l00167"></a>00167 <span class="keyword">contains</span> 
+<a name="l00168"></a>00168 
+<a name="l00169"></a>00169 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<a name="l00182"></a><a class="code" href="namespaceglobal__variables.html#ab2cadfd3c1baf79993639b9632cddb16">00182</a> <span class="keyword">subroutine </span><a class="code" href="namespaceglobal__variables.html#ab2cadfd3c1baf79993639b9632cddb16">get_array_sizes</a>()
+<a name="l00183"></a>00183 
+<a name="l00184"></a>00184 <span class="keyword">implicit none</span>
+<a name="l00185"></a>00185 
+<a name="l00186"></a>00186 <span class="comment">! We get the number of reactions and species</span>
+<a name="l00187"></a>00187 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_species.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a9eb4858dc86bcaf6f75a2b2a77786097">nb_species_for_gas</a>)
+<a name="l00188"></a>00188 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_reactions.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a1386249b61536332c06b75ca9fd9ed45">nb_gas_phase_reactions</a>)
+<a name="l00189"></a>00189 
+<a name="l00190"></a>00190 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_species.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a123983c27b5980f7064915557e53f63a">nb_species_for_grain</a>)
+<a name="l00191"></a>00191 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_reactions.in&#39;</span>, nb_lines=<a class="code" href="namespaceglobal__variables.html#a7776be480fd35a80eb7077912c2ff212">nb_surface_reactions</a>)
+<a name="l00192"></a>00192 
 <a name="l00193"></a>00193 
 <a name="l00194"></a>00194 
-<a name="l00195"></a>00195 
-<a name="l00196"></a>00196 <a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a> = <a class="code" href="namespaceglobal__variables.html#a9eb4858dc86bcaf6f75a2b2a77786097">nb_species_for_gas</a> + <a class="code" href="namespaceglobal__variables.html#a123983c27b5980f7064915557e53f63a">nb_species_for_grain</a> <span class="comment">! The total number of species, sum of species in gas and grain</span>
-<a name="l00197"></a>00197 <a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a> = <a class="code" href="namespaceglobal__variables.html#a1386249b61536332c06b75ca9fd9ed45">nb_gas_phase_reactions</a> + <a class="code" href="namespaceglobal__variables.html#a7776be480fd35a80eb7077912c2ff212">nb_surface_reactions</a> <span class="comment">! The total number of reactions, sum of species in gas and grain</span>
-<a name="l00198"></a>00198 
-<a name="l00199"></a>00199 <span class="keyword">end subroutine get_array_sizes</span>
-<a name="l00200"></a>00200 
-<a name="l00201"></a>00201 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<a name="l00211"></a><a class="code" href="namespaceglobal__variables.html#a84bbdabf06c92318f689ac25ae01bb99">00211</a> <span class="keyword">subroutine </span><a class="code" href="namespaceglobal__variables.html#a84bbdabf06c92318f689ac25ae01bb99">initialize_global_arrays</a>()
-<a name="l00212"></a>00212 
-<a name="l00213"></a>00213 <span class="keyword">implicit none</span>
-<a name="l00214"></a>00214 
-<a name="l00215"></a>00215 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a04617384cd2be82e5e894bfd695d9a5d">species_name</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00216"></a>00216 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#ad3306b4302b6492f2d2e59117d500699">abundances</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00217"></a>00217 <span class="keyword">allocate</span>(awt(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00218"></a>00218 <span class="keyword">allocate</span>(tindif(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00219"></a>00219 <span class="keyword">allocate</span>(tinacc(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00220"></a>00220 <span class="keyword">allocate</span>(tineva(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00221"></a>00221 <span class="keyword">allocate</span>(ed(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00222"></a>00222 <span class="keyword">allocate</span>(eb(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00223"></a>00223 <span class="keyword">allocate</span>(deb(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00224"></a>00224 <span class="keyword">allocate</span>(dhf(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00225"></a>00225 <span class="keyword">allocate</span>(chf(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00226"></a>00226 <span class="keyword">allocate</span>(condsp(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00227"></a>00227 <span class="keyword">allocate</span>(rq1(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00228"></a>00228 <span class="keyword">allocate</span>(rq2(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00229"></a>00229 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a39123476f5f2eb6dff7737ffe7cb8784">SPECIES_CHARGE</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00230"></a>00230 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a5272ac866f093cc83feb14708002dd40">nb_reactions_using_species</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
-<a name="l00231"></a>00231 
-<a name="l00232"></a>00232 <span class="keyword">allocate</span>(xj(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00233"></a>00233 <span class="keyword">allocate</span>(a(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00234"></a>00234 <span class="keyword">allocate</span>(b(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00235"></a>00235 <span class="keyword">allocate</span>(c(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00236"></a>00236 <span class="keyword">allocate</span>(xk(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00237"></a>00237 <span class="keyword">allocate</span>(rdif1(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00238"></a>00238 <span class="keyword">allocate</span>(rdif2(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00239"></a>00239 <span class="keyword">allocate</span>(ex1(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00240"></a>00240 <span class="keyword">allocate</span>(ex2(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00241"></a>00241 <span class="keyword">allocate</span>(ea(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00242"></a>00242 <span class="keyword">allocate</span>(tmin(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00243"></a>00243 <span class="keyword">allocate</span>(tmax(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00244"></a>00244 <span class="keyword">allocate</span>(act1(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00245"></a>00245 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a8d2276107a9630baae2ae2e4b34eadba">REACTION_TYPE</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00246"></a>00246 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a1b2cb7f4216d13dae5e02020329e3db0">jsp1</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00247"></a>00247 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a32e7ac8cde72e2964bffd929f7dcf565">jsp2</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00248"></a>00248 <span class="keyword">allocate</span>(formula(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00249"></a>00249 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#ab57afaa2f7711c88f0187586a8f231f9">REACTION_ID</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00250"></a>00250 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#ab899443e7a09652b2ce82d94964f9605">REACTION_SUBSTANCES_ID</a>(7,<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00251"></a>00251 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(7,<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
-<a name="l00252"></a>00252 
-<a name="l00253"></a>00253 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#abaa9075c9e4e9207709dfeb916dbbafd">INITIAL_ELEMENTAL_ABUNDANCE</a>(<a class="code" href="namespaceglobal__variables.html#a2aa4be5d11df79c25e4b2474494dc0b7">NB_PRIME_ELEMENTS</a>))
-<a name="l00254"></a>00254 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a3720fab2dbfb6ee864ac34d586f78352">PRIME_ELEMENT_IDX</a>(<a class="code" href="namespaceglobal__variables.html#a2aa4be5d11df79c25e4b2474494dc0b7">NB_PRIME_ELEMENTS</a>))
-<a name="l00255"></a>00255 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a6180c6ee007a61d6dfd0f5bd6c5c6029">species_composition</a>(<a class="code" href="namespaceglobal__variables.html#a2aa4be5d11df79c25e4b2474494dc0b7">NB_PRIME_ELEMENTS</a>,<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00195"></a>00195 <a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a> = <a class="code" href="namespaceglobal__variables.html#a9eb4858dc86bcaf6f75a2b2a77786097">nb_species_for_gas</a> + <a class="code" href="namespaceglobal__variables.html#a123983c27b5980f7064915557e53f63a">nb_species_for_grain</a> <span class="comment">! The total number of species, sum of species in gas and grain</span>
+<a name="l00196"></a>00196 <a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a> = <a class="code" href="namespaceglobal__variables.html#a1386249b61536332c06b75ca9fd9ed45">nb_gas_phase_reactions</a> + <a class="code" href="namespaceglobal__variables.html#a7776be480fd35a80eb7077912c2ff212">nb_surface_reactions</a> <span class="comment">! The total number of reactions, sum of species in gas and grain</span>
+<a name="l00197"></a>00197 
+<a name="l00198"></a>00198 <span class="keyword">end subroutine get_array_sizes</span>
+<a name="l00199"></a>00199 
+<a name="l00200"></a>00200 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<a name="l00210"></a><a class="code" href="namespaceglobal__variables.html#a84bbdabf06c92318f689ac25ae01bb99">00210</a> <span class="keyword">subroutine </span><a class="code" href="namespaceglobal__variables.html#a84bbdabf06c92318f689ac25ae01bb99">initialize_global_arrays</a>()
+<a name="l00211"></a>00211 
+<a name="l00212"></a>00212 <span class="keyword">implicit none</span>
+<a name="l00213"></a>00213 
+<a name="l00214"></a>00214 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a04617384cd2be82e5e894bfd695d9a5d">species_name</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00215"></a>00215 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#ad3306b4302b6492f2d2e59117d500699">abundances</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00216"></a>00216 <span class="keyword">allocate</span>(awt(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00217"></a>00217 <span class="keyword">allocate</span>(tindif(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00218"></a>00218 <span class="keyword">allocate</span>(tinacc(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00219"></a>00219 <span class="keyword">allocate</span>(tineva(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00220"></a>00220 <span class="keyword">allocate</span>(ed(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00221"></a>00221 <span class="keyword">allocate</span>(eb(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00222"></a>00222 <span class="keyword">allocate</span>(deb(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00223"></a>00223 <span class="keyword">allocate</span>(dhf(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00224"></a>00224 <span class="keyword">allocate</span>(chf(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00225"></a>00225 <span class="keyword">allocate</span>(condsp(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00226"></a>00226 <span class="keyword">allocate</span>(rq1(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00227"></a>00227 <span class="keyword">allocate</span>(rq2(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00228"></a>00228 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a39123476f5f2eb6dff7737ffe7cb8784">SPECIES_CHARGE</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00229"></a>00229 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a5272ac866f093cc83feb14708002dd40">nb_reactions_using_species</a>(<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00230"></a>00230 
+<a name="l00231"></a>00231 <span class="keyword">allocate</span>(xj(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00232"></a>00232 <span class="keyword">allocate</span>(a(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00233"></a>00233 <span class="keyword">allocate</span>(b(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00234"></a>00234 <span class="keyword">allocate</span>(c(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00235"></a>00235 <span class="keyword">allocate</span>(xk(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00236"></a>00236 <span class="keyword">allocate</span>(rdif1(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00237"></a>00237 <span class="keyword">allocate</span>(rdif2(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00238"></a>00238 <span class="keyword">allocate</span>(ex1(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00239"></a>00239 <span class="keyword">allocate</span>(ex2(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00240"></a>00240 <span class="keyword">allocate</span>(ea(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00241"></a>00241 <span class="keyword">allocate</span>(tmin(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00242"></a>00242 <span class="keyword">allocate</span>(tmax(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00243"></a>00243 <span class="keyword">allocate</span>(act1(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00244"></a>00244 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a8d2276107a9630baae2ae2e4b34eadba">REACTION_TYPE</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00245"></a>00245 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a1b2cb7f4216d13dae5e02020329e3db0">jsp1</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00246"></a>00246 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a32e7ac8cde72e2964bffd929f7dcf565">jsp2</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00247"></a>00247 <span class="keyword">allocate</span>(formula(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00248"></a>00248 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#ab57afaa2f7711c88f0187586a8f231f9">REACTION_ID</a>(<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00249"></a>00249 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#ab899443e7a09652b2ce82d94964f9605">REACTION_SUBSTANCES_ID</a>(7,<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00250"></a>00250 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(7,<a class="code" href="namespaceglobal__variables.html#a817eda6b6bf84e137c7e0f9445e36916">nb_reactions</a>))
+<a name="l00251"></a>00251 
+<a name="l00252"></a>00252 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#abaa9075c9e4e9207709dfeb916dbbafd">INITIAL_ELEMENTAL_ABUNDANCE</a>(<a class="code" href="namespaceglobal__variables.html#a2aa4be5d11df79c25e4b2474494dc0b7">NB_PRIME_ELEMENTS</a>))
+<a name="l00253"></a>00253 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a3720fab2dbfb6ee864ac34d586f78352">PRIME_ELEMENT_IDX</a>(<a class="code" href="namespaceglobal__variables.html#a2aa4be5d11df79c25e4b2474494dc0b7">NB_PRIME_ELEMENTS</a>))
+<a name="l00254"></a>00254 <span class="keyword">allocate</span>(<a class="code" href="namespaceglobal__variables.html#a6180c6ee007a61d6dfd0f5bd6c5c6029">species_composition</a>(<a class="code" href="namespaceglobal__variables.html#a2aa4be5d11df79c25e4b2474494dc0b7">NB_PRIME_ELEMENTS</a>,<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>))
+<a name="l00255"></a>00255 
 <a name="l00256"></a>00256 
 <a name="l00257"></a>00257 
-<a name="l00258"></a>00258 
-<a name="l00259"></a>00259 <span class="keyword">end subroutine initialize_global_arrays</span>
-<a name="l00260"></a>00260 
-<a name="l00261"></a>00261 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<a name="l00274"></a><a class="code" href="namespaceglobal__variables.html#acf3dcaac7261a4e59977b15ecb0543e3">00274</a> <span class="keyword">subroutine </span><a class="code" href="namespaceglobal__variables.html#acf3dcaac7261a4e59977b15ecb0543e3">get_gas_surface_species</a>()
-<a name="l00275"></a>00275 
-<a name="l00276"></a>00276 <span class="keyword">implicit none</span>
-<a name="l00277"></a>00277 
-<a name="l00278"></a>00278 <span class="comment">! Locals</span>
-<a name="l00279"></a>00279 <span class="keywordtype">integer</span> :: i
-<a name="l00280"></a>00280 
-<a name="l00281"></a>00281 <span class="comment">! We retrieve the total number of gas and surface species (not the ones that are involved in reactions, but the actual position of the species)</span>
-<a name="l00282"></a>00282 <a class="code" href="namespaceglobal__variables.html#a92f61eb7a88fe738db011101272fe3c2">nb_gaseous_species</a> = 0
-<a name="l00283"></a>00283 <a class="code" href="namespaceglobal__variables.html#a30928fefa37dcaeca6630b0fc4ec8a9a">nb_surface_species</a> = 0
-<a name="l00284"></a>00284 <span class="keyword">do</span> i=1,<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>
-<a name="l00285"></a>00285   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a04617384cd2be82e5e894bfd695d9a5d">species_name</a>(i)(1:1).eq.<span class="stringliteral">&#39;J&#39;</span>) <span class="keyword">then</span>
-<a name="l00286"></a>00286     <a class="code" href="namespaceglobal__variables.html#a30928fefa37dcaeca6630b0fc4ec8a9a">nb_surface_species</a> = <a class="code" href="namespaceglobal__variables.html#a30928fefa37dcaeca6630b0fc4ec8a9a">nb_surface_species</a> + 1
-<a name="l00287"></a>00287   <span class="keyword">else</span>
-<a name="l00288"></a>00288     <a class="code" href="namespaceglobal__variables.html#a92f61eb7a88fe738db011101272fe3c2">nb_gaseous_species</a> = <a class="code" href="namespaceglobal__variables.html#a92f61eb7a88fe738db011101272fe3c2">nb_gaseous_species</a> + 1
-<a name="l00289"></a>00289   <span class="keyword">endif</span>
-<a name="l00290"></a>00290 <span class="keyword">end do</span>
-<a name="l00291"></a>00291 
-<a name="l00292"></a>00292 <span class="keyword">end subroutine get_gas_surface_species</span>
-<a name="l00293"></a>00293 
-<a name="l00294"></a>00294 <span class="keyword">end module global_variables</span>
+<a name="l00258"></a>00258 <span class="keyword">end subroutine initialize_global_arrays</span>
+<a name="l00259"></a>00259 
+<a name="l00260"></a>00260 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<a name="l00273"></a><a class="code" href="namespaceglobal__variables.html#acf3dcaac7261a4e59977b15ecb0543e3">00273</a> <span class="keyword">subroutine </span><a class="code" href="namespaceglobal__variables.html#acf3dcaac7261a4e59977b15ecb0543e3">get_gas_surface_species</a>()
+<a name="l00274"></a>00274 
+<a name="l00275"></a>00275 <span class="keyword">implicit none</span>
+<a name="l00276"></a>00276 
+<a name="l00277"></a>00277 <span class="comment">! Locals</span>
+<a name="l00278"></a>00278 <span class="keywordtype">integer</span> :: i
+<a name="l00279"></a>00279 
+<a name="l00280"></a>00280 <span class="comment">! We retrieve the total number of gas and surface species (not the ones that are involved in reactions, but the actual position of the species)</span>
+<a name="l00281"></a>00281 <a class="code" href="namespaceglobal__variables.html#a92f61eb7a88fe738db011101272fe3c2">nb_gaseous_species</a> = 0
+<a name="l00282"></a>00282 <a class="code" href="namespaceglobal__variables.html#a30928fefa37dcaeca6630b0fc4ec8a9a">nb_surface_species</a> = 0
+<a name="l00283"></a>00283 <span class="keyword">do</span> i=1,<a class="code" href="namespaceglobal__variables.html#ad04596284d512f27430cf16e116b11b8">nb_species</a>
+<a name="l00284"></a>00284   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a04617384cd2be82e5e894bfd695d9a5d">species_name</a>(i)(1:1).eq.<span class="stringliteral">&#39;J&#39;</span>) <span class="keyword">then</span>
+<a name="l00285"></a>00285     <a class="code" href="namespaceglobal__variables.html#a30928fefa37dcaeca6630b0fc4ec8a9a">nb_surface_species</a> = <a class="code" href="namespaceglobal__variables.html#a30928fefa37dcaeca6630b0fc4ec8a9a">nb_surface_species</a> + 1
+<a name="l00286"></a>00286   <span class="keyword">else</span>
+<a name="l00287"></a>00287     <a class="code" href="namespaceglobal__variables.html#a92f61eb7a88fe738db011101272fe3c2">nb_gaseous_species</a> = <a class="code" href="namespaceglobal__variables.html#a92f61eb7a88fe738db011101272fe3c2">nb_gaseous_species</a> + 1
+<a name="l00288"></a>00288   <span class="keyword">endif</span>
+<a name="l00289"></a>00289 <span class="keyword">end do</span>
+<a name="l00290"></a>00290 
+<a name="l00291"></a>00291 <span class="keyword">end subroutine get_gas_surface_species</span>
+<a name="l00292"></a>00292 
+<a name="l00293"></a>00293 <span class="keyword">end module global_variables</span>
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -334,7 +333,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for Nautilus by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

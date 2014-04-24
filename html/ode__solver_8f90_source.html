@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
-<title>Nautilus: ode_solver.f90 Source File</title>
+<title>&lt;a href= http://code.google.com/p/nautilus/&gt;Nautilus&lt;/a&gt;: ode_solver.f90 Source File</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <link href="search/search.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="search/search.js"></script>
@@ -19,7 +19,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
  <tbody>
  <tr style="height: 56px;">
   <td style="padding-left: 0.5em;">
-   <div id="projectname">Nautilus</div>
+   <div id="projectname"><a href= http://code.google.com/p/nautilus/>Nautilus</a></div>
    <div id="projectbrief">1D gas-grain chemical model</div>
   </td>
  </tr>
@@ -738,381 +738,372 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00762"></a>00762     <span class="comment">! Add X-rays in case X_IONISATION_RATE is not 0</span>
 <a name="l00763"></a>00763     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(17),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(17)
 <a name="l00764"></a>00764       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*(<a class="code" href="namespaceglobal__variables.html#abcb701fe084819f14c57fb80f7c2b849">CR_IONISATION_RATE</a> + <a class="code" href="namespaceglobal__variables.html#a9ac1774271a2c98792808fb4ac91a316">X_IONISATION_RATE</a>)
-<a name="l00765"></a>00765       <span class="comment">!            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))</span>
-<a name="l00766"></a>00766     <span class="keyword">enddo</span>
-<a name="l00767"></a>00767 
-<a name="l00768"></a>00768     <span class="comment">! ====== Rxn ITYPE 18</span>
-<a name="l00769"></a>00769     <span class="comment">! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces</span>
-<a name="l00770"></a>00770     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(18),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(18)
-<a name="l00771"></a>00771       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*(<a class="code" href="namespaceglobal__variables.html#abcb701fe084819f14c57fb80f7c2b849">CR_IONISATION_RATE</a>+<a class="code" href="namespaceglobal__variables.html#a9ac1774271a2c98792808fb4ac91a316">X_IONISATION_RATE</a>)
-<a name="l00772"></a>00772       <span class="comment">!            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))</span>
-<a name="l00773"></a>00773     <span class="keyword">enddo</span>
+<a name="l00765"></a>00765     <span class="keyword">enddo</span>
+<a name="l00766"></a>00766 
+<a name="l00767"></a>00767     <span class="comment">! ====== Rxn ITYPE 18</span>
+<a name="l00768"></a>00768     <span class="comment">! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces</span>
+<a name="l00769"></a>00769     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(18),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(18)
+<a name="l00770"></a>00770       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*(<a class="code" href="namespaceglobal__variables.html#abcb701fe084819f14c57fb80f7c2b849">CR_IONISATION_RATE</a>+<a class="code" href="namespaceglobal__variables.html#a9ac1774271a2c98792808fb4ac91a316">X_IONISATION_RATE</a>)
+<a name="l00771"></a>00771     <span class="keyword">enddo</span>
+<a name="l00772"></a>00772 
+<a name="l00773"></a>00773   <span class="keyword">endif</span>
 <a name="l00774"></a>00774 
-<a name="l00775"></a>00775   <span class="keyword">endif</span>
-<a name="l00776"></a>00776 
-<a name="l00777"></a>00777   <span class="comment">! When dust is turned off, zero all dust rates==========================</span>
-<a name="l00778"></a>00778   <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#aad1529a525462ea536c9fa3f8a6d7595">IS_GRAIN_REACTIONS</a>.EQ.0).AND.(<a class="code" href="namespaceglobal__variables.html#aa4c5d6aebbab967a09d481f86f109eb3">timestep</a>.EQ.1)) <span class="keyword">then</span>
-<a name="l00779"></a>00779     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(14),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(99)
-<a name="l00780"></a>00780       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=0.d0
-<a name="l00781"></a>00781       <a class="code" href="namespaceglobal__variables.html#af1bcfffabd3524ab9e31c0f51af4fcd5">XJ</a>(J)=0.d0
-<a name="l00782"></a>00782     <span class="keyword">enddo</span>
-<a name="l00783"></a>00783   <span class="keyword">endif</span>
-<a name="l00784"></a>00784 
-<a name="l00785"></a>00785 
-<a name="l00786"></a>00786   return
-<a name="l00787"></a>00787 <span class="keyword">  end subroutine set_constant_rates</span>
-<a name="l00788"></a>00788   
-<a name="l00789"></a>00789 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<a name="l00800"></a><a class="code" href="namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5">00800</a>   <span class="keyword">subroutine </span><a class="code" href="namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5">set_dependant_rates</a>(Y)
-<a name="l00801"></a>00801 
-<a name="l00802"></a>00802   use <span class="keywordflow">global_variables</span> 
+<a name="l00775"></a>00775   <span class="comment">! When dust is turned off, zero all dust rates==========================</span>
+<a name="l00776"></a>00776   <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#aad1529a525462ea536c9fa3f8a6d7595">IS_GRAIN_REACTIONS</a>.EQ.0).AND.(<a class="code" href="namespaceglobal__variables.html#aa4c5d6aebbab967a09d481f86f109eb3">timestep</a>.EQ.1)) <span class="keyword">then</span>
+<a name="l00777"></a>00777     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(14),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(99)
+<a name="l00778"></a>00778       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=0.d0
+<a name="l00779"></a>00779       <a class="code" href="namespaceglobal__variables.html#af1bcfffabd3524ab9e31c0f51af4fcd5">XJ</a>(J)=0.d0
+<a name="l00780"></a>00780     <span class="keyword">enddo</span>
+<a name="l00781"></a>00781   <span class="keyword">endif</span>
+<a name="l00782"></a>00782 
+<a name="l00783"></a>00783 
+<a name="l00784"></a>00784   return
+<a name="l00785"></a>00785 <span class="keyword">  end subroutine set_constant_rates</span>
+<a name="l00786"></a>00786   
+<a name="l00787"></a>00787 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<a name="l00798"></a><a class="code" href="namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5">00798</a>   <span class="keyword">subroutine </span><a class="code" href="namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5">set_dependant_rates</a>(Y)
+<a name="l00799"></a>00799 
+<a name="l00800"></a>00800   use <span class="keywordflow">global_variables</span> 
+<a name="l00801"></a>00801   
+<a name="l00802"></a>00802   <span class="keyword">implicit none</span>
 <a name="l00803"></a>00803   
-<a name="l00804"></a>00804   <span class="keyword">implicit none</span>
-<a name="l00805"></a>00805   
-<a name="l00806"></a>00806   <span class="comment">! Inputs</span>
-<a name="l00807"></a>00807   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span>, <span class="keywordtype">dimension(nb_species)</span> :: Y <span class="comment">!&lt; [in] abundances</span>
-<a name="l00808"></a>00808 
-<a name="l00809"></a>00809   <span class="comment">! Locals</span>
-<a name="l00810"></a>00810   <span class="keywordtype">real(double_precision)</span> :: ACTIV,BARR,MONLAY,DIFF
-<a name="l00811"></a>00811   <span class="keywordtype">real(double_precision)</span> :: XNH2,XNCO
-<a name="l00812"></a>00812   <span class="keywordtype">real(double_precision)</span> :: TETABIS,TETABIS1,TETABIS2,TETABIS3
-<a name="l00813"></a>00813   <span class="keywordtype">real(double_precision)</span> :: T300, TI, TSQ
-<a name="l00814"></a>00814   <span class="keywordtype">real(double_precision)</span> :: YMOD1, YMOD2
-<a name="l00815"></a>00815   <span class="keywordtype">integer</span> IMOD1,IMOD2
-<a name="l00816"></a>00816   <span class="keywordtype">integer</span> :: j, l
-<a name="l00817"></a>00817 
-<a name="l00818"></a>00818   T300=<a class="code" href="namespaceglobal__variables.html#ab9dd50afd8abd86bbd3380d959de6a92">gas_temperature</a>/300.D+0
-<a name="l00819"></a>00819   TI=1.0d00/<a class="code" href="namespaceglobal__variables.html#ab9dd50afd8abd86bbd3380d959de6a92">gas_temperature</a>
-<a name="l00820"></a>00820   TSQ=SQRT(<a class="code" href="namespaceglobal__variables.html#ab9dd50afd8abd86bbd3380d959de6a92">gas_temperature</a>)
-<a name="l00821"></a>00821   MONLAY=<a class="code" href="namespaceglobal__variables.html#abed081160b86611bd15a79c7b089e0e0">LAYERS</a>*<a class="code" href="namespaceglobal__variables.html#ad8d5a490d2fca20f34af76035faa7fa3">nb_sites_per_grain</a>/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
+<a name="l00804"></a>00804   <span class="comment">! Inputs</span>
+<a name="l00805"></a>00805   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span>, <span class="keywordtype">dimension(nb_species)</span> :: Y <span class="comment">!&lt; [in] abundances</span>
+<a name="l00806"></a>00806 
+<a name="l00807"></a>00807   <span class="comment">! Locals</span>
+<a name="l00808"></a>00808   <span class="keywordtype">real(double_precision)</span> :: ACTIV,BARR,DIFF
+<a name="l00809"></a>00809   <span class="keywordtype">real(double_precision)</span> :: XNH2,XNCO
+<a name="l00810"></a>00810   <span class="keywordtype">real(double_precision)</span> :: TETABIS,TETABIS1,TETABIS2,TETABIS3
+<a name="l00811"></a>00811   <span class="keywordtype">real(double_precision)</span> :: T300, TI, TSQ
+<a name="l00812"></a>00812   <span class="keywordtype">real(double_precision)</span> :: YMOD1, YMOD2
+<a name="l00813"></a>00813   <span class="keywordtype">integer</span> IMOD1,IMOD2
+<a name="l00814"></a>00814   <span class="keywordtype">integer</span> :: j, l
+<a name="l00815"></a>00815 
+<a name="l00816"></a>00816   T300=<a class="code" href="namespaceglobal__variables.html#ab9dd50afd8abd86bbd3380d959de6a92">gas_temperature</a>/300.D+0
+<a name="l00817"></a>00817   TI=1.0d00/<a class="code" href="namespaceglobal__variables.html#ab9dd50afd8abd86bbd3380d959de6a92">gas_temperature</a>
+<a name="l00818"></a>00818   TSQ=SQRT(<a class="code" href="namespaceglobal__variables.html#ab9dd50afd8abd86bbd3380d959de6a92">gas_temperature</a>)
+<a name="l00819"></a>00819 
+<a name="l00820"></a>00820   XNH2=Y(indH2)
+<a name="l00821"></a>00821   XNCO=Y(indCO)
 <a name="l00822"></a>00822 
-<a name="l00823"></a>00823   XNH2=Y(indH2)
-<a name="l00824"></a>00824   XNCO=Y(indCO)
-<a name="l00825"></a>00825 
-<a name="l00826"></a>00826   <span class="comment">! Density/Av-dependent==================================================</span>
-<a name="l00827"></a>00827   <span class="comment">!</span>
-<a name="l00828"></a>00828   <span class="comment">! VW 02/07 the treatment for the H2 and CO photodissociation was corrected</span>
-<a name="l00829"></a>00829   <span class="comment">! for larger and smaller values of H2, CO column densities and Av not in the </span>
-<a name="l00830"></a>00830   <span class="comment">! data tables. I also added the choice of using this approximation in gg_control.d</span>
-<a name="l00831"></a>00831   <span class="comment">!</span>
-<a name="l00832"></a>00832   <span class="comment">! ====== Rxn ITYPE 13</span>
-<a name="l00833"></a>00833   <span class="comment">! ITYPE 2: Gas phase photodissociations/ionisations by UV</span>
-<a name="l00834"></a>00834   <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(3),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(3)
-<a name="l00835"></a>00835     <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*EXP(-<a class="code" href="namespaceglobal__variables.html#a615a678685619b06cfbeff1132b7cdc2">C</a>(J)*<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
+<a name="l00823"></a>00823   <span class="comment">! Density/Av-dependent==================================================</span>
+<a name="l00824"></a>00824   <span class="comment">!</span>
+<a name="l00825"></a>00825   <span class="comment">! VW 02/07 the treatment for the H2 and CO photodissociation was corrected</span>
+<a name="l00826"></a>00826   <span class="comment">! for larger and smaller values of H2, CO column densities and Av not in the </span>
+<a name="l00827"></a>00827   <span class="comment">! data tables. I also added the choice of using this approximation in gg_control.d</span>
+<a name="l00828"></a>00828   <span class="comment">!</span>
+<a name="l00829"></a>00829   <span class="comment">! ====== Rxn ITYPE 13</span>
+<a name="l00830"></a>00830   <span class="comment">! ITYPE 2: Gas phase photodissociations/ionisations by UV</span>
+<a name="l00831"></a>00831   <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(3),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(3)
+<a name="l00832"></a>00832     <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*EXP(-<a class="code" href="namespaceglobal__variables.html#a615a678685619b06cfbeff1132b7cdc2">C</a>(J)*<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
+<a name="l00833"></a>00833 
+<a name="l00834"></a>00834     <span class="comment">! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1</span>
+<a name="l00835"></a>00835     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#af8a4262f63596ad8657d1cf0ac3b3840">IS_ABSORPTION</a>.EQ.1) <span class="keyword">then</span> 
 <a name="l00836"></a>00836 
-<a name="l00837"></a>00837     <span class="comment">! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1</span>
-<a name="l00838"></a>00838     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#af8a4262f63596ad8657d1cf0ac3b3840">IS_ABSORPTION</a>.EQ.1) <span class="keyword">then</span> 
-<a name="l00839"></a>00839 
-<a name="l00840"></a>00840       <span class="comment">! ====== Compute the H2 self-shielding</span>
-<a name="l00841"></a>00841       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#a332b8c2284d5cc1745d4ca18c15b0e94">YH2</a>) <span class="keyword">then</span>
-<a name="l00842"></a>00842         TETABIS=1.D0
-<a name="l00843"></a>00843 
-<a name="l00844"></a>00844         <a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a> = <a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>/<a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">AV_NH_ratio</a> * XNH2
-<a name="l00845"></a>00845 
-<a name="l00846"></a>00846         <span class="comment">! ======= Linear extrapolation of the shielding factors</span>
-<a name="l00847"></a>00847         <span class="keyword">do</span> L=1,<a class="code" href="namespaceshielding.html#a574c0dc650bc48ec8a009e4d7d76702c">NL1</a>-1
-<a name="l00848"></a>00848           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>).AND.(<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>)) <span class="keyword">then</span>
-<a name="l00849"></a>00849             TETABIS=<a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(L)+(<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>-<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L))*(<a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(L))/(<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L))
-<a name="l00850"></a>00850           <span class="keyword">endif</span>
-<a name="l00851"></a>00851         <span class="keyword">enddo</span>
-<a name="l00852"></a>00852         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>.GT.<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(<a class="code" href="namespaceshielding.html#a574c0dc650bc48ec8a009e4d7d76702c">NL1</a>)) TETABIS = <a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(<a class="code" href="namespaceshielding.html#a574c0dc650bc48ec8a009e4d7d76702c">NL1</a>)
-<a name="l00853"></a>00853 
-<a name="l00854"></a>00854         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=2.54D-11*TETABIS
+<a name="l00837"></a>00837       <span class="comment">! ====== Compute the H2 self-shielding</span>
+<a name="l00838"></a>00838       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#a332b8c2284d5cc1745d4ca18c15b0e94">YH2</a>) <span class="keyword">then</span>
+<a name="l00839"></a>00839         TETABIS=1.D0
+<a name="l00840"></a>00840 
+<a name="l00841"></a>00841         <a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a> = <a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>/<a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">AV_NH_ratio</a> * XNH2
+<a name="l00842"></a>00842 
+<a name="l00843"></a>00843         <span class="comment">! ======= Linear extrapolation of the shielding factors</span>
+<a name="l00844"></a>00844         <span class="keyword">do</span> L=1,<a class="code" href="namespaceshielding.html#a574c0dc650bc48ec8a009e4d7d76702c">NL1</a>-1
+<a name="l00845"></a>00845           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>).AND.(<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>)) <span class="keyword">then</span>
+<a name="l00846"></a>00846             TETABIS=<a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(L)+(<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>-<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L))*(<a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(L))/(<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(L))
+<a name="l00847"></a>00847           <span class="keyword">endif</span>
+<a name="l00848"></a>00848         <span class="keyword">enddo</span>
+<a name="l00849"></a>00849         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>.GT.<a class="code" href="namespaceshielding.html#a2c746ef62645d68a4fbde6802aa2f475">N1H2</a>(<a class="code" href="namespaceshielding.html#a574c0dc650bc48ec8a009e4d7d76702c">NL1</a>)) TETABIS = <a class="code" href="namespaceshielding.html#a8e09964d8ac5fda8b17352f7c249f197">T1H2</a>(<a class="code" href="namespaceshielding.html#a574c0dc650bc48ec8a009e4d7d76702c">NL1</a>)
+<a name="l00850"></a>00850 
+<a name="l00851"></a>00851         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=2.54D-11*TETABIS
+<a name="l00852"></a>00852 
+<a name="l00853"></a>00853         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
+<a name="l00854"></a>00854       <span class="keyword">endif</span>
 <a name="l00855"></a>00855 
-<a name="l00856"></a>00856         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
-<a name="l00857"></a>00857       <span class="keyword">endif</span>
+<a name="l00856"></a>00856       <span class="comment">! ====== Compute the CO self-shielding</span>
+<a name="l00857"></a>00857       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#aeb9d5362587d4aa7bc7261745f0ca1a4">YCO</a>) <span class="keyword">then</span>
 <a name="l00858"></a>00858 
-<a name="l00859"></a>00859       <span class="comment">! ====== Compute the CO self-shielding</span>
-<a name="l00860"></a>00860       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#aeb9d5362587d4aa7bc7261745f0ca1a4">YCO</a>) <span class="keyword">then</span>
-<a name="l00861"></a>00861 
-<a name="l00862"></a>00862         TETABIS1=1.D0
-<a name="l00863"></a>00863         TETABIS2=1.D0
-<a name="l00864"></a>00864         TETABIS3=1.D0
+<a name="l00859"></a>00859         TETABIS1=1.D0
+<a name="l00860"></a>00860         TETABIS2=1.D0
+<a name="l00861"></a>00861         TETABIS3=1.D0
+<a name="l00862"></a>00862 
+<a name="l00863"></a>00863         <a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a> = <a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>/<a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">AV_NH_ratio</a> * XNH2
+<a name="l00864"></a>00864         <a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a> = <a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>/<a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">AV_NH_ratio</a> * XNCO
 <a name="l00865"></a>00865 
-<a name="l00866"></a>00866         <a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a> = <a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>/<a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">AV_NH_ratio</a> * XNH2
-<a name="l00867"></a>00867         <a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a> = <a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>/<a class="code" href="namespaceglobal__variables.html#a032ebc8d525bc95b1df9f75738ed4568">AV_NH_ratio</a> * XNCO
-<a name="l00868"></a>00868 
-<a name="l00869"></a>00869         <span class="comment">! ======= Linear extrapolation of the three shileding factors</span>
-<a name="l00870"></a>00870         <span class="keyword">do</span> L=1,<a class="code" href="namespaceshielding.html#ab99c284239692df65a426df8b1e68625">NL2</a>-1
-<a name="l00871"></a>00871           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>).AND.(<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>))  &amp;
-<a name="l00872"></a>00872           TETABIS2=<a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(L)+(<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>-<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L))*(<a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(L+1)-<a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(L))&amp;
-<a name="l00873"></a>00873           /(<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L+1)-<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L))
-<a name="l00874"></a>00874         <span class="keyword">enddo</span>
-<a name="l00875"></a>00875 
-<a name="l00876"></a>00876         <span class="keyword">do</span> L=1,<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>-1
-<a name="l00877"></a>00877           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>).AND.(<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>)) &amp;
-<a name="l00878"></a>00878           TETABIS1=<a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(L)+(<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>-<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L))*(<a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(L))&amp;
-<a name="l00879"></a>00879           /(<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L))
-<a name="l00880"></a>00880           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>).AND.(<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>)) &amp;
-<a name="l00881"></a>00881           TETABIS3=<a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(L)+(<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>-<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L))*(<a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(L+1)-<a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(L))&amp;
-<a name="l00882"></a>00882           /(<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L+1)-<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L))
-<a name="l00883"></a>00883         <span class="keyword">enddo</span>
+<a name="l00866"></a>00866         <span class="comment">! ======= Linear extrapolation of the three shileding factors</span>
+<a name="l00867"></a>00867         <span class="keyword">do</span> L=1,<a class="code" href="namespaceshielding.html#ab99c284239692df65a426df8b1e68625">NL2</a>-1
+<a name="l00868"></a>00868           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>).AND.(<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>))  &amp;
+<a name="l00869"></a>00869           TETABIS2=<a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(L)+(<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>-<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L))*(<a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(L+1)-<a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(L))&amp;
+<a name="l00870"></a>00870           /(<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L+1)-<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(L))
+<a name="l00871"></a>00871         <span class="keyword">enddo</span>
+<a name="l00872"></a>00872 
+<a name="l00873"></a>00873         <span class="keyword">do</span> L=1,<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>-1
+<a name="l00874"></a>00874           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>).AND.(<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>)) &amp;
+<a name="l00875"></a>00875           TETABIS1=<a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(L)+(<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>-<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L))*(<a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(L))&amp;
+<a name="l00876"></a>00876           /(<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L+1)-<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(L))
+<a name="l00877"></a>00877           <span class="keyword">if</span> ((<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L).LE.<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>).AND.(<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L+1).GE.<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>)) &amp;
+<a name="l00878"></a>00878           TETABIS3=<a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(L)+(<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>-<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L))*(<a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(L+1)-<a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(L))&amp;
+<a name="l00879"></a>00879           /(<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L+1)-<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(L))
+<a name="l00880"></a>00880         <span class="keyword">enddo</span>
+<a name="l00881"></a>00881 
+<a name="l00882"></a>00882         <span class="comment">! Saturate the rate coefficient if necessary (when density or Av are out of </span>
+<a name="l00883"></a>00883         <span class="comment">! the shielding array, from the photodiss files)</span>
 <a name="l00884"></a>00884 
-<a name="l00885"></a>00885         <span class="comment">! Saturate the rate coefficient if necessary (when density or Av are out of </span>
-<a name="l00886"></a>00886         <span class="comment">! the shielding array, from the photodiss files)</span>
-<a name="l00887"></a>00887 
-<a name="l00888"></a>00888         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>.GT.<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(<a class="code" href="namespaceshielding.html#ab99c284239692df65a426df8b1e68625">NL2</a>)) TETABIS2 = <a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(<a class="code" href="namespaceshielding.html#ab99c284239692df65a426df8b1e68625">NL2</a>)
-<a name="l00889"></a>00889         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>.GT.<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>)) TETABIS1 = <a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>)
-<a name="l00890"></a>00890         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>.GT.<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>))  TETABIS3 = <a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>)
+<a name="l00885"></a>00885         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#ad83c677657aaaf49b0a64b3e693eceb1">NCO</a>.GT.<a class="code" href="namespaceshielding.html#a51716b1fa843b83ec33cd1f0743f11db">N2CO</a>(<a class="code" href="namespaceshielding.html#ab99c284239692df65a426df8b1e68625">NL2</a>)) TETABIS2 = <a class="code" href="namespaceshielding.html#a2f65fb76cdf1337a478cb42625a49269">T2CO</a>(<a class="code" href="namespaceshielding.html#ab99c284239692df65a426df8b1e68625">NL2</a>)
+<a name="l00886"></a>00886         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#abbcb53eabba6615b09054867432db21e">NH2</a>.GT.<a class="code" href="namespaceshielding.html#a5d93f423aa99ec9a84632038757558c3">N2H2</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>)) TETABIS1 = <a class="code" href="namespaceshielding.html#a8b394bda6e8e5bc14599e4eafc80f78f">T2H2</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>)
+<a name="l00887"></a>00887         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>.GT.<a class="code" href="namespaceshielding.html#ad4fed1d0c424a76e4b44f4f71affb2d1">AV2</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>))  TETABIS3 = <a class="code" href="namespaceshielding.html#a1690dfbe83464cfc30413a7586d2703f">T2AV</a>(<a class="code" href="namespaceshielding.html#a76320caf3f16f25879bc44f7094066cd">NL3</a>)
+<a name="l00888"></a>00888 
+<a name="l00889"></a>00889         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
+<a name="l00890"></a>00890         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
 <a name="l00891"></a>00891 
-<a name="l00892"></a>00892         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
-<a name="l00893"></a>00893         <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
-<a name="l00894"></a>00894 
-<a name="l00895"></a>00895       <span class="keyword">endif</span>
-<a name="l00896"></a>00896 
-<a name="l00897"></a>00897     <span class="keyword">endif</span>
-<a name="l00898"></a>00898 
-<a name="l00899"></a>00899   <span class="keyword">enddo</span>
+<a name="l00892"></a>00892       <span class="keyword">endif</span>
+<a name="l00893"></a>00893 
+<a name="l00894"></a>00894     <span class="keyword">endif</span>
+<a name="l00895"></a>00895 
+<a name="l00896"></a>00896   <span class="keyword">enddo</span>
+<a name="l00897"></a>00897 
+<a name="l00898"></a>00898   <span class="comment">! Continually time-dependent grain rates================================</span>
+<a name="l00899"></a>00899   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#aad1529a525462ea536c9fa3f8a6d7595">IS_GRAIN_REACTIONS</a>.NE.0) <span class="keyword">then</span>
 <a name="l00900"></a>00900 
-<a name="l00901"></a>00901   <span class="comment">! Continually time-dependent grain rates================================</span>
-<a name="l00902"></a>00902   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#aad1529a525462ea536c9fa3f8a6d7595">IS_GRAIN_REACTIONS</a>.NE.0) <span class="keyword">then</span>
-<a name="l00903"></a>00903 
-<a name="l00904"></a>00904     <span class="comment">! ====== Rxn ITYPE 99</span>
-<a name="l00905"></a>00905     <span class="comment">! ITYPE 99: Adsorption on grains</span>
-<a name="l00906"></a>00906     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(99),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(99)
-<a name="l00907"></a>00907       <span class="comment">! ========= Set accretion rates</span>
-<a name="l00908"></a>00908       <a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))=<a class="code" href="namespaceglobal__variables.html#ac46ea159454e21892985c1e4ee3df55c">CONDSP</a>(JSP1(J))*TSQ*Y(JSP1(J))*<a class="code" href="namespaceglobal__variables.html#ad8c6e0f43cbfebacfed34e1f1921ef92">H_number_density</a>
-<a name="l00909"></a>00909       <a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
-<a name="l00910"></a>00910       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*<a class="code" href="namespaceglobal__variables.html#af1bcfffabd3524ab9e31c0f51af4fcd5">XJ</a>(J)*<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))/Y(JSP1(J))/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
-<a name="l00911"></a>00911     <span class="keyword">enddo</span>
-<a name="l00912"></a>00912 
-<a name="l00913"></a>00913     <span class="comment">! ====== Rxn ITYPE 14</span>
-<a name="l00914"></a>00914     <span class="comment">! ITYPE 14: Grain surface reactions</span>
-<a name="l00915"></a>00915     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(14),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(14)
-<a name="l00916"></a>00916       IMOD1=0
-<a name="l00917"></a>00917       IMOD2=0
-<a name="l00918"></a>00918       BARR=1.0d0
-<a name="l00919"></a>00919       <span class="comment">! --------- Calculate activation energy barrier multiplier</span>
-<a name="l00920"></a>00920       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a3ef750853b67055d92ead68f2c88f802">EA</a>(J).GE.1.0D-40) <span class="keyword">then</span>
-<a name="l00921"></a>00921         ACTIV=<a class="code" href="namespaceglobal__variables.html#a3ef750853b67055d92ead68f2c88f802">EA</a>(J)/<a class="code" href="namespaceglobal__variables.html#ab165b9b5b824a85985f8b99f82e1ae67">dust_temperature</a>
-<a name="l00922"></a>00922         <span class="comment">! ------------ Choose fastest of classical or tunnelling</span>
-<a name="l00923"></a>00923         <span class="keyword">if</span> (ACTIV.GT.<a class="code" href="namespaceglobal__variables.html#a0c62af56d482e9d1e355df1681de241c">ACT1</a>(J)) ACTIV=<a class="code" href="namespaceglobal__variables.html#a0c62af56d482e9d1e355df1681de241c">ACT1</a>(J)
-<a name="l00924"></a>00924         BARR=EXP(-ACTIV)
-<a name="l00925"></a>00925       <span class="keyword">endif</span>
-<a name="l00926"></a>00926 
-<a name="l00927"></a>00927       <span class="comment">! --------- Thermal hopping diffusion method</span>
-<a name="l00928"></a>00928       <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6e81a15c16c301fce96b9ceeb0a83681">TINDIF</a>(JSP1(J))
-<a name="l00929"></a>00929       <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6e81a15c16c301fce96b9ceeb0a83681">TINDIF</a>(JSP2(J))
-<a name="l00930"></a>00930 
-<a name="l00931"></a>00931       <span class="comment">! --------- Check for JH,JH2</span>
-<a name="l00932"></a>00932       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>)  IMOD1=1
-<a name="l00933"></a>00933       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#a440f32b1e4e9ec4a4e326ddf7bf38786">YJH2</a>) IMOD1=2
-<a name="l00934"></a>00934       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>)  IMOD2=1
-<a name="l00935"></a>00935       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<a class="code" href="namespaceglobal__variables.html#a440f32b1e4e9ec4a4e326ddf7bf38786">YJH2</a>) IMOD2=2
-<a name="l00936"></a>00936 
-<a name="l00937"></a>00937       <span class="comment">! --------- QM for JH,JH2 only - others are too heavy</span>
-<a name="l00938"></a>00938       <span class="keyword">if</span> (IMOD1+IMOD2.NE.0) <span class="keyword">then</span>
-<a name="l00939"></a>00939         <span class="comment">! ------------ QM1 - Tunnelling (if it&#39;s faster than thermal)</span>
-<a name="l00940"></a>00940         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">GRAIN_TUNNELING_DIFFUSION</a>.EQ.1) <span class="keyword">then</span>
-<a name="l00941"></a>00941           <span class="keyword">if</span> ((IMOD1.NE.0).AND.&amp;
-<a name="l00942"></a>00942           (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J))
-<a name="l00943"></a>00943           <span class="keyword">if</span> ((IMOD2.NE.0).AND.&amp;
-<a name="l00944"></a>00944           (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J))
-<a name="l00945"></a>00945         <span class="keyword">endif</span>
-<a name="l00946"></a>00946         <span class="comment">! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it&#39;s faster than thermal)</span>
-<a name="l00947"></a>00947         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">GRAIN_TUNNELING_DIFFUSION</a>.EQ.2) <span class="keyword">then</span>
-<a name="l00948"></a>00948           <span class="keyword">if</span> ((IMOD1.NE.0).AND.&amp;
-<a name="l00949"></a>00949           (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J))
-<a name="l00950"></a>00950           <span class="keyword">if</span> ((IMOD2.NE.0).AND.&amp;
-<a name="l00951"></a>00951           (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J))
-<a name="l00952"></a>00952         <span class="keyword">endif</span>
-<a name="l00953"></a>00953         <span class="comment">! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates</span>
-<a name="l00954"></a>00954         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">GRAIN_TUNNELING_DIFFUSION</a>.EQ.3) <span class="keyword">then</span>
-<a name="l00955"></a>00955           <span class="keyword">if</span> (IMOD1.NE.0) <span class="keyword">then</span>
-<a name="l00956"></a>00956             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J))
-<a name="l00957"></a>00957             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J))
-<a name="l00958"></a>00958           <span class="keyword">endif</span>
-<a name="l00959"></a>00959           <span class="keyword">if</span> (IMOD2.NE.0) <span class="keyword">then</span>
-<a name="l00960"></a>00960             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J))
-<a name="l00961"></a>00961             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J))
-<a name="l00962"></a>00962           <span class="keyword">endif</span>
-<a name="l00963"></a>00963         <span class="keyword">endif</span>
-<a name="l00964"></a>00964       <span class="keyword">endif</span>
-<a name="l00965"></a>00965 
-<a name="l00966"></a>00966       <span class="comment">! --------- Modify according to IMODH switch:</span>
-<a name="l00967"></a>00967       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.NE.0) <span class="keyword">then</span>
-<a name="l00968"></a>00968         <span class="comment">! ------------ if H+H-&gt;H2 is only modified rxn:</span>
-<a name="l00969"></a>00969         <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) <span class="keyword">then</span>
-<a name="l00970"></a>00970           IMOD1=0
-<a name="l00971"></a>00971           IMOD2=0
-<a name="l00972"></a>00972         <span class="keyword">endif</span>
-<a name="l00973"></a>00973 
-<a name="l00974"></a>00974         <span class="comment">! ------------ if only H is modified:</span>
-<a name="l00975"></a>00975         <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
-<a name="l00976"></a>00976         <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
-<a name="l00977"></a>00977 
-<a name="l00978"></a>00978         <span class="comment">! ------------ Set to modify all rates, if selected (just atoms)</span>
-<a name="l00979"></a>00979         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.3) <span class="keyword">then</span>
-<a name="l00980"></a>00980           <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>).OR.&amp;
-<a name="l00981"></a>00981           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JHe        &#39;</span>).OR.&amp;
-<a name="l00982"></a>00982           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JC         &#39;</span>).OR.&amp;
-<a name="l00983"></a>00983           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JN         &#39;</span>).OR.&amp;
-<a name="l00984"></a>00984           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JO         &#39;</span>).OR.&amp;
-<a name="l00985"></a>00985           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JS         &#39;</span>).OR.&amp;
-<a name="l00986"></a>00986           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JSi        &#39;</span>).OR.&amp;
-<a name="l00987"></a>00987           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JFe        &#39;</span>).OR.&amp;
-<a name="l00988"></a>00988           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JNa        &#39;</span>).OR.&amp;
-<a name="l00989"></a>00989           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JMg        &#39;</span>).OR.&amp;
-<a name="l00990"></a>00990           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JP         &#39;</span>).OR.&amp;
-<a name="l00991"></a>00991           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JCl        &#39;</span>)) IMOD1=3
-<a name="l00992"></a>00992           <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>).OR.&amp;
-<a name="l00993"></a>00993           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JHe        &#39;</span>).OR.&amp;
-<a name="l00994"></a>00994           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JC         &#39;</span>).OR.&amp;
-<a name="l00995"></a>00995           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JN         &#39;</span>).OR.&amp;
-<a name="l00996"></a>00996           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JO         &#39;</span>).OR.&amp;
-<a name="l00997"></a>00997           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JS         &#39;</span>).OR.&amp;
-<a name="l00998"></a>00998           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JSi        &#39;</span>).OR.&amp;
-<a name="l00999"></a>00999           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JFe        &#39;</span>).OR.&amp;
-<a name="l01000"></a>01000           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JNa        &#39;</span>).OR.&amp;
-<a name="l01001"></a>01001           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JMg        &#39;</span>).OR.&amp;
-<a name="l01002"></a>01002           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JP         &#39;</span>).OR.&amp;
-<a name="l01003"></a>01003           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JCl        &#39;</span>)) IMOD2=3
-<a name="l01004"></a>01004         <span class="keyword">endif</span>
-<a name="l01005"></a>01005 
-<a name="l01006"></a>01006         <span class="comment">! ------------ Modify rates (RDIF1 &amp; RDIF2) according to their own evap/acc rates</span>
-<a name="l01007"></a>01007         YMOD1=Y(JSP1(J))
-<a name="l01008"></a>01008         YMOD2=Y(JSP2(J))
-<a name="l01009"></a>01009         call <a class="code" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">modify_specific_rates</a>(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
-<a name="l01010"></a>01010       <span class="keyword">endif</span>
-<a name="l01011"></a>01011 
-<a name="l01012"></a>01012       DIFF=<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)
-<a name="l01013"></a>01013 
-<a name="l01014"></a>01014       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*<a class="code" href="namespaceglobal__variables.html#af1bcfffabd3524ab9e31c0f51af4fcd5">XJ</a>(J)*BARR*DIFF*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>/<a class="code" href="namespaceglobal__variables.html#ad8c6e0f43cbfebacfed34e1f1921ef92">H_number_density</a>
-<a name="l01015"></a>01015       <span class="comment">!              XK(J)=0.D0</span>
-<a name="l01016"></a>01016       <span class="comment">! --------- Allow only 1 monolayer of each to react</span>
-<a name="l01017"></a>01017       <span class="comment">! Not used for the time being</span>
-<a name="l01018"></a>01018       <span class="comment">!            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*nb_sites_per_grain/GTODN/Y(JSP1(J))</span>
-<a name="l01019"></a>01019       <span class="comment">!            if (Y(JSP2(J)).GT.MONLAY) XK(J)=XK(J)*nb_sites_per_grain/GTODN/Y(JSP2(J))</span>
-<a name="l01020"></a>01020 
-<a name="l01021"></a>01021     <span class="keyword">enddo</span>
-<a name="l01022"></a>01022 
-<a name="l01023"></a>01023     <span class="comment">! ====== Rxn ITYPE 19 - 20</span>
-<a name="l01024"></a>01024     <span class="comment">! ITYPE 19: Photodissociations by UV photons on grain surfaces</span>
-<a name="l01025"></a>01025     <span class="comment">! ITYPE 20: Photodissociations by UV photons on grain surfaces</span>
-<a name="l01026"></a>01026     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(19),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(20)
-<a name="l01027"></a>01027       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*EXP(-<a class="code" href="namespaceglobal__variables.html#a615a678685619b06cfbeff1132b7cdc2">C</a>(J)*<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
-<a name="l01028"></a>01028       <span class="comment">!            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))</span>
-<a name="l01029"></a>01029     <span class="keyword">enddo</span>
-<a name="l01030"></a>01030 
-<a name="l01031"></a>01031     <span class="comment">! Useful for testing</span>
-<a name="l01032"></a>01032     <span class="comment">! To disable some reaction types</span>
-<a name="l01033"></a>01033     <span class="comment">!do j=type_id_start(14),type_id_stop(15)</span>
-<a name="l01034"></a>01034     <span class="comment">!xk(j)=0.</span>
-<a name="l01035"></a>01035     <span class="comment">!enddo</span>
-<a name="l01036"></a>01036 
-<a name="l01037"></a>01037     <span class="comment">!do j=type_id_start(17),type_id_stop(20)</span>
-<a name="l01038"></a>01038     <span class="comment">!xk(j)=0.</span>
-<a name="l01039"></a>01039     <span class="comment">!enddo</span>
-<a name="l01040"></a>01040   <span class="keyword">endif</span>
-<a name="l01041"></a>01041 
-<a name="l01042"></a>01042   <span class="comment">! Continually time-dependent gas phase rates============================</span>
-<a name="l01043"></a>01043   <span class="comment">! H2 formation</span>
-<a name="l01044"></a>01044   <span class="comment">! XJ(1) and XJ(2) are zero if IS_GRAIN_REACTIONS=1</span>
-<a name="l01045"></a>01045   <span class="comment">! cf GRAINRATE</span>
-<a name="l01046"></a>01046   <span class="comment">! VW Fev 2012 - this process has been removed</span>
-<a name="l01047"></a>01047   <span class="comment">!      do j=type_id_start(0),type_id_stop(0)</span>
-<a name="l01048"></a>01048   <span class="comment">!      if ((REACTION_SUBSTANCES_NAMES(1,J).eq.YH).and.(REACTION_SUBSTANCES_NAMES(2,j).eq.YH)) then</span>
-<a name="l01049"></a>01049   <span class="comment">!      XK(j)=XJ(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))</span>
-<a name="l01050"></a>01050   <span class="comment">!      endif</span>
-<a name="l01051"></a>01051   <span class="comment">!      enddo</span>
-<a name="l01052"></a>01052 
-<a name="l01053"></a>01053   <span class="comment">! if rate acoefficients are too small, put them to 0</span>
-<a name="l01054"></a>01054   <span class="keyword">where</span> (<a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>.lt.<a class="code" href="namespaceglobal__variables.html#a6623b4104772161e3879f413cba30c77">MINIMUM_RATE_COEFFICIENT</a>) <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>=0.d0
-<a name="l01055"></a>01055 
-<a name="l01056"></a>01056     return
-<a name="l01057"></a>01057 <span class="keyword">    end subroutine set_dependant_rates</span>
-<a name="l01058"></a>01058     
-<a name="l01059"></a>01059 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<a name="l01070"></a><a class="code" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">01070</a>   <span class="keyword">subroutine </span><a class="code" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">modify_specific_rates</a>(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
-<a name="l01071"></a>01071   use <span class="keywordflow">global_variables</span>
-<a name="l01072"></a>01072   
-<a name="l01073"></a>01073   <span class="keyword">implicit none</span>
-<a name="l01074"></a>01074 
-<a name="l01075"></a>01075   <span class="comment">! Inputs</span>
-<a name="l01076"></a>01076   <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: J
-<a name="l01077"></a>01077   <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: IMOD1
-<a name="l01078"></a>01078   <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: IMOD2
-<a name="l01079"></a>01079   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span> :: BARR
-<a name="l01080"></a>01080   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span> :: YMOD1
-<a name="l01081"></a>01081   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span> :: YMOD2
-<a name="l01082"></a>01082   
-<a name="l01083"></a>01083   <span class="comment">! Locals</span>
-<a name="l01084"></a>01084   <span class="keywordtype">real(double_precision)</span> :: PICK, TESTREF1, TESTREF2, TESTNUM
-<a name="l01085"></a>01085 
-<a name="l01086"></a>01086   <a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J)=0.d0
-<a name="l01087"></a>01087   <a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J)=0.d0
-<a name="l01088"></a>01088 
-<a name="l01089"></a>01089   <span class="comment">! --- Check value of x = t_acc/t_evap</span>
-<a name="l01090"></a>01090   <span class="comment">! TINEVA = 1/t_evap</span>
-<a name="l01091"></a>01091   <span class="comment">! TINACC = 1/t_acc</span>
-<a name="l01092"></a>01092   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J)).GT.0.d0) <span class="keyword">then</span>
-<a name="l01093"></a>01093     <a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))/<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
-<a name="l01094"></a>01094   <span class="keyword">endif</span>
-<a name="l01095"></a>01095   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J)).GT.0.d0) <span class="keyword">then</span>
-<a name="l01096"></a>01096     <a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))/<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))
-<a name="l01097"></a>01097   <span class="keyword">endif</span>
-<a name="l01098"></a>01098   <span class="comment">! Hence x = 0 if t_evap or t_acc = 0</span>
-<a name="l01099"></a>01099 
-<a name="l01100"></a>01100   <span class="comment">! --- Assign max rates</span>
-<a name="l01101"></a>01101 
-<a name="l01102"></a>01102   <span class="keyword">if</span> (BARR.EQ.1.0d0) <span class="keyword">then</span>
-<a name="l01103"></a>01103     <span class="keyword">if</span> (IMOD1.NE.0) <span class="keyword">then</span>
-<a name="l01104"></a>01104       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J).LT.1.0d0) <span class="keyword">then</span>
-<a name="l01105"></a>01105         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
+<a name="l00901"></a>00901     <span class="comment">! ====== Rxn ITYPE 99</span>
+<a name="l00902"></a>00902     <span class="comment">! ITYPE 99: Adsorption on grains</span>
+<a name="l00903"></a>00903     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(99),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(99)
+<a name="l00904"></a>00904       <span class="comment">! ========= Set accretion rates</span>
+<a name="l00905"></a>00905       <a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))=<a class="code" href="namespaceglobal__variables.html#ac46ea159454e21892985c1e4ee3df55c">CONDSP</a>(JSP1(J))*TSQ*Y(JSP1(J))*<a class="code" href="namespaceglobal__variables.html#ad8c6e0f43cbfebacfed34e1f1921ef92">H_number_density</a>
+<a name="l00906"></a>00906       <a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
+<a name="l00907"></a>00907       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*<a class="code" href="namespaceglobal__variables.html#af1bcfffabd3524ab9e31c0f51af4fcd5">XJ</a>(J)*<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))/Y(JSP1(J))/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
+<a name="l00908"></a>00908     <span class="keyword">enddo</span>
+<a name="l00909"></a>00909 
+<a name="l00910"></a>00910     <span class="comment">! ====== Rxn ITYPE 14</span>
+<a name="l00911"></a>00911     <span class="comment">! ITYPE 14: Grain surface reactions</span>
+<a name="l00912"></a>00912     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(14),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(14)
+<a name="l00913"></a>00913       IMOD1=0
+<a name="l00914"></a>00914       IMOD2=0
+<a name="l00915"></a>00915       BARR=1.0d0
+<a name="l00916"></a>00916       <span class="comment">! --------- Calculate activation energy barrier multiplier</span>
+<a name="l00917"></a>00917       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a3ef750853b67055d92ead68f2c88f802">EA</a>(J).GE.1.0D-40) <span class="keyword">then</span>
+<a name="l00918"></a>00918         ACTIV=<a class="code" href="namespaceglobal__variables.html#a3ef750853b67055d92ead68f2c88f802">EA</a>(J)/<a class="code" href="namespaceglobal__variables.html#ab165b9b5b824a85985f8b99f82e1ae67">dust_temperature</a>
+<a name="l00919"></a>00919         <span class="comment">! ------------ Choose fastest of classical or tunnelling</span>
+<a name="l00920"></a>00920         <span class="keyword">if</span> (ACTIV.GT.<a class="code" href="namespaceglobal__variables.html#a0c62af56d482e9d1e355df1681de241c">ACT1</a>(J)) ACTIV=<a class="code" href="namespaceglobal__variables.html#a0c62af56d482e9d1e355df1681de241c">ACT1</a>(J)
+<a name="l00921"></a>00921         BARR=EXP(-ACTIV)
+<a name="l00922"></a>00922       <span class="keyword">endif</span>
+<a name="l00923"></a>00923 
+<a name="l00924"></a>00924       <span class="comment">! --------- Thermal hopping diffusion method</span>
+<a name="l00925"></a>00925       <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6e81a15c16c301fce96b9ceeb0a83681">TINDIF</a>(JSP1(J))
+<a name="l00926"></a>00926       <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6e81a15c16c301fce96b9ceeb0a83681">TINDIF</a>(JSP2(J))
+<a name="l00927"></a>00927 
+<a name="l00928"></a>00928       <span class="comment">! --------- Check for JH,JH2</span>
+<a name="l00929"></a>00929       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>)  IMOD1=1
+<a name="l00930"></a>00930       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#a440f32b1e4e9ec4a4e326ddf7bf38786">YJH2</a>) IMOD1=2
+<a name="l00931"></a>00931       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>)  IMOD2=1
+<a name="l00932"></a>00932       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<a class="code" href="namespaceglobal__variables.html#a440f32b1e4e9ec4a4e326ddf7bf38786">YJH2</a>) IMOD2=2
+<a name="l00933"></a>00933 
+<a name="l00934"></a>00934       <span class="comment">! --------- QM for JH,JH2 only - others are too heavy</span>
+<a name="l00935"></a>00935       <span class="keyword">if</span> (IMOD1+IMOD2.NE.0) <span class="keyword">then</span>
+<a name="l00936"></a>00936         <span class="comment">! ------------ QM1 - Tunnelling (if it&#39;s faster than thermal)</span>
+<a name="l00937"></a>00937         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">GRAIN_TUNNELING_DIFFUSION</a>.EQ.1) <span class="keyword">then</span>
+<a name="l00938"></a>00938           <span class="keyword">if</span> ((IMOD1.NE.0).AND.&amp;
+<a name="l00939"></a>00939           (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J))
+<a name="l00940"></a>00940           <span class="keyword">if</span> ((IMOD2.NE.0).AND.&amp;
+<a name="l00941"></a>00941           (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J))
+<a name="l00942"></a>00942         <span class="keyword">endif</span>
+<a name="l00943"></a>00943         <span class="comment">! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it&#39;s faster than thermal)</span>
+<a name="l00944"></a>00944         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">GRAIN_TUNNELING_DIFFUSION</a>.EQ.2) <span class="keyword">then</span>
+<a name="l00945"></a>00945           <span class="keyword">if</span> ((IMOD1.NE.0).AND.&amp;
+<a name="l00946"></a>00946           (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J))
+<a name="l00947"></a>00947           <span class="keyword">if</span> ((IMOD2.NE.0).AND.&amp;
+<a name="l00948"></a>00948           (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J))
+<a name="l00949"></a>00949         <span class="keyword">endif</span>
+<a name="l00950"></a>00950         <span class="comment">! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates</span>
+<a name="l00951"></a>00951         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6133a2ce729a3d2e5cebd02c0073edfb">GRAIN_TUNNELING_DIFFUSION</a>.EQ.3) <span class="keyword">then</span>
+<a name="l00952"></a>00952           <span class="keyword">if</span> (IMOD1.NE.0) <span class="keyword">then</span>
+<a name="l00953"></a>00953             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP1(J))
+<a name="l00954"></a>00954             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J)).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP1(J))
+<a name="l00955"></a>00955           <span class="keyword">endif</span>
+<a name="l00956"></a>00956           <span class="keyword">if</span> (IMOD2.NE.0) <span class="keyword">then</span>
+<a name="l00957"></a>00957             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a897ff33b235f3e0853e43e64d00d73de">RQ1</a>(JSP2(J))
+<a name="l00958"></a>00958             <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J)).GT.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#ad204d32b76057fbc1556d214a79db0c7">RQ2</a>(JSP2(J))
+<a name="l00959"></a>00959           <span class="keyword">endif</span>
+<a name="l00960"></a>00960         <span class="keyword">endif</span>
+<a name="l00961"></a>00961       <span class="keyword">endif</span>
+<a name="l00962"></a>00962 
+<a name="l00963"></a>00963       <span class="comment">! --------- Modify according to IMODH switch:</span>
+<a name="l00964"></a>00964       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.NE.0) <span class="keyword">then</span>
+<a name="l00965"></a>00965         <span class="comment">! ------------ if H+H-&gt;H2 is only modified rxn:</span>
+<a name="l00966"></a>00966         <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) <span class="keyword">then</span>
+<a name="l00967"></a>00967           IMOD1=0
+<a name="l00968"></a>00968           IMOD2=0
+<a name="l00969"></a>00969         <span class="keyword">endif</span>
+<a name="l00970"></a>00970 
+<a name="l00971"></a>00971         <span class="comment">! ------------ if only H is modified:</span>
+<a name="l00972"></a>00972         <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
+<a name="l00973"></a>00973         <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
+<a name="l00974"></a>00974 
+<a name="l00975"></a>00975         <span class="comment">! ------------ Set to modify all rates, if selected (just atoms)</span>
+<a name="l00976"></a>00976         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a271966988ac3f788845df21f7d18d6c6">IMODH</a>.EQ.3) <span class="keyword">then</span>
+<a name="l00977"></a>00977           <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>).OR.&amp;
+<a name="l00978"></a>00978           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JHe        &#39;</span>).OR.&amp;
+<a name="l00979"></a>00979           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JC         &#39;</span>).OR.&amp;
+<a name="l00980"></a>00980           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JN         &#39;</span>).OR.&amp;
+<a name="l00981"></a>00981           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JO         &#39;</span>).OR.&amp;
+<a name="l00982"></a>00982           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JS         &#39;</span>).OR.&amp;
+<a name="l00983"></a>00983           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JSi        &#39;</span>).OR.&amp;
+<a name="l00984"></a>00984           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JFe        &#39;</span>).OR.&amp;
+<a name="l00985"></a>00985           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JNa        &#39;</span>).OR.&amp;
+<a name="l00986"></a>00986           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JMg        &#39;</span>).OR.&amp;
+<a name="l00987"></a>00987           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JP         &#39;</span>).OR.&amp;
+<a name="l00988"></a>00988           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(1,J).EQ.<span class="stringliteral">&#39;JCl        &#39;</span>)) IMOD1=3
+<a name="l00989"></a>00989           <span class="keyword">if</span> ((<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<a class="code" href="namespaceglobal__variables.html#ac482cca882b0a18a0ff5036b6c1f28f6">YJH</a>).OR.&amp;
+<a name="l00990"></a>00990           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JHe        &#39;</span>).OR.&amp;
+<a name="l00991"></a>00991           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JC         &#39;</span>).OR.&amp;
+<a name="l00992"></a>00992           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JN         &#39;</span>).OR.&amp;
+<a name="l00993"></a>00993           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JO         &#39;</span>).OR.&amp;
+<a name="l00994"></a>00994           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JS         &#39;</span>).OR.&amp;
+<a name="l00995"></a>00995           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JSi        &#39;</span>).OR.&amp;
+<a name="l00996"></a>00996           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JFe        &#39;</span>).OR.&amp;
+<a name="l00997"></a>00997           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JNa        &#39;</span>).OR.&amp;
+<a name="l00998"></a>00998           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JMg        &#39;</span>).OR.&amp;
+<a name="l00999"></a>00999           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JP         &#39;</span>).OR.&amp;
+<a name="l01000"></a>01000           (<a class="code" href="namespaceglobal__variables.html#a90b37647e2ee578bfb44d897576125a3">REACTION_SUBSTANCES_NAMES</a>(2,J).EQ.<span class="stringliteral">&#39;JCl        &#39;</span>)) IMOD2=3
+<a name="l01001"></a>01001         <span class="keyword">endif</span>
+<a name="l01002"></a>01002 
+<a name="l01003"></a>01003         <span class="comment">! ------------ Modify rates (RDIF1 &amp; RDIF2) according to their own evap/acc rates</span>
+<a name="l01004"></a>01004         YMOD1=Y(JSP1(J))
+<a name="l01005"></a>01005         YMOD2=Y(JSP2(J))
+<a name="l01006"></a>01006         call <a class="code" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">modify_specific_rates</a>(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
+<a name="l01007"></a>01007       <span class="keyword">endif</span>
+<a name="l01008"></a>01008 
+<a name="l01009"></a>01009       DIFF=<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)
+<a name="l01010"></a>01010 
+<a name="l01011"></a>01011       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*<a class="code" href="namespaceglobal__variables.html#af1bcfffabd3524ab9e31c0f51af4fcd5">XJ</a>(J)*BARR*DIFF*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>/<a class="code" href="namespaceglobal__variables.html#ad8c6e0f43cbfebacfed34e1f1921ef92">H_number_density</a>
+<a name="l01012"></a>01012       <span class="comment">!              XK(J)=0.D0</span>
+<a name="l01013"></a>01013     <span class="keyword">enddo</span>
+<a name="l01014"></a>01014 
+<a name="l01015"></a>01015     <span class="comment">! ====== Rxn ITYPE 19 - 20</span>
+<a name="l01016"></a>01016     <span class="comment">! ITYPE 19: Photodissociations by UV photons on grain surfaces</span>
+<a name="l01017"></a>01017     <span class="comment">! ITYPE 20: Photodissociations by UV photons on grain surfaces</span>
+<a name="l01018"></a>01018     <span class="keyword">do</span> J=<a class="code" href="namespaceglobal__variables.html#a72678d4a3e42c7707c53312a0bfd820a">type_id_start</a>(19),<a class="code" href="namespaceglobal__variables.html#a8e042ab32439646714871e722e3b8c18">type_id_stop</a>(20)
+<a name="l01019"></a>01019       <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>(J)=<a class="code" href="namespaceglobal__variables.html#a6b58839271251f1570f7a836fbb5f569">A</a>(J)*EXP(-<a class="code" href="namespaceglobal__variables.html#a615a678685619b06cfbeff1132b7cdc2">C</a>(J)*<a class="code" href="namespaceglobal__variables.html#a70719d43ec2f69b5c28c61897ab75aab">visual_extinction</a>)*<a class="code" href="namespaceglobal__variables.html#a22c25f3a7738bb754b2da9a33197668b">UV_FLUX</a>
+<a name="l01020"></a>01020     <span class="keyword">enddo</span>
+<a name="l01021"></a>01021 
+<a name="l01022"></a>01022     <span class="comment">! Useful for testing</span>
+<a name="l01023"></a>01023     <span class="comment">! To disable some reaction types</span>
+<a name="l01024"></a>01024     <span class="comment">!do j=type_id_start(14),type_id_stop(15)</span>
+<a name="l01025"></a>01025     <span class="comment">!xk(j)=0.</span>
+<a name="l01026"></a>01026     <span class="comment">!enddo</span>
+<a name="l01027"></a>01027 
+<a name="l01028"></a>01028     <span class="comment">!do j=type_id_start(17),type_id_stop(20)</span>
+<a name="l01029"></a>01029     <span class="comment">!xk(j)=0.</span>
+<a name="l01030"></a>01030     <span class="comment">!enddo</span>
+<a name="l01031"></a>01031   <span class="keyword">endif</span>
+<a name="l01032"></a>01032 
+<a name="l01033"></a>01033   <span class="comment">! Continually time-dependent gas phase rates============================</span>
+<a name="l01034"></a>01034   <span class="comment">! H2 formation</span>
+<a name="l01035"></a>01035   <span class="comment">! XJ(1) and XJ(2) are zero if IS_GRAIN_REACTIONS=1</span>
+<a name="l01036"></a>01036   <span class="comment">! cf GRAINRATE</span>
+<a name="l01037"></a>01037   <span class="comment">! VW Fev 2012 - this process has been removed</span>
+<a name="l01038"></a>01038   <span class="comment">!      do j=type_id_start(0),type_id_stop(0)</span>
+<a name="l01039"></a>01039   <span class="comment">!      if ((REACTION_SUBSTANCES_NAMES(1,J).eq.YH).and.(REACTION_SUBSTANCES_NAMES(2,j).eq.YH)) then</span>
+<a name="l01040"></a>01040   <span class="comment">!      XK(j)=XJ(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))</span>
+<a name="l01041"></a>01041   <span class="comment">!      endif</span>
+<a name="l01042"></a>01042   <span class="comment">!      enddo</span>
+<a name="l01043"></a>01043 
+<a name="l01044"></a>01044   <span class="comment">! if rate acoefficients are too small, put them to 0</span>
+<a name="l01045"></a>01045   <span class="keyword">where</span> (<a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>.lt.<a class="code" href="namespaceglobal__variables.html#a6623b4104772161e3879f413cba30c77">MINIMUM_RATE_COEFFICIENT</a>) <a class="code" href="namespaceglobal__variables.html#ab3b5d1d3bfa2b06191bfece7f4582d1f">XK</a>=0.d0
+<a name="l01046"></a>01046 
+<a name="l01047"></a>01047     return
+<a name="l01048"></a>01048 <span class="keyword">    end subroutine set_dependant_rates</span>
+<a name="l01049"></a>01049     
+<a name="l01050"></a>01050 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
+<a name="l01061"></a><a class="code" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">01061</a>   <span class="keyword">subroutine </span><a class="code" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">modify_specific_rates</a>(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
+<a name="l01062"></a>01062   use <span class="keywordflow">global_variables</span>
+<a name="l01063"></a>01063   
+<a name="l01064"></a>01064   <span class="keyword">implicit none</span>
+<a name="l01065"></a>01065 
+<a name="l01066"></a>01066   <span class="comment">! Inputs</span>
+<a name="l01067"></a>01067   <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: J
+<a name="l01068"></a>01068   <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: IMOD1
+<a name="l01069"></a>01069   <span class="keywordtype">integer</span>, <span class="keywordtype">intent(in)</span> :: IMOD2
+<a name="l01070"></a>01070   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span> :: BARR
+<a name="l01071"></a>01071   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span> :: YMOD1
+<a name="l01072"></a>01072   <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">intent(in)</span> :: YMOD2
+<a name="l01073"></a>01073   
+<a name="l01074"></a>01074   <span class="comment">! Locals</span>
+<a name="l01075"></a>01075   <span class="keywordtype">real(double_precision)</span> :: PICK, TESTREF1, TESTREF2, TESTNUM
+<a name="l01076"></a>01076 
+<a name="l01077"></a>01077   <a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J)=0.d0
+<a name="l01078"></a>01078   <a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J)=0.d0
+<a name="l01079"></a>01079 
+<a name="l01080"></a>01080   <span class="comment">! --- Check value of x = t_acc/t_evap</span>
+<a name="l01081"></a>01081   <span class="comment">! TINEVA = 1/t_evap</span>
+<a name="l01082"></a>01082   <span class="comment">! TINACC = 1/t_acc</span>
+<a name="l01083"></a>01083   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J)).GT.0.d0) <span class="keyword">then</span>
+<a name="l01084"></a>01084     <a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))/<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
+<a name="l01085"></a>01085   <span class="keyword">endif</span>
+<a name="l01086"></a>01086   <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J)).GT.0.d0) <span class="keyword">then</span>
+<a name="l01087"></a>01087     <a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))/<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))
+<a name="l01088"></a>01088   <span class="keyword">endif</span>
+<a name="l01089"></a>01089   <span class="comment">! Hence x = 0 if t_evap or t_acc = 0</span>
+<a name="l01090"></a>01090 
+<a name="l01091"></a>01091   <span class="comment">! --- Assign max rates</span>
+<a name="l01092"></a>01092 
+<a name="l01093"></a>01093   <span class="keyword">if</span> (BARR.EQ.1.0d0) <span class="keyword">then</span>
+<a name="l01094"></a>01094     <span class="keyword">if</span> (IMOD1.NE.0) <span class="keyword">then</span>
+<a name="l01095"></a>01095       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J).LT.1.0d0) <span class="keyword">then</span>
+<a name="l01096"></a>01096         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
+<a name="l01097"></a>01097       <span class="keyword">endif</span>
+<a name="l01098"></a>01098       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J).GE.1.0d0) <span class="keyword">then</span>
+<a name="l01099"></a>01099         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))
+<a name="l01100"></a>01100       <span class="keyword">endif</span>
+<a name="l01101"></a>01101     <span class="keyword">endif</span>
+<a name="l01102"></a>01102 
+<a name="l01103"></a>01103     <span class="keyword">if</span> (IMOD2.NE.0) <span class="keyword">then</span>
+<a name="l01104"></a>01104       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J).LT.1.0d0) <span class="keyword">then</span>
+<a name="l01105"></a>01105         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))
 <a name="l01106"></a>01106       <span class="keyword">endif</span>
-<a name="l01107"></a>01107       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J).GE.1.0d0) <span class="keyword">then</span>
-<a name="l01108"></a>01108         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))
+<a name="l01107"></a>01107       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J).GE.1.0d0) <span class="keyword">then</span>
+<a name="l01108"></a>01108         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))
 <a name="l01109"></a>01109       <span class="keyword">endif</span>
 <a name="l01110"></a>01110     <span class="keyword">endif</span>
-<a name="l01111"></a>01111 
-<a name="l01112"></a>01112     <span class="keyword">if</span> (IMOD2.NE.0) <span class="keyword">then</span>
-<a name="l01113"></a>01113       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J).LT.1.0d0) <span class="keyword">then</span>
-<a name="l01114"></a>01114         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))
-<a name="l01115"></a>01115       <span class="keyword">endif</span>
-<a name="l01116"></a>01116       <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J).GE.1.0d0) <span class="keyword">then</span>
-<a name="l01117"></a>01117         <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))
-<a name="l01118"></a>01118       <span class="keyword">endif</span>
-<a name="l01119"></a>01119     <span class="keyword">endif</span>
-<a name="l01120"></a>01120   <span class="keyword">endif</span>
+<a name="l01111"></a>01111   <span class="keyword">endif</span>
+<a name="l01112"></a>01112 
+<a name="l01113"></a>01113   <span class="comment">! --- Species rate to compare chosen by fastest diffusion rate</span>
+<a name="l01114"></a>01114   <span class="keyword">if</span> (BARR.NE.1.0d0) <span class="keyword">then</span>
+<a name="l01115"></a>01115     PICK=0.d0
+<a name="l01116"></a>01116 
+<a name="l01117"></a>01117     TESTREF1=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
+<a name="l01118"></a>01118     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J).GE.1.0d0) TESTREF1=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))
+<a name="l01119"></a>01119     TESTREF2=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))
+<a name="l01120"></a>01120     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J).GE.1.0d0) TESTREF2=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))
 <a name="l01121"></a>01121 
-<a name="l01122"></a>01122   <span class="comment">! --- Species rate to compare chosen by fastest diffusion rate</span>
-<a name="l01123"></a>01123   <span class="keyword">if</span> (BARR.NE.1.0d0) <span class="keyword">then</span>
-<a name="l01124"></a>01124     PICK=0.d0
-<a name="l01125"></a>01125 
-<a name="l01126"></a>01126     TESTREF1=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP1(J))
-<a name="l01127"></a>01127     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a384513fdc79b6b944ee3561f25c31240">EX1</a>(J).GE.1.0d0) TESTREF1=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP1(J))
-<a name="l01128"></a>01128     TESTREF2=<a class="code" href="namespaceglobal__variables.html#a332de76270ae8c6d2b55d807e3048933">TINACC</a>(JSP2(J))
-<a name="l01129"></a>01129     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a0fd634bf6403a8e8a91cac89ae000fbb">EX2</a>(J).GE.1.0d0) TESTREF2=<a class="code" href="namespaceglobal__variables.html#a2c22b1c30790c66048620e8d915a3f52">TINEVA</a>(JSP2(J))
-<a name="l01130"></a>01130 
-<a name="l01131"></a>01131     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J).GE.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)) <span class="keyword">then</span>
-<a name="l01132"></a>01132       TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR*YMOD2*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
-<a name="l01133"></a>01133       <span class="keyword">if</span> (YMOD2*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR
-<a name="l01134"></a>01134       <span class="keyword">if</span> (TESTNUM.GT.TESTREF1) PICK=1.d0
-<a name="l01135"></a>01135     <span class="keyword">endif</span>
-<a name="l01136"></a>01136     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)) <span class="keyword">then</span>
-<a name="l01137"></a>01137       TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR*YMOD1*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
-<a name="l01138"></a>01138       <span class="keyword">if</span> (YMOD1*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR
-<a name="l01139"></a>01139       <span class="keyword">if</span> (TESTNUM.GT.TESTREF2) PICK=2.d0
-<a name="l01140"></a>01140     <span class="keyword">endif</span>
-<a name="l01141"></a>01141 
-<a name="l01142"></a>01142     <span class="keyword">if</span> (PICK.EQ.1) <span class="keyword">then</span>
-<a name="l01143"></a>01143       <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=TESTREF1/BARR/YMOD2/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
-<a name="l01144"></a>01144       <span class="keyword">if</span> (YMOD2*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=TESTREF1/BARR
-<a name="l01145"></a>01145       <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=0.d0
-<a name="l01146"></a>01146     <span class="keyword">endif</span>
-<a name="l01147"></a>01147 
-<a name="l01148"></a>01148     <span class="keyword">if</span> (PICK.EQ.2) <span class="keyword">then</span>
-<a name="l01149"></a>01149       <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=TESTREF2/BARR/YMOD1/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
-<a name="l01150"></a>01150       <span class="keyword">if</span> (YMOD1*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=TESTREF2/BARR
-<a name="l01151"></a>01151       <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=0.d0
-<a name="l01152"></a>01152     <span class="keyword">endif</span>
-<a name="l01153"></a>01153 
-<a name="l01154"></a>01154   <span class="keyword">endif</span>
-<a name="l01155"></a>01155 
-<a name="l01156"></a>01156   return
-<a name="l01157"></a>01157 <span class="keyword">  end subroutine modify_specific_rates</span>
-<a name="l01158"></a>01158 
-<a name="l01159"></a>01159 <span class="keyword">end module ode_solver</span>
+<a name="l01122"></a>01122     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J).GE.<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)) <span class="keyword">then</span>
+<a name="l01123"></a>01123       TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR*YMOD2*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
+<a name="l01124"></a>01124       <span class="keyword">if</span> (YMOD2*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR
+<a name="l01125"></a>01125       <span class="keyword">if</span> (TESTNUM.GT.TESTREF1) PICK=1.d0
+<a name="l01126"></a>01126     <span class="keyword">endif</span>
+<a name="l01127"></a>01127     <span class="keyword">if</span> (<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J).GT.<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)) <span class="keyword">then</span>
+<a name="l01128"></a>01128       TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR*YMOD1*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
+<a name="l01129"></a>01129       <span class="keyword">if</span> (YMOD1*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) TESTNUM=(<a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)+<a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J))*BARR
+<a name="l01130"></a>01130       <span class="keyword">if</span> (TESTNUM.GT.TESTREF2) PICK=2.d0
+<a name="l01131"></a>01131     <span class="keyword">endif</span>
+<a name="l01132"></a>01132 
+<a name="l01133"></a>01133     <span class="keyword">if</span> (PICK.EQ.1) <span class="keyword">then</span>
+<a name="l01134"></a>01134       <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=TESTREF1/BARR/YMOD2/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
+<a name="l01135"></a>01135       <span class="keyword">if</span> (YMOD2*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=TESTREF1/BARR
+<a name="l01136"></a>01136       <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=0.d0
+<a name="l01137"></a>01137     <span class="keyword">endif</span>
+<a name="l01138"></a>01138 
+<a name="l01139"></a>01139     <span class="keyword">if</span> (PICK.EQ.2) <span class="keyword">then</span>
+<a name="l01140"></a>01140       <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=TESTREF2/BARR/YMOD1/<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>
+<a name="l01141"></a>01141       <span class="keyword">if</span> (YMOD1*<a class="code" href="namespaceglobal__variables.html#a9cfac828196dd36b6608931be24d610f">GTODN</a>.LT.1.0d0) <a class="code" href="namespaceglobal__variables.html#a6fc20d2d106a5ccfd92f3f780c2f20ba">RDIF2</a>(J)=TESTREF2/BARR
+<a name="l01142"></a>01142       <a class="code" href="namespaceglobal__variables.html#a30d6182488a0bfd3072bbcbb41e02d9e">RDIF1</a>(J)=0.d0
+<a name="l01143"></a>01143     <span class="keyword">endif</span>
+<a name="l01144"></a>01144 
+<a name="l01145"></a>01145   <span class="keyword">endif</span>
+<a name="l01146"></a>01146 
+<a name="l01147"></a>01147   return
+<a name="l01148"></a>01148 <span class="keyword">  end subroutine modify_specific_rates</span>
+<a name="l01149"></a>01149 
+<a name="l01150"></a>01150 <span class="keyword">end module ode_solver</span>
 </pre></div></div>
 </div>
 <!-- window showing the filter options -->
@@ -1129,7 +1120,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for Nautilus by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>
