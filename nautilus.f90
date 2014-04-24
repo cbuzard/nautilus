@@ -332,10 +332,10 @@ do I=1,nb_species
   do K=1,NB_PRIME_ELEMENTS 
     MSUM=MSUM+elemental_mass(K)*species_composition(K,I) 
   enddo 
-  AWT(I)=MSUM
-  if (species_name(I).EQ.YE) AWT(I)=1.D+0/1836.D+0 
+  SPECIES_MASS(I)=MSUM
+  if (species_name(I).EQ.YE) SPECIES_MASS(I)=1.D+0/1836.D+0 
   if (species_name(I).EQ.YGRAIN .OR. species_name(I).EQ.'GRAIN-      ')&
-  AWT(I)=4.0*PI*grain_radius*grain_radius*grain_radius*GRAIN_DENSITY/3.0/AMU
+  SPECIES_MASS(I)=4.0*PI*grain_radius*grain_radius*grain_radius*GRAIN_DENSITY/3.0/AMU
 enddo
 
 ! Initialize the Av/NH ratio
@@ -355,7 +355,7 @@ do I=0,MAX_NUMBER_REACTION_TYPE-1
   enddo
 enddo
 
-! Find the index of CO and H2
+! Find the index of CO and H2 and He
 do i=1,nb_species
   if (species_name(i).eq.YH2) INDH2=i
   if (species_name(i).eq.YCO) INDCO=i
@@ -632,7 +632,7 @@ end subroutine get_elemental_abundance
       !         if (species_name(I).EQ.'H2+')    STICK=0.D+0
 
       if (I.GT.nb_gaseous_species) STICK=0.D+0
-      CONDSP(I)=COND*STICK/SQRT(AWT(I))
+      CONDSP(I)=COND*STICK/SQRT(SPECIES_MASS(I))
     enddo
 
 

@@ -61,7 +61,7 @@ integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENT
 character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
 integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
 real(double_precision), allocatable, dimension(:) :: abundances !< dim(nb_species) Species abundances
-real(double_precision), allocatable, dimension(:) :: AWT !< dim(nb_species)
+real(double_precision), allocatable, dimension(:) :: SPECIES_MASS !< dim(nb_species) Species mass [a.m.u]
 real(double_precision), allocatable, dimension(:) :: TINDIF !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: TINACC !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: TINEVA !< dim(nb_species)
@@ -214,7 +214,7 @@ implicit none
 
 allocate(species_name(nb_species))
 allocate(abundances(nb_species))
-allocate(awt(nb_species))
+allocate(SPECIES_MASS(nb_species))
 allocate(tindif(nb_species))
 allocate(tinacc(nb_species))
 allocate(tineva(nb_species))
