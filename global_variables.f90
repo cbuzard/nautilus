@@ -78,7 +78,7 @@ integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< elect
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
 integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
-real(double_precision), allocatable, dimension(:) :: XJ !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions)
@@ -228,7 +228,7 @@ allocate(rq2(nb_species))
 allocate(SPECIES_CHARGE(nb_species))
 allocate(nb_reactions_using_species(nb_species))
 
-allocate(xj(nb_reactions))
+allocate(branching_ratio(nb_reactions))
 allocate(a(nb_reactions))
 allocate(b(nb_reactions))
 allocate(c(nb_reactions))

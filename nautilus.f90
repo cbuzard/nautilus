@@ -771,8 +771,8 @@ end subroutine get_elemental_abundance
     ! === Cycle all reactions
     do J=1,nb_reactions
 
-      ! ------ Initialise all XJ rate factors, and get species 1 & 2
-      XJ(J)=1.0d0
+      ! ------ Initialise all branching_ratio rate factors, and get species 1 & 2
+      branching_ratio(J)=1.0d0
       JSP1(J)=0
       JSP2(J)=0
       do I=1,nb_species
@@ -796,13 +796,13 @@ end subroutine get_elemental_abundance
 
       ! ------ Branching ratio
       if (NPATH.EQ.0) then
-        XJ(J)=0.d0
+        branching_ratio(J)=0.d0
       else
-        XJ(J)=XJ(J)/dble(NPATH)
+        branching_ratio(J)=branching_ratio(J)/dble(NPATH)
       endif
 
       ! ------ Factor of 2 for same species reactions
-      if (JSP1(J).EQ.JSP2(J)) XJ(J)=XJ(J)/2.0d0
+      if (JSP1(J).EQ.JSP2(J)) branching_ratio(J)=branching_ratio(J)/2.0d0
 
       ! ------ Calculate evaporation fraction
       NEVAP=0
@@ -905,7 +905,7 @@ end subroutine get_elemental_abundance
       EVFRAC=1.0d0-EVFRAC
     endif
 
-    XJ(J)=XJ(J)*EVFRAC
+    branching_ratio(J)=branching_ratio(J)*EVFRAC
 
     ! ------ Calculate quantum activation energy
     REDMAS = SMASS(JSP1(J)) * SMASS(JSP2(J)) / (SMASS(JSP1(J)) + SMASS(JSP2(J)))
@@ -914,7 +914,7 @@ end subroutine get_elemental_abundance
 
   ! === ITYPE 16 - C.R. DESORPTION
   if (REACTION_TYPE(J).EQ.16) then
-    if (SMASS(JSP1(J)).EQ.0) XJ(J)=0.d0
+    if (SMASS(JSP1(J)).EQ.0) branching_ratio(J)=0.d0
   endif
 
   ! === ITYPE 99 - ACCRETION
@@ -929,8 +929,8 @@ enddo
 
 ! === Zero dummy H2 formation rxns, if necc.
 !      if (IS_GRAIN_REACTIONS.NE.0) then
-!         XJ(1)=0.d0
-!         XJ(2)=0.d0
+!         branching_ratio(1)=0.d0
+!         branching_ratio(2)=0.d0
 !      endif
 
 return

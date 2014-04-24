@@ -724,13 +724,13 @@ end subroutine get_temporal_derivatives
     ! ========= Rxn ITYPE 15 - thermal evaporation
     ! ITYPE 15: Thermal evaporation
     do J=type_id_start(15),type_id_stop(15)
-      reaction_rates(J)=A(J)*XJ(J)*TINEVA(JSP1(J))
+      reaction_rates(J)=A(J)*branching_ratio(J)*TINEVA(JSP1(J))
     enddo
 
     ! ========= Rxn ITYPE 16
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
-      reaction_rates(J)=A(J)*XJ(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
+      reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
       *CHF(JSP1(J))*CRFE*CRT*EXP(-ED(JSP1(J))/TSMAX)
     enddo
 
@@ -780,7 +780,7 @@ end subroutine get_temporal_derivatives
   if ((IS_GRAIN_REACTIONS.EQ.0).AND.(timestep.EQ.1)) then
     do J=type_id_start(14),type_id_stop(99)
       reaction_rates(J)=0.d0
-      XJ(J)=0.d0
+      branching_ratio(J)=0.d0
     enddo
   endif
 
@@ -908,7 +908,7 @@ end subroutine get_temporal_derivatives
       ! ========= Set accretion rates
       TINACC(JSP1(J))=CONDSP(JSP1(J))*TSQ*Y(JSP1(J))*H_number_density
       TINACC(JSP2(J))=TINACC(JSP1(J))
-      reaction_rates(J)=A(J)*XJ(J)*TINACC(JSP1(J))/Y(JSP1(J))/GTODN
+      reaction_rates(J)=A(J)*branching_ratio(J)*TINACC(JSP1(J))/Y(JSP1(J))/GTODN
     enddo
 
     ! ====== Rxn ITYPE 14
@@ -1012,7 +1012,7 @@ end subroutine get_temporal_derivatives
 
       DIFF=RDIF1(J)+RDIF2(J)
 
-      reaction_rates(J)=A(J)*XJ(J)*BARR*DIFF*GTODN/H_number_density
+      reaction_rates(J)=A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
       !              reaction_rates(J)=0.D0
     enddo
 
@@ -1036,12 +1036,12 @@ end subroutine get_temporal_derivatives
 
   ! Continually time-dependent gas phase rates============================
   ! H2 formation
-  ! XJ(1) and XJ(2) are zero if IS_GRAIN_REACTIONS=1
+  ! branching_ratio(1) and branching_ratio(2) are zero if IS_GRAIN_REACTIONS=1
   ! cf GRAINRATE
   ! VW Fev 2012 - this process has been removed
   !      do j=type_id_start(0),type_id_stop(0)
   !      if ((REACTION_SUBSTANCES_NAMES(1,J).eq.YH).and.(REACTION_SUBSTANCES_NAMES(2,j).eq.YH)) then
-  !      reaction_rates(j)=XJ(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))
+  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(JSP1(j))
   !      endif
   !      enddo
 
