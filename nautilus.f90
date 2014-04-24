@@ -614,13 +614,11 @@ end subroutine get_elemental_abundance
     STICK=0.d0
     do I=1,nb_species
       if (SPECIES_CHARGE(I).EQ.0) then
-        STICK=sticking_coeff_neutral
-      endif 
-      if (SPECIES_CHARGE(I).GT.0) then 
-        STICK=sticking_coeff_positive 
-      endif
-      if (SPECIES_CHARGE(I).LT.0) then 
-        STICK=sticking_coeff_negative 
+        STICK = sticking_coeff_neutral
+      else if (SPECIES_CHARGE(I).GT.0) then 
+        STICK = sticking_coeff_positive 
+      else ! (SPECIES_CHARGE(I).LT.0)
+        STICK = sticking_coeff_negative 
       endif
       !         if (species_name(I).EQ.YH2)      STICK=0.D+0 
       !         if (species_name(I).EQ.YHE)      STICK=0.D+0 
