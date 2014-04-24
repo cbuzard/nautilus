@@ -8,7 +8,6 @@ filename
 *.o
 nlso_tail.d
 html
-latex
 *.tmp
 *.out
 nautilus_original/nautilus
