@@ -118,7 +118,6 @@ real(double_precision) :: visual_extinction !< visual extinction of the molecula
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION
 real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: UV_FLUX
-real(double_precision) :: LAYERS
 real(double_precision) :: SITE_SPACING
 real(double_precision) :: SITE_DENSITY
 real(double_precision) :: nb_sites_per_grain

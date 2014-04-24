@@ -762,14 +762,12 @@ end subroutine get_temporal_derivatives
     ! Add X-rays in case X_IONISATION_RATE is not 0
     do J=type_id_start(17),type_id_stop(17)
       XK(J)=A(J)*(CR_IONISATION_RATE + X_IONISATION_RATE)
-      !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
     ! ====== Rxn ITYPE 18
     ! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces
     do J=type_id_start(18),type_id_stop(18)
       XK(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
-      !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
   endif
@@ -807,7 +805,7 @@ end subroutine get_temporal_derivatives
   real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
   ! Locals
-  real(double_precision) :: ACTIV,BARR,MONLAY,DIFF
+  real(double_precision) :: ACTIV,BARR,DIFF
   real(double_precision) :: XNH2,XNCO
   real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
   real(double_precision) :: T300, TI, TSQ
@@ -818,7 +816,6 @@ end subroutine get_temporal_derivatives
   T300=gas_temperature/300.D+0
   TI=1.0d00/gas_temperature
   TSQ=SQRT(gas_temperature)
-  MONLAY=LAYERS*nb_sites_per_grain/GTODN
 
   XNH2=Y(indH2)
   XNCO=Y(indCO)
@@ -1013,11 +1010,6 @@ end subroutine get_temporal_derivatives
 
       XK(J)=A(J)*XJ(J)*BARR*DIFF*GTODN/H_number_density
       !              XK(J)=0.D0
-      ! --------- Allow only 1 monolayer of each to react
-      ! Not used for the time being
-      !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*nb_sites_per_grain/GTODN/Y(JSP1(J))
-      !            if (Y(JSP2(J)).GT.MONLAY) XK(J)=XK(J)*nb_sites_per_grain/GTODN/Y(JSP2(J))
-
     enddo
 
     ! ====== Rxn ITYPE 19 - 20
@@ -1025,7 +1017,6 @@ end subroutine get_temporal_derivatives
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
     do J=type_id_start(19),type_id_stop(20)
       XK(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
-      !            if (Y(JSP1(J)).GT.MONLAY) XK(J)=XK(J)*MONLAY/Y(JSP1(J))
     enddo
 
     ! Useful for testing

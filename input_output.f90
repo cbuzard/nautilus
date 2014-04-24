@@ -454,9 +454,6 @@ if (isDefined) then
       case('CRFE')
         read(value, '(e12.6)') CRFE
       
-      case('LAYERS')
-        read(value, '(e12.6)') LAYERS
-      
       case('ARRK')
         read(value, '(e12.6)') ARRK
       
@@ -566,7 +563,6 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'TSMAX = ', TSMAX, ' ! peak grain temperature [K] (CR heating)'
   write(10,'(a,es10.3e2,a)') 'CRT = ', CRT, ' ! duration [s] of peak grain temperature'
   write(10,'(a,es10.3e2,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)'
-  write(10,'(a,es10.3e2,a)') 'LAYERS = ', LAYERS, ' ! number of monolayers for ITYPE 17-20 currently not used in the code'
   write(10,'(a,es10.3e2,a)') 'ARRK = ', ARRK, ' ! a-coefficient for RRK-style formation-desorption'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"

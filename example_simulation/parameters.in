@@ -47,7 +47,6 @@ ACT =  1.000E-08 ! grain rxn activation energy constant
 TSMAX =  7.000E+01 ! peak grain temperature [K] (CR heating)
 CRT =  1.000E-05 ! duration [s] of peak grain temperature
 CRFE =  3.000E-14 ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
-LAYERS =  1.000E+02 ! number of monolayers for ITYPE 17-20 currently not used in the code
 ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
 
 !*****************************
