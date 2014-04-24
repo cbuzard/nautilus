@@ -987,7 +987,7 @@ open(45, file=filename_output, form='unformatted')
 
 write(45) species_name
 write(45) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
-write(45) XK
+write(45) reaction_rates
 write(45) REACTION_ID
 
 close(45)

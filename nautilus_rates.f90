@@ -37,7 +37,7 @@ real(double_precision), dimension(:,:), allocatable :: visual_extinction !< visu
 real(double_precision), dimension(:,:), allocatable :: zeta
 
 ! For rates
-real(double_precision), allocatable, dimension(:,:) :: XK ! (nb_outputs, nb_reactions)
+real(double_precision), allocatable, dimension(:,:) :: reaction_rates ! (nb_outputs, nb_reactions)
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
 integer, allocatable, dimension(:) :: NUM !< index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
@@ -84,7 +84,7 @@ allocate(zeta(nptmax, nb_outputs))
 allocate(abundances(nb_outputs, nb_species+1, nptmax)) ! We create an extra species that will always have an abundance of 1
 
 allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
-allocate(xk(nb_outputs, nb_reactions))
+allocate(reaction_rates(nb_outputs, nb_reactions))
 allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(3, nb_reactions))
 
@@ -108,7 +108,7 @@ do output=1,nb_outputs
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) species_name(1:nb_species)
   read(10) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
-  read(10) xk(output,1:nb_reactions)
+  read(10) reaction_rates(output,1:nb_reactions)
   read(10) REACTION_ID(1:nb_reactions)
   close(10)
 enddo
@@ -138,7 +138,7 @@ do output=1, nb_outputs
     reactant2 = REACTION_SUBSTANCES_ID(2, reaction)
     reactant3 = REACTION_SUBSTANCES_ID(3, reaction)
 
-    reaction_fluxes(output, reaction) = xk(output, reaction) * abundances(output, reactant1, 1) * &
+    reaction_fluxes(output, reaction) = reaction_rates(output, reaction) * abundances(output, reactant1, 1) * &
                                         abundances(output, reactant2, 1) * abundances(output, reactant3, 1)
   enddo
 enddo
