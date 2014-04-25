@@ -108,15 +108,15 @@ real(double_precision) :: sticking_coeff_neutral
 real(double_precision) :: sticking_coeff_positive
 real(double_precision) :: sticking_coeff_negative
 real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
-real(double_precision) :: H_number_density !< Total H number density (both H and H2)
-real(double_precision) :: initial_gas_density
+real(double_precision) :: H_number_density !< [part/cm^3] Total H number density (both H and H2), representing the total gas density
+real(double_precision) :: initial_gas_density !< [part/cm^3] initial gas density of the structure
 real(double_precision) :: gas_temperature !< current gas temperature [K]
 real(double_precision) :: initial_gas_temperature !< initial gas temperature [K], simulation parameter
 real(double_precision) :: dust_temperature !< current dust temperature [K]
 real(double_precision) :: initial_dust_temperature !< initial dust temperature [K], simulation parameter
-real(double_precision) :: visual_extinction !< visual extinction of the molecular cloud (or other astronomical object). 
+real(double_precision) :: visual_extinction !< visual extinction [mag] of the molecular cloud (or other astronomical object). 
 !! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
-real(double_precision) :: INITIAL_VISUAL_EXTINCTION
+real(double_precision) :: INITIAL_VISUAL_EXTINCTION !< initial visual extinction [mag] 
 real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: UV_FLUX
 real(double_precision) :: SITE_SPACING
@@ -137,11 +137,34 @@ integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reac
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_start !< list of id start for each reaction type given their type number
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_stop !< list of id stop for each reaction type given their type number
 
+character(len=80) :: GRAIN_TEMPERATURE_TYPE = 'fixed' !< ('gas', 'computed', 'table', 'fixed') How the grain temperature is computed in the code
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION
 integer :: CONSERVATION_TYPE
 integer :: IMODH
 integer :: IS_ABSORPTION
+
+! About IS_STRUCTURE_EVOLUTION, describing the evolution of the physical structure properties with time
+integer :: IS_STRUCTURE_EVOLUTION = 0 !< if 1, physical structure properties evolve with time. They come from structure_evolution.dat file, containing
+!! {time [Myr], number density [part/cm3], temperature [K] and Av [mag]} for the structure
+procedure(get_structure_properties_interface), pointer :: get_structure_properties
+
+abstract interface 
+  subroutine get_structure_properties_interface(time, Av, density, gas_temperature, grain_temperature)
+    import 
+    
+    implicit none
+  ! Inputs
+  real(double_precision), intent(in) :: time !<[in] Current time of the simulation [s]
+  
+  ! Outputs
+  real(double_precision), intent(out) :: Av !<[out] Visual extinction [mag]
+  real(double_precision), intent(out) :: gas_temperature !<[out] gas temperature [K]
+  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
+  real(double_precision), intent(out) :: density !<[out] gas density [part/cm^3]
+  
+  end subroutine get_structure_properties_interface
+end interface
 
 ! About the optimization so that, for each species, we only check the reactions we know the species is involved.
 integer :: max_reactions_same_species !< Maximum number of reactions in which any species will be involved. Used to set the array 'relevant_reactions'

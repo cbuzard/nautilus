@@ -146,6 +146,12 @@ Error 5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by
 
 Error 6: The number of prime elements in input files *_species.in do not match with the real one coming from element.in
 
+Error 7: The file "time_evolution.dat" does not exist.
+
+Error 8: Grain temperature cannot be read from "structure_evolution.dat" if the "structure_evolution" flag is not activated.
+
+Error 9: IS_STRUCTURE_EVOLUTION has an undefined value. 
+
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
 (even though this is a problem for readability). 

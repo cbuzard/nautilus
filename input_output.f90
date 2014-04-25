@@ -476,6 +476,9 @@ if (isDefined) then
       ! Initial abundances
       case('minimum_initial_abundance')
         read(value, '(e12.6)') MINIMUM_INITIAL_ABUNDANCE
+      
+      case('is_structure_evolution')
+        read(value, '(i2)') IS_STRUCTURE_EVOLUTION
          
       case default
         write(*,*) 'Warning: An unknown parameter has been found'
@@ -491,6 +494,12 @@ end if
 
 START_TIME = START_TIME * YEAR
 STOP_TIME = STOP_TIME * YEAR
+
+if ((GRAIN_TEMPERATURE_TYPE.eq.'table').and.(IS_STRUCTURE_EVOLUTION.eq.0)) then
+  write(Error_unit,*) 'Error: Grain temperature cannot be read from "structure_evolution.dat" if the &
+                      &"IS_STRUCTURE_EVOLUTION" flag is not activated'
+  call exit(8)
+endif
 
 return
 end subroutine read_parameters_in
@@ -527,6 +536,8 @@ use global_variables
   write(10,'(a)') "!*          Switches         *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
+  write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
+                        &time, values come from structure_evolution.dat file that must exists'
   write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &

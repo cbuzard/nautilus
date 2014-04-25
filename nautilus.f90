@@ -95,6 +95,7 @@ use ode_solver
 use iso_fortran_env
 use shielding
 use utilities
+use structure
 
 implicit none
 
@@ -109,9 +110,6 @@ real(double_precision) :: integration_timestep !< Timestep of the present step, 
 call initialisation()
 
 call initialize_work_arrays()
-
-! Initializing global time
-current_time = 0.d0
 
 ! The real time loop
 do while (current_time.lt.0.9*STOP_TIME)
@@ -164,6 +162,9 @@ implicit none
 ! Locals
 integer :: i ! For loops
 
+! Initializing global time
+current_time = 0.d0
+
 ! Read list of prime elements, including their atomic mass (in AMU)
 call read_element_in()
 
@@ -175,6 +176,33 @@ call initialize_global_arrays()
 
 ! Read simulation parameters
 call read_parameters_in()
+
+! Initialize structure evolution
+select case(IS_STRUCTURE_EVOLUTION)
+  case(0)
+    get_structure_properties => get_structure_properties_fixed
+
+  case(1)
+    call init_structure_evolution()
+    
+    get_structure_properties => get_structure_properties_table
+    
+  case default
+    write(error_unit,*) 'The is_structure_evolution="', IS_STRUCTURE_EVOLUTION,'" cannot be found.'
+    
+!~     write(error_unit,*) 'Values possible : 0: no ; 1: yes'
+!~     write(error_unit, '(a)') 'Error in structure: subroutine init_structure_evolution' 
+    call exit(9)
+end select
+!~ 
+!~ if (IS_STRUCTURE_EVOLUTION.eq.1) then
+!~   call init_structure_evolution()
+!~ 
+!~   get_structure_properties => get_structure_properties_table
+!~ else
+!~ 
+!~   get_structure_properties => get_structure_properties_fixed
+!~ endif
 
 ! Read list of species, either for gas or grain reactions
 call read_species()
@@ -223,10 +251,16 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 call check_conservation(abundances(1:nb_species))
 
 ! 1D physical structure (nls_phys_1D)
-gas_temperature = initial_gas_temperature
-dust_temperature = initial_dust_temperature
-visual_extinction = INITIAL_VISUAL_EXTINCTION
-H_number_density = initial_gas_density
+!~ call get_structure_properties_fixed(time=current_time, & ! Inputs
+!~                               Av=visual_extinction, density=H_number_density, & ! Outputs
+!~                               gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
+call get_structure_properties(time=current_time, & ! Inputs
+                              Av=visual_extinction, density=H_number_density, & ! Outputs
+                              gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
+!~ gas_temperature = initial_gas_temperature
+!~ dust_temperature = initial_dust_temperature
+!~ visual_extinction = INITIAL_VISUAL_EXTINCTION
+!~ H_number_density = initial_gas_density
 
 ! Write species name/index correspondance
 call write_species()
