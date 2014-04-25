@@ -27,6 +27,7 @@ real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant i
 real(double_precision), parameter :: PI = 3.1415926535898d0 !< The number Pi
 real(double_precision), parameter :: H_BARRE = 1.054571628d-27 !< Reduced Planck constant h/2*pi in CGS (g cm2 s-1)
 real(double_precision), parameter :: AMU = 1.66053892d-24 !< Atomic mass unit in g
+real(double_precision), parameter :: ELECTRON_MASS = 0.000548579909d0 !< Electron mass in AMU (close to 1/1836)
 real(double_precision), parameter :: AVOGADRO = 6.02214129d23 !< avogadro number : number of atom in 1 mol
 real(double_precision), parameter :: YEAR = 3.15576d7 !< one year in seconds
 real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in cm (mean earth-sun distance)

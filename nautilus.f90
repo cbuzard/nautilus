@@ -367,7 +367,7 @@ do I=1,nb_species
     MSUM=MSUM+elemental_mass(K)*species_composition(K,I) 
   enddo 
   SPECIES_MASS(I)=MSUM
-  if (species_name(I).EQ.YE) SPECIES_MASS(I) = 0.000548579909 ! electron mass in amu
+  if (species_name(I).EQ.YE) SPECIES_MASS(I) = ELECTRON_MASS ! electron mass in amu
   if (species_name(I).EQ.YGRAIN .OR. species_name(I).EQ.'GRAIN-      ')&
   SPECIES_MASS(I)=4.0*PI*grain_radius*grain_radius*grain_radius*GRAIN_DENSITY/3.0/AMU
 enddo
