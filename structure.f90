@@ -57,9 +57,7 @@ integer :: comment_position !< the index of the comment character on the line. i
 integer :: error !< to store the state of a read instruction
 
 integer :: i !< loop index
-logical :: isParameter, isDefined
-character(len=80) :: identificator, value
-
+logical :: isDefined
 !------------------------------------------------------------------------------
 
 inquire(file=filename, exist=isDefined)
@@ -70,6 +68,7 @@ if (isDefined) then
   allocate(structure_time(structure_sample))
   allocate(structure_log_density(structure_sample))
   allocate(structure_log_gas_temperature(structure_sample))
+  allocate(structure_log_dust_temperature(structure_sample))
   allocate(structure_log_Av(structure_sample))
   
   
