@@ -9,9 +9,9 @@ import pdb
 
 COMPILATOR = "gfortran"
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wextra -Wunreachable-code -fbacktrace" + \
-  " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
+  " -ffpe-trap=invalid -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic -fimplicit-none"
-
+# commented options : -ffpe-trap=zero,overflow,underflow because most of the time, this is not a bug.
 OPTIMIZATIONS = "-O3 -ffast-math -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
 PROFILING_OPTIONS = "-g -pg"
