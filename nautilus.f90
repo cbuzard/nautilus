@@ -121,6 +121,10 @@ do while (current_time.lt.0.9*STOP_TIME)
     integration_timestep = 1.d0 * YEAR
   endif
   
+  call get_structure_properties(time=current_time, & ! Inputs
+                              Av=visual_extinction, density=H_number_density, & ! Outputs
+                              gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
+                                
   current_time = current_time + integration_timestep ! Final time for chemistry T -> T + integration_timestep
   timestep = timestep + 1
 
