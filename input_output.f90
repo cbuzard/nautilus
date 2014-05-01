@@ -784,6 +784,9 @@ call get_linenumber(filename, nb_lines)
 allocate(temp_abundances(nb_lines))
 allocate(temp_names(nb_lines))
 
+temp_abundances(1:nb_lines) = 0.d0
+temp_names(1:nb_lines) = ''
+
   !------------------------------------------------------------------------------
   
 inquire(file=filename, exist=isDefined)
@@ -905,6 +908,9 @@ endif
 ! We allocate global variables
 allocate(element_name(NB_PRIME_ELEMENTS))
 allocate(elemental_mass(NB_PRIME_ELEMENTS))
+
+element_name(1:NB_PRIME_ELEMENTS) = ''
+elemental_mass(1:NB_PRIME_ELEMENTS) = 0.d0
 
 if (isDefined) then
 

@@ -193,20 +193,10 @@ select case(IS_STRUCTURE_EVOLUTION)
     
   case default
     write(error_unit,*) 'The is_structure_evolution="', IS_STRUCTURE_EVOLUTION,'" cannot be found.'
-    
-!~     write(error_unit,*) 'Values possible : 0: no ; 1: yes'
-!~     write(error_unit, '(a)') 'Error in structure: subroutine init_structure_evolution' 
+    write(error_unit,*) 'Values possible : 0: no ; 1: yes'
+    write(error_unit, '(a)') 'Error in structure: subroutine init_structure_evolution' 
     call exit(9)
 end select
-!~ 
-!~ if (IS_STRUCTURE_EVOLUTION.eq.1) then
-!~   call init_structure_evolution()
-!~ 
-!~   get_structure_properties => get_structure_properties_table
-!~ else
-!~ 
-!~   get_structure_properties => get_structure_properties_fixed
-!~ endif
 
 ! Read list of species, either for gas or grain reactions
 call read_species()
@@ -255,16 +245,9 @@ where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 call check_conservation(abundances(1:nb_species))
 
 ! 1D physical structure (nls_phys_1D)
-!~ call get_structure_properties_fixed(time=current_time, & ! Inputs
-!~                               Av=visual_extinction, density=H_number_density, & ! Outputs
-!~                               gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
 call get_structure_properties(time=current_time, & ! Inputs
                               Av=visual_extinction, density=H_number_density, & ! Outputs
                               gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
-!~ gas_temperature = initial_gas_temperature
-!~ dust_temperature = initial_dust_temperature
-!~ visual_extinction = INITIAL_VISUAL_EXTINCTION
-!~ H_number_density = initial_gas_density
 
 ! Write species name/index correspondance
 call write_species()

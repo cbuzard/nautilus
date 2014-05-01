@@ -278,7 +278,46 @@ allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
 
+species_name(1:nb_species) = ''
+abundances(1:nb_species) = 0.d0
+SPECIES_MASS(1:nb_species) = 0.d0
+tindif(1:nb_species) = 0.d0
+tinacc(1:nb_species) = 0.d0
+tineva(1:nb_species) = 0.d0
+ed(1:nb_species) = 0.d0
+eb(1:nb_species) = 0.d0
+deb(1:nb_species) = 0.d0
+dhf(1:nb_species) = 0.d0
+chf(1:nb_species) = 0.d0
+condsp(1:nb_species) = 0.d0
+rq1(1:nb_species) = 0.d0
+rq2(1:nb_species) = 0.d0
+SPECIES_CHARGE(1:nb_species) = 0
+nb_reactions_using_species(1:nb_species) = 0
 
+branching_ratio(1:nb_reactions) = 0.d0
+a(1:nb_reactions) = 0.d0
+b(1:nb_reactions) = 0.d0
+c(1:nb_reactions) = 0.d0
+reaction_rates(1:nb_reactions) = 0.d0
+rdif1(1:nb_reactions) = 0.d0
+rdif2(1:nb_reactions) = 0.d0
+ex1(1:nb_reactions) = 0.d0
+ex2(1:nb_reactions) = 0.d0
+ea(1:nb_reactions) = 0.d0
+tmin(1:nb_reactions) = 0.d0
+tmax(1:nb_reactions) = 0.d0
+act1(1:nb_reactions) = 0.d0
+REACTION_TYPE(1:nb_reactions) = 0
+reactant_1_idx(1:nb_reactions) = 0
+reactant_2_idx(1:nb_reactions) = 0
+RATE_FORMULA(1:nb_reactions) = 0
+REACTION_ID(1:nb_reactions) = 0
+REACTION_SUBSTANCES_ID(1:7,1:nb_reactions) = 0
+REACTION_SUBSTANCES_NAMES(1:7,1:nb_reactions) = ''
+INITIAL_ELEMENTAL_ABUNDANCE(1:NB_PRIME_ELEMENTS) = 0.d0
+PRIME_ELEMENT_IDX(1:NB_PRIME_ELEMENTS) = 0
+species_composition(1:NB_PRIME_ELEMENTS,nb_species) = 0
 
 end subroutine initialize_global_arrays
 

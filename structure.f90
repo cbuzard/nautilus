@@ -71,6 +71,11 @@ if (isDefined) then
   allocate(structure_log_dust_temperature(structure_sample))
   allocate(structure_log_Av(structure_sample))
   
+  structure_time(1:structure_sample) = 0.d0
+  structure_log_density(1:structure_sample) = 0.d0
+  structure_log_gas_temperature(1:structure_sample) = 0.d0
+  structure_log_dust_temperature(1:structure_sample) = 0.d0
+  structure_log_Av(1:structure_sample) = 0.d0
   
   open(10, file=filename, status='old')
   i = 1
