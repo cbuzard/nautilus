@@ -780,19 +780,21 @@ end subroutine get_elemental_abundance
         if (REACTION_SUBSTANCES_NAMES(2,J).EQ.species_name(I)) reactant_2_idx(J)=I
       enddo
 
-      ! === ITYPE 14 - SURFACE REACTIONS
-      if (REACTION_TYPE(J).EQ.14) then
+      ! === ITYPE 14 AND 21 - SURFACE REACTIONS
+      if (REACTION_TYPE(J).EQ.14 .OR. REACTION_TYPE(J).EQ.21) then
         NPATH=0
 
         ! ------ Check for branching
         do K=1,nb_reactions
-          if (((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K))).OR.&
-          ((REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)))) then
-          if (REACTION_SUBSTANCES_NAMES(4,K)(:1).EQ.'J          ') NPATH=NPATH+1
-        endif
-      enddo
+           if(REACTION_TYPE(K).EQ.REACTION_TYPE(J)) THEN
+             if (((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
+                  (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K))).OR.&
+                 ((REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
+                  (REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)))) then
+                if (REACTION_SUBSTANCES_NAMES(4,K)(:1).EQ.'J          ') NPATH=NPATH+1
+             endif
+           endif
+        enddo
 
       ! ------ Branching ratio
       if (NPATH.EQ.0) then

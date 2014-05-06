@@ -719,7 +719,9 @@ end subroutine get_temporal_derivatives
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
       TINDIF(K)=CHF(K)*EXP(-EB(K)/dust_temperature)/nb_sites_per_grain
+      TINDIFCR(K)=CHF(K)*EXP(-EB(K)/TSMAX)/nb_sites_per_grain
       TINEVA(K)=CHF(K)*EXP(-ED(K)/dust_temperature)
+      TINEVACR(K)=CHF(K)*EXP(-ED(K)/TSMAX)
     enddo
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
@@ -793,7 +795,7 @@ end subroutine get_temporal_derivatives
   real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
   ! Locals
-  real(double_precision) :: ACTIV,BARR,DIFF
+  real(double_precision) :: ACTIV,BARR,DIFF,ACTIVCR,BARRCR,DIFFCR
   real(double_precision) :: XNH2,XNCO
   real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
   real(double_precision) :: T300, TI, TSQ
@@ -1022,13 +1024,124 @@ end subroutine get_temporal_derivatives
       ! reaction_rates(J)=0.D0
     enddo
 
+    ! Grain surface reactions (Cosmic Rays) DTEMP=70K
+    ! ====== Rxn ITYPE 21
+    ! ITYPE 21: Grain surface reactions
+    if (type_id_start(21).NE.0) then
+       do J=type_id_start(21),type_id_stop(21)
+            IMOD1=0
+            IMOD2=0
+            BARRCR=1.0D+0
+            ! --------- Calculate activation energy barrier multiplier
+            IF (EA(J).GE.1.0D-40) THEN
+               ACTIVCR=EA(J)/TSMAX
+               ! ------------ Choose fastest of classical or tunnelling
+               IF (ACTIVCR.GT.ACT1(J)) ACTIVCR=ACT1(J)
+               BARRCR=EXP(-ACTIVCR)
+            ENDIF
+
+            ! --------- Thermal hopping diffusion method
+            RDIF1CR(J)=TINDIFCR(reactant_1_idx(J))
+            RDIF2CR(J)=TINDIFCR(reactant_2_idx(J))
+
+            ! --------- Check for JH,JH2
+            IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
+            IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH2) IMOD1=2
+            IF (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH)  IMOD2=1
+            IF (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH2) IMOD2=2
+            !IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJO)  IMOD1=4
+            !IF (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJO)  IMOD2=4
+
+            ! --------- QM for JH,JH2 only - others are too heavy
+            IF (IMOD1+IMOD2.NE.0) THEN
+               ! ------------ QM1 - Tunnelling (if it's faster than thermal)
+               IF (grain_tunneling_diffusion.EQ.1) THEN
+                  IF ((IMOD1.NE.0).AND.&
+                     (RQ1(reactant_1_idx(J)).GT.RDIF1CR(J))) RDIF1CR(J)=RQ1(reactant_1_idx(J))
+                  IF ((IMOD2.NE.0).AND.&
+                     (RQ1(reactant_2_idx(J)).GT.RDIF2CR(J))) RDIF2CR(J)=RQ1(reactant_2_idx(J))
+               ENDIF
+               ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
+               IF (grain_tunneling_diffusion.EQ.2) THEN
+                  IF ((IMOD1.NE.0).AND.&
+                     (RQ2(reactant_1_idx(J)).GT.RDIF1CR(J))) RDIF1CR(J)=RQ2(reactant_1_idx(J))
+                  IF ((IMOD2.NE.0).AND.&
+                     (RQ2(reactant_2_idx(J)).GT.RDIF2CR(J))) RDIF2CR(J)=RQ2(reactant_2_idx(J))
+               ENDIF
+               ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
+               IF (grain_tunneling_diffusion.EQ.3) THEN
+                  IF (IMOD1.NE.0) THEN
+                     IF (RQ1(reactant_1_idx(J)).GT.RDIF1CR(J)) RDIF1CR(J)=RQ1(reactant_1_idx(J))
+                     IF (RQ2(reactant_1_idx(J)).GT.RDIF1CR(J)) RDIF1CR(J)=RQ2(reactant_1_idx(J))
+                  ENDIF
+                  IF (IMOD2.NE.0) THEN
+                     IF (RQ1(reactant_2_idx(J)).GT.RDIF2CR(J)) RDIF2CR(J)=RQ1(reactant_2_idx(J))
+                     IF (RQ2(reactant_2_idx(J)).GT.RDIF2CR(J)) RDIF2CR(J)=RQ2(reactant_2_idx(J))
+                  ENDIF
+               ENDIF
+            ENDIF
+
+            ! --------- Modify according to IMODH switch:
+            IF (IMODH.NE.0) THEN
+               ! ------------ If H+H->H2 is only modified rxn:
+               IF ((IMODH.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) THEN
+                  IMOD1=0
+                  IMOD2=0
+               ENDIF
+
+               ! ------------ If only H is modified:
+               IF ((IMODH.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
+               IF ((IMODH.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
+
+               ! ------------ Set to modify all rates, if selected (just atoms)
+               IF (IMODH.EQ.3) THEN
+                  IF ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JHe        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JC         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JN         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JO         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JS         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JSi        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JFe        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JNa        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JMg        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JP         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JCl        ')) IMOD1=3
+                  IF ((REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH).OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JHe        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JC         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JN         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JO         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JS         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JSi        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JFe        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JNa        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JMg        ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JP         ').OR.&
+                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
+               ENDIF
+
+                  ! ------------ Modify rates (RDIF1 & RDIF2) according to their own evap/acc rates
+                  YMOD1=Y(reactant_1_idx(J))
+                  YMOD2=Y(reactant_2_idx(J))
+                  CALL modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
+            ENDIF
+
+            DIFFCR=RDIF1CR(J)+RDIF2CR(J)
+
+            reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*CRT*A(J)*branching_ratio(J)* &
+                               BARRCR*DIFFCR*GTODN/H_number_density
+
+       enddo
+    endif
+
     ! ====== Rxn ITYPE 19 - 20
     ! ITYPE 19: Photodissociations by UV photons on grain surfaces
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
     do J=type_id_start(19),type_id_stop(20)
       reaction_rates(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
     enddo
-    
+
 ! ============================================================
 ! Photodesorption, when used appears through ITYPES 66 and 67
 ! ============================================================
@@ -1187,7 +1300,100 @@ end subroutine get_temporal_derivatives
 
   return
   end subroutine modify_specific_rates
-  
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author
+!> Laura Reboussin
+!
+!> @date 2014
+!
+! DESCRIPTION:
+!> @brief Modify some reaction rates on the grain surface (itype=21) in
+!! various conditions. Test to estimates the fastest process and replace them.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  SUBROUTINE modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
+
+  use global_variables
+
+  implicit none
+
+  integer :: J,IMOD1,IMOD2
+  real(kind=8) :: BARRCR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
+
+  EX1(J)=0.0D+0
+  EX2(J)=0.0D+0
+
+  ! --- Check value of x = t_acc/t_evap
+  ! TINEVA = 1/t_evap
+  ! TINACC = 1/t_acc
+  IF (TINACC(reactant_1_idx(J)).GT.0.0D+0) THEN
+     EX1(J)=TINEVACR(reactant_1_idx(J))/TINACC(reactant_1_idx(J))
+  ENDIF
+  IF (TINACC(reactant_2_idx(J)).GT.0.0D+0) THEN
+     EX2(J)=TINEVACR(reactant_2_idx(J))/TINACC(reactant_2_idx(J))
+  ENDIF
+  ! Hence x = 0 if t_evap or t_acc = 0
+
+  ! --- Assign max rates
+
+  IF (BARRCR.EQ.1.0D+0) THEN
+     IF (IMOD1.NE.0) THEN
+        IF (EX1(J).LT.1.0D+0) THEN
+           IF (RDIF1CR(J).GT.TINACC(reactant_1_idx(J))) RDIF1CR(J)=TINACC(reactant_1_idx(J))
+        ENDIF
+        IF (EX1(J).GE.1.0D+0) THEN
+           IF (RDIF1CR(J).GT.TINEVACR(reactant_1_idx(J))) RDIF1CR(J)=TINEVACR(reactant_1_idx(J))
+        ENDIF
+     ENDIF
+
+     IF (IMOD2.NE.0) THEN
+        IF (EX2(J).LT.1.0D+0) THEN
+           IF (RDIF2CR(J).GT.TINACC(reactant_2_idx(J))) RDIF2CR(J)=TINACC(reactant_2_idx(J))
+        ENDIF
+        IF (EX2(J).GE.1.0D+0) THEN
+           IF (RDIF2CR(J).GT.TINEVACR(reactant_2_idx(J))) RDIF2CR(J)=TINEVACR(reactant_2_idx(J))
+        ENDIF
+     ENDIF
+  ENDIF
+
+  ! --- Species rate to compare chosen by fastest diffusion rate
+  IF (BARRCR.NE.1.0D+0) THEN
+     PICK=0
+
+     TESTREF1=TINACC(reactant_1_idx(J))
+     IF (EX1(J).GE.1.0D+0) TESTREF1=TINEVACR(reactant_1_idx(J))
+     TESTREF2=TINACC(reactant_2_idx(J))
+     IF (EX2(J).GE.1.0D+0) TESTREF2=TINEVACR(reactant_2_idx(J))
+
+     IF (RDIF1CR(J).GE.RDIF2CR(J)) THEN
+        TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR*YMOD2*GTODN
+        IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR
+        IF (TESTNUM.GT.TESTREF1) PICK=1
+     ENDIF
+     IF (RDIF2CR(J).GT.RDIF1CR(J)) THEN
+        TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR*YMOD1*GTODN
+        IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR
+        IF (TESTNUM.GT.TESTREF2) PICK=2
+     ENDIF
+
+     IF (PICK.EQ.1) THEN
+        RDIF1CR(J)=TESTREF1/BARRCR/YMOD2/GTODN
+        IF (YMOD2*GTODN.LT.1.0D+0) RDIF1CR(J)=TESTREF1/BARRCR
+        RDIF2CR(J)=0.0D+0
+     ENDIF
+
+     IF (PICK.EQ.2) THEN
+        RDIF2CR(J)=TESTREF2/BARRCR/YMOD1/GTODN
+        IF (YMOD1*GTODN.LT.1.0D+0) RDIF2CR(J)=TESTREF2/BARRCR
+        RDIF1CR(J)=0.0D+0
+     ENDIF
+
+  ENDIF
+
+RETURN
+END SUBROUTINE modify_specific_rates_cr
+
 ! ======================================================================
 ! ======================================================================
       SUBROUTINE PHOTODESSPECASE(J,SUMLAY)
