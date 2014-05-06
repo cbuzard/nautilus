@@ -736,23 +736,6 @@ end subroutine get_temporal_derivatives
     enddo
 
 
-    ! Photodesorption, when used appears through ITYPES 66 and 67
-    if (type_id_start(66).ne.0) then
-      ! ========= Rxn ITYPE 66
-      ! ITYPE 66: CO photodesorption by external UV
-      ! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
-      do j=type_id_start(66),type_id_stop(66)
-        reaction_rates(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*exp(-2.*visual_extinction) 
-      enddo
-
-      ! ========= Rxn ITYPE 67
-      ! ITYPE 67: CO photodesorption by CR generated UV
-      do j=type_id_start(67),type_id_stop(67)
-        reaction_rates(J)=A(J)/SITE_DENSITY*1.d4
-      enddo
-
-    endif
-
     if (type_id_start(98).ne.0) then
       ! ========= Rxn ITYPE 98 test the storage of H2S under a refractory form
       ! ITYPE 98: storage of H2S under a refractory form
@@ -817,6 +800,14 @@ end subroutine get_temporal_derivatives
   real(double_precision) :: YMOD1, YMOD2
   integer IMOD1,IMOD2
   integer :: j, l
+  REAL(double_precision) :: XNDTOT         ! Sum of all abundances on grain surfaces
+                                           ! Used to compute the photodesorption by FUV photons
+                                           ! proposed by Hassel,G and following Oberg mesurments
+  REAL(double_precision) :: MLAY           ! Number of layers from which species can desorb
+  REAL(double_precision) :: SUMLAY         ! Total number of layers on the grain surface
+  REAL(double_precision) :: UVCR           ! Scaling factor for CR generated UV
+                                           ! The reference used is 1.3x10^-17 s-1
+
 
   T300=gas_temperature/300.D+0
   TI=1.0d00/gas_temperature
@@ -824,6 +815,20 @@ end subroutine get_temporal_derivatives
 
   XNH2=Y(indH2)
   XNCO=Y(indCO)
+  
+  XNDTOT = 0.0E+00
+  DO J = nb_gaseous_species+1,nb_species
+    IF(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
+                                                  & "grain surface include gas-phase species"
+    XNDTOT = XNDTOT + Y(J)
+  ENDDO
+
+  MLAY = 5.0E+00
+  SUMLAY = XNDTOT*GTODN/nb_sites_per_grain
+  UVCR = 1.300D-17 / CR_IONISATION_RATE
+
+  !PRINT*, MLAY, SUMLAY
+
 
   ! Density/Av-dependent==================================================
   !
@@ -1023,6 +1028,37 @@ end subroutine get_temporal_derivatives
     do J=type_id_start(19),type_id_stop(20)
       reaction_rates(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
     enddo
+    
+! ============================================================
+! Photodesorption, when used appears through ITYPES 66 and 67
+! ============================================================
+! ========= Rxn ITYPE 66
+! ITYPE 66: Photodesorption by external UV
+! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
+    IF (type_id_start(66).NE.0) THEN
+        DO J = type_id_start(66),type_id_stop(66)
+!---- Used for all species
+           reaction_rates(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
+!---- Specific cases
+           CALL PHOTODESSPECASE(J,SUMLAY)
+!---- If there is more than MLAY on the grain surface, then we take into account that only
+!     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
+           IF(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
+        ENDDO
+    ENDIF
+
+! ========= Rxn ITYPE 67
+! ITYPE 67: Photodesorption by CR generated UV
+    IF (type_id_start(67).NE.0) THEN
+        DO J = type_id_start(67),type_id_stop(67)
+!---- Used for all species
+           reaction_rates(J)=A(J)/SITE_DENSITY*1.d4*UVCR
+           CALL PHOTODESSPECASE(J,SUMLAY)
+!---- If there is more than MLAY on the grain surface, then we take into account that only
+!     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
+           IF(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
+        ENDDO
+    ENDIF
 
     ! Useful for testing
     ! To disable some reaction types
@@ -1151,5 +1187,66 @@ end subroutine get_temporal_derivatives
 
   return
   end subroutine modify_specific_rates
+  
+! ======================================================================
+! ======================================================================
+      SUBROUTINE PHOTODESSPECASE(J,SUMLAY)
+! Treat special cases of photodesorption such as CO2, CO, H2O, CH3OH and N2
+! Data from Oberg et al. 2009:
+!      a - A&A, 496, 281-293
+!      b - ApJ, 693, 1209-1218
+!      c - A&A, 504, 891-913
+
+      use global_variables
+
+      IMPLICIT NONE
+
+      INTEGER, INTENT(IN) :: J
+      REAL(KIND=8), INTENT(IN) :: SUMLAY
+      REAL(KIND=8) :: LTD
+      REAL(KIND=8) :: fH2O
+
+!------ Photodesorption of CO2: photodesorbs as either CO2 or CO
+      IF (dust_temperature.LE.3.5E+01) THEN
+          IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
+              reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / A(J)
+          ENDIF
+          IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') THEN
+              reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / A(J)
+          ENDIF
+      ELSEIF(dust_temperature.GT.3.5E+01) THEN
+          IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
+              reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / A(J)
+          ENDIF
+          IF(REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') THEN
+             reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / A(J)
+          ENDIF
+      ENDIF
+!------ Photodesorption of CO
+      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') THEN
+         reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / A(J)
+      ENDIF
+!------ Photodesorption of N2
+      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') THEN
+         reaction_rates(J) = reaction_rates(J) * 4.0E-04 / A(J)
+      ENDIF
+!------ Photodesorption of CH3OH
+      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') THEN
+         reaction_rates(J) = reaction_rates(J) * 2.1E-03 / A(J)
+      ENDIF
+!------ Photodesorption of H2O
+      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
+         LTD = 6.0E-01 + 2.4E-02 * dust_temperature
+         fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
+         reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
+                 & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / A(J)
+         IF(REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') THEN
+            reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
+         ENDIF
+      ENDIF
+
+      END SUBROUTINE PHOTODESSPECASE
+
+! ======================================================================
 
 end module ode_solver
