@@ -1211,14 +1211,16 @@ end subroutine get_temporal_derivatives
           IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
               reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / A(J)
           ENDIF
-          IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') THEN
+          IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
+             (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
               reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / A(J)
           ENDIF
       ELSEIF(dust_temperature.GT.3.5E+01) THEN
           IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
               reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / A(J)
           ENDIF
-          IF(REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') THEN
+          IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
+             (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
              reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / A(J)
           ENDIF
       ENDIF
@@ -1240,7 +1242,8 @@ end subroutine get_temporal_derivatives
          fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
          reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
                  & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / A(J)
-         IF(REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') THEN
+         IF((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
+            (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) THEN
             reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
          ENDIF
       ENDIF
