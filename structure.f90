@@ -65,6 +65,14 @@ if (isDefined) then
   
   call get_linenumber(filename=filename, nb_lines=structure_sample)
   
+  ! If by any chance the routine is run several times, this test is here to avoid bugs
+  if (allocated(structure_time)) then
+    deallocate(structure_time)
+    deallocate(structure_log_density)
+    deallocate(structure_log_gas_temperature)
+    deallocate(structure_log_dust_temperature)
+    deallocate(structure_log_Av)
+  end if
   allocate(structure_time(structure_sample))
   allocate(structure_log_density(structure_sample))
   allocate(structure_log_gas_temperature(structure_sample))
