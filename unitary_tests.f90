@@ -219,8 +219,13 @@ program unitary_tests
     write(10,*) '# time (Myr), av [mag], density [part/cm^3], gas_temperature (K), grain_temperature (K)'
     do j=1,structure_sample
       
-      write(10,*) structure_time(j)/(1e6*YEAR), 10.d0**(structure_log_Av(j)), 10.d0**(structure_log_density(j)), &
-                  10.d0**(structure_log_gas_temperature(j)), 10.d0**(structure_log_dust_temperature(j))
+      if (read_dust) then
+        write(10,*) structure_time(j)/(1e6*YEAR), 10.d0**(structure_log_Av(j)), 10.d0**(structure_log_density(j)), &
+                    10.d0**(structure_log_gas_temperature(j)), 10.d0**(structure_log_dust_temperature(j))
+      else
+        write(10,*) structure_time(j)/(1e6*YEAR), 10.d0**(structure_log_Av(j)), 10.d0**(structure_log_density(j)), &
+                    10.d0**(structure_log_gas_temperature(j))
+      endif
       ! if the grain temperature is not defined in the structure_evolution.dat file, grain temperature will appear to be 1K 
       !! since the log will be set to 0
     end do
@@ -230,9 +235,8 @@ program unitary_tests
     open(10, file="test_av_read.gnuplot")
     open(11, file="test_density_read.gnuplot")
     open(12, file="test_gas_temperature_read.gnuplot")
-    open(13, file="test_grain_temperature_read.gnuplot")
     
-    do j=10,13
+    do j=10,12
       write(j,*) "set terminal pdfcairo enhanced"
     end do
     
@@ -250,12 +254,7 @@ program unitary_tests
     write(12,*) 'set ylabel "Temperature [K]"'
     write(12,*) 'set logscale y'
     
-    write(13,*) '!rm "test_grain_temperature_read.pdf"'
-    write(13,*) "set output 'test_grain_temperature_read.pdf'"
-    write(13,*) 'set ylabel "Temperature [K]"'
-    write(13,*) 'set logscale y'
-    
-    do j=10,13
+    do j=10,12
       write(j,*) 'set xlabel "Time [Myr]"'
       write(j,*) 'set grid'
       write(j,*) 'set logscale x'
@@ -269,24 +268,39 @@ program unitary_tests
 
     write(12,*) 'plot "test_time_read.dat" using 1:4 with points linetype 1 pointtype 2 title "Read profile",\'
     write(12,*) '     "structure_evolution.dat" using 1:(10**$4) with lines title "Profile"'
-
-    select case(GRAIN_TEMPERATURE_TYPE)
-    case('gas')
-      write(13,*) 'plot "test_time_read.dat" using 1:5 with points linetype 1 pointtype 2 title "Read profile",\'
-      write(13,*) '     "structure_evolution.dat" using 1:(10**$4) with lines title "Profile"'
-    
-    case('table')
-      write(13,*) 'plot "test_time_read.dat" using 1:5 with points linetype 1 pointtype 2 title "Read profile",\'
-      write(13,*) '     "structure_evolution.dat" using 1:(10**$5) with lines title "Profile"'
-
-    case default
-      write(13,*) 'plot "test_time_read.dat" using 1:5 with points linetype 1 pointtype 2 title "Read profile"'
-    end select
     
     close(10)
     close(11)
     close(12)
-    close(13)
+    
+    if (read_dust) then
+      open(13, file="test_grain_temperature_read.gnuplot")
+      
+      write(13,*) "set terminal pdfcairo enhanced"
+      write(13,*) '!rm "test_grain_temperature_read.pdf"'
+      write(13,*) "set output 'test_grain_temperature_read.pdf'"
+      write(13,*) 'set ylabel "Temperature [K]"'
+      write(13,*) 'set logscale y'
+      write(13,*) 'set xlabel "Time [Myr]"'
+      write(13,*) 'set grid'
+      write(13,*) 'set logscale x'
+      
+      select case(GRAIN_TEMPERATURE_TYPE)
+      case('gas')
+        write(13,*) 'plot "test_time_read.dat" using 1:5 with points linetype 1 pointtype 2 title "Read profile",\'
+        write(13,*) '     "structure_evolution.dat" using 1:(10**$4) with lines title "Profile"'
+      
+      case('table')
+        write(13,*) 'plot "test_time_read.dat" using 1:5 with points linetype 1 pointtype 2 title "Read profile",\'
+        write(13,*) '     "structure_evolution.dat" using 1:(10**$5) with lines title "Profile"'
+
+      case default
+        write(13,*) 'plot "test_time_read.dat" using 1:5 with points linetype 1 pointtype 2 title "Read profile"'
+      end select
+      
+      close(13)
+    endif
+    
   
   end subroutine test_read_time_evolution
 

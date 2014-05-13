@@ -17,12 +17,17 @@ use global_variables
 implicit none
 
 integer :: structure_sample !< the number of points from structure_evolution.dat, about the time evolution of the physical structure properties
+
 real(double_precision), allocatable, dimension(:) :: structure_time !< dim(structure_sample) time [s] read from structure_evolution.dat
+real(double_precision) :: structure_sample_step !< time [s] between each sample point for the structure evolution
+
 real(double_precision), allocatable, dimension(:) :: structure_log_Av !< dim(structure_sample) log10(Av) [log10(mag)] read from structure_evolution.dat
 real(double_precision), allocatable, dimension(:) :: structure_log_density !< dim(structure_sample) log10(density) [log10(part/cm^3)] read from structure_evolution.dat
 real(double_precision), allocatable, dimension(:) :: structure_log_gas_temperature !< dim(structure_sample) log10(gas temperature) [log10(K)] read from structure_evolution.dat
+
+logical :: read_dust !< If dust temperature must be read directly from the data file (or not)
 real(double_precision), allocatable, dimension(:) :: structure_log_dust_temperature !< dim(structure_sample) log10(dust temperature) [log10(K)] read from structure_evolution.dat
-real(double_precision) :: structure_sample_step !< time [s] between each sample point for the structure evolution
+
 
 contains
 
@@ -55,6 +60,7 @@ character(len=80) :: line
 character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
 integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
 integer :: error !< to store the state of a read instruction
+integer :: nb_columns
 
 integer :: i !< loop index
 logical :: isDefined
@@ -64,26 +70,47 @@ inquire(file=filename, exist=isDefined)
 if (isDefined) then
   
   call get_linenumber(filename=filename, nb_lines=structure_sample)
+  nb_columns = get_nb_columns(filename)
+  
+  if (nb_columns.ge.5) then
+    read_dust = .true.
+  else
+    read_dust = .false.
+  endif
   
   ! If by any chance the routine is run several times, this test is here to avoid bugs
   if (allocated(structure_time)) then
     deallocate(structure_time)
     deallocate(structure_log_density)
     deallocate(structure_log_gas_temperature)
-    deallocate(structure_log_dust_temperature)
     deallocate(structure_log_Av)
   end if
   allocate(structure_time(structure_sample))
   allocate(structure_log_density(structure_sample))
   allocate(structure_log_gas_temperature(structure_sample))
-  allocate(structure_log_dust_temperature(structure_sample))
   allocate(structure_log_Av(structure_sample))
+  
   
   structure_time(1:structure_sample) = 0.d0
   structure_log_density(1:structure_sample) = 0.d0
   structure_log_gas_temperature(1:structure_sample) = 0.d0
-  structure_log_dust_temperature(1:structure_sample) = 0.d0
   structure_log_Av(1:structure_sample) = 0.d0
+  
+  if (read_dust) then
+    if (GRAIN_TEMPERATURE_TYPE.ne.'table') then
+      write(Error_unit, *) 'Error: The grain temperature column exist'
+      write(Error_unit, *) 'in structure_evolution.dat but '
+      write(Error_unit, *) 'GRAIN_TEMPERATURE_TYPE = ',trim(GRAIN_TEMPERATURE_TYPE)
+      call exit(10)
+    endif
+    
+    if (allocated(structure_log_dust_temperature)) then
+      deallocate(structure_log_dust_temperature)
+    endif
+    
+    allocate(structure_log_dust_temperature(structure_sample))
+    structure_log_dust_temperature(1:structure_sample) = 0.d0
+  endif
   
   open(10, file=filename, status='old')
   i = 1
@@ -100,7 +127,12 @@ if (isDefined) then
     end if
     
     if (line.ne.'') then
-      read(line, *) structure_time(i), structure_log_Av(i), structure_log_density(i), structure_log_gas_temperature(i)
+      if (read_dust) then
+        read(line, *) structure_time(i), structure_log_Av(i), structure_log_density(i), structure_log_gas_temperature(i), &
+                      structure_log_dust_temperature(i)
+      else
+        read(line, *) structure_time(i), structure_log_Av(i), structure_log_density(i), structure_log_gas_temperature(i)
+      endif
       i = i + 1
     endif
   enddo

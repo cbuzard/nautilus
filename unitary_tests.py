@@ -151,6 +151,7 @@ if (returncode != 0):
 
 # We run the gnuplot scripts we wants
 scripts = glob.glob("*."+GNUPLOT_EXTENSION)
+scripts.sort()
 nb_scripts = len(scripts)
 
 # If the action is not given in parameters, we ask the user through standard input
