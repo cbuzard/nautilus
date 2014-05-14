@@ -139,6 +139,26 @@ integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_start !< list of id 
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_stop !< list of id stop for each reaction type given their type number
 
 character(len=80) :: GRAIN_TEMPERATURE_TYPE = 'fixed' !< ('gas', 'computed', 'table', 'fixed') How the grain temperature is computed in the code
+procedure(get_grain_temperature_interface), pointer :: get_grain_temperature !< Pointer toward the routine that will calculate grain temperature
+
+abstract interface 
+  subroutine get_grain_temperature_interface(time, gas_temperature, grain_temperature)
+  import
+  
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
+  real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  
+  ! Outputs
+  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
+  !------------------------------------------------------------------------------
+  
+  end subroutine get_grain_temperature_interface
+end interface
+
+
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION
 integer :: CONSERVATION_TYPE

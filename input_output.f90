@@ -479,6 +479,9 @@ if (isDefined) then
       
       case('is_structure_evolution')
         read(value, '(i2)') IS_STRUCTURE_EVOLUTION
+      
+      case('grain_temperature_type')
+        read(value, *) GRAIN_TEMPERATURE_TYPE
          
       case default
         write(*,*) 'Warning: An unknown parameter has been found'
@@ -538,6 +541,9 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
                         &time, values come from structure_evolution.dat file that must exists'
+  write(10,'(a,a,a)') 'grain_temperature_type = ', GRAIN_TEMPERATURE_TYPE, ' ! fixed, gas or table &
+                        &fixed: Tgrain = Tgrain_initial ; gas: Tgrain=Tgas ; table: Tgrain is interpolated from &
+                        &structure_evolution.dat data file (5th optional column)'
   write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &

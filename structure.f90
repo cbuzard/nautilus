@@ -215,7 +215,7 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature, gr
     gas_temperature = 10.0d0**(structure_log_gas_temperature(structure_sample))
   end if
   
-  call get_grain_temperature(gas_temperature=gas_temperature, grain_temperature=grain_temperature)
+  call get_grain_temperature(time=time, gas_temperature=gas_temperature, grain_temperature=grain_temperature)
 
   return
 end subroutine get_structure_properties_table
@@ -250,7 +250,7 @@ subroutine get_structure_properties_fixed(time, Av, density, gas_temperature, gr
   Av = INITIAL_VISUAL_EXTINCTION
   gas_temperature = initial_gas_temperature
   
-  call get_grain_temperature(gas_temperature=gas_temperature, grain_temperature=grain_temperature)
+  call get_grain_temperature(time=time, gas_temperature=gas_temperature, grain_temperature=grain_temperature)
 
   return
 end subroutine get_structure_properties_fixed
@@ -266,11 +266,12 @@ end subroutine get_structure_properties_fixed
 !! the gas temperature
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_grain_temperature_gas(gas_temperature, grain_temperature)
+subroutine get_grain_temperature_gas(time, gas_temperature, grain_temperature)
 
   implicit none
 
   ! Inputs
+  real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
   real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
   
   ! Outputs
@@ -293,11 +294,12 @@ end subroutine get_grain_temperature_gas
 !! dust temperature
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_grain_temperature(gas_temperature, grain_temperature)
+subroutine get_grain_temperature_fixed(time, gas_temperature, grain_temperature)
 
   implicit none
 
   ! Inputs
+  real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
   real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
   
   ! Outputs
@@ -307,5 +309,33 @@ subroutine get_grain_temperature(gas_temperature, grain_temperature)
   grain_temperature = initial_dust_temperature
   
   return
-end subroutine get_grain_temperature
+end subroutine get_grain_temperature_fixed
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Routine to get the grain temperature, here interpolated from 
+!! the data read in structure_evolution.dat
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_grain_temperature_table(time, gas_temperature, grain_temperature)
+
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
+  real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  
+  ! Outputs
+  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
+  !------------------------------------------------------------------------------
+  
+  grain_temperature = gas_temperature
+  
+  return
+end subroutine get_grain_temperature_table
 end module structure
