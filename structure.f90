@@ -334,8 +334,31 @@ subroutine get_grain_temperature_table(time, gas_temperature, grain_temperature)
   real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
   !------------------------------------------------------------------------------
   
-  grain_temperature = gas_temperature
-  
+  ! Local
+  integer :: closest_low_id ! the index of the first closest lower value of radius regarding the radius value given in parameter of the subroutine. 
+  real(double_precision) :: t1, t2, log_y1, log_y2
+  real(double_precision) :: interpolation_tmp ! Tmp value that contain a small part of the linear interpolation, to avoid computing it three times
+  !------------------------------------------------------------------------------
+
+  if (time .lt. structure_time(structure_sample)) then
+    
+    ! in the range
+    closest_low_id = 1 + int((time - structure_time(1)) / structure_sample_step)
+    
+    ! We get the closest times (left and right) from the current one
+    t1 = structure_time(closest_low_id)
+    t2 = structure_time(closest_low_id + 1)
+    
+    interpolation_tmp = (time - t2) / (t1 - t2)
+    
+    ! For the grain temperature
+    log_y1 = structure_log_dust_temperature(closest_low_id)
+    log_y2 = structure_log_dust_temperature(closest_low_id + 1)
+    grain_temperature = 10.0d0**(log_y2 + (log_y1 - log_y2) * interpolation_tmp)
+    
+  else if (time .ge. structure_time(structure_sample)) then
+    grain_temperature = 10.0d0**(structure_log_dust_temperature(structure_sample))
+  end if  
   return
 end subroutine get_grain_temperature_table
 end module structure
