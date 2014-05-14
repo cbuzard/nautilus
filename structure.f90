@@ -183,7 +183,7 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature, gr
   real(double_precision) :: interpolation_tmp ! Tmp value that contain a small part of the linear interpolation, to avoid computing it three times
   !------------------------------------------------------------------------------
 
-  if (time .lt. structure_time(structure_sample-1)) then
+  if (time .lt. structure_time(structure_sample)) then
     
     ! in the range
     closest_low_id = 1 + int((time - structure_time(1)) / structure_sample_step)
@@ -209,7 +209,7 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature, gr
     log_y2 = structure_log_gas_temperature(closest_low_id + 1)
     gas_temperature = 10.0d0**(log_y2 + (log_y1 - log_y2) * interpolation_tmp)
     
-  else if (time .ge. structure_time(structure_sample-1)) then
+  else if (time .ge. structure_time(structure_sample)) then
     density = 10.0d0**(structure_log_density(structure_sample))
     Av = 10.0d0**(structure_log_Av(structure_sample))
     gas_temperature = 10.0d0**(structure_log_gas_temperature(structure_sample))
