@@ -143,6 +143,9 @@ if (isModifs):
 # We run the unitary tests
 os.chdir(SIMULATION_FOLDER)
 
+# We delete the old gnuplot scripts
+run("rm *.gnuplot")
+
 (process_stdout, process_stderr, returncode) = run("../unitary_tests")
 print(process_stdout)
 
