@@ -183,8 +183,11 @@ else:
 # We run gnuplot for every script needed. 
 for index in indexes:
   script = scripts[index]
-
+  sys.stdout.write("Running %s...\r" % script)
+  sys.stdout.flush()
   (stdout, stderr, returncode) = run("gnuplot "+script)
+  sys.stdout.write("Running %s...OK\n" % script)
+  sys.stdout.flush()
 
 # We only display the output file for the last script (in order to display only one graphic if we choose to run them all
 output_file = getOutput(script)
