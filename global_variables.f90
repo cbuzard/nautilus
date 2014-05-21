@@ -27,6 +27,7 @@ real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant i
 real(double_precision), parameter :: PI = 3.1415926535898d0 !< The number Pi
 real(double_precision), parameter :: H_BARRE = 1.054571628d-27 !< Reduced Planck constant h/2*pi in CGS (g cm2 s-1)
 real(double_precision), parameter :: AMU = 1.66053892d-24 !< Atomic mass unit in g
+real(double_precision), parameter :: ELECTRON_MASS = 0.000548579909d0 !< Electron mass in AMU (close to 1/1836)
 real(double_precision), parameter :: AVOGADRO = 6.02214129d23 !< avogadro number : number of atom in 1 mol
 real(double_precision), parameter :: YEAR = 3.15576d7 !< one year in seconds
 real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in cm (mean earth-sun distance)
@@ -112,15 +113,15 @@ real(double_precision) :: sticking_coeff_neutral
 real(double_precision) :: sticking_coeff_positive
 real(double_precision) :: sticking_coeff_negative
 real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
-real(double_precision) :: H_number_density !< Total H number density (both H and H2)
-real(double_precision) :: initial_gas_density
+real(double_precision) :: H_number_density !< [part/cm^3] Total H number density (both H and H2), representing the total gas density
+real(double_precision) :: initial_gas_density !< [part/cm^3] initial gas density of the structure
 real(double_precision) :: gas_temperature !< current gas temperature [K]
 real(double_precision) :: initial_gas_temperature !< initial gas temperature [K], simulation parameter
 real(double_precision) :: dust_temperature !< current dust temperature [K]
 real(double_precision) :: initial_dust_temperature !< initial dust temperature [K], simulation parameter
-real(double_precision) :: visual_extinction !< visual extinction of the molecular cloud (or other astronomical object). 
+real(double_precision) :: visual_extinction !< visual extinction [mag] of the molecular cloud (or other astronomical object). 
 !! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
-real(double_precision) :: INITIAL_VISUAL_EXTINCTION
+real(double_precision) :: INITIAL_VISUAL_EXTINCTION !< initial visual extinction [mag] 
 real(double_precision) :: CR_IONISATION_RATE
 real(double_precision) :: UV_FLUX
 real(double_precision) :: SITE_SPACING
@@ -141,11 +142,54 @@ integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reac
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_start !< list of id start for each reaction type given their type number
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_stop !< list of id stop for each reaction type given their type number
 
+character(len=80) :: GRAIN_TEMPERATURE_TYPE = 'fixed' !< ('gas', 'computed', 'table', 'fixed') How the grain temperature is computed in the code
+procedure(get_grain_temperature_interface), pointer :: get_grain_temperature !< Pointer toward the routine that will calculate grain temperature
+
+abstract interface 
+  subroutine get_grain_temperature_interface(time, gas_temperature, grain_temperature)
+  import
+  
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
+  real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  
+  ! Outputs
+  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
+  !------------------------------------------------------------------------------
+  
+  end subroutine get_grain_temperature_interface
+end interface
+
+
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION
 integer :: CONSERVATION_TYPE
 integer :: IMODH
 integer :: IS_ABSORPTION
+
+! About IS_STRUCTURE_EVOLUTION, describing the evolution of the physical structure properties with time
+integer :: IS_STRUCTURE_EVOLUTION = 0 !< if 1, physical structure properties evolve with time. They come from structure_evolution.dat file, containing
+!! {time [Myr], number density [part/cm3], temperature [K] and Av [mag]} for the structure
+procedure(get_structure_properties_interface), pointer :: get_structure_properties
+
+abstract interface 
+  subroutine get_structure_properties_interface(time, Av, density, gas_temperature, grain_temperature)
+    import 
+    
+    implicit none
+  ! Inputs
+  real(double_precision), intent(in) :: time !<[in] Current time of the simulation [s]
+  
+  ! Outputs
+  real(double_precision), intent(out) :: Av !<[out] Visual extinction [mag]
+  real(double_precision), intent(out) :: gas_temperature !<[out] gas temperature [K]
+  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
+  real(double_precision), intent(out) :: density !<[out] gas density [part/cm^3]
+  
+  end subroutine get_structure_properties_interface
+end interface
 
 ! About the optimization so that, for each species, we only check the reactions we know the species is involved.
 integer :: max_reactions_same_species !< Maximum number of reactions in which any species will be involved. Used to set the array 'relevant_reactions'
@@ -262,7 +306,46 @@ allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
 
+species_name(1:nb_species) = ''
+abundances(1:nb_species) = 0.d0
+SPECIES_MASS(1:nb_species) = 0.d0
+tindif(1:nb_species) = 0.d0
+tinacc(1:nb_species) = 0.d0
+tineva(1:nb_species) = 0.d0
+ed(1:nb_species) = 0.d0
+eb(1:nb_species) = 0.d0
+deb(1:nb_species) = 0.d0
+dhf(1:nb_species) = 0.d0
+chf(1:nb_species) = 0.d0
+condsp(1:nb_species) = 0.d0
+rq1(1:nb_species) = 0.d0
+rq2(1:nb_species) = 0.d0
+SPECIES_CHARGE(1:nb_species) = 0
+nb_reactions_using_species(1:nb_species) = 0
 
+branching_ratio(1:nb_reactions) = 0.d0
+a(1:nb_reactions) = 0.d0
+b(1:nb_reactions) = 0.d0
+c(1:nb_reactions) = 0.d0
+reaction_rates(1:nb_reactions) = 0.d0
+rdif1(1:nb_reactions) = 0.d0
+rdif2(1:nb_reactions) = 0.d0
+ex1(1:nb_reactions) = 0.d0
+ex2(1:nb_reactions) = 0.d0
+ea(1:nb_reactions) = 0.d0
+tmin(1:nb_reactions) = 0.d0
+tmax(1:nb_reactions) = 0.d0
+act1(1:nb_reactions) = 0.d0
+REACTION_TYPE(1:nb_reactions) = 0
+reactant_1_idx(1:nb_reactions) = 0
+reactant_2_idx(1:nb_reactions) = 0
+RATE_FORMULA(1:nb_reactions) = 0
+REACTION_ID(1:nb_reactions) = 0
+REACTION_SUBSTANCES_ID(1:7,1:nb_reactions) = 0
+REACTION_SUBSTANCES_NAMES(1:7,1:nb_reactions) = ''
+INITIAL_ELEMENTAL_ABUNDANCE(1:NB_PRIME_ELEMENTS) = 0.d0
+PRIME_ELEMENT_IDX(1:NB_PRIME_ELEMENTS) = 0
+species_composition(1:NB_PRIME_ELEMENTS,nb_species) = 0
 
 end subroutine initialize_global_arrays
 

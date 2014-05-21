@@ -476,6 +476,12 @@ if (isDefined) then
       ! Initial abundances
       case('minimum_initial_abundance')
         read(value, '(e12.6)') MINIMUM_INITIAL_ABUNDANCE
+      
+      case('is_structure_evolution')
+        read(value, '(i2)') IS_STRUCTURE_EVOLUTION
+      
+      case('grain_temperature_type')
+        read(value, *) GRAIN_TEMPERATURE_TYPE
          
       case default
         write(*,*) 'Warning: An unknown parameter has been found'
@@ -491,6 +497,12 @@ end if
 
 START_TIME = START_TIME * YEAR
 STOP_TIME = STOP_TIME * YEAR
+
+if ((GRAIN_TEMPERATURE_TYPE.eq.'table').and.(IS_STRUCTURE_EVOLUTION.eq.0)) then
+  write(Error_unit,*) 'Error: Grain temperature cannot be read from "structure_evolution.dat" if the &
+                      &"IS_STRUCTURE_EVOLUTION" flag is not activated'
+  call exit(8)
+endif
 
 return
 end subroutine read_parameters_in
@@ -527,6 +539,11 @@ use global_variables
   write(10,'(a)') "!*          Switches         *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
+  write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
+                        &time, values come from structure_evolution.dat file that must exists'
+  write(10,'(a,a,a)') 'grain_temperature_type = ', GRAIN_TEMPERATURE_TYPE, ' ! fixed, gas or table &
+                        &fixed: Tgrain = Tgrain_initial ; gas: Tgrain=Tgas ; table: Tgrain is interpolated from &
+                        &structure_evolution.dat data file (5th optional column)'
   write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
@@ -773,6 +790,9 @@ call get_linenumber(filename, nb_lines)
 allocate(temp_abundances(nb_lines))
 allocate(temp_names(nb_lines))
 
+temp_abundances(1:nb_lines) = 0.d0
+temp_names(1:nb_lines) = ''
+
   !------------------------------------------------------------------------------
   
 inquire(file=filename, exist=isDefined)
@@ -894,6 +914,9 @@ endif
 ! We allocate global variables
 allocate(element_name(NB_PRIME_ELEMENTS))
 allocate(elemental_mass(NB_PRIME_ELEMENTS))
+
+element_name(1:NB_PRIME_ELEMENTS) = ''
+elemental_mass(1:NB_PRIME_ELEMENTS) = 0.d0
 
 if (isDefined) then
 

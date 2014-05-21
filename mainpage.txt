@@ -134,17 +134,25 @@ One file per species in a folder named <b>ab</b>.
 
 @section section_errors Errors
 
-Error 1: Missing input file.
+Error  1: Missing input file.
+       
+Error  2: Species name in reaction do not match expected list of species
+       
+Error  3: More elements than NB_PRIME_ELEMENTS
+       
+Error  4: When reordering reactions, it seems that some reactions misses or not expected
+       
+Error  5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code
+       
+Error  6: The number of prime elements in input files *_species.in do not match with the real one coming from element.in
+       
+Error  7: The file "time_evolution.dat" does not exist.
+       
+Error  8: Grain temperature cannot be read from "structure_evolution.dat" if the "structure_evolution" flag is not activated.
+       
+Error  9: IS_STRUCTURE_EVOLUTION has an undefined value. 
 
-Error 2: Species name in reaction do not match expected list of species
-
-Error 3: More elements than NB_PRIME_ELEMENTS
-
-Error 4: When reordering reactions, it seems that some reactions misses or not expected
-
-Error 5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code
-
-Error 6: The number of prime elements in input files *_species.in do not match with the real one coming from element.in
+Error 10: GRAIN_TEMPERATURE_TYPE is not 'table' and the grain temperature column exist in 'structure_evolution.dat'. 
 
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 

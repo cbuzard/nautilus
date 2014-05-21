@@ -336,6 +336,8 @@ liw = 31 + 3 * nb_nonzeros_values*nb_species + 21 * nb_species
 allocate(iwork(liw))
 allocate(rwork(lrw))
 
+iwork(1:liw) = 0
+rwork(1:lrw) = 0.d0
 
 return
 end subroutine initialize_work_arrays

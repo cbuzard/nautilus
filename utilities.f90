@@ -26,15 +26,17 @@ contains
 !
 ! DESCRIPTION: 
 !> @brief Routine to retrieve the number of lines of a given file whose
-!! filename is passed as an argument. 
+!! filename is passed as an argument. Commented lines are excluded
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_linenumber(filename, nb_lines)
+subroutine get_linenumber(filename, nb_lines, opt_comment)
 
   implicit none
   
   ! Input
   character(len=*), intent(in) :: filename !< [in] the filename of the file we want the number of lines
+  character(len=1), intent(in), optional :: opt_comment !< [in] optional input parameter to define a 
+  !! commenting character different from the default one '!'
   
   ! Output
   integer, intent(out) :: nb_lines !< [out] the number of line of the input file
@@ -43,8 +45,16 @@ subroutine get_linenumber(filename, nb_lines)
   integer :: error
   logical test
   character(len=80) :: line
-  character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
+  character(len=1) :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
   integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+
+  ! Treating options
+  if (present(opt_comment)) then
+    comment_character = opt_comment
+  else 
+    ! Force definition to '!' because the 'save' option might keep the non default value for other run of the routine
+    comment_character = '!'
+  endif
 
   !------------------------------------------------------------------------------
   nb_lines = 0

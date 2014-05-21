@@ -16,3 +16,5 @@ nautilus_outputs
 *.ab
 nautilus_rates
 archive/
+unitary_tests
+tests/

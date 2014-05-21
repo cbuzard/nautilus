@@ -9,17 +9,18 @@ import pdb
 
 COMPILATOR = "gfortran"
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wextra -Wunreachable-code -fbacktrace" + \
-  " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
+  " -ffpe-trap=invalid -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic -fimplicit-none"
-
+# commented options : -ffpe-trap=zero,overflow,underflow because most of the time, this is not a bug.
 OPTIMIZATIONS = "-O3 -ffast-math -pipe -finit-real=nan"
+TEST_OPTIONS = "-O3 -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"
 PROFILING_OPTIONS = "-g -pg"
 
 LOG_NAME = "compilation.log"
 
 nautilus_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90 git_infos.f90", "-c global_variables.f90", 
-"-c shielding.f90 input_output.f90 ode_solver.f90", 
+"-c shielding.f90 input_output.f90 ode_solver.f90 structure.f90 nautilus_main.f90", 
 "-o nautilus nautilus.f90 opk*.f90 *.o"]
 
 output_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90", "-o nautilus_outputs nautilus_outputs.f90 *.o"]
@@ -28,6 +29,7 @@ rates_order = ["-c numerical_types.f90 iso_fortran_env.f90 utilities.f90", "-o n
 
 # Parameters
 debug = False
+isTest = False
 gdb = False
 profiling = False
 force = False # To force the compilation of every module
@@ -44,6 +46,7 @@ problem_message = "The script can take various arguments :" + "\n" + \
 " * output : To compile binary abundances (nautilus_outputs) instead of Nautilus" + "\n" + \
 " * rates : To compile binary rates (nautilus_rates) instead of Nautilus" + "\n" + \
 " * opkd : To include warnings of opkd" + "\n" + \
+" * test : [%s] activate test options. Theses options are to be used when we want to compare the original and actual version of the code, by launching tests_nautilus.py" % isTest + "\n" + \
 " * debug : [%s] activate debug options" % debug + "\n" + \
 " * gdb : [%s] activate options for gdb" % gdb + "\n" + \
 " * profiling : [%s] activate options for profiling" % profiling + "\n" + \
@@ -233,6 +236,8 @@ for arg in sys.argv[1:]:
     debug = True
   elif (key == 'force'):
     force = True
+  elif (key == 'test'):
+    isTest = True
   elif (key == 'output'):
     compilation_order = output_order
   elif (key == 'rates'):
@@ -261,6 +266,8 @@ write_infos_in_f90_file(main_branch='master')
 
 if debug:
   OPTIONS = DEBUG_OPTIONS
+elif isTest:
+  OPTIONS = TEST_OPTIONS
 else:
   OPTIONS = OPTIMIZATIONS
 
