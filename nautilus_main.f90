@@ -206,6 +206,12 @@ select case(GRAIN_TEMPERATURE_TYPE)
     get_grain_temperature => get_grain_temperature_gas
 
   case('computed') ! Tgrain computed consistently
+    ! Initialise:
+    !    - the wavelength in Angstrom
+    !    - Qabs from Draine calculations
+    !    - the dust emiision intensity from Draine calculations
+    call initial_tdust()
+  
     get_grain_temperature => get_grain_temperature_computed
     
   case default
