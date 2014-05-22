@@ -1155,7 +1155,7 @@ end subroutine get_temporal_derivatives
 !---- Used for all species
            reaction_rates(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
 !---- Specific cases
-           CALL PHOTODESSPECASE(J,SUMLAY)
+           CALL photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
            IF(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
@@ -1168,7 +1168,7 @@ end subroutine get_temporal_derivatives
         DO J = type_id_start(67),type_id_stop(67)
 !---- Used for all species
            reaction_rates(J)=A(J)/SITE_DENSITY*1.d4*UVCR
-           CALL PHOTODESSPECASE(J,SUMLAY)
+           CALL photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
            IF(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
@@ -1396,67 +1396,79 @@ end subroutine get_temporal_derivatives
 RETURN
 END SUBROUTINE modify_specific_rates_cr
 
-! ======================================================================
-! ======================================================================
-      SUBROUTINE PHOTODESSPECASE(J,SUMLAY)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Treat special cases of photodesorption such as CO2, CO, H2O, CH3OH and N2
+!!\n Data from Oberg et al. 2009:
+!!\n      a - A&A, 496, 281-293
+!!\n      b - ApJ, 693, 1209-1218
+!!\n      c - A&A, 504, 891-913
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+SUBROUTINE photodesorption_special_cases(J,SUMLAY)
 ! Treat special cases of photodesorption such as CO2, CO, H2O, CH3OH and N2
 ! Data from Oberg et al. 2009:
 !      a - A&A, 496, 281-293
 !      b - ApJ, 693, 1209-1218
 !      c - A&A, 504, 891-913
 
-      use global_variables
+use global_variables
 
-      IMPLICIT NONE
+IMPLICIT NONE
 
-      INTEGER, INTENT(IN) :: J
-      REAL(KIND=8), INTENT(IN) :: SUMLAY
-      REAL(KIND=8) :: LTD
-      REAL(KIND=8) :: fH2O
+INTEGER, INTENT(IN) :: J
+REAL(double_precision), INTENT(IN) :: SUMLAY
+REAL(double_precision) :: LTD
+REAL(double_precision) :: fH2O
 
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
-      IF (dust_temperature.LE.3.5E+01) THEN
-          IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
-              reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / A(J)
-          ENDIF
-          IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
-             (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
-              reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / A(J)
-          ENDIF
-      ELSEIF(dust_temperature.GT.3.5E+01) THEN
-          IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
-              reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / A(J)
-          ENDIF
-          IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
-             (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
-             reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / A(J)
-          ENDIF
-      ENDIF
+IF (dust_temperature.LE.3.5E+01) THEN
+    IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
+        reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / A(J)
+    ENDIF
+    IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
+       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
+        reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / A(J)
+    ENDIF
+ELSEIF(dust_temperature.GT.3.5E+01) THEN
+    IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
+        reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / A(J)
+    ENDIF
+    IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
+       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
+       reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / A(J)
+    ENDIF
+ENDIF
 !------ Photodesorption of CO
-      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') THEN
-         reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / A(J)
-      ENDIF
+IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') THEN
+   reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / A(J)
+ENDIF
 !------ Photodesorption of N2
-      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') THEN
-         reaction_rates(J) = reaction_rates(J) * 4.0E-04 / A(J)
-      ENDIF
+IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') THEN
+   reaction_rates(J) = reaction_rates(J) * 4.0E-04 / A(J)
+ENDIF
 !------ Photodesorption of CH3OH
-      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') THEN
-         reaction_rates(J) = reaction_rates(J) * 2.1E-03 / A(J)
-      ENDIF
+IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') THEN
+   reaction_rates(J) = reaction_rates(J) * 2.1E-03 / A(J)
+ENDIF
 !------ Photodesorption of H2O
-      IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
-         LTD = 6.0E-01 + 2.4E-02 * dust_temperature
-         fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
-         reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
-                 & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / A(J)
-         IF((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
-            (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) THEN
-            reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
-         ENDIF
-      ENDIF
+IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
+   LTD = 6.0E-01 + 2.4E-02 * dust_temperature
+   fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
+   reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
+           & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / A(J)
+   IF((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
+      (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) THEN
+      reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
+   ENDIF
+ENDIF
 
-      END SUBROUTINE PHOTODESSPECASE
+END SUBROUTINE photodesorption_special_cases
 
 ! ======================================================================
 
