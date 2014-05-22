@@ -154,6 +154,8 @@ Error  9: IS_STRUCTURE_EVOLUTION has an undefined value.
 
 Error 10: GRAIN_TEMPERATURE_TYPE is not 'table' and the grain temperature column exist in 'structure_evolution.dat'. 
 
+Error 11: Error in subroutine DICHO of dust_temperature.f90: the sign of the function doesn't change in the interval:"
+
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
 (even though this is a problem for readability). 

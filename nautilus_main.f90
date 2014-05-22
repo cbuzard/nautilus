@@ -16,6 +16,7 @@ use global_variables
 use structure
 use input_output
 use ode_solver
+use dust_temperature
 
 implicit none
 
@@ -203,10 +204,13 @@ select case(GRAIN_TEMPERATURE_TYPE)
 
   case('gas') ! Tgrain = Tgas
     get_grain_temperature => get_grain_temperature_gas
+
+  case('computed') ! Tgrain computed consistently
+    get_grain_temperature => get_grain_temperature_computed
     
   case default
     write(error_unit,*) 'The GRAIN_TEMPERATURE_TYPE="', GRAIN_TEMPERATURE_TYPE,'" cannot be found.'
-    write(error_unit,*) 'Values possible : fixed, table, gas'
+    write(error_unit,*) 'Values possible : fixed, table, gas, computed'
     write(error_unit, '(a)') 'Error in subroutine initialisation.' 
     call exit(10)
 end select

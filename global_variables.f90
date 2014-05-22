@@ -24,6 +24,8 @@ integer :: nb_species_for_gas !< number of species involved in gas phase reactio
 integer :: nb_gas_phase_reactions !< number of reactions in gas phase
 real(double_precision), parameter :: MINIMUM_RATE_COEFFICIENT=1.0D-99 !< Minimum rate coefficient (Below, coefficients are forced to 0)
 real(double_precision), parameter :: K_B = 1.3806488d-16 !< Boltzmann constant in CGS (cm^2 g s^⁻2 K-1)
+real(double_precision), parameter :: PLANCK_CONSTANT = 6.62565d-27 !< Planck constant in CGS (erg.s or g cm2 s-1)
+real(double_precision), parameter :: SPEED_OF_LIGHT = 2.99792458d10 !< speed of light in CGS (cm/s)
 real(double_precision), parameter :: PI = 3.1415926535898d0 !< The number Pi
 real(double_precision), parameter :: H_BARRE = 1.054571628d-27 !< Reduced Planck constant h/2*pi in CGS (g cm2 s-1)
 real(double_precision), parameter :: AMU = 1.66053892d-24 !< Atomic mass unit in g

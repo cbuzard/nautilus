@@ -93,6 +93,7 @@ use global_variables
 use iso_fortran_env
 use shielding
 use utilities
+use dust_temperature
 use nautilus_main
 
 implicit none
