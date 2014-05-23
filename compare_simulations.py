@@ -1,13 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # Script that run a mercury simulation and test if the outputs and binaries have correct behaviour. 
-# Of course, everything is not tested, but it is planed to test as many things as possible
+# The goal is to compare with a given version of the code, either an old one, the previous or current one.
 
 __author__ = "Christophe Cossou <cossou@obs.u-bordeaux1.fr>"
-__date__ = "21 Juillet 2011"
-__version__ = "$Revision: 2.6.2 $"
-__credits__ = """We run a test simulation and erase all the files created after the tests. The simulations files are thought to be 
-in a "simu_test" subdirectory of the directory were are the sources (and binaries) of mercury (and this script)"""
+__date__ = "23 mai 2014"
+__version__ = "$Revision: 3.0 $"
 
 import sys
 import os
@@ -17,18 +15,25 @@ import pdb # To debug
 import glob # to get list of file through a given pattern
 
 NEW_TEST = "example_simulation"
-ORIGINAL_TEST = "nautilus_original"
+PREVIOUS_TEST = "old_simulation"
+REVISION = "HEAD"
 
 # Parameters
-force = False # To force the compilation of every module
+force_source = False # To force the compilation of every module
+force_simulation = False # To force generation of simulation outputs for the "old" version of the code
 
 isProblem = False
-problem_message = "The script can take various arguments :" + "\n" + \
+problem_message = "Script that run a mercury simulation and test if the outputs and binaries have correct behaviour." + \ 
+"The goal is to compare with a given version of the code, either an old one, the previous or current one." + \
+"\n\nThe script can take various arguments :" + "\n" + \
 "(no spaces between the key and the values, only separated by '=')" + "\n" + \
 " * help : display a little help message on HOW to use various options" + "\n" + \
-" * force : To force generation of outputs for the original program" + "\n" + \
+" * force : To force generation of outputs for the 'old' program" + "\n" + \
+" * rev=%s : (previous, actual, current) are possible. Else, every Git ID syntax is OK." % REVISION + \
+"the reference revision for the comparison with actual code" + "\n" + \
 " Example : " + "\n" + \
-" tests_nautilus.py force"
+" compare_simulations.py force" + "\n" + \
+" compare_simulations.py rev=cdabb998"
 
 # We get arguments from the script
 for arg in sys.argv[1:]:
@@ -37,9 +42,19 @@ for arg in sys.argv[1:]:
   except:
     key = arg
   if (key == 'force'):
-    force = True
+    force_simulation = True
   elif (key == 'help'):
     isProblem = True
+  elif (key == 'rev'):
+    # If a revision is specified, we force the actualisation of source code, compilation and simulation.
+    force_source = True
+    force_simulation = True
+    if (value in ['actual', 'current']):
+      REVISION = "HEAD"
+    elif (value in ['previous']):
+      REVISION = "HEAD^"
+    else:
+      REVISION = value
   else:
     print("the key '%s' does not match" % key)
     isProblem = True
@@ -185,12 +200,73 @@ def compare2Binaries(ori_files, new_files):
 
 
 os.chdir(NEW_TEST)
-# We clean undesirable files. 
+# We clean undesirable files beforehand, because we will copy if necessary the input simulation files to the other folder. 
 clean()
+os.chdir("..")
+
+if not(os.path.isdir(PREVIOUS_TEST)):
+  force = True
+
+# We delete old files, get the desired revision of the code, and the corresponding simulation files, compile it and so on.
+if force_source:
+  print("Preparing old binaries ...")
+  run("rm %s/*" % PREVIOUS_TEST) # Delete all files in the test directory
+  
+  # Copy the given revision REVISION in the required sub-folder (PREVIOUS_TEST)
+  ## REVISION can either be a given commit, or HEAD, or READ^ and so on. Any commit ID available in Git.
+  #> @Warning Problems for comparison can occurs if output files changes format between the two revisions.
+  ## This script is intended to compare recent version of the code, when outputs changes are not expected. When outputs changes,
+  ## one must be carefull with implementation and do the test themselves.
+  get_revision = "git archive %s --format=tar --prefix=%s/ | tar xf -" % (REVISION, PREVIOUS_TEST)
+  
+  print(get_revision)
+  run(get_revision)
+  
+  # We retrieve the commit ID from the possible alias stored in 'REVISION'
+  (REVISION_ID, dummy, returnCode) = run("git rev-parse %s" % REVISION)
+  (HEAD_ID, dummy, returnCode) = run("git rev-parse HEAD")
+  
+  os.chdir(PREVIOUS_TEST)
+  
+  # We store information about old commit used for comparison, in the corresponding folder.
+  revision_file = open("revision.in", 'w')
+  revision_file.write("Old revision: %s\n" % REVISION)
+  revision_file.write("Old revision ID: %s\n" % REVISION_ID)
+  revision_file.write("Current revision ID (HEAD): %s\n(but uncommitted changes might exists)\n" % HEAD_ID)
+  revision_file.close()
+  
+  # Compilation of previous code
+  previous_compilation = "Makefile.py"
+  print(previous_compilation)
+  (stdout, stderr, returnCode) = run(previous_compilation)
+  
+  if (returnCode != 0):
+    print(stdout)
+    print(stderr)
+
+if force_simulation:
+  # Copy of simulation files
+  copy_files = "cp ../%s/* ." % NEW_TEST
+  print(copy_files)
+  run(copy_files)
+  
+  # We run the simulation
+  print("##########################################")
+  sys.stdout.write("Running old binaries ...\r")
+  sys.stdout.flush()
+  (naut_or_stdout, naut_or_stderr, returnCode) = run("./nautilus")
+  print("Running old binaries ...ok")
+  print("##########################################")
+
+  # Go back in parent directory (containing the current code and test script)
+  os.chdir("..")
+else:
+  print("Skipping running original Nautilus, output already exists")
 
 print("##########################################")
 sys.stdout.write("Running new binaries ...\r")
 sys.stdout.flush()
+os.chdir(NEW_TEST)
 
 (naut_new_stdout, naut_new_stderr, returnCode) = run("../nautilus")
 
@@ -204,25 +280,15 @@ RATES_FILENAMES.sort()
 os.chdir("..")
 print("Running new binaries ...ok")
 print("##########################################")
-os.chdir(ORIGINAL_TEST)
 
-if force:
-  # We clean the output files
-  originalClean()
-
-if not(os.path.isfile("output_1D.000001")):
-  sys.stdout.write("Running original binaries ...\r")
-  sys.stdout.flush()
-  (naut_or_stdout, naut_or_stderr, returnCode) = run("./nautilus")
-  print("Running original binaries ...ok")
-else:
-  print("Skipping running original Nautilus, output already exists")
-  # To prevent finding differences in the standard output and error
+if not(force_simulation):
+  # To prevent finding differences in the standard output and error when the old simulation is not re-generated here
   naut_or_stdout = naut_new_stdout
-  naut_or_stderr = naut_new_stderr
+  naut_or_stderr = naut_new_stderr  
 
-ABUNDANCES_FILENAMES_OLD = glob.glob("output_1D.*")
-RATES_FILENAMES_OLD = glob.glob("rates1D.*")
+os.chdir(PREVIOUS_TEST)
+ABUNDANCES_FILENAMES_OLD = glob.glob("abundances.*.out")
+RATES_FILENAMES_OLD = glob.glob("rates.*.out")
 
 # list are sorted to ensure we compare the right files between actual and original outputs
 ABUNDANCES_FILENAMES_OLD.sort()
@@ -236,9 +302,13 @@ print("##########################################")
 
 if (len(ABUNDANCES_FILENAMES_OLD) != len(ABUNDANCES_FILENAMES)):
   print("Error: number of abundances files is different")
+  print("Old: %s" % ABUNDANCES_FILENAMES_OLD)
+  print("Actual: %s" % ABUNDANCES_FILENAMES)
 
 if (len(RATES_FILENAMES_OLD) != len(RATES_FILENAMES)):
-  print("Error: number of abundances files is different")
+  print("Error: number of rates files is different")
+  print("Old: %s" % RATES_FILENAMES_OLD)
+  print("Actual: %s" % RATES_FILENAMES)
 
 diff = ASCIICompare(naut_or_stdout, naut_new_stdout)
 if (diff != None):
@@ -251,8 +321,8 @@ RATES_FILENAMES = [os.path.join(NEW_TEST, filename) for filename in RATES_FILENA
 ABUNDANCES_FILENAMES = [os.path.join(NEW_TEST, filename) for filename in ABUNDANCES_FILENAMES]
 
 # We create names including the folder in which they are
-RATES_FILENAMES_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in RATES_FILENAMES_OLD]
-ABUNDANCES_FILENAMES_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in ABUNDANCES_FILENAMES_OLD]
+RATES_FILENAMES_OLD = [os.path.join(PREVIOUS_TEST, filename) for filename in RATES_FILENAMES_OLD]
+ABUNDANCES_FILENAMES_OLD = [os.path.join(PREVIOUS_TEST, filename) for filename in ABUNDANCES_FILENAMES_OLD]
 
 print("comparing abundances outputs:")
 compare2Binaries(ABUNDANCES_FILENAMES_OLD, ABUNDANCES_FILENAMES)
@@ -260,12 +330,11 @@ compare2Binaries(ABUNDANCES_FILENAMES_OLD, ABUNDANCES_FILENAMES)
 print("comparing rates outputs:")
 compare2Binaries(RATES_FILENAMES_OLD, RATES_FILENAMES)
 
-ASCII_OLD = ['nlso_tail.d', 'nlso_spec.d']
-ASCII_NEW = ['abundances.tmp', 'species.out']
+ASCII_FILES = ['abundances.tmp', 'species.out', 'elemental_abundances.out']
 
 # We include the folder name because we are in the parent folder.
-ASCII_OLD = [os.path.join(ORIGINAL_TEST, filename) for filename in ASCII_OLD]
-ASCII_NEW = [os.path.join(NEW_TEST, filename) for filename in ASCII_NEW]
+ASCII_OLD = [os.path.join(PREVIOUS_TEST, filename) for filename in ASCII_FILES]
+ASCII_NEW = [os.path.join(NEW_TEST, filename) for filename in ASCII_FILES]
 
 #~ pdb.set_trace()
 print("comparing chemical composition:")
