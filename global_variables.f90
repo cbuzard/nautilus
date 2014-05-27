@@ -54,30 +54,32 @@ integer :: INDEL !< Index corresponding to e- in nb_species length arrays
 
 
 ! Arrays about prime elements
-real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< dim(NB_PRIME_ELEMENTS) Store abundances for all 
-!! elemental species before running the simulation.
-real(double_precision), allocatable, dimension(:) :: elemental_mass !< dim(NB_PRIME_ELEMENTS) elemental mass.
+real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< dim(NB_PRIME_ELEMENTS) Store abundances 
+!! (relative to H) for all elemental species before running the simulation [number ratio]
+real(double_precision), allocatable, dimension(:) :: elemental_mass !< dim(NB_PRIME_ELEMENTS) elemental mass [a.m.u]
 character(len=11), allocatable, dimension(:) :: element_name !< dim(NB_PRIME_ELEMENTS) elemental mass.
 integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENTS) Tell for each prime element its index in the global array of all elements.
 
 ! Arrays about species
 character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
 integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
-real(double_precision), allocatable, dimension(:) :: abundances !< dim(nb_species) Species abundances
+real(double_precision), allocatable, dimension(:) :: abundances !< dim(nb_species) Species abundances (relative to H) [number ratio]
 real(double_precision), allocatable, dimension(:) :: SPECIES_MASS !< dim(nb_species) Species mass [a.m.u]
-real(double_precision), allocatable, dimension(:) :: TINDIF !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: TINDIFCR !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: TINACC !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: TINEVA !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: TINEVACR !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: ED !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: EB !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species)
-real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species)
+real(double_precision), allocatable, dimension(:) :: TINDIF !< dim(nb_species) Diffusion rate by thermal hopping [s-1] :
+!! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface 
+real(double_precision), allocatable, dimension(:) :: TINDIFCR !< dim(nb_species) Diffusion rate by thermal hopping due to cosmic rays heating [s-1]:
+!! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface
+real(double_precision), allocatable, dimension(:) :: TINACC !< dim(nb_species) Accretion rate for a given species onto the grain surface [s-1]
+real(double_precision), allocatable, dimension(:) :: TINEVA !< dim(nb_species) evaporation rate for a given species [s-1]
+real(double_precision), allocatable, dimension(:) :: TINEVACR !< dim(nb_species) evaporation rate  due to cosmic rays for a given species [s-1]
+real(double_precision), allocatable, dimension(:) :: ED !< dim(nb_species) Desorption energies (specific of each species) [K]
+real(double_precision), allocatable, dimension(:) :: EB !< dim(nb_species) Diffusion barriers (specific of each species) [K]
+real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) ?? Used to compute RQ1 TODO
+real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
+real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species) Characteristic vibration frequency of the adsorbed species [s-1]
+real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species) Just used to compute TINACC
+real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species) Quantum tunneling diffusion rate 1 [s-1] (Two prescriptions, but I don't know the differences between the two...)
+real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species) Quantum tunneling diffusion rate 2 [s-1] (Two prescriptions, but I don't know the differences between the two...)
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
@@ -87,17 +89,17 @@ real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_r
 real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
 real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
 real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
-real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: RDIF1 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: RDIF2 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: RDIF1CR !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: RDIF2CR !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: EA !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions)
-real(double_precision), allocatable, dimension(:) :: ACT1 !< dim(nb_reactions)
+real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions) reaction rate [unit depend on the reaction]
+real(double_precision), allocatable, dimension(:) :: diffusion_rates_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
+real(double_precision), allocatable, dimension(:) :: diffusion_rates_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
+real(double_precision), allocatable, dimension(:) :: diffusion_rates_1CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
+real(double_precision), allocatable, dimension(:) :: diffusion_rates_2CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
+real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EX1 = TINEVA(reactants1)/TINACC(reactants1)
+real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EX2 = TINEVA(reactants2)/TINACC(reactants2)
+real(double_precision), allocatable, dimension(:) :: EA !< dim(nb_reactions) Activation energy of reactions [K]
+real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions) min temperature boundary of each reactions [K]
+real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions) max temperature boundary of each reactions [K]
+real(double_precision), allocatable, dimension(:) :: quantum_activation_energy !< dim(nb_reactions) Quantum activation energy
 integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For each reaction, what is its type (cosmic ray evaporation, etc...)
 integer, allocatable, dimension(:) :: reactant_1_idx !< dim(nb_reactions) Index of the first reactant species involved in the reaction
 integer, allocatable, dimension(:) :: reactant_2_idx !< dim(nb_reactions) Index of the second reactant species involved in the reaction
@@ -107,14 +109,14 @@ integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of 
 !! declaring a given number for each reaction, like a hashtag.
 
 real(double_precision) :: initial_dtg_mass_ratio
-real(double_precision) :: GTODN
-real(double_precision) :: AV_NH_ratio
+real(double_precision) :: GTODN !< Gas to dust number ratio. 1/GTODN is equivalent to the grain abundance [no unit]
+real(double_precision) :: AV_NH_ratio !< Extinction over total hydrogen column density [mag/cm-2]
 real(double_precision) :: grain_radius !< Grain radius [cm]
 real(double_precision) :: GRAIN_DENSITY !< grain density [g/cm^3]
-real(double_precision) :: sticking_coeff_neutral
-real(double_precision) :: sticking_coeff_positive
-real(double_precision) :: sticking_coeff_negative
-real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE
+real(double_precision) :: sticking_coeff_neutral  !< sticking coefficient for neutral  species on grain surface [no unit]
+real(double_precision) :: sticking_coeff_positive !< sticking coefficient for positive species on grain surface [no unit]
+real(double_precision) :: sticking_coeff_negative !< sticking coefficient for negative species on grain surface [no unit]
+real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE !< minimum value of the abundance (relative to H) [number ratio]
 real(double_precision) :: H_number_density !< [part/cm^3] Total H number density (both H and H2), representing the total gas density
 real(double_precision) :: initial_gas_density !< [part/cm^3] initial gas density of the structure
 real(double_precision) :: gas_temperature !< current gas temperature [K]
@@ -129,15 +131,16 @@ real(double_precision) :: UV_FLUX
 real(double_precision) :: SITE_SPACING
 real(double_precision) :: SITE_DENSITY
 real(double_precision) :: nb_sites_per_grain
-real(double_precision) :: ACT
-real(double_precision) :: TSMAX
-real(double_precision) :: CRT
-real(double_precision) :: CRFE
-real(double_precision) :: EBFAC
+real(double_precision) :: ACT !< ??? TODO
+real(double_precision) :: TSMAX !< Peak grain temperature when struck by a cosmic ray [K]
+real(double_precision) :: CRT !< Peak duration [s] of TSMAX
+real(double_precision) :: CRFE !< ??? TODO
+real(double_precision) :: EBFAC !<  EB/ED. Assumed to be 0.5 by default.  [no unit]
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
-real(double_precision) :: ARRK
+real(double_precision) :: ARRK !< The ratio of the surface-molecule bond frequency to the frequency at which energy is lost to the 
+!! grain surface [no unit]. Used for the reactive desorption mechanism (see Garrod el al. 2007 for more). Assumed to be 1% by default.
 
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
@@ -168,7 +171,7 @@ end interface
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION
 integer :: CONSERVATION_TYPE
-integer :: IMODH
+integer :: IMODH !< Modify rates flag 
 integer :: IS_ABSORPTION
 
 ! About IS_STRUCTURE_EVOLUTION, describing the evolution of the physical structure properties with time
@@ -286,16 +289,16 @@ allocate(a(nb_reactions))
 allocate(b(nb_reactions))
 allocate(c(nb_reactions))
 allocate(reaction_rates(nb_reactions))
-allocate(rdif1(nb_reactions))
-allocate(rdif1cr(nb_reactions))
-allocate(rdif2(nb_reactions))
-allocate(rdif2cr(nb_reactions))
+allocate(diffusion_rates_1(nb_reactions))
+allocate(diffusion_rates_1cr(nb_reactions))
+allocate(diffusion_rates_2(nb_reactions))
+allocate(diffusion_rates_2cr(nb_reactions))
 allocate(ex1(nb_reactions))
 allocate(ex2(nb_reactions))
 allocate(ea(nb_reactions))
 allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
-allocate(act1(nb_reactions))
+allocate(quantum_activation_energy(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
 allocate(reactant_1_idx(nb_reactions))
 allocate(reactant_2_idx(nb_reactions))
@@ -330,14 +333,14 @@ a(1:nb_reactions) = 0.d0
 b(1:nb_reactions) = 0.d0
 c(1:nb_reactions) = 0.d0
 reaction_rates(1:nb_reactions) = 0.d0
-rdif1(1:nb_reactions) = 0.d0
-rdif2(1:nb_reactions) = 0.d0
+diffusion_rates_1(1:nb_reactions) = 0.d0
+diffusion_rates_2(1:nb_reactions) = 0.d0
 ex1(1:nb_reactions) = 0.d0
 ex2(1:nb_reactions) = 0.d0
 ea(1:nb_reactions) = 0.d0
 tmin(1:nb_reactions) = 0.d0
 tmax(1:nb_reactions) = 0.d0
-act1(1:nb_reactions) = 0.d0
+quantum_activation_energy(1:nb_reactions) = 0.d0
 REACTION_TYPE(1:nb_reactions) = 0
 reactant_1_idx(1:nb_reactions) = 0
 reactant_2_idx(1:nb_reactions) = 0

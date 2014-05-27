@@ -931,13 +931,13 @@ end subroutine get_temporal_derivatives
       if (EA(J).GE.1.0D-40) then
         ACTIV=EA(J)/dust_temperature
         ! ------------ Choose fastest of classical or tunnelling
-        if (ACTIV.GT.ACT1(J)) ACTIV=ACT1(J)
+        if (ACTIV.GT.quantum_activation_energy(J)) ACTIV=quantum_activation_energy(J)
         BARR=EXP(-ACTIV)
       endif
 
       ! --------- Thermal hopping diffusion method
-      RDIF1(J)=TINDIF(reactant_1_idx(J))
-      RDIF2(J)=TINDIF(reactant_2_idx(J))
+      diffusion_rates_1(J)=TINDIF(reactant_1_idx(J))
+      diffusion_rates_2(J)=TINDIF(reactant_2_idx(J))
 
       ! --------- Check for JH,JH2
       if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
@@ -950,26 +950,26 @@ end subroutine get_temporal_derivatives
         ! ------------ QM1 - Tunnelling (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.1) then
           if ((IMOD1.NE.0).AND.&
-          (RQ1(reactant_1_idx(J)).GT.RDIF1(J))) RDIF1(J)=RQ1(reactant_1_idx(J))
+          (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1(J))) diffusion_rates_1(J)=RQ1(reactant_1_idx(J))
           if ((IMOD2.NE.0).AND.&
-          (RQ1(reactant_2_idx(J)).GT.RDIF2(J))) RDIF2(J)=RQ1(reactant_2_idx(J))
+          (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2(J))) diffusion_rates_2(J)=RQ1(reactant_2_idx(J))
         endif
         ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.2) then
           if ((IMOD1.NE.0).AND.&
-          (RQ2(reactant_1_idx(J)).GT.RDIF1(J))) RDIF1(J)=RQ2(reactant_1_idx(J))
+          (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1(J))) diffusion_rates_1(J)=RQ2(reactant_1_idx(J))
           if ((IMOD2.NE.0).AND.&
-          (RQ2(reactant_2_idx(J)).GT.RDIF2(J))) RDIF2(J)=RQ2(reactant_2_idx(J))
+          (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2(J))) diffusion_rates_2(J)=RQ2(reactant_2_idx(J))
         endif
         ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
         if (GRAIN_TUNNELING_DIFFUSION.EQ.3) then
           if (IMOD1.NE.0) then
-            if (RQ1(reactant_1_idx(J)).GT.RDIF1(J)) RDIF1(J)=RQ1(reactant_1_idx(J))
-            if (RQ2(reactant_1_idx(J)).GT.RDIF1(J)) RDIF1(J)=RQ2(reactant_1_idx(J))
+            if (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1(J)) diffusion_rates_1(J)=RQ1(reactant_1_idx(J))
+            if (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1(J)) diffusion_rates_1(J)=RQ2(reactant_1_idx(J))
           endif
           if (IMOD2.NE.0) then
-            if (RQ1(reactant_2_idx(J)).GT.RDIF2(J)) RDIF2(J)=RQ1(reactant_2_idx(J))
-            if (RQ2(reactant_2_idx(J)).GT.RDIF2(J)) RDIF2(J)=RQ2(reactant_2_idx(J))
+            if (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2(J)) diffusion_rates_2(J)=RQ1(reactant_2_idx(J))
+            if (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2(J)) diffusion_rates_2(J)=RQ2(reactant_2_idx(J))
           endif
         endif
       endif
@@ -1014,13 +1014,13 @@ end subroutine get_temporal_derivatives
           (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
         endif
 
-        ! ------------ Modify rates (RDIF1 & RDIF2) according to their own evap/acc rates
+        ! ------------ Modify rates (diffusion_rates_1 & diffusion_rates_2) according to their own evap/acc rates
         YMOD1=Y(reactant_1_idx(J))
         YMOD2=Y(reactant_2_idx(J))
         call modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
       endif
 
-      DIFF=RDIF1(J)+RDIF2(J)
+      DIFF=diffusion_rates_1(J)+diffusion_rates_2(J)
 
       reaction_rates(J)=A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
       ! reaction_rates(J)=0.D0
@@ -1038,13 +1038,13 @@ end subroutine get_temporal_derivatives
             IF (EA(J).GE.1.0D-40) THEN
                ACTIVCR=EA(J)/TSMAX
                ! ------------ Choose fastest of classical or tunnelling
-               IF (ACTIVCR.GT.ACT1(J)) ACTIVCR=ACT1(J)
+               IF (ACTIVCR.GT.quantum_activation_energy(J)) ACTIVCR=quantum_activation_energy(J)
                BARRCR=EXP(-ACTIVCR)
             ENDIF
 
             ! --------- Thermal hopping diffusion method
-            RDIF1CR(J)=TINDIFCR(reactant_1_idx(J))
-            RDIF2CR(J)=TINDIFCR(reactant_2_idx(J))
+            diffusion_rates_1CR(J)=TINDIFCR(reactant_1_idx(J))
+            diffusion_rates_2CR(J)=TINDIFCR(reactant_2_idx(J))
 
             ! --------- Check for JH,JH2
             IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
@@ -1059,26 +1059,26 @@ end subroutine get_temporal_derivatives
                ! ------------ QM1 - Tunnelling (if it's faster than thermal)
                IF (grain_tunneling_diffusion.EQ.1) THEN
                   IF ((IMOD1.NE.0).AND.&
-                     (RQ1(reactant_1_idx(J)).GT.RDIF1CR(J))) RDIF1CR(J)=RQ1(reactant_1_idx(J))
+                     (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1CR(J))) diffusion_rates_1CR(J)=RQ1(reactant_1_idx(J))
                   IF ((IMOD2.NE.0).AND.&
-                     (RQ1(reactant_2_idx(J)).GT.RDIF2CR(J))) RDIF2CR(J)=RQ1(reactant_2_idx(J))
+                     (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2CR(J))) diffusion_rates_2CR(J)=RQ1(reactant_2_idx(J))
                ENDIF
                ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
                IF (grain_tunneling_diffusion.EQ.2) THEN
                   IF ((IMOD1.NE.0).AND.&
-                     (RQ2(reactant_1_idx(J)).GT.RDIF1CR(J))) RDIF1CR(J)=RQ2(reactant_1_idx(J))
+                     (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1CR(J))) diffusion_rates_1CR(J)=RQ2(reactant_1_idx(J))
                   IF ((IMOD2.NE.0).AND.&
-                     (RQ2(reactant_2_idx(J)).GT.RDIF2CR(J))) RDIF2CR(J)=RQ2(reactant_2_idx(J))
+                     (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2CR(J))) diffusion_rates_2CR(J)=RQ2(reactant_2_idx(J))
                ENDIF
                ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
                IF (grain_tunneling_diffusion.EQ.3) THEN
                   IF (IMOD1.NE.0) THEN
-                     IF (RQ1(reactant_1_idx(J)).GT.RDIF1CR(J)) RDIF1CR(J)=RQ1(reactant_1_idx(J))
-                     IF (RQ2(reactant_1_idx(J)).GT.RDIF1CR(J)) RDIF1CR(J)=RQ2(reactant_1_idx(J))
+                     IF (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1CR(J)) diffusion_rates_1CR(J)=RQ1(reactant_1_idx(J))
+                     IF (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1CR(J)) diffusion_rates_1CR(J)=RQ2(reactant_1_idx(J))
                   ENDIF
                   IF (IMOD2.NE.0) THEN
-                     IF (RQ1(reactant_2_idx(J)).GT.RDIF2CR(J)) RDIF2CR(J)=RQ1(reactant_2_idx(J))
-                     IF (RQ2(reactant_2_idx(J)).GT.RDIF2CR(J)) RDIF2CR(J)=RQ2(reactant_2_idx(J))
+                     IF (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2CR(J)) diffusion_rates_2CR(J)=RQ1(reactant_2_idx(J))
+                     IF (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2CR(J)) diffusion_rates_2CR(J)=RQ2(reactant_2_idx(J))
                   ENDIF
                ENDIF
             ENDIF
@@ -1123,13 +1123,13 @@ end subroutine get_temporal_derivatives
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
                ENDIF
 
-                  ! ------------ Modify rates (RDIF1 & RDIF2) according to their own evap/acc rates
+                  ! ------------ Modify rates (diffusion_rates_1 & diffusion_rates_2) according to their own evap/acc rates
                   YMOD1=Y(reactant_1_idx(J))
                   YMOD2=Y(reactant_2_idx(J))
                   CALL modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
             ENDIF
 
-            DIFFCR=RDIF1CR(J)+RDIF2CR(J)
+            DIFFCR=diffusion_rates_1CR(J)+diffusion_rates_2CR(J)
 
             reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*CRT*A(J)*branching_ratio(J)* &
                                BARRCR*DIFFCR*GTODN/H_number_density
@@ -1249,19 +1249,19 @@ end subroutine get_temporal_derivatives
   if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
       if (EX1(J).LT.1.0d0) then
-        if (RDIF1(J).GT.TINACC(reactant_1_idx(J))) RDIF1(J)=TINACC(reactant_1_idx(J))
+        if (diffusion_rates_1(J).GT.TINACC(reactant_1_idx(J))) diffusion_rates_1(J)=TINACC(reactant_1_idx(J))
       endif
       if (EX1(J).GE.1.0d0) then
-        if (RDIF1(J).GT.TINEVA(reactant_1_idx(J))) RDIF1(J)=TINEVA(reactant_1_idx(J))
+        if (diffusion_rates_1(J).GT.TINEVA(reactant_1_idx(J))) diffusion_rates_1(J)=TINEVA(reactant_1_idx(J))
       endif
     endif
 
     if (IMOD2.NE.0) then
       if (EX2(J).LT.1.0d0) then
-        if (RDIF2(J).GT.TINACC(reactant_2_idx(J))) RDIF2(J)=TINACC(reactant_2_idx(J))
+        if (diffusion_rates_2(J).GT.TINACC(reactant_2_idx(J))) diffusion_rates_2(J)=TINACC(reactant_2_idx(J))
       endif
       if (EX2(J).GE.1.0d0) then
-        if (RDIF2(J).GT.TINEVA(reactant_2_idx(J))) RDIF2(J)=TINEVA(reactant_2_idx(J))
+        if (diffusion_rates_2(J).GT.TINEVA(reactant_2_idx(J))) diffusion_rates_2(J)=TINEVA(reactant_2_idx(J))
       endif
     endif
   endif
@@ -1275,27 +1275,27 @@ end subroutine get_temporal_derivatives
     TESTREF2=TINACC(reactant_2_idx(J))
     if (EX2(J).GE.1.0d0) TESTREF2=TINEVA(reactant_2_idx(J))
 
-    if (RDIF1(J).GE.RDIF2(J)) then
-      TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD2*GTODN
-      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
+    if (diffusion_rates_1(J).GE.diffusion_rates_2(J)) then
+      TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR*YMOD2*GTODN
+      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR
       if (TESTNUM.GT.TESTREF1) PICK=1.d0
     endif
-    if (RDIF2(J).GT.RDIF1(J)) then
-      TESTNUM=(RDIF1(J)+RDIF2(J))*BARR*YMOD1*GTODN
-      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(RDIF1(J)+RDIF2(J))*BARR
+    if (diffusion_rates_2(J).GT.diffusion_rates_1(J)) then
+      TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR*YMOD1*GTODN
+      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR
       if (TESTNUM.GT.TESTREF2) PICK=2.d0
     endif
 
     if (PICK.EQ.1) then
-      RDIF1(J)=TESTREF1/BARR/YMOD2/GTODN
-      if (YMOD2*GTODN.LT.1.0d0) RDIF1(J)=TESTREF1/BARR
-      RDIF2(J)=0.d0
+      diffusion_rates_1(J)=TESTREF1/BARR/YMOD2/GTODN
+      if (YMOD2*GTODN.LT.1.0d0) diffusion_rates_1(J)=TESTREF1/BARR
+      diffusion_rates_2(J)=0.d0
     endif
 
     if (PICK.EQ.2) then
-      RDIF2(J)=TESTREF2/BARR/YMOD1/GTODN
-      if (YMOD1*GTODN.LT.1.0d0) RDIF2(J)=TESTREF2/BARR
-      RDIF1(J)=0.d0
+      diffusion_rates_2(J)=TESTREF2/BARR/YMOD1/GTODN
+      if (YMOD1*GTODN.LT.1.0d0) diffusion_rates_2(J)=TESTREF2/BARR
+      diffusion_rates_1(J)=0.d0
     endif
 
   endif
@@ -1342,19 +1342,19 @@ end subroutine get_temporal_derivatives
   IF (BARRCR.EQ.1.0D+0) THEN
      IF (IMOD1.NE.0) THEN
         IF (EX1(J).LT.1.0D+0) THEN
-           IF (RDIF1CR(J).GT.TINACC(reactant_1_idx(J))) RDIF1CR(J)=TINACC(reactant_1_idx(J))
+           IF (diffusion_rates_1CR(J).GT.TINACC(reactant_1_idx(J))) diffusion_rates_1CR(J)=TINACC(reactant_1_idx(J))
         ENDIF
         IF (EX1(J).GE.1.0D+0) THEN
-           IF (RDIF1CR(J).GT.TINEVACR(reactant_1_idx(J))) RDIF1CR(J)=TINEVACR(reactant_1_idx(J))
+           IF (diffusion_rates_1CR(J).GT.TINEVACR(reactant_1_idx(J))) diffusion_rates_1CR(J)=TINEVACR(reactant_1_idx(J))
         ENDIF
      ENDIF
 
      IF (IMOD2.NE.0) THEN
         IF (EX2(J).LT.1.0D+0) THEN
-           IF (RDIF2CR(J).GT.TINACC(reactant_2_idx(J))) RDIF2CR(J)=TINACC(reactant_2_idx(J))
+           IF (diffusion_rates_2CR(J).GT.TINACC(reactant_2_idx(J))) diffusion_rates_2CR(J)=TINACC(reactant_2_idx(J))
         ENDIF
         IF (EX2(J).GE.1.0D+0) THEN
-           IF (RDIF2CR(J).GT.TINEVACR(reactant_2_idx(J))) RDIF2CR(J)=TINEVACR(reactant_2_idx(J))
+           IF (diffusion_rates_2CR(J).GT.TINEVACR(reactant_2_idx(J))) diffusion_rates_2CR(J)=TINEVACR(reactant_2_idx(J))
         ENDIF
      ENDIF
   ENDIF
@@ -1368,27 +1368,27 @@ end subroutine get_temporal_derivatives
      TESTREF2=TINACC(reactant_2_idx(J))
      IF (EX2(J).GE.1.0D+0) TESTREF2=TINEVACR(reactant_2_idx(J))
 
-     IF (RDIF1CR(J).GE.RDIF2CR(J)) THEN
-        TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR*YMOD2*GTODN
-        IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR
+     IF (diffusion_rates_1CR(J).GE.diffusion_rates_2CR(J)) THEN
+        TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR*YMOD2*GTODN
+        IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR
         IF (TESTNUM.GT.TESTREF1) PICK=1
      ENDIF
-     IF (RDIF2CR(J).GT.RDIF1CR(J)) THEN
-        TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR*YMOD1*GTODN
-        IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(RDIF1CR(J)+RDIF2CR(J))*BARRCR
+     IF (diffusion_rates_2CR(J).GT.diffusion_rates_1CR(J)) THEN
+        TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR*YMOD1*GTODN
+        IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR
         IF (TESTNUM.GT.TESTREF2) PICK=2
      ENDIF
 
      IF (PICK.EQ.1) THEN
-        RDIF1CR(J)=TESTREF1/BARRCR/YMOD2/GTODN
-        IF (YMOD2*GTODN.LT.1.0D+0) RDIF1CR(J)=TESTREF1/BARRCR
-        RDIF2CR(J)=0.0D+0
+        diffusion_rates_1CR(J)=TESTREF1/BARRCR/YMOD2/GTODN
+        IF (YMOD2*GTODN.LT.1.0D+0) diffusion_rates_1CR(J)=TESTREF1/BARRCR
+        diffusion_rates_2CR(J)=0.0D+0
      ENDIF
 
      IF (PICK.EQ.2) THEN
-        RDIF2CR(J)=TESTREF2/BARRCR/YMOD1/GTODN
-        IF (YMOD1*GTODN.LT.1.0D+0) RDIF2CR(J)=TESTREF2/BARRCR
-        RDIF1CR(J)=0.0D+0
+        diffusion_rates_2CR(J)=TESTREF2/BARRCR/YMOD1/GTODN
+        IF (YMOD1*GTODN.LT.1.0D+0) diffusion_rates_2CR(J)=TESTREF2/BARRCR
+        diffusion_rates_1CR(J)=0.0D+0
      ENDIF
 
   ENDIF
