@@ -65,7 +65,7 @@ character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
 integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
 real(double_precision), allocatable, dimension(:) :: abundances !< dim(nb_species) Species abundances (relative to H) [number ratio]
 real(double_precision), allocatable, dimension(:) :: SPECIES_MASS !< dim(nb_species) Species mass [a.m.u]
-real(double_precision), allocatable, dimension(:) :: TINDIF !< dim(nb_species) Diffusion rate by thermal hopping [s-1]:
+real(double_precision), allocatable, dimension(:) :: THERMAL_HOPING_RATE !< dim(nb_species) Diffusion rate by thermal hopping [s-1]:
 !! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface 
 real(double_precision), allocatable, dimension(:) :: CR_HOPING_RATE !< dim(nb_species) Diffusion rate by thermal hopping due to cosmic rays heating [s-1]:
 !! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface
@@ -268,7 +268,7 @@ implicit none
 allocate(species_name(nb_species))
 allocate(abundances(nb_species))
 allocate(SPECIES_MASS(nb_species))
-allocate(tindif(nb_species))
+allocate(THERMAL_HOPING_RATE(nb_species))
 allocate(CR_HOPING_RATE(nb_species))
 allocate(ACCRETION_RATES(nb_species))
 allocate(EVAPORATION_RATES(nb_species))
@@ -314,7 +314,7 @@ allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
 species_name(1:nb_species) = ''
 abundances(1:nb_species) = 0.d0
 SPECIES_MASS(1:nb_species) = 0.d0
-tindif(1:nb_species) = 0.d0
+THERMAL_HOPING_RATE(1:nb_species) = 0.d0
 ACCRETION_RATES(1:nb_species) = 0.d0
 EVAPORATION_RATES(1:nb_species) = 0.d0
 DESORPTION_ENERGY(1:nb_species) = 0.d0
