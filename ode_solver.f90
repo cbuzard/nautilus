@@ -722,10 +722,10 @@ end subroutine get_temporal_derivatives
 
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
-      THERMAL_HOPING_RATE(K)=CHF(K)*EXP(-DIFFUSION_BARRIER(K)/dust_temperature)/nb_sites_per_grain
-      CR_HOPING_RATE(K)=CHF(K)*EXP(-DIFFUSION_BARRIER(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
-      EVAPORATION_RATES(K)=CHF(K)*EXP(-DESORPTION_ENERGY(K)/dust_temperature)
-      EVAPORATION_RATESCR(K)=CHF(K)*EXP(-DESORPTION_ENERGY(K)/PEAK_GRAIN_TEMPERATURE)
+      THERMAL_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/dust_temperature)/nb_sites_per_grain
+      CR_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
+      EVAPORATION_RATES(K)=VIBRATION_FREQUENCY(K)*EXP(-DESORPTION_ENERGY(K)/dust_temperature)
+      EVAPORATION_RATESCR(K)=VIBRATION_FREQUENCY(K)*EXP(-DESORPTION_ENERGY(K)/PEAK_GRAIN_TEMPERATURE)
     enddo
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
@@ -738,7 +738,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
       reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
-      *CHF(reagent_1_idx(J))*CRFE*PEAK_DURATION*EXP(-DESORPTION_ENERGY(reagent_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
+      *VIBRATION_FREQUENCY(reagent_1_idx(J))*CRFE*PEAK_DURATION*EXP(-DESORPTION_ENERGY(reagent_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
     enddo
 
 

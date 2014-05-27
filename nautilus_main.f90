@@ -593,21 +593,21 @@ end subroutine index_datas
 
     ! Set up constants, quantum rate info===================================
     do I=1,nb_species
-      CHF(I)=0.d0
+      VIBRATION_FREQUENCY(I)=0.d0
       TUNNELING_RATE_TYPE_1(I)=0.d0
       TUNNELING_RATE_TYPE_2(I)=0.d0
       ! ------ For species which have been assigned surface info, SMASS=/=0
       if (SMASS(I).NE.0) then
         SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
-        CHF(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*DESORPTION_ENERGY(I)/SMA)
+        VIBRATION_FREQUENCY(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*DESORPTION_ENERGY(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
           TUNNELING_RATE_TYPE_1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
         else
           TUNNELING_RATE_TYPE_1(I)=0.d0
         endif
-        TUNNELING_RATE_TYPE_2(I) = CHF(I) / nb_sites_per_grain * &
+        TUNNELING_RATE_TYPE_2(I) = VIBRATION_FREQUENCY(I) / nb_sites_per_grain * &
                  EXP(-2.0d0*SITE_SPACING/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*DIFFUSION_BARRIER(I)))
       endif
     enddo
