@@ -951,27 +951,39 @@ end subroutine get_temporal_derivatives
       if (IMOD1+IMOD2.NE.0) then
         ! ------------ QM1 - Tunnelling (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.1) then
-          if ((IMOD1.NE.0).AND.&
-          (RQ1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) THERMAL_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
-          if ((IMOD2.NE.0).AND.&
-          (RQ1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) THERMAL_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
+          if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) then
+            THERMAL_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
+          endif
+          if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) then
+            THERMAL_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
+          endif
         endif
         ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.2) then
-          if ((IMOD1.NE.0).AND.&
-          (RQ2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) THERMAL_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
-          if ((IMOD2.NE.0).AND.&
-          (RQ2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) THERMAL_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
+          if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) then
+            THERMAL_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
+          endif
+          if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) then
+            THERMAL_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
+          endif
         endif
         ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
         if (GRAIN_TUNNELING_DIFFUSION.EQ.3) then
           if (IMOD1.NE.0) then
-            if (RQ1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) THERMAL_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
-            if (RQ2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) THERMAL_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
+            if (TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) then
+              THERMAL_DIFFUSION_RATE_1(J) = TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
+            endif
+            if (TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) then
+              THERMAL_DIFFUSION_RATE_1(J) = TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
+            endif
           endif
           if (IMOD2.NE.0) then
-            if (RQ1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J)) THERMAL_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
-            if (RQ2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J)) THERMAL_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
+            if (TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))  then
+              THERMAL_DIFFUSION_RATE_2(J) = TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
+            endif
+            if (TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))  then
+              THERMAL_DIFFUSION_RATE_2(J) = TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
+            endif
           endif
         endif
       endif
@@ -1058,31 +1070,43 @@ end subroutine get_temporal_derivatives
 
             ! --------- QM for JH,JH2 only - others are too heavy
             IF (IMOD1+IMOD2.NE.0) THEN
-               ! ------------ QM1 - Tunnelling (if it's faster than thermal)
-               IF (grain_tunneling_diffusion.EQ.1) THEN
-                  IF ((IMOD1.NE.0).AND.&
-                     (RQ1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) CR_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
-                  IF ((IMOD2.NE.0).AND.&
-                     (RQ1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) CR_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
-               ENDIF
-               ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
-               IF (grain_tunneling_diffusion.EQ.2) THEN
-                  IF ((IMOD1.NE.0).AND.&
-                     (RQ2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) CR_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
-                  IF ((IMOD2.NE.0).AND.&
-                     (RQ2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) CR_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
-               ENDIF
-               ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
-               IF (grain_tunneling_diffusion.EQ.3) THEN
-                  IF (IMOD1.NE.0) THEN
-                     IF (RQ1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) CR_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
-                     IF (RQ2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) CR_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
-                  ENDIF
-                  IF (IMOD2.NE.0) THEN
-                     IF (RQ1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) CR_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
-                     IF (RQ2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) CR_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
-                  ENDIF
-               ENDIF
+              ! ------------ QM1 - Tunnelling (if it's faster than thermal)
+              IF (grain_tunneling_diffusion.EQ.1) THEN
+                if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) then
+                  CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
+                endif
+                if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) then
+                  CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
+                endif
+              ENDIF
+              ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
+              IF (grain_tunneling_diffusion.EQ.2) THEN
+                if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) then
+                  CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
+                endif
+                if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) then
+                  CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
+                endif
+              ENDIF
+              ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
+              IF (grain_tunneling_diffusion.EQ.3) THEN
+                IF (IMOD1.NE.0) THEN
+                  if (TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) then
+                    CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
+                  endif
+                  if (TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) then
+                    CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
+                  endif
+                ENDIF
+                IF (IMOD2.NE.0) THEN
+                  if (TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) then
+                    CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
+                  endif
+                  if (TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) then
+                    CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
+                  endif
+                ENDIF
+              ENDIF
             ENDIF
 
             ! --------- Modify according to IMODH switch:
