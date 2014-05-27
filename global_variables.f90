@@ -91,8 +91,8 @@ real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) k(T)
 real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
 real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions) reaction rate [unit depend on the reaction]
 real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
-real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions) min temperature boundary of each reactions [K]
-real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions) max temperature boundary of each reactions [K]
+real(double_precision), allocatable, dimension(:) :: REACTION_TMIN !< dim(nb_reactions) min temperature boundary of each reactions [K]
+real(double_precision), allocatable, dimension(:) :: REACTION_TMAX !< dim(nb_reactions) max temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: quantum_activation_energy !< dim(nb_reactions) Quantum activation energy
 integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For each reaction, what is its type (cosmic ray evaporation, etc...)
 integer, allocatable, dimension(:) :: RATE_FORMULA !< dim(nb_reactions) The index tracing the formula used for each specific 
@@ -298,8 +298,8 @@ allocate(CR_DIFFUSION_RATE_2(nb_reactions))
 allocate(EVAP_OVER_ACC_RATIO_1(nb_reactions))
 allocate(EVAP_OVER_ACC_RATIO_2(nb_reactions))
 allocate(ACTIVATION_ENERGY(nb_reactions))
-allocate(tmin(nb_reactions))
-allocate(tmax(nb_reactions))
+allocate(REACTION_TMIN(nb_reactions))
+allocate(REACTION_TMAX(nb_reactions))
 allocate(quantum_activation_energy(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
 allocate(reagent_1_idx(nb_reactions))
@@ -340,8 +340,8 @@ THERMAL_DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
 EVAP_OVER_ACC_RATIO_1(1:nb_reactions) = 0.d0
 EVAP_OVER_ACC_RATIO_2(1:nb_reactions) = 0.d0
 ACTIVATION_ENERGY(1:nb_reactions) = 0.d0
-tmin(1:nb_reactions) = 0.d0
-tmax(1:nb_reactions) = 0.d0
+REACTION_TMIN(1:nb_reactions) = 0.d0
+REACTION_TMAX(1:nb_reactions) = 0.d0
 quantum_activation_energy(1:nb_reactions) = 0.d0
 REACTION_TYPE(1:nb_reactions) = 0
 reagent_1_idx(1:nb_reactions) = 0

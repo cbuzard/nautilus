@@ -575,39 +575,39 @@ end subroutine get_temporal_derivatives
       reaction_rates(J)=A(J)*(T300**B(J))*EXP(-C(J)/gas_temperature)
 
       ! Check for temperature bounderies
-      if (gas_temperature.LT.Tmin(J)) reaction_rates(J)=A(J)*((Tmin(J)/300.D0)**B(J))*EXP(-C(J)/Tmin(J))
-      if (gas_temperature.GT.Tmax(J)) reaction_rates(J)=A(J)*((Tmax(J)/300.D0)**B(J))*EXP(-C(J)/Tmax(J))
+      if (gas_temperature.LT.REACTION_TMIN(J)) reaction_rates(J)=A(J)*((REACTION_TMIN(J)/300.D0)**B(J))*EXP(-C(J)/REACTION_TMIN(J))
+      if (gas_temperature.GT.REACTION_TMAX(J)) reaction_rates(J)=A(J)*((REACTION_TMAX(J)/300.D0)**B(J))*EXP(-C(J)/REACTION_TMAX(J))
 
       ! Check for the presence of several rate coefficients present in the network for the
       ! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
-        distmin(w)=tmin(j)-gas_temperature
-        distmax(w)=gas_temperature-tmax(j)
+        distmin(w)=REACTION_TMIN(j)-gas_temperature
+        distmax(w)=gas_temperature-REACTION_TMAX(j)
         W = W + 1
       endif
 
       if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=tmin(j)-gas_temperature
-        distmax(w)=gas_temperature-tmax(j)
+        distmin(w)=REACTION_TMIN(j)-gas_temperature
+        distmax(w)=gas_temperature-REACTION_TMAX(j)
 
         do M=1,W
           N=INDICE(M)
-          !IF(IT==1) write(*,*) N,M, REACTION_SUBSTANCES_NAMES(:,N), tmin(N), tmax(N),distmin(M),distmax(M)
-          if (gas_temperature.LT.Tmin(N)) reaction_rates(N)=0.d0
-          if (gas_temperature.GT.Tmax(N)) reaction_rates(N)=0.d0
+          !IF(IT==1) write(*,*) N,M, REACTION_SUBSTANCES_NAMES(:,N), REACTION_TMIN(N), REACTION_TMAX(N),distmin(M),distmax(M)
+          if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)=0.d0
+          if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)=0.d0
         enddo
 
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
 
           if (minval(abs(distmin)).lt.minval(abs(distmax))) then
             N=indice(minloc(abs(distmin),dim=1))
-            reaction_rates(N)=A(N)*((Tmin(N)/300.D0)**B(N))*EXP(-C(N)/Tmin(N))
+            reaction_rates(N)=A(N)*((REACTION_TMIN(N)/300.D0)**B(N))*EXP(-C(N)/REACTION_TMIN(N))
           else
             N=indice(minloc(abs(distmax),dim=1))
-            reaction_rates(N)=A(N)*((Tmax(N)/300.D0)**B(N))*EXP(-C(N)/Tmax(N))
+            reaction_rates(N)=A(N)*((REACTION_TMAX(N)/300.D0)**B(N))*EXP(-C(N)/REACTION_TMAX(N))
           endif
         endif
 
@@ -623,37 +623,37 @@ end subroutine get_temporal_derivatives
       reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/gas_temperature)**0.5))
 
       ! Check for temperature bounderies
-      if (gas_temperature.LT.Tmin(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/Tmin(J))**0.5))
-      if (gas_temperature.GT.Tmax(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/TMAX(J))**0.5))
+      if (gas_temperature.LT.REACTION_TMIN(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/REACTION_TMIN(J))**0.5))
+      if (gas_temperature.GT.REACTION_TMAX(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/REACTION_TMAX(J))**0.5))
 
       ! Check for the presence of several rate coefficients present in the network for the
       ! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
-        distmin(w)=tmin(j)-gas_temperature
-        distmax(w)=gas_temperature-tmax(j)
+        distmin(w)=REACTION_TMIN(j)-gas_temperature
+        distmax(w)=gas_temperature-REACTION_TMAX(j)
         W = W + 1
       endif
 
       if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=tmin(j)-gas_temperature
-        distmax(w)=gas_temperature-tmax(j)
+        distmin(w)=REACTION_TMIN(j)-gas_temperature
+        distmax(w)=gas_temperature-REACTION_TMAX(j)
 
         do M=1,W
           N=INDICE(M)
-          if (gas_temperature.LT.Tmin(N)) reaction_rates(N)= 0.d0
-          if (gas_temperature.GT.Tmax(N)) reaction_rates(N)= 0.d0
+          if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)= 0.d0
+          if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)= 0.d0
         enddo
 
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
           if (minval(abs(distmin)).lt.minval(abs(distmax))) then
             N=indice(minloc(abs(distmin),dim=1))
-            reaction_rates(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/Tmin(N))**0.5))
+            reaction_rates(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/REACTION_TMIN(N))**0.5))
           else
             N=indice(minloc(abs(distmax),dim=1))
-            reaction_rates(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/TMAX(N))**0.5))
+            reaction_rates(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/REACTION_TMAX(N))**0.5))
           endif
         endif
 
@@ -668,10 +668,10 @@ end subroutine get_temporal_derivatives
     if (RATE_FORMULA(J).EQ.5) then
       
       ! Check for temperature boundaries and apply the formula in consequence
-      if (gas_temperature.LT.Tmin(J)) then
-        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*TMIN(J))))
-      else if (gas_temperature.GT.Tmax(J)) then
-        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*TMAX(J))))
+      if (gas_temperature.LT.REACTION_TMIN(J)) then
+        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/REACTION_TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*REACTION_TMIN(J))))
+      else if (gas_temperature.GT.REACTION_TMAX(J)) then
+        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/REACTION_TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*REACTION_TMAX(J))))
       else
         reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/gas_temperature)**0.5)+(C(J)**2*300.d0/(10.526*gas_temperature)))
       endif
@@ -680,30 +680,32 @@ end subroutine get_temporal_derivatives
       !! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
-        distmin(w)=tmin(j)-gas_temperature
-        distmax(w)=gas_temperature-tmax(j)
+        distmin(w)=REACTION_TMIN(j)-gas_temperature
+        distmax(w)=gas_temperature-REACTION_TMAX(j)
         W = W + 1
       endif
 
       if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=tmin(j)-gas_temperature
-        distmax(w)=gas_temperature-tmax(j)
+        distmin(w)=REACTION_TMIN(j)-gas_temperature
+        distmax(w)=gas_temperature-REACTION_TMAX(j)
 
         do M=1,W
           N=INDICE(M)
-          if (gas_temperature.LT.Tmin(N)) reaction_rates(N)= 0.d0
-          if (gas_temperature.GT.Tmax(N)) reaction_rates(N)= 0.d0
+          if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)= 0.d0
+          if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)= 0.d0
         enddo
 
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
           if (minval(abs(distmin)).lt.minval(abs(distmax))) then
             N=indice(minloc(abs(distmin),dim=1))
-            reaction_rates(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/TMIN(N))**0.5)+(C(N)**2*300.d0/(10.526*TMIN(N))))
+            reaction_rates(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/REACTION_TMIN(N))**0.5) + &
+                              (C(N)**2*300.d0/(10.526*REACTION_TMIN(N))))
           else
             N=indice(minloc(abs(distmax),dim=1))
-            reaction_rates(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/TMAX(N))**0.5)+(C(N)**2*300.d0/(10.526*TMAX(N))))
+            reaction_rates(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/REACTION_TMAX(N))**0.5) + &
+                              (C(N)**2*300.d0/(10.526*REACTION_TMAX(N))))
           endif
         endif
 
