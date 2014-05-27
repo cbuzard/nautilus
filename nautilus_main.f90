@@ -555,14 +555,14 @@ end subroutine index_datas
       DESORPTION_ENERGY(I)=0.d0
       DIFFUSION_BARRIER(I)=0.d0
       DEB(I)=0.d0
-      DHF(I)=0.d0
+      FORMATION_ENTHALPY(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=dble(INT1(J))
           DESORPTION_ENERGY(I)=REA1(J)
           DIFFUSION_BARRIER(I)=REA2(J)
           DEB(I)=REA3(J)
-          DHF(I)=REA4(J)
+          FORMATION_ENTHALPY(I)=REA4(J)
           if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.(EBFAC.GE.0.d0)) then
             DIFFUSION_BARRIER(I)=EBFAC*DESORPTION_ENERGY(I)
           endif
@@ -688,9 +688,9 @@ end subroutine index_datas
       endif
     enddo
 
-    DHFSUM=DHF(reagent_1_idx(J))+DHF(reagent_2_idx(J))-DHF(N4)
-    if (N5.NE.0) DHFSUM=DHFSUM-DHF(N5)
-    if (N6.NE.0) DHFSUM=DHFSUM-DHF(N6)
+    DHFSUM=FORMATION_ENTHALPY(reagent_1_idx(J))+FORMATION_ENTHALPY(reagent_2_idx(J))-FORMATION_ENTHALPY(N4)
+    if (N5.NE.0) DHFSUM=DHFSUM-FORMATION_ENTHALPY(N5)
+    if (N6.NE.0) DHFSUM=DHFSUM-FORMATION_ENTHALPY(N6)
     ! ------ Convert from kcal to J, from J to K
     DHFSUM=DHFSUM*4.184D+03/1.38054D-23
     ! ------ Convert from #moles-1 to #reactions-1
@@ -721,15 +721,15 @@ end subroutine index_datas
     !         endif
 
     BADFLAG=0
-    if (DHF(reagent_1_idx(J)).LE.-999.0) then
+    if (FORMATION_ENTHALPY(reagent_1_idx(J)).LE.-999.0) then
       EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
-    if (DHF(reagent_2_idx(J)).LE.-999.0) then
+    if (FORMATION_ENTHALPY(reagent_2_idx(J)).LE.-999.0) then
       EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif
-    if (DHF(N4).LE.-999.0) then
+    if (FORMATION_ENTHALPY(N4).LE.-999.0) then
       EVFRAC=0.d0
       BADFLAG=BADFLAG+1
     endif

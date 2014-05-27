@@ -75,7 +75,7 @@ real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATESCR !< dim(
 real(double_precision), allocatable, dimension(:) :: DESORPTION_ENERGY !< dim(nb_species) Desorption energies (specific of each species) [K]
 real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER !< dim(nb_species) Diffusion barriers (specific of each species) [K]
 real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) dEb breadth in energy [K] between two surface wells as seen by the quantum mechanical tunneling effect (see Watson 1976)
-real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
+real(double_precision), allocatable, dimension(:) :: FORMATION_ENTHALPY !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
 real(double_precision), allocatable, dimension(:) :: VIBRATION_FREQUENCY !< dim(nb_species) Characteristic vibration frequency [s-1] of the adsorbed species  as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species) Just used to compute ACCRETION_RATES
 real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_1 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Watson 1976) (dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain)
@@ -278,7 +278,7 @@ allocate(EVAPORATION_RATEScr(nb_species))
 allocate(DESORPTION_ENERGY(nb_species))
 allocate(DIFFUSION_BARRIER(nb_species))
 allocate(deb(nb_species))
-allocate(dhf(nb_species))
+allocate(FORMATION_ENTHALPY(nb_species))
 allocate(VIBRATION_FREQUENCY(nb_species))
 allocate(condsp(nb_species))
 allocate(TUNNELING_RATE_TYPE_1(nb_species))
@@ -322,7 +322,7 @@ EVAPORATION_RATES(1:nb_species) = 0.d0
 DESORPTION_ENERGY(1:nb_species) = 0.d0
 DIFFUSION_BARRIER(1:nb_species) = 0.d0
 deb(1:nb_species) = 0.d0
-dhf(1:nb_species) = 0.d0
+FORMATION_ENTHALPY(1:nb_species) = 0.d0
 VIBRATION_FREQUENCY(1:nb_species) = 0.d0
 condsp(1:nb_species) = 0.d0
 TUNNELING_RATE_TYPE_1(1:nb_species) = 0.d0
