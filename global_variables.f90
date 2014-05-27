@@ -74,28 +74,28 @@ real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATES !< dim(nb
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATESCR !< dim(nb_species) evaporation rate  due to cosmic rays for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: DESORPTION_ENERGY !< dim(nb_species) Desorption energies (specific of each species) [K]
 real(double_precision), allocatable, dimension(:) :: EB !< dim(nb_species) Diffusion barriers (specific of each species) [K]
-real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) ?? Used to compute RQ1 TODO
+real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) dEb breadth in energy [K] between two surface wells as seen by the quantum mechanical tunneling effect (see Watson 1976)
 real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
-real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species) Characteristic vibration frequency of the adsorbed species [s-1]
+real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species) Characteristic vibration frequency [s-1] of the adsorbed species  as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species) Just used to compute ACCRETION_RATES
-real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species) Quantum tunneling diffusion rate 1 [s-1] (Two prescriptions, but I don't know the differences between the two...)
-real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species) Quantum tunneling diffusion rate 2 [s-1] (Two prescriptions, but I don't know the differences between the two...)
+real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Watson 1976) (dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain)
+real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Hasegawa & Herbst 1992) CHF / nb_sites_per_grain.EXP(-2.SITE_SPACING / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2)
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
 integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
-real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
-real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
-real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) coefficients for the modified arrhenius law to define reaction rates
+real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
+real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
+real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
 real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions) reaction rate [unit depend on the reaction]
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_1CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_2CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
-real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EX1 = EVAPORATION_RATES(reactants1)/ACCRETION_RATES(reactants1)
-real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EX2 = EVAPORATION_RATES(reactants2)/ACCRETION_RATES(reactants2)
+real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reactant 1
+real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reactant 2
 real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions) min temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions) max temperature boundary of each reactions [K]
@@ -131,10 +131,10 @@ real(double_precision) :: UV_FLUX
 real(double_precision) :: SITE_SPACING
 real(double_precision) :: SITE_DENSITY
 real(double_precision) :: nb_sites_per_grain
-real(double_precision) :: ACT !< ??? TODO
+real(double_precision) :: ACT !< grain reaction activation energy constant [TODO unit]
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
 real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
-real(double_precision) :: CRFE !< ??? TODO
+real(double_precision) :: CRFE !< Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
 real(double_precision) :: EBFAC !<  EB/DESORPTION_ENERGY. Assumed to be 0.5 by default.  [no unit]
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
