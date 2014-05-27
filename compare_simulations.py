@@ -23,7 +23,7 @@ force_source = False # To force the compilation of every module
 force_simulation = False # To force generation of simulation outputs for the "old" version of the code
 
 isProblem = False
-problem_message = "Script that run a mercury simulation and test if the outputs and binaries have correct behaviour." + \ 
+problem_message = "Script that run a mercury simulation and test if the outputs and binaries have correct behaviour." + "\n" + \
 "The goal is to compare with a given version of the code, either an old one, the previous or current one." + \
 "\n\nThe script can take various arguments :" + "\n" + \
 "(no spaces between the key and the values, only separated by '=')" + "\n" + \
@@ -236,15 +236,18 @@ if force_source:
   revision_file.close()
   
   # Compilation of previous code
-  previous_compilation = "Makefile.py"
+  previous_compilation = "Makefile.py test"
   print(previous_compilation)
   (stdout, stderr, returnCode) = run(previous_compilation)
   
   if (returnCode != 0):
     print(stdout)
     print(stderr)
+  
+  os.chdir("..")
 
 if force_simulation:
+  os.chdir(PREVIOUS_TEST)
   # Copy of simulation files
   copy_files = "cp ../%s/* ." % NEW_TEST
   print(copy_files)
