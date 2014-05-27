@@ -721,9 +721,9 @@ end subroutine get_temporal_derivatives
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
       TINDIF(K)=CHF(K)*EXP(-EB(K)/dust_temperature)/nb_sites_per_grain
-      TINDIFCR(K)=CHF(K)*EXP(-EB(K)/TSMAX)/nb_sites_per_grain
+      TINDIFCR(K)=CHF(K)*EXP(-EB(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
       TINEVA(K)=CHF(K)*EXP(-ED(K)/dust_temperature)
-      TINEVACR(K)=CHF(K)*EXP(-ED(K)/TSMAX)
+      TINEVACR(K)=CHF(K)*EXP(-ED(K)/PEAK_GRAIN_TEMPERATURE)
     enddo
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
@@ -736,7 +736,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
       reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
-      *CHF(reactant_1_idx(J))*CRFE*CRT*EXP(-ED(reactant_1_idx(J))/TSMAX)
+      *CHF(reactant_1_idx(J))*CRFE*CRT*EXP(-ED(reactant_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
     enddo
 
 
@@ -1036,7 +1036,7 @@ end subroutine get_temporal_derivatives
             BARRCR=1.0D+0
             ! --------- Calculate activation energy barrier multiplier
             IF (ACTIVATION_ENERGY(J).GE.1.0D-40) THEN
-               ACTIVCR=ACTIVATION_ENERGY(J)/TSMAX
+               ACTIVCR=ACTIVATION_ENERGY(J)/PEAK_GRAIN_TEMPERATURE
                ! ------------ Choose fastest of classical or tunnelling
                IF (ACTIVCR.GT.quantum_activation_energy(J)) ACTIVCR=quantum_activation_energy(J)
                BARRCR=EXP(-ACTIVCR)
