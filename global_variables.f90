@@ -107,8 +107,8 @@ real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_1 !<
 real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate for reagent 2
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating for reagent 1
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating for reagent 2
-real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 1
-real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 2
+real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 1
+real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 2
 
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN !< Gas to dust number ratio. 1/GTODN is equivalent to the grain abundance [no unit]
@@ -295,8 +295,8 @@ allocate(THERMAL_DIFFUSION_RATE_1(nb_reactions))
 allocate(CR_DIFFUSION_RATE_1(nb_reactions))
 allocate(THERMAL_DIFFUSION_RATE_2(nb_reactions))
 allocate(CR_DIFFUSION_RATE_2(nb_reactions))
-allocate(ex1(nb_reactions))
-allocate(ex2(nb_reactions))
+allocate(EVAP_OVER_ACC_RATIO_1(nb_reactions))
+allocate(EVAP_OVER_ACC_RATIO_2(nb_reactions))
 allocate(ACTIVATION_ENERGY(nb_reactions))
 allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
@@ -337,8 +337,8 @@ c(1:nb_reactions) = 0.d0
 reaction_rates(1:nb_reactions) = 0.d0
 THERMAL_DIFFUSION_RATE_1(1:nb_reactions) = 0.d0
 THERMAL_DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
-ex1(1:nb_reactions) = 0.d0
-ex2(1:nb_reactions) = 0.d0
+EVAP_OVER_ACC_RATIO_1(1:nb_reactions) = 0.d0
+EVAP_OVER_ACC_RATIO_2(1:nb_reactions) = 0.d0
 ACTIVATION_ENERGY(1:nb_reactions) = 0.d0
 tmin(1:nb_reactions) = 0.d0
 tmax(1:nb_reactions) = 0.d0

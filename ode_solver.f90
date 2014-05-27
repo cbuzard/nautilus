@@ -1230,17 +1230,17 @@ end subroutine get_temporal_derivatives
   ! Locals
   real(double_precision) :: PICK, TESTREF1, TESTREF2, TESTNUM
 
-  EX1(J)=0.d0
-  EX2(J)=0.d0
+  EVAP_OVER_ACC_RATIO_1(J)=0.d0
+  EVAP_OVER_ACC_RATIO_2(J)=0.d0
 
   ! --- Check value of x = t_acc/t_evap
   ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
   if (ACCRETION_RATES(reagent_1_idx(J)).GT.0.d0) then
-    EX1(J)=EVAPORATION_RATES(reagent_1_idx(J))/ACCRETION_RATES(reagent_1_idx(J))
+    EVAP_OVER_ACC_RATIO_1(J) = EVAPORATION_RATES(reagent_1_idx(J)) / ACCRETION_RATES(reagent_1_idx(J))
   endif
   if (ACCRETION_RATES(reagent_2_idx(J)).GT.0.d0) then
-    EX2(J)=EVAPORATION_RATES(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
+    EVAP_OVER_ACC_RATIO_2(J)=EVAPORATION_RATES(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
   endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1248,11 +1248,11 @@ end subroutine get_temporal_derivatives
 
   if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
-      if (EX1(J).LT.1.0d0) then
+      if (EVAP_OVER_ACC_RATIO_1(J).LT.1.0d0) then ! accretion dominates
         if (THERMAL_DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
           THERMAL_DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
         endif
-      else
+      else ! evaporation dominates
         if (THERMAL_DIFFUSION_RATE_1(J).GT.EVAPORATION_RATES(reagent_1_idx(J))) then
           THERMAL_DIFFUSION_RATE_1(J) = EVAPORATION_RATES(reagent_1_idx(J))
         endif
@@ -1260,11 +1260,11 @@ end subroutine get_temporal_derivatives
     endif
 
     if (IMOD2.NE.0) then
-      if (EX2(J).LT.1.0d0) then
+      if (EVAP_OVER_ACC_RATIO_2(J).LT.1.0d0) then ! accretion dominates
         if (THERMAL_DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
           THERMAL_DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
         endif
-      else
+      else ! evaporation dominates
         if (THERMAL_DIFFUSION_RATE_2(J).GT.EVAPORATION_RATES(reagent_2_idx(J))) then
           THERMAL_DIFFUSION_RATE_2(J) = EVAPORATION_RATES(reagent_2_idx(J))
         endif
@@ -1277,9 +1277,9 @@ end subroutine get_temporal_derivatives
     PICK=0.d0
 
     TESTREF1=ACCRETION_RATES(reagent_1_idx(J))
-    if (EX1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATES(reagent_1_idx(J))
+    if (EVAP_OVER_ACC_RATIO_1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATES(reagent_1_idx(J))
     TESTREF2=ACCRETION_RATES(reagent_2_idx(J))
-    if (EX2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATES(reagent_2_idx(J))
+    if (EVAP_OVER_ACC_RATIO_2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATES(reagent_2_idx(J))
 
     if (THERMAL_DIFFUSION_RATE_1(J).GE.THERMAL_DIFFUSION_RATE_2(J)) then
       TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD2*GTODN
@@ -1329,17 +1329,17 @@ end subroutine get_temporal_derivatives
   integer :: J,IMOD1,IMOD2
   real(kind=8) :: BARRCR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
 
-  EX1(J)=0.0D+0
-  EX2(J)=0.0D+0
+  EVAP_OVER_ACC_RATIO_1(J)=0.0D+0
+  EVAP_OVER_ACC_RATIO_2(J)=0.0D+0
 
   ! --- Check value of x = t_acc/t_evap
   ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
   IF (ACCRETION_RATES(reagent_1_idx(J)).GT.0.0D+0) THEN
-     EX1(J)=EVAPORATION_RATESCR(reagent_1_idx(J))/ACCRETION_RATES(reagent_1_idx(J))
+     EVAP_OVER_ACC_RATIO_1(J) = EVAPORATION_RATESCR(reagent_1_idx(J)) / ACCRETION_RATES(reagent_1_idx(J))
   ENDIF
   IF (ACCRETION_RATES(reagent_2_idx(J)).GT.0.0D+0) THEN
-     EX2(J)=EVAPORATION_RATESCR(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
+     EVAP_OVER_ACC_RATIO_2(J)=EVAPORATION_RATESCR(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
   ENDIF
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1347,11 +1347,11 @@ end subroutine get_temporal_derivatives
 
   IF (BARRCR.EQ.1.0D+0) THEN
      IF (IMOD1.NE.0) THEN
-        if (EX1(J).LT.1.0D+0) THEN
+        if (EVAP_OVER_ACC_RATIO_1(J).LT.1.0D+0) THEN ! accretion dominates
           if (CR_DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
             CR_DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
           endif
-        else
+        else ! evaporation dominates
           if (CR_DIFFUSION_RATE_1(J).GT.EVAPORATION_RATESCR(reagent_1_idx(J))) then
             CR_DIFFUSION_RATE_1(J) = EVAPORATION_RATESCR(reagent_1_idx(J))
           endif
@@ -1359,11 +1359,11 @@ end subroutine get_temporal_derivatives
      ENDIF
 
      IF (IMOD2.NE.0) THEN
-        if (EX2(J).LT.1.0D+0) THEN
+        if (EVAP_OVER_ACC_RATIO_2(J).LT.1.0D+0) THEN ! accretion dominates
           if (CR_DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
             CR_DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
           endif
-        else
+        else ! evaporation dominates
           if (CR_DIFFUSION_RATE_2(J).GT.EVAPORATION_RATESCR(reagent_2_idx(J))) then
             CR_DIFFUSION_RATE_2(J) = EVAPORATION_RATESCR(reagent_2_idx(J))
           endif
@@ -1376,9 +1376,9 @@ end subroutine get_temporal_derivatives
      PICK=0
 
      TESTREF1=ACCRETION_RATES(reagent_1_idx(J))
-     IF (EX1(J).GE.1.0D+0) TESTREF1=EVAPORATION_RATESCR(reagent_1_idx(J))
+     IF (EVAP_OVER_ACC_RATIO_1(J).GE.1.0D+0) TESTREF1=EVAPORATION_RATESCR(reagent_1_idx(J))
      TESTREF2=ACCRETION_RATES(reagent_2_idx(J))
-     IF (EX2(J).GE.1.0D+0) TESTREF2=EVAPORATION_RATESCR(reagent_2_idx(J))
+     IF (EVAP_OVER_ACC_RATIO_2(J).GE.1.0D+0) TESTREF2=EVAPORATION_RATESCR(reagent_2_idx(J))
 
      IF (CR_DIFFUSION_RATE_1(J).GE.CR_DIFFUSION_RATE_2(J)) THEN
         TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD2*GTODN
