@@ -722,14 +722,14 @@ end subroutine get_temporal_derivatives
     do K=1,nb_species
       TINDIF(K)=CHF(K)*EXP(-EB(K)/dust_temperature)/nb_sites_per_grain
       TINDIFCR(K)=CHF(K)*EXP(-EB(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
-      TINEVA(K)=CHF(K)*EXP(-ED(K)/dust_temperature)
-      TINEVACR(K)=CHF(K)*EXP(-ED(K)/PEAK_GRAIN_TEMPERATURE)
+      EVAPORATION_RATES(K)=CHF(K)*EXP(-ED(K)/dust_temperature)
+      EVAPORATION_RATESCR(K)=CHF(K)*EXP(-ED(K)/PEAK_GRAIN_TEMPERATURE)
     enddo
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
     ! ITYPE 15: Thermal evaporation
     do J=type_id_start(15),type_id_stop(15)
-      reaction_rates(J)=A(J)*branching_ratio(J)*TINEVA(reactant_1_idx(J))
+      reaction_rates(J)=A(J)*branching_ratio(J)*EVAPORATION_RATES(reactant_1_idx(J))
     enddo
 
     ! ========= Rxn ITYPE 16
@@ -1234,13 +1234,13 @@ end subroutine get_temporal_derivatives
   EX2(J)=0.d0
 
   ! --- Check value of x = t_acc/t_evap
-  ! TINEVA = 1/t_evap
+  ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
   if (ACCRETION_RATES(reactant_1_idx(J)).GT.0.d0) then
-    EX1(J)=TINEVA(reactant_1_idx(J))/ACCRETION_RATES(reactant_1_idx(J))
+    EX1(J)=EVAPORATION_RATES(reactant_1_idx(J))/ACCRETION_RATES(reactant_1_idx(J))
   endif
   if (ACCRETION_RATES(reactant_2_idx(J)).GT.0.d0) then
-    EX2(J)=TINEVA(reactant_2_idx(J))/ACCRETION_RATES(reactant_2_idx(J))
+    EX2(J)=EVAPORATION_RATES(reactant_2_idx(J))/ACCRETION_RATES(reactant_2_idx(J))
   endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1252,7 +1252,7 @@ end subroutine get_temporal_derivatives
         if (diffusion_rates_1(J).GT.ACCRETION_RATES(reactant_1_idx(J))) diffusion_rates_1(J)=ACCRETION_RATES(reactant_1_idx(J))
       endif
       if (EX1(J).GE.1.0d0) then
-        if (diffusion_rates_1(J).GT.TINEVA(reactant_1_idx(J))) diffusion_rates_1(J)=TINEVA(reactant_1_idx(J))
+        if (diffusion_rates_1(J).GT.EVAPORATION_RATES(reactant_1_idx(J))) diffusion_rates_1(J)=EVAPORATION_RATES(reactant_1_idx(J))
       endif
     endif
 
@@ -1261,7 +1261,7 @@ end subroutine get_temporal_derivatives
         if (diffusion_rates_2(J).GT.ACCRETION_RATES(reactant_2_idx(J))) diffusion_rates_2(J)=ACCRETION_RATES(reactant_2_idx(J))
       endif
       if (EX2(J).GE.1.0d0) then
-        if (diffusion_rates_2(J).GT.TINEVA(reactant_2_idx(J))) diffusion_rates_2(J)=TINEVA(reactant_2_idx(J))
+        if (diffusion_rates_2(J).GT.EVAPORATION_RATES(reactant_2_idx(J))) diffusion_rates_2(J)=EVAPORATION_RATES(reactant_2_idx(J))
       endif
     endif
   endif
@@ -1271,9 +1271,9 @@ end subroutine get_temporal_derivatives
     PICK=0.d0
 
     TESTREF1=ACCRETION_RATES(reactant_1_idx(J))
-    if (EX1(J).GE.1.0d0) TESTREF1=TINEVA(reactant_1_idx(J))
+    if (EX1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATES(reactant_1_idx(J))
     TESTREF2=ACCRETION_RATES(reactant_2_idx(J))
-    if (EX2(J).GE.1.0d0) TESTREF2=TINEVA(reactant_2_idx(J))
+    if (EX2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATES(reactant_2_idx(J))
 
     if (diffusion_rates_1(J).GE.diffusion_rates_2(J)) then
       TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR*YMOD2*GTODN
@@ -1327,13 +1327,13 @@ end subroutine get_temporal_derivatives
   EX2(J)=0.0D+0
 
   ! --- Check value of x = t_acc/t_evap
-  ! TINEVA = 1/t_evap
+  ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
   IF (ACCRETION_RATES(reactant_1_idx(J)).GT.0.0D+0) THEN
-     EX1(J)=TINEVACR(reactant_1_idx(J))/ACCRETION_RATES(reactant_1_idx(J))
+     EX1(J)=EVAPORATION_RATESCR(reactant_1_idx(J))/ACCRETION_RATES(reactant_1_idx(J))
   ENDIF
   IF (ACCRETION_RATES(reactant_2_idx(J)).GT.0.0D+0) THEN
-     EX2(J)=TINEVACR(reactant_2_idx(J))/ACCRETION_RATES(reactant_2_idx(J))
+     EX2(J)=EVAPORATION_RATESCR(reactant_2_idx(J))/ACCRETION_RATES(reactant_2_idx(J))
   ENDIF
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1346,8 +1346,8 @@ end subroutine get_temporal_derivatives
             diffusion_rates_1CR(J) = ACCRETION_RATES(reactant_1_idx(J))
           endif
         else
-          if (diffusion_rates_1CR(J).GT.TINEVACR(reactant_1_idx(J))) then
-            diffusion_rates_1CR(J) = TINEVACR(reactant_1_idx(J))
+          if (diffusion_rates_1CR(J).GT.EVAPORATION_RATESCR(reactant_1_idx(J))) then
+            diffusion_rates_1CR(J) = EVAPORATION_RATESCR(reactant_1_idx(J))
           endif
         endif
      ENDIF
@@ -1358,8 +1358,8 @@ end subroutine get_temporal_derivatives
             diffusion_rates_2CR(J) = ACCRETION_RATES(reactant_2_idx(J))
           endif
         else
-          if (diffusion_rates_2CR(J).GT.TINEVACR(reactant_2_idx(J))) then
-            diffusion_rates_2CR(J) = TINEVACR(reactant_2_idx(J))
+          if (diffusion_rates_2CR(J).GT.EVAPORATION_RATESCR(reactant_2_idx(J))) then
+            diffusion_rates_2CR(J) = EVAPORATION_RATESCR(reactant_2_idx(J))
           endif
         endif
      ENDIF
@@ -1370,9 +1370,9 @@ end subroutine get_temporal_derivatives
      PICK=0
 
      TESTREF1=ACCRETION_RATES(reactant_1_idx(J))
-     IF (EX1(J).GE.1.0D+0) TESTREF1=TINEVACR(reactant_1_idx(J))
+     IF (EX1(J).GE.1.0D+0) TESTREF1=EVAPORATION_RATESCR(reactant_1_idx(J))
      TESTREF2=ACCRETION_RATES(reactant_2_idx(J))
-     IF (EX2(J).GE.1.0D+0) TESTREF2=TINEVACR(reactant_2_idx(J))
+     IF (EX2(J).GE.1.0D+0) TESTREF2=EVAPORATION_RATESCR(reactant_2_idx(J))
 
      IF (diffusion_rates_1CR(J).GE.diffusion_rates_2CR(J)) THEN
         TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR*YMOD2*GTODN
