@@ -553,18 +553,19 @@ end subroutine index_datas
     do I=1,nb_species
       SMASS(I)=0.d0
       DESORPTION_ENERGY(I)=0.d0
-      EB(I)=0.d0
+      DIFFUSION_BARRIER(I)=0.d0
       DEB(I)=0.d0
       DHF(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=dble(INT1(J))
           DESORPTION_ENERGY(I)=REA1(J)
-          EB(I)=REA2(J)
+          DIFFUSION_BARRIER(I)=REA2(J)
           DEB(I)=REA3(J)
           DHF(I)=REA4(J)
-          if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.&
-          (EBFAC.GE.0.d0)) EB(I)=EBFAC*DESORPTION_ENERGY(I)
+          if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.(EBFAC.GE.0.d0)) then
+            DIFFUSION_BARRIER(I)=EBFAC*DESORPTION_ENERGY(I)
+          endif
         endif
       enddo
       !IF(species_name(I) == 'JN2O2      ') write(*,*) DESORPTION_ENERGY(I)
@@ -606,8 +607,8 @@ end subroutine index_datas
         else
           RQ1(I)=0.d0
         endif
-        RQ2(I)=CHF(I)/nb_sites_per_grain*&
-        EXP(-2.0d0*SITE_SPACING/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*EB(I)))
+        RQ2(I) = CHF(I) / nb_sites_per_grain * &
+                 EXP(-2.0d0*SITE_SPACING/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*DIFFUSION_BARRIER(I)))
       endif
     enddo
 

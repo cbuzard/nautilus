@@ -73,7 +73,7 @@ real(double_precision), allocatable, dimension(:) :: ACCRETION_RATES !< dim(nb_s
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATES !< dim(nb_species) evaporation rate for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATESCR !< dim(nb_species) evaporation rate  due to cosmic rays for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: DESORPTION_ENERGY !< dim(nb_species) Desorption energies (specific of each species) [K]
-real(double_precision), allocatable, dimension(:) :: EB !< dim(nb_species) Diffusion barriers (specific of each species) [K]
+real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER !< dim(nb_species) Diffusion barriers (specific of each species) [K]
 real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) dEb breadth in energy [K] between two surface wells as seen by the quantum mechanical tunneling effect (see Watson 1976)
 real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
 real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species) Characteristic vibration frequency [s-1] of the adsorbed species  as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
@@ -137,7 +137,7 @@ real(double_precision) :: ACT !< grain reaction activation energy constant [TODO
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
 real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
 real(double_precision) :: CRFE !< Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
-real(double_precision) :: EBFAC !<  EB/DESORPTION_ENERGY. Assumed to be 0.5 by default.  [no unit]
+real(double_precision) :: EBFAC !<  DIFFUSION_BARRIER/DESORPTION_ENERGY. Assumed to be 0.5 by default.  [no unit]
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
@@ -276,7 +276,7 @@ allocate(ACCRETION_RATES(nb_species))
 allocate(EVAPORATION_RATES(nb_species))
 allocate(EVAPORATION_RATEScr(nb_species))
 allocate(DESORPTION_ENERGY(nb_species))
-allocate(eb(nb_species))
+allocate(DIFFUSION_BARRIER(nb_species))
 allocate(deb(nb_species))
 allocate(dhf(nb_species))
 allocate(chf(nb_species))
@@ -320,7 +320,7 @@ THERMAL_HOPING_RATE(1:nb_species) = 0.d0
 ACCRETION_RATES(1:nb_species) = 0.d0
 EVAPORATION_RATES(1:nb_species) = 0.d0
 DESORPTION_ENERGY(1:nb_species) = 0.d0
-eb(1:nb_species) = 0.d0
+DIFFUSION_BARRIER(1:nb_species) = 0.d0
 deb(1:nb_species) = 0.d0
 dhf(1:nb_species) = 0.d0
 chf(1:nb_species) = 0.d0

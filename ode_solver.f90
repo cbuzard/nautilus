@@ -722,8 +722,8 @@ end subroutine get_temporal_derivatives
 
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
-      THERMAL_HOPING_RATE(K)=CHF(K)*EXP(-EB(K)/dust_temperature)/nb_sites_per_grain
-      CR_HOPING_RATE(K)=CHF(K)*EXP(-EB(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
+      THERMAL_HOPING_RATE(K)=CHF(K)*EXP(-DIFFUSION_BARRIER(K)/dust_temperature)/nb_sites_per_grain
+      CR_HOPING_RATE(K)=CHF(K)*EXP(-DIFFUSION_BARRIER(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
       EVAPORATION_RATES(K)=CHF(K)*EXP(-DESORPTION_ENERGY(K)/dust_temperature)
       EVAPORATION_RATESCR(K)=CHF(K)*EXP(-DESORPTION_ENERGY(K)/PEAK_GRAIN_TEMPERATURE)
     enddo
