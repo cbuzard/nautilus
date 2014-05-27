@@ -552,22 +552,22 @@ end subroutine index_datas
     ! --- Transfer from dummies to arrays with correct species numbers
     do I=1,nb_species
       SMASS(I)=0.d0
-      ED(I)=0.d0
+      DESORPTION_ENERGY(I)=0.d0
       EB(I)=0.d0
       DEB(I)=0.d0
       DHF(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=dble(INT1(J))
-          ED(I)=REA1(J)
+          DESORPTION_ENERGY(I)=REA1(J)
           EB(I)=REA2(J)
           DEB(I)=REA3(J)
           DHF(I)=REA4(J)
           if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.&
-          (EBFAC.GE.0.d0)) EB(I)=EBFAC*ED(I)
+          (EBFAC.GE.0.d0)) EB(I)=EBFAC*DESORPTION_ENERGY(I)
         endif
       enddo
-      !IF(species_name(I) == 'JN2O2      ') write(*,*) ED(I)
+      !IF(species_name(I) == 'JN2O2      ') write(*,*) DESORPTION_ENERGY(I)
     enddo
 
     do I=1,nb_reactions
@@ -599,7 +599,7 @@ end subroutine index_datas
       if (SMASS(I).NE.0) then
         SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
-        CHF(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*ED(I)/SMA)
+        CHF(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*DESORPTION_ENERGY(I)/SMA)
         ! --------- Set quantum rates
         if (DEB(I).GE.1.0D-38) then
           RQ1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
@@ -697,9 +697,9 @@ end subroutine index_datas
 
     DHFSUM=DHFSUM+ACTIVATION_ENERGY(J)
 
-    SUM1=ED(N4)
-    if (N5.NE.0) SUM1=MAX(ED(N4),ED(N5))
-    if (N6.NE.0) SUM1=MAX(ED(N4),ED(N5),ED(N6))
+    SUM1=DESORPTION_ENERGY(N4)
+    if (N5.NE.0) SUM1=MAX(DESORPTION_ENERGY(N4),DESORPTION_ENERGY(N5))
+    if (N6.NE.0) SUM1=MAX(DESORPTION_ENERGY(N4),DESORPTION_ENERGY(N5),DESORPTION_ENERGY(N6))
 
     ATOMS=0
     do K=1,NB_PRIME_ELEMENTS

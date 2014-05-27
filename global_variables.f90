@@ -72,7 +72,7 @@ real(double_precision), allocatable, dimension(:) :: TINDIFCR !< dim(nb_species)
 real(double_precision), allocatable, dimension(:) :: ACCRETION_RATES !< dim(nb_species) Accretion rate for a given species onto the grain surface [s-1]
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATES !< dim(nb_species) evaporation rate for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATESCR !< dim(nb_species) evaporation rate  due to cosmic rays for a given species [s-1]
-real(double_precision), allocatable, dimension(:) :: ED !< dim(nb_species) Desorption energies (specific of each species) [K]
+real(double_precision), allocatable, dimension(:) :: DESORPTION_ENERGY !< dim(nb_species) Desorption energies (specific of each species) [K]
 real(double_precision), allocatable, dimension(:) :: EB !< dim(nb_species) Diffusion barriers (specific of each species) [K]
 real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) ?? Used to compute RQ1 TODO
 real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
@@ -135,7 +135,7 @@ real(double_precision) :: ACT !< ??? TODO
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
 real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
 real(double_precision) :: CRFE !< ??? TODO
-real(double_precision) :: EBFAC !<  EB/ED. Assumed to be 0.5 by default.  [no unit]
+real(double_precision) :: EBFAC !<  EB/DESORPTION_ENERGY. Assumed to be 0.5 by default.  [no unit]
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
@@ -273,7 +273,7 @@ allocate(tindifcr(nb_species))
 allocate(ACCRETION_RATES(nb_species))
 allocate(EVAPORATION_RATES(nb_species))
 allocate(EVAPORATION_RATEScr(nb_species))
-allocate(ed(nb_species))
+allocate(DESORPTION_ENERGY(nb_species))
 allocate(eb(nb_species))
 allocate(deb(nb_species))
 allocate(dhf(nb_species))
@@ -317,7 +317,7 @@ SPECIES_MASS(1:nb_species) = 0.d0
 tindif(1:nb_species) = 0.d0
 ACCRETION_RATES(1:nb_species) = 0.d0
 EVAPORATION_RATES(1:nb_species) = 0.d0
-ed(1:nb_species) = 0.d0
+DESORPTION_ENERGY(1:nb_species) = 0.d0
 eb(1:nb_species) = 0.d0
 deb(1:nb_species) = 0.d0
 dhf(1:nb_species) = 0.d0
