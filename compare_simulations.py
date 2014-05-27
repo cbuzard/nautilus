@@ -29,11 +29,22 @@ problem_message = "Script that run a mercury simulation and test if the outputs 
 "(no spaces between the key and the values, only separated by '=')" + "\n" + \
 " * help : display a little help message on HOW to use various options" + "\n" + \
 " * force : To force generation of outputs for the 'old' program" + "\n" + \
+" * faq : Display possible problems that might occurs during comparison" + "\n" + \
 " * rev=%s : (previous, actual, current) are possible. Else, every Git ID syntax is OK." % REVISION + \
 "the reference revision for the comparison with actual code" + "\n" + \
 " Example : " + "\n" + \
 " compare_simulations.py force" + "\n" + \
 " compare_simulations.py rev=cdabb998"
+
+isFAq = False
+faq_message = """* If parameters changes between the two versions, using 'rev' or 'force' 
+options will make the comparison fail, because the old program will miss some
+parameters, leading sometimes to infinite loop such as : 
+  "ISTATE =           -3
+   DLSODES- At start of problem, too much accuracy             
+      requested for precision of machine..  See TOLSF (=R1) 
+      In above message,  R1 =                  NaN"
+"""
 
 # We get arguments from the script
 for arg in sys.argv[1:]:
@@ -45,6 +56,8 @@ for arg in sys.argv[1:]:
     force_simulation = True
   elif (key == 'help'):
     isProblem = True
+  elif (key == 'faq'):
+    isFAQ = True
   elif (key == 'rev'):
     # If a revision is specified, we force the actualisation of source code, compilation and simulation.
     force_source = True
@@ -61,6 +74,10 @@ for arg in sys.argv[1:]:
 
 if isProblem:
   print(problem_message)
+  exit()
+
+if isFAQ:
+  print(faq_message)
   exit()
 
 
