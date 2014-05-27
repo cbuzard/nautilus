@@ -133,7 +133,7 @@ real(double_precision) :: SITE_DENSITY
 real(double_precision) :: nb_sites_per_grain
 real(double_precision) :: ACT !< ??? TODO
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
-real(double_precision) :: CRT !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
+real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
 real(double_precision) :: CRFE !< ??? TODO
 real(double_precision) :: EBFAC !<  EB/ED. Assumed to be 0.5 by default.  [no unit]
 real(double_precision) :: START_TIME !< Start time of the simulation [s]

@@ -736,7 +736,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
       reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
-      *CHF(reactant_1_idx(J))*CRFE*CRT*EXP(-ED(reactant_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
+      *CHF(reactant_1_idx(J))*CRFE*PEAK_DURATION*EXP(-ED(reactant_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
     enddo
 
 
@@ -1131,7 +1131,7 @@ end subroutine get_temporal_derivatives
 
             DIFFCR=diffusion_rates_1CR(J)+diffusion_rates_2CR(J)
 
-            reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*CRT*A(J)*branching_ratio(J)* &
+            reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*PEAK_DURATION*A(J)*branching_ratio(J)* &
                                BARRCR*DIFFCR*GTODN/H_number_density
 
        enddo

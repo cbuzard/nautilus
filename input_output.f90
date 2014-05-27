@@ -448,8 +448,8 @@ if (isDefined) then
       case('PEAK_GRAIN_TEMPERATURE')
         read(value, '(e12.6)') PEAK_GRAIN_TEMPERATURE
       
-      case('CRT')
-        read(value, '(e12.6)') CRT
+      case('PEAK_DURATION')
+        read(value, '(e12.6)') PEAK_DURATION
       
       case('CRFE')
         read(value, '(e12.6)') CRFE
@@ -579,7 +579,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'EBFAC = ', EBFAC, ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
   write(10,'(a,es10.3e2,a)') 'PEAK_GRAIN_TEMPERATURE = ', PEAK_GRAIN_TEMPERATURE, ' ! peak grain temperature [K] (CR heating)'
-  write(10,'(a,es10.3e2,a)') 'CRT = ', CRT, ' ! duration [s] of peak grain temperature'
+  write(10,'(a,es10.3e2,a)') 'PEAK_DURATION = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'
   write(10,'(a,es10.3e2,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)'
   write(10,'(a,es10.3e2,a)') 'ARRK = ', ARRK, ' ! a-coefficient for RRK-style formation-desorption'
   write(10,'(a)') ""

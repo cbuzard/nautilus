@@ -47,7 +47,7 @@ site_density =  1.500E+15 ! site density [cm-2]
 EBFAC =  5.000E-01 ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values
 ACT =  1.000E-08 ! grain rxn activation energy constant
 PEAK_GRAIN_TEMPERATURE =  7.000E+01 ! peak grain temperature [K] (CR heating)
-CRT =  1.000E-05 ! duration [s] of peak grain temperature
+PEAK_DURATION =  1.000E-05 ! duration [s] of peak grain temperature
 CRFE =  3.000E-14 ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
 ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
 
