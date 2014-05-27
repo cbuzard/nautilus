@@ -36,7 +36,7 @@ problem_message = "Script that run a mercury simulation and test if the outputs 
 " compare_simulations.py force" + "\n" + \
 " compare_simulations.py rev=cdabb998"
 
-isFAq = False
+isFAQ = False
 faq_message = """* If parameters changes between the two versions, using 'rev' or 'force' 
 options will make the comparison fail, because the old program will miss some
 parameters, leading sometimes to infinite loop such as : 
