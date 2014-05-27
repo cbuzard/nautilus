@@ -96,7 +96,7 @@ real(double_precision), allocatable, dimension(:) :: diffusion_rates_1CR !< dim(
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_2CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
 real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EX1 = TINEVA(reactants1)/TINACC(reactants1)
 real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EX2 = TINEVA(reactants2)/TINACC(reactants2)
-real(double_precision), allocatable, dimension(:) :: EA !< dim(nb_reactions) Activation energy of reactions [K]
+real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions) min temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions) max temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: quantum_activation_energy !< dim(nb_reactions) Quantum activation energy
@@ -295,7 +295,7 @@ allocate(diffusion_rates_2(nb_reactions))
 allocate(diffusion_rates_2cr(nb_reactions))
 allocate(ex1(nb_reactions))
 allocate(ex2(nb_reactions))
-allocate(ea(nb_reactions))
+allocate(ACTIVATION_ENERGY(nb_reactions))
 allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
 allocate(quantum_activation_energy(nb_reactions))
@@ -337,7 +337,7 @@ diffusion_rates_1(1:nb_reactions) = 0.d0
 diffusion_rates_2(1:nb_reactions) = 0.d0
 ex1(1:nb_reactions) = 0.d0
 ex2(1:nb_reactions) = 0.d0
-ea(1:nb_reactions) = 0.d0
+ACTIVATION_ENERGY(1:nb_reactions) = 0.d0
 tmin(1:nb_reactions) = 0.d0
 tmax(1:nb_reactions) = 0.d0
 quantum_activation_energy(1:nb_reactions) = 0.d0

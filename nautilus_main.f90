@@ -571,23 +571,23 @@ end subroutine index_datas
     enddo
 
     do I=1,nb_reactions
-      EA(I)=0.d0
+      ACTIVATION_ENERGY(I)=0.d0
       do J=1,NEA
         if (REACTION_SUBSTANCES_NAMES(4,I)(:1).EQ.'J') then
           if ((REACTION_SUBSTANCES_NAMES(1,I).EQ.GSread(1,J)).AND.&
           (REACTION_SUBSTANCES_NAMES(2,I).EQ.GSread(2,J)).AND.&
           (REACTION_SUBSTANCES_NAMES(4,I).EQ.GSread(3,J)).AND.&
           (REACTION_SUBSTANCES_NAMES(5,I).EQ.GSread(4,J)).AND.&
-          (REACTION_SUBSTANCES_NAMES(6,I).EQ.GSread(5,J))) EA(I)=REA5(J)
+          (REACTION_SUBSTANCES_NAMES(6,I).EQ.GSread(5,J))) ACTIVATION_ENERGY(I)=REA5(J)
         else
           if ((REACTION_SUBSTANCES_NAMES(1,I).EQ.GSread(1,J)).AND.&
           (REACTION_SUBSTANCES_NAMES(2,I).EQ.GSread(2,J)).AND.&
           (REACTION_SUBSTANCES_NAMES(4,I).EQ.GSread(3,J)(2:)).AND.&
           (REACTION_SUBSTANCES_NAMES(5,I).EQ.GSread(4,J)(2:)).AND.&
-          (REACTION_SUBSTANCES_NAMES(6,I).EQ.GSread(5,J)(2:))) EA(I)=REA5(J)
+          (REACTION_SUBSTANCES_NAMES(6,I).EQ.GSread(5,J)(2:))) ACTIVATION_ENERGY(I)=REA5(J)
         endif
       enddo
-      !IF(REACTION_SUBSTANCES_NAMES(4,i) == 'JO2H       ') write(*,*)  REACTION_SUBSTANCES_NAMES(:,i), Ea(i)
+      !IF(REACTION_SUBSTANCES_NAMES(4,i) == 'JO2H       ') write(*,*)  REACTION_SUBSTANCES_NAMES(:,i), ACTIVATION_ENERGY(i)
     enddo
 
     ! Set up constants, quantum rate info===================================
@@ -695,7 +695,7 @@ end subroutine index_datas
     ! ------ Convert from #moles-1 to #reactions-1
     DHFSUM=DHFSUM/AVOGADRO
 
-    DHFSUM=DHFSUM+EA(J)
+    DHFSUM=DHFSUM+ACTIVATION_ENERGY(J)
 
     SUM1=ED(N4)
     if (N5.NE.0) SUM1=MAX(ED(N4),ED(N5))
@@ -754,7 +754,7 @@ end subroutine index_datas
 
     ! ------ Calculate quantum activation energy
     REDMAS = SMASS(reactant_1_idx(J)) * SMASS(reactant_2_idx(J)) / (SMASS(reactant_1_idx(J)) + SMASS(reactant_2_idx(J)))
-    quantum_activation_energy(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*EA(J))
+    quantum_activation_energy(J) = 2.0d0 * ACT/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*ACTIVATION_ENERGY(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION

@@ -928,8 +928,8 @@ end subroutine get_temporal_derivatives
       IMOD2=0
       BARR=1.0d0
       ! --------- Calculate activation energy barrier multiplier
-      if (EA(J).GE.1.0D-40) then
-        ACTIV=EA(J)/dust_temperature
+      if (ACTIVATION_ENERGY(J).GE.1.0D-40) then
+        ACTIV=ACTIVATION_ENERGY(J)/dust_temperature
         ! ------------ Choose fastest of classical or tunnelling
         if (ACTIV.GT.quantum_activation_energy(J)) ACTIV=quantum_activation_energy(J)
         BARR=EXP(-ACTIV)
@@ -1035,8 +1035,8 @@ end subroutine get_temporal_derivatives
             IMOD2=0
             BARRCR=1.0D+0
             ! --------- Calculate activation energy barrier multiplier
-            IF (EA(J).GE.1.0D-40) THEN
-               ACTIVCR=EA(J)/TSMAX
+            IF (ACTIVATION_ENERGY(J).GE.1.0D-40) THEN
+               ACTIVCR=ACTIVATION_ENERGY(J)/TSMAX
                ! ------------ Choose fastest of classical or tunnelling
                IF (ACTIVCR.GT.quantum_activation_energy(J)) ACTIVCR=quantum_activation_energy(J)
                BARRCR=EXP(-ACTIVCR)
