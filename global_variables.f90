@@ -69,7 +69,7 @@ real(double_precision), allocatable, dimension(:) :: TINDIF !< dim(nb_species) D
 !! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface 
 real(double_precision), allocatable, dimension(:) :: TINDIFCR !< dim(nb_species) Diffusion rate by thermal hopping due to cosmic rays heating [s-1]:
 !! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface
-real(double_precision), allocatable, dimension(:) :: TINACC !< dim(nb_species) Accretion rate for a given species onto the grain surface [s-1]
+real(double_precision), allocatable, dimension(:) :: ACCRETION_RATES !< dim(nb_species) Accretion rate for a given species onto the grain surface [s-1]
 real(double_precision), allocatable, dimension(:) :: TINEVA !< dim(nb_species) evaporation rate for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: TINEVACR !< dim(nb_species) evaporation rate  due to cosmic rays for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: ED !< dim(nb_species) Desorption energies (specific of each species) [K]
@@ -77,7 +77,7 @@ real(double_precision), allocatable, dimension(:) :: EB !< dim(nb_species) Diffu
 real(double_precision), allocatable, dimension(:) :: DEB !< dim(nb_species) ?? Used to compute RQ1 TODO
 real(double_precision), allocatable, dimension(:) :: DHF !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
 real(double_precision), allocatable, dimension(:) :: CHF !< dim(nb_species) Characteristic vibration frequency of the adsorbed species [s-1]
-real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species) Just used to compute TINACC
+real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species) Just used to compute ACCRETION_RATES
 real(double_precision), allocatable, dimension(:) :: RQ1 !< dim(nb_species) Quantum tunneling diffusion rate 1 [s-1] (Two prescriptions, but I don't know the differences between the two...)
 real(double_precision), allocatable, dimension(:) :: RQ2 !< dim(nb_species) Quantum tunneling diffusion rate 2 [s-1] (Two prescriptions, but I don't know the differences between the two...)
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
@@ -94,8 +94,8 @@ real(double_precision), allocatable, dimension(:) :: diffusion_rates_1 !< dim(nb
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_1CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
 real(double_precision), allocatable, dimension(:) :: diffusion_rates_2CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
-real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EX1 = TINEVA(reactants1)/TINACC(reactants1)
-real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EX2 = TINEVA(reactants2)/TINACC(reactants2)
+real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EX1 = TINEVA(reactants1)/ACCRETION_RATES(reactants1)
+real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EX2 = TINEVA(reactants2)/ACCRETION_RATES(reactants2)
 real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions) min temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions) max temperature boundary of each reactions [K]
@@ -270,7 +270,7 @@ allocate(abundances(nb_species))
 allocate(SPECIES_MASS(nb_species))
 allocate(tindif(nb_species))
 allocate(tindifcr(nb_species))
-allocate(tinacc(nb_species))
+allocate(ACCRETION_RATES(nb_species))
 allocate(tineva(nb_species))
 allocate(tinevacr(nb_species))
 allocate(ed(nb_species))
@@ -315,7 +315,7 @@ species_name(1:nb_species) = ''
 abundances(1:nb_species) = 0.d0
 SPECIES_MASS(1:nb_species) = 0.d0
 tindif(1:nb_species) = 0.d0
-tinacc(1:nb_species) = 0.d0
+ACCRETION_RATES(1:nb_species) = 0.d0
 tineva(1:nb_species) = 0.d0
 ed(1:nb_species) = 0.d0
 eb(1:nb_species) = 0.d0
