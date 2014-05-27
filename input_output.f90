@@ -165,9 +165,9 @@ do i=0,MAX_NUMBER_REACTION_TYPE
   do j=1,nb_reactions
     if (itypeuo(j).eq.i) then
       REACTION_SUBSTANCES_NAMES(:,jk)=SYMBOLUO(:,j)     
-      A(jk)=AUO(j)
-      B(jk)=BUO(j)
-      C(jk)=CUO(j)
+      RATE_A(jk)=AUO(j)
+      RATE_B(jk)=BUO(j)
+      RATE_C(jk)=CUO(j)
       REACTION_TYPE(jk)=itypeuo(j)
       REACTION_TMIN(jk) = dble(TminUO(j))
       REACTION_TMAX(jk) = dble(TmaxUO(j))

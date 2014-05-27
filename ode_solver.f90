@@ -528,7 +528,7 @@ end subroutine get_temporal_derivatives
   ! ====== Rxn ITYPE 0
   ! ITYPE 0: Gas phase reactions with GRAINS =) 
   do J=type_id_start(0),type_id_stop(0)
-    reaction_rates(J)=A(J)*(T300**B(J))
+    reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))
   enddo
 
   ! In the case IS_GRAIN_REACTIONS eq 0, we still need the formation of H on the grains
@@ -538,10 +538,10 @@ end subroutine get_temporal_derivatives
   ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
   if (IS_GRAIN_REACTIONS.eq.0) then
     do J=type_id_start(10),type_id_stop(10)
-      reaction_rates(J)=A(J)*1.186D7*exp(225.D0/gas_temperature)**(-1)*GTODN/H_number_density
+      reaction_rates(J)=RATE_A(J)*1.186D7*exp(225.D0/gas_temperature)**(-1)*GTODN/H_number_density
     enddo
     do J=type_id_start(11),type_id_stop(11)       
-      reaction_rates(J)=A(J)*(T300**B(J))*H_number_density/GTODN
+      reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))*H_number_density/GTODN
     enddo       
   endif
 
@@ -550,10 +550,10 @@ end subroutine get_temporal_derivatives
   ! ITYPE 1: Photodissoc/ionisation with cosmic rays
   ! Add X-rays in case X_IONISATION_RATE is not 0
   do J=type_id_start(1),type_id_stop(1)
-    reaction_rates(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
+    reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
   do J=type_id_start(2),type_id_stop(2)
-    reaction_rates(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
+    reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
 
   ! ====== Rxns ITYPE 4 - 8
@@ -572,11 +572,15 @@ end subroutine get_temporal_derivatives
     !---------------  KOOIJ FORMULA
     if (RATE_FORMULA(J).eq.3) then
 
-      reaction_rates(J)=A(J)*(T300**B(J))*EXP(-C(J)/gas_temperature)
+      reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))*EXP(-RATE_C(J)/gas_temperature)
 
       ! Check for temperature bounderies
-      if (gas_temperature.LT.REACTION_TMIN(J)) reaction_rates(J)=A(J)*((REACTION_TMIN(J)/300.D0)**B(J))*EXP(-C(J)/REACTION_TMIN(J))
-      if (gas_temperature.GT.REACTION_TMAX(J)) reaction_rates(J)=A(J)*((REACTION_TMAX(J)/300.D0)**B(J))*EXP(-C(J)/REACTION_TMAX(J))
+      if (gas_temperature.LT.REACTION_TMIN(J)) then
+        reaction_rates(J)=RATE_A(J)*((REACTION_TMIN(J)/300.D0)**RATE_B(J))*EXP(-RATE_C(J)/REACTION_TMIN(J))
+      endif
+      if (gas_temperature.GT.REACTION_TMAX(J)) then
+        reaction_rates(J)=RATE_A(J)*((REACTION_TMAX(J)/300.D0)**RATE_B(J))*EXP(-RATE_C(J)/REACTION_TMAX(J))
+      endif
 
       ! Check for the presence of several rate coefficients present in the network for the
       ! the same reaction
@@ -604,10 +608,10 @@ end subroutine get_temporal_derivatives
 
           if (minval(abs(distmin)).lt.minval(abs(distmax))) then
             N=indice(minloc(abs(distmin),dim=1))
-            reaction_rates(N)=A(N)*((REACTION_TMIN(N)/300.D0)**B(N))*EXP(-C(N)/REACTION_TMIN(N))
+            reaction_rates(N)=RATE_A(N)*((REACTION_TMIN(N)/300.D0)**RATE_B(N))*EXP(-RATE_C(N)/REACTION_TMIN(N))
           else
             N=indice(minloc(abs(distmax),dim=1))
-            reaction_rates(N)=A(N)*((REACTION_TMAX(N)/300.D0)**B(N))*EXP(-C(N)/REACTION_TMAX(N))
+            reaction_rates(N)=RATE_A(N)*((REACTION_TMAX(N)/300.D0)**RATE_B(N))*EXP(-RATE_C(N)/REACTION_TMAX(N))
           endif
         endif
 
@@ -620,11 +624,15 @@ end subroutine get_temporal_derivatives
 
     !---------------  IONPOL1 FORMULA
     if (RATE_FORMULA(J).EQ.4) then
-      reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/gas_temperature)**0.5))
+      reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/gas_temperature)**0.5))
 
       ! Check for temperature bounderies
-      if (gas_temperature.LT.REACTION_TMIN(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/REACTION_TMIN(J))**0.5))
-      if (gas_temperature.GT.REACTION_TMAX(J)) reaction_rates(J)=A(J)*B(J)*(0.62d0+0.4767d0*C(J)*((300.D0/REACTION_TMAX(J))**0.5))
+      if (gas_temperature.LT.REACTION_TMIN(J)) then
+        reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/REACTION_TMIN(J))**0.5))
+      endif
+      if (gas_temperature.GT.REACTION_TMAX(J))  then
+        reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/REACTION_TMAX(J))**0.5))
+      endif
 
       ! Check for the presence of several rate coefficients present in the network for the
       ! the same reaction
@@ -650,10 +658,10 @@ end subroutine get_temporal_derivatives
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
           if (minval(abs(distmin)).lt.minval(abs(distmax))) then
             N=indice(minloc(abs(distmin),dim=1))
-            reaction_rates(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/REACTION_TMIN(N))**0.5))
+            reaction_rates(N)=RATE_A(N)*RATE_B(N)*(0.62d0+0.4767d0*RATE_C(N)*((300.D0/REACTION_TMIN(N))**0.5))
           else
             N=indice(minloc(abs(distmax),dim=1))
-            reaction_rates(N)=A(N)*B(N)*(0.62d0+0.4767d0*C(N)*((300.D0/REACTION_TMAX(N))**0.5))
+            reaction_rates(N)=RATE_A(N)*RATE_B(N)*(0.62d0+0.4767d0*RATE_C(N)*((300.D0/REACTION_TMAX(N))**0.5))
           endif
         endif
 
@@ -669,11 +677,14 @@ end subroutine get_temporal_derivatives
       
       ! Check for temperature boundaries and apply the formula in consequence
       if (gas_temperature.LT.REACTION_TMIN(J)) then
-        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/REACTION_TMIN(J))**0.5)+(C(J)**2*300.d0/(10.526*REACTION_TMIN(J))))
+        reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/REACTION_TMIN(J))**0.5)+&
+                           (RATE_C(J)**2*300.d0/(10.526*REACTION_TMIN(J))))
       else if (gas_temperature.GT.REACTION_TMAX(J)) then
-        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/REACTION_TMAX(J))**0.5)+(C(J)**2*300.d0/(10.526*REACTION_TMAX(J))))
+        reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/REACTION_TMAX(J))**0.5)+&
+                           (RATE_C(J)**2*300.d0/(10.526*REACTION_TMAX(J))))
       else
-        reaction_rates(J)=A(J)*B(J)*((1.d0+0.0967*C(J)*(300.D0/gas_temperature)**0.5)+(C(J)**2*300.d0/(10.526*gas_temperature)))
+        reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/gas_temperature)**0.5)+&
+                           (RATE_C(J)**2*300.d0/(10.526*gas_temperature)))
       endif
 
       ! Check for the presence of several rate coefficients present in the network for the
@@ -700,12 +711,12 @@ end subroutine get_temporal_derivatives
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
           if (minval(abs(distmin)).lt.minval(abs(distmax))) then
             N=indice(minloc(abs(distmin),dim=1))
-            reaction_rates(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/REACTION_TMIN(N))**0.5) + &
-                              (C(N)**2*300.d0/(10.526*REACTION_TMIN(N))))
+            reaction_rates(N)=RATE_A(N)*RATE_B(N)*((1.d0+0.0967*RATE_C(N)*(300.D0/REACTION_TMIN(N))**0.5) + &
+                              (RATE_C(N)**2*300.d0/(10.526*REACTION_TMIN(N))))
           else
             N=indice(minloc(abs(distmax),dim=1))
-            reaction_rates(N)=A(N)*B(N)*((1.d0+0.0967*C(N)*(300.D0/REACTION_TMAX(N))**0.5) + &
-                              (C(N)**2*300.d0/(10.526*REACTION_TMAX(N))))
+            reaction_rates(N)=RATE_A(N)*RATE_B(N)*((1.d0+0.0967*RATE_C(N)*(300.D0/REACTION_TMAX(N))**0.5) + &
+                              (RATE_C(N)**2*300.d0/(10.526*REACTION_TMAX(N))))
           endif
         endif
 
@@ -731,13 +742,13 @@ end subroutine get_temporal_derivatives
     ! ========= Rxn ITYPE 15 - thermal evaporation
     ! ITYPE 15: Thermal evaporation
     do J=type_id_start(15),type_id_stop(15)
-      reaction_rates(J)=A(J)*branching_ratio(J)*EVAPORATION_RATES(reagent_1_idx(J))
+      reaction_rates(J)=RATE_A(J)*branching_ratio(J)*EVAPORATION_RATES(reagent_1_idx(J))
     enddo
 
     ! ========= Rxn ITYPE 16
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
-      reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
+      reaction_rates(J)=RATE_A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
       *VIBRATION_FREQUENCY(reagent_1_idx(J))*CRFE*PEAK_DURATION*EXP(-DESORPTION_ENERGY(reagent_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
     enddo
 
@@ -746,7 +757,7 @@ end subroutine get_temporal_derivatives
       ! ========= Rxn ITYPE 98 test the storage of H2S under a refractory form
       ! ITYPE 98: storage of H2S under a refractory form
       do j=type_id_start(98),type_id_stop(98)
-        reaction_rates(J)=A(J)*(T300**B(J))*EXP(-C(J)*TI)
+        reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))*EXP(-RATE_C(J)*TI)
       enddo
     endif
 
@@ -755,13 +766,13 @@ end subroutine get_temporal_derivatives
     ! ITYPE 17: Photodissociations by Cosmic rays on grain surfaces
     ! Add X-rays in case X_IONISATION_RATE is not 0
     do J=type_id_start(17),type_id_stop(17)
-      reaction_rates(J)=A(J)*(CR_IONISATION_RATE + X_IONISATION_RATE)
+      reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE + X_IONISATION_RATE)
     enddo
 
     ! ====== Rxn ITYPE 18
     ! ITYPE 18: Photodissociations by Cosmic rays on grain surfaces
     do J=type_id_start(18),type_id_stop(18)
-      reaction_rates(J)=A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
+      reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
     enddo
 
   endif
@@ -845,7 +856,7 @@ end subroutine get_temporal_derivatives
   ! ====== Rxn ITYPE 13
   ! ITYPE 2: Gas phase photodissociations/ionisations by UV
   do J=type_id_start(3),type_id_stop(3)
-    reaction_rates(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
+    reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*visual_extinction)*UV_FLUX
 
     ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
     if (IS_ABSORPTION.EQ.1) then 
@@ -920,7 +931,7 @@ end subroutine get_temporal_derivatives
       ! ========= Set accretion rates
       ACCRETION_RATES(reagent_1_idx(J))=CONDSP(reagent_1_idx(J))*TSQ*Y(reagent_1_idx(J))*H_number_density
       ACCRETION_RATES(reagent_2_idx(J))=ACCRETION_RATES(reagent_1_idx(J))
-      reaction_rates(J)=A(J)*branching_ratio(J)*ACCRETION_RATES(reagent_1_idx(J))/Y(reagent_1_idx(J))/GTODN
+      reaction_rates(J)=RATE_A(J)*branching_ratio(J)*ACCRETION_RATES(reagent_1_idx(J))/Y(reagent_1_idx(J))/GTODN
     enddo
 
     ! ====== Rxn ITYPE 14
@@ -1036,7 +1047,7 @@ end subroutine get_temporal_derivatives
 
       DIFF=THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J)
 
-      reaction_rates(J)=A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
+      reaction_rates(J)=RATE_A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
       ! reaction_rates(J)=0.D0
     enddo
 
@@ -1157,7 +1168,7 @@ end subroutine get_temporal_derivatives
 
             DIFFCR=CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J)
 
-            reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*PEAK_DURATION*A(J)*branching_ratio(J)* &
+            reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*PEAK_DURATION*RATE_A(J)*branching_ratio(J)* &
                                BARRCR*DIFFCR*GTODN/H_number_density
 
        enddo
@@ -1167,7 +1178,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 19: Photodissociations by UV photons on grain surfaces
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
     do J=type_id_start(19),type_id_stop(20)
-      reaction_rates(J)=A(J)*EXP(-C(J)*visual_extinction)*UV_FLUX
+      reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*visual_extinction)*UV_FLUX
     enddo
 
 ! ============================================================
@@ -1179,7 +1190,7 @@ end subroutine get_temporal_derivatives
     IF (type_id_start(66).NE.0) THEN
         DO J = type_id_start(66),type_id_stop(66)
 !---- Used for all species
-           reaction_rates(J)=A(J)/SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
+           reaction_rates(J)=RATE_A(J)/SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
 !---- Specific cases
            CALL photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
@@ -1193,7 +1204,7 @@ end subroutine get_temporal_derivatives
     IF (type_id_start(67).NE.0) THEN
         DO J = type_id_start(67),type_id_stop(67)
 !---- Used for all species
-           reaction_rates(J)=A(J)/SITE_DENSITY*1.d4*UVCR
+           reaction_rates(J)=RATE_A(J)/SITE_DENSITY*1.d4*UVCR
            CALL photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
@@ -1467,39 +1478,39 @@ REAL(double_precision) :: fH2O
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
 IF (dust_temperature.LE.3.5E+01) THEN
     IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
-        reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / A(J)
+        reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / RATE_A(J)
     ENDIF
     IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
        (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
-        reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / A(J)
+        reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / RATE_A(J)
     ENDIF
 ELSEIF(dust_temperature.GT.3.5E+01) THEN
     IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
-        reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / A(J)
+        reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / RATE_A(J)
     ENDIF
     IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
        (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
-       reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / A(J)
+       reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / RATE_A(J)
     ENDIF
 ENDIF
 !------ Photodesorption of CO
 IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') THEN
-   reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / A(J)
+   reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / RATE_A(J)
 ENDIF
 !------ Photodesorption of N2
 IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') THEN
-   reaction_rates(J) = reaction_rates(J) * 4.0E-04 / A(J)
+   reaction_rates(J) = reaction_rates(J) * 4.0E-04 / RATE_A(J)
 ENDIF
 !------ Photodesorption of CH3OH
 IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') THEN
-   reaction_rates(J) = reaction_rates(J) * 2.1E-03 / A(J)
+   reaction_rates(J) = reaction_rates(J) * 2.1E-03 / RATE_A(J)
 ENDIF
 !------ Photodesorption of H2O
 IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
    LTD = 6.0E-01 + 2.4E-02 * dust_temperature
    fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
    reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
-           & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / A(J)
+           & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / RATE_A(J)
    IF((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
       (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) THEN
       reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O

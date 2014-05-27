@@ -653,7 +653,7 @@ end subroutine index_datas
       ! ------ Calculate evaporation fraction
       NEVAP=0
       do K=1,nb_reactions
-        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).EQ.'J          ').AND.(A(K).NE.0.d0)) then
+        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).EQ.'J          ').AND.(RATE_A(K).NE.0.d0)) then
           if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
           (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)).AND.&
           (REACTION_SUBSTANCES_NAMES(4,J)(2:).EQ.REACTION_SUBSTANCES_NAMES(4,K)).AND.&
@@ -661,7 +661,7 @@ end subroutine index_datas
           (REACTION_SUBSTANCES_NAMES(6,J)(2:).EQ.REACTION_SUBSTANCES_NAMES(6,K)).AND.&
           (REACTION_SUBSTANCES_NAMES(4,K)(:1).NE.'J          ')) NEVAP=NEVAP+1
         endif
-        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).NE.'J          ').AND.(A(J).NE.0.d0)) then
+        if ((REACTION_SUBSTANCES_NAMES(4,J)(:1).NE.'J          ').AND.(RATE_A(J).NE.0.d0)) then
           if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
           (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K)).AND.&
           (REACTION_SUBSTANCES_NAMES(4,J).EQ.REACTION_SUBSTANCES_NAMES(4,K)(2:)).AND.&

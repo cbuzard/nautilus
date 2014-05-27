@@ -86,9 +86,9 @@ integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< elect
 character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
 integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reagents (first 3) and products (last 4).
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
-real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
-real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
-real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
+real(double_precision), allocatable, dimension(:) :: RATE_A !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
+real(double_precision), allocatable, dimension(:) :: RATE_B !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
+real(double_precision), allocatable, dimension(:) :: RATE_C !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions) reaction rate [unit depend on the reaction]
 real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
 real(double_precision), allocatable, dimension(:) :: REACTION_TMIN !< dim(nb_reactions) min temperature boundary of each reactions [K]
@@ -287,9 +287,9 @@ allocate(SPECIES_CHARGE(nb_species))
 allocate(nb_reactions_using_species(nb_species))
 
 allocate(branching_ratio(nb_reactions))
-allocate(a(nb_reactions))
-allocate(b(nb_reactions))
-allocate(c(nb_reactions))
+allocate(RATE_A(nb_reactions))
+allocate(RATE_B(nb_reactions))
+allocate(RATE_C(nb_reactions))
 allocate(reaction_rates(nb_reactions))
 allocate(THERMAL_DIFFUSION_RATE_1(nb_reactions))
 allocate(CR_DIFFUSION_RATE_1(nb_reactions))
@@ -331,9 +331,9 @@ SPECIES_CHARGE(1:nb_species) = 0
 nb_reactions_using_species(1:nb_species) = 0
 
 branching_ratio(1:nb_reactions) = 0.d0
-a(1:nb_reactions) = 0.d0
-b(1:nb_reactions) = 0.d0
-c(1:nb_reactions) = 0.d0
+RATE_A(1:nb_reactions) = 0.d0
+RATE_B(1:nb_reactions) = 0.d0
+RATE_C(1:nb_reactions) = 0.d0
 reaction_rates(1:nb_reactions) = 0.d0
 THERMAL_DIFFUSION_RATE_1(1:nb_reactions) = 0.d0
 THERMAL_DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
