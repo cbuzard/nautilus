@@ -84,29 +84,31 @@ integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< elect
 
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
-integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reactants (first 3) and products (last 4).
+integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reagents (first 3) and products (last 4).
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
 real(double_precision), allocatable, dimension(:) :: A !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
 real(double_precision), allocatable, dimension(:) :: B !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
 real(double_precision), allocatable, dimension(:) :: C !< dim(nb_reactions) k(T)= A * (T/300)^B * exp(-C/T)
 real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions) reaction rate [unit depend on the reaction]
-real(double_precision), allocatable, dimension(:) :: diffusion_rates_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
-real(double_precision), allocatable, dimension(:) :: diffusion_rates_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate
-real(double_precision), allocatable, dimension(:) :: diffusion_rates_1CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
-real(double_precision), allocatable, dimension(:) :: diffusion_rates_2CR !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating
-real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reactant 1
-real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reactant 2
 real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmin !< dim(nb_reactions) min temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: Tmax !< dim(nb_reactions) max temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: quantum_activation_energy !< dim(nb_reactions) Quantum activation energy
 integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For each reaction, what is its type (cosmic ray evaporation, etc...)
-integer, allocatable, dimension(:) :: reactant_1_idx !< dim(nb_reactions) Index of the first reactant species involved in the reaction
-integer, allocatable, dimension(:) :: reactant_2_idx !< dim(nb_reactions) Index of the second reactant species involved in the reaction
 integer, allocatable, dimension(:) :: RATE_FORMULA !< dim(nb_reactions) The index tracing the formula used for each specific 
 !! reaction, defining its reaction rates in function of temperature and abundances.
 integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
+
+! Specific variables for first or second reagent of each reactions
+integer, allocatable, dimension(:) :: reagent_1_idx !< dim(nb_reactions) Index of the first reagent species involved in the reaction
+integer, allocatable, dimension(:) :: reagent_2_idx !< dim(nb_reactions) Index of the second reagent species involved in the reaction
+real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate for reagent 1
+real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate for reagent 2
+real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating for reagent 1
+real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating for reagent 2
+real(double_precision), allocatable, dimension(:) :: EX1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 1
+real(double_precision), allocatable, dimension(:) :: EX2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 2
 
 real(double_precision) :: initial_dtg_mass_ratio
 real(double_precision) :: GTODN !< Gas to dust number ratio. 1/GTODN is equivalent to the grain abundance [no unit]
@@ -289,10 +291,10 @@ allocate(a(nb_reactions))
 allocate(b(nb_reactions))
 allocate(c(nb_reactions))
 allocate(reaction_rates(nb_reactions))
-allocate(diffusion_rates_1(nb_reactions))
-allocate(diffusion_rates_1cr(nb_reactions))
-allocate(diffusion_rates_2(nb_reactions))
-allocate(diffusion_rates_2cr(nb_reactions))
+allocate(THERMAL_DIFFUSION_RATE_1(nb_reactions))
+allocate(CR_DIFFUSION_RATE_1(nb_reactions))
+allocate(THERMAL_DIFFUSION_RATE_2(nb_reactions))
+allocate(CR_DIFFUSION_RATE_2(nb_reactions))
 allocate(ex1(nb_reactions))
 allocate(ex2(nb_reactions))
 allocate(ACTIVATION_ENERGY(nb_reactions))
@@ -300,8 +302,8 @@ allocate(tmin(nb_reactions))
 allocate(tmax(nb_reactions))
 allocate(quantum_activation_energy(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
-allocate(reactant_1_idx(nb_reactions))
-allocate(reactant_2_idx(nb_reactions))
+allocate(reagent_1_idx(nb_reactions))
+allocate(reagent_2_idx(nb_reactions))
 allocate(RATE_FORMULA(nb_reactions))
 allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(7,nb_reactions))
@@ -333,8 +335,8 @@ a(1:nb_reactions) = 0.d0
 b(1:nb_reactions) = 0.d0
 c(1:nb_reactions) = 0.d0
 reaction_rates(1:nb_reactions) = 0.d0
-diffusion_rates_1(1:nb_reactions) = 0.d0
-diffusion_rates_2(1:nb_reactions) = 0.d0
+THERMAL_DIFFUSION_RATE_1(1:nb_reactions) = 0.d0
+THERMAL_DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
 ex1(1:nb_reactions) = 0.d0
 ex2(1:nb_reactions) = 0.d0
 ACTIVATION_ENERGY(1:nb_reactions) = 0.d0
@@ -342,8 +344,8 @@ tmin(1:nb_reactions) = 0.d0
 tmax(1:nb_reactions) = 0.d0
 quantum_activation_energy(1:nb_reactions) = 0.d0
 REACTION_TYPE(1:nb_reactions) = 0
-reactant_1_idx(1:nb_reactions) = 0
-reactant_2_idx(1:nb_reactions) = 0
+reagent_1_idx(1:nb_reactions) = 0
+reagent_2_idx(1:nb_reactions) = 0
 RATE_FORMULA(1:nb_reactions) = 0
 REACTION_ID(1:nb_reactions) = 0
 REACTION_SUBSTANCES_ID(1:7,1:nb_reactions) = 0

@@ -13,10 +13,10 @@ contains
 !> @date 2003
 !
 ! DESCRIPTION: 
-!> @brief Initialize reactants and products of all reactions
+!> @brief Initialize reagents and products of all reactions
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine set_chemical_reactants()
+subroutine set_chemical_reagents()
 use global_variables
 
 implicit none
@@ -28,7 +28,7 @@ integer :: no_species
 
 no_species = nb_species + 1
 
-! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
+! By default, non existing reagents (dummy species) will be assigned (nb_species+1)
 REACTION_SUBSTANCES_ID(1:7, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
@@ -44,7 +44,7 @@ do I=1,nb_reactions
 enddo   
 
 return
-end subroutine set_chemical_reactants
+end subroutine set_chemical_reagents
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -143,14 +143,14 @@ integer :: no_species
 
 real(double_precision), dimension(nb_species+1) :: PDJ2
 integer :: i
-integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 integer :: reaction_idx ! The index of a given reaction
 
 ! Temp values to increase speed
 real(double_precision) :: H_number_density_squared ! H_number_density*H_number_density, to gain speed
 real(double_precision) :: tmp_value ! To optimize speed, temporary variable is created to avoid multiple calculation of the same thing
 
-no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
+no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reagent for instance
 
 H_number_density_squared = H_number_density * H_number_density
 
@@ -159,9 +159,9 @@ PDJ2(1:nb_species+1) = 0.d0
 do i=1,nb_reactions_using_species(j)
   reaction_idx = relevant_reactions(i, j) ! j being the species index, given as a parameter
 
-  reactant1_idx = REACTION_SUBSTANCES_ID(1, reaction_idx)
-  reactant2_idx = REACTION_SUBSTANCES_ID(2, reaction_idx)
-  reactant3_idx = REACTION_SUBSTANCES_ID(3, reaction_idx)
+  reagent1_idx = REACTION_SUBSTANCES_ID(1, reaction_idx)
+  reagent2_idx = REACTION_SUBSTANCES_ID(2, reaction_idx)
+  reagent3_idx = REACTION_SUBSTANCES_ID(3, reaction_idx)
   product1_idx = REACTION_SUBSTANCES_ID(4, reaction_idx)
   product2_idx = REACTION_SUBSTANCES_ID(5, reaction_idx)
   product3_idx = REACTION_SUBSTANCES_ID(6, reaction_idx)
@@ -171,72 +171,72 @@ do i=1,nb_reactions_using_species(j)
   !! then always go to 'else' statement, not to test if we have already found our case. One, then two bodies reactions are the most 
   !! abundants reactions. 
 
-  ! One reactant only
-  if (reactant2_idx.eq.no_species) then
-    if (reactant1_idx.eq.J) then 
+  ! One reagent only
+  if (reagent2_idx.eq.no_species) then
+    if (reagent1_idx.eq.J) then 
       tmp_value = reaction_rates(reaction_idx)
       PDJ2(product1_idx)   = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx)   = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx)   = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx)   = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
+      PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
     endif
   
   ! Two bodies reaction
-  else if (reactant3_idx.eq.no_species) then
-    if (reactant1_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant2_idx) * H_number_density
+  else if (reagent3_idx.eq.no_species) then
+    if (reagent1_idx.eq.J) then 
+      tmp_value = reaction_rates(reaction_idx) * Y(reagent2_idx) * H_number_density
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
+      PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
+      PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
     endif
 
-    if (reactant2_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant1_idx) * H_number_density
+    if (reagent2_idx.eq.J) then 
+      tmp_value = reaction_rates(reaction_idx) * Y(reagent1_idx) * H_number_density
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
+      PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
+      PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
     endif
   
   ! Three bodies reaction
   else
-    if (reactant1_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant2_idx) * Y(reactant3_idx) * H_number_density_squared
+    if (reagent1_idx.eq.J) then 
+      tmp_value = reaction_rates(reaction_idx) * Y(reagent2_idx) * Y(reagent3_idx) * H_number_density_squared
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
-      PDJ2(reactant3_idx) = PDJ2(reactant3_idx) - tmp_value
+      PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
+      PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
+      PDJ2(reagent3_idx) = PDJ2(reagent3_idx) - tmp_value
     endif
 
-    if (reactant2_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant1_idx) * Y(reactant3_idx) * H_number_density_squared
+    if (reagent2_idx.eq.J) then 
+      tmp_value = reaction_rates(reaction_idx) * Y(reagent1_idx) * Y(reagent3_idx) * H_number_density_squared
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
-      PDJ2(reactant3_idx) = PDJ2(reactant3_idx) - tmp_value
+      PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
+      PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
+      PDJ2(reagent3_idx) = PDJ2(reagent3_idx) - tmp_value
     endif
 
-    if (reactant3_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant1_idx) * Y(reactant2_idx) * H_number_density_squared
+    if (reagent3_idx.eq.J) then 
+      tmp_value = reaction_rates(reaction_idx) * Y(reagent1_idx) * Y(reagent2_idx) * H_number_density_squared
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
-      PDJ2(reactant1_idx) = PDJ2(reactant1_idx) - tmp_value
-      PDJ2(reactant2_idx) = PDJ2(reactant2_idx) - tmp_value
-      PDJ2(reactant3_idx) = PDJ2(reactant3_idx) - tmp_value
+      PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
+      PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
+      PDJ2(reagent3_idx) = PDJ2(reagent3_idx) - tmp_value
     endif
 
   endif
@@ -271,24 +271,24 @@ integer, dimension(nb_reactions, nb_species+1) :: is_species_used ! For each spe
 !! (0 if not used, 1 if used at least once)
 
 integer :: reaction, species, idx
-integer :: reactant1_idx, reactant2_idx, reactant3_idx
+integer :: reagent1_idx, reagent2_idx, reagent3_idx
 
 is_species_used(1:nb_reactions, 1:nb_species+1) = 0
 
 do reaction=1,nb_reactions
 
-  reactant1_idx = REACTION_SUBSTANCES_ID(1, reaction)
-  reactant2_idx = REACTION_SUBSTANCES_ID(2, reaction)
-  reactant3_idx = REACTION_SUBSTANCES_ID(3, reaction)
+  reagent1_idx = REACTION_SUBSTANCES_ID(1, reaction)
+  reagent2_idx = REACTION_SUBSTANCES_ID(2, reaction)
+  reagent3_idx = REACTION_SUBSTANCES_ID(3, reaction)
   
-  is_species_used(reaction, reactant1_idx) = 1
-  is_species_used(reaction, reactant2_idx) = 1
-  is_species_used(reaction, reactant3_idx) = 1
+  is_species_used(reaction, reagent1_idx) = 1
+  is_species_used(reaction, reagent2_idx) = 1
+  is_species_used(reaction, reagent3_idx) = 1
 
 enddo
 
 ! We get the total number of reactions in which each species can be involved
-! We skip the 'nb_species+1' species that is only a fake species for "no reactant"
+! We skip the 'nb_species+1' species that is only a fake species for "no reagent"
 nb_reactions_using_species(1:nb_species) = sum(is_species_used(1:nb_reactions, 1:nb_species), 1)
 
 ! What is the maximum number of reactions involving one particular species?
@@ -299,7 +299,7 @@ allocate(relevant_reactions(max_reactions_same_species, nb_species))
 relevant_reactions(1:max_reactions_same_species, 1:nb_species) = 0 ! For the extra elements (because not all species 
 !! will have 'max_reactions' reactions involving it).
 
-! For each species, we get the references of reactions that have it as a reactant. The number of reactions is different for each species 
+! For each species, we get the references of reactions that have it as a reagent. The number of reactions is different for each species 
 !! Thus, at least one species will have a full line of meaningfull indexes. The other will have the rest of their line completed by zeros.
 do species=1,nb_species
   idx = 1
@@ -445,7 +445,7 @@ integer :: no_species
 real(double_precision), dimension(nb_species+1) :: YD2
 !REAL(KIND=16), dimension(nb_species+1) :: YD2
 integer :: i
-integer :: reactant1_idx, reactant2_idx, reactant3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 real(double_precision) :: rate
 
 call set_dependant_rates(y)
@@ -459,25 +459,25 @@ yd2(1:nb_species) = 0.d0
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
 
-  reactant1_idx = REACTION_SUBSTANCES_ID(1, i)
-  reactant2_idx = REACTION_SUBSTANCES_ID(2, i)
-  reactant3_idx = REACTION_SUBSTANCES_ID(3, i)
+  reagent1_idx = REACTION_SUBSTANCES_ID(1, i)
+  reagent2_idx = REACTION_SUBSTANCES_ID(2, i)
+  reagent3_idx = REACTION_SUBSTANCES_ID(3, i)
 
   product1_idx = REACTION_SUBSTANCES_ID(4, i)
   product2_idx = REACTION_SUBSTANCES_ID(5, i)
   product3_idx = REACTION_SUBSTANCES_ID(6, i)
   product4_idx = REACTION_SUBSTANCES_ID(7, i)
 
-  ! One reactant only
-  if (reactant2_idx.eq.no_species) then
-    RATE = reaction_rates(I) * Y(reactant1_idx)  
+  ! One reagent only
+  if (reagent2_idx.eq.no_species) then
+    RATE = reaction_rates(I) * Y(reagent1_idx)  
   else
-    if (reactant3_idx.eq.no_species) then
+    if (reagent3_idx.eq.no_species) then
       ! Two bodies reactions
-      RATE = reaction_rates(I) * Y(reactant1_idx) * Y(reactant2_idx) * H_number_density
+      RATE = reaction_rates(I) * Y(reagent1_idx) * Y(reagent2_idx) * H_number_density
     else 
       ! Three bodies reactions
-      RATE = reaction_rates(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * H_number_density * H_number_density
+      RATE = reaction_rates(I)*Y(reagent1_idx) * Y(reagent2_idx) * Y(reagent3_idx) * H_number_density * H_number_density
     endif
   endif
 
@@ -485,9 +485,9 @@ do I=1,nb_reactions
   YD2(product2_idx) = YD2(product2_idx) + RATE
   YD2(product3_idx) = YD2(product3_idx) + RATE
   YD2(product4_idx) = YD2(product4_idx) + RATE
-  YD2(reactant1_idx) = YD2(reactant1_idx) - RATE
-  YD2(reactant2_idx) = YD2(reactant2_idx) - RATE
-  YD2(reactant3_idx) = YD2(reactant3_idx) - RATE
+  YD2(reagent1_idx) = YD2(reagent1_idx) - RATE
+  YD2(reagent2_idx) = YD2(reagent2_idx) - RATE
+  YD2(reagent3_idx) = YD2(reagent3_idx) - RATE
 enddo   
 
 YDOT(1:nb_species) = YD2(1:nb_species)
@@ -729,14 +729,14 @@ end subroutine get_temporal_derivatives
     ! ========= Rxn ITYPE 15 - thermal evaporation
     ! ITYPE 15: Thermal evaporation
     do J=type_id_start(15),type_id_stop(15)
-      reaction_rates(J)=A(J)*branching_ratio(J)*EVAPORATION_RATES(reactant_1_idx(J))
+      reaction_rates(J)=A(J)*branching_ratio(J)*EVAPORATION_RATES(reagent_1_idx(J))
     enddo
 
     ! ========= Rxn ITYPE 16
     ! ITYPE 16: Cosmic-ray evaporation
     do J=type_id_start(16),type_id_stop(16)
       reaction_rates(J)=A(J)*branching_ratio(J)*((CR_IONISATION_RATE+X_IONISATION_RATE)/1.3D-17)&
-      *CHF(reactant_1_idx(J))*CRFE*PEAK_DURATION*EXP(-DESORPTION_ENERGY(reactant_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
+      *CHF(reagent_1_idx(J))*CRFE*PEAK_DURATION*EXP(-DESORPTION_ENERGY(reagent_1_idx(J))/PEAK_GRAIN_TEMPERATURE)
     enddo
 
 
@@ -916,9 +916,9 @@ end subroutine get_temporal_derivatives
     ! ITYPE 99: Adsorption on grains
     do J=type_id_start(99),type_id_stop(99)
       ! ========= Set accretion rates
-      ACCRETION_RATES(reactant_1_idx(J))=CONDSP(reactant_1_idx(J))*TSQ*Y(reactant_1_idx(J))*H_number_density
-      ACCRETION_RATES(reactant_2_idx(J))=ACCRETION_RATES(reactant_1_idx(J))
-      reaction_rates(J)=A(J)*branching_ratio(J)*ACCRETION_RATES(reactant_1_idx(J))/Y(reactant_1_idx(J))/GTODN
+      ACCRETION_RATES(reagent_1_idx(J))=CONDSP(reagent_1_idx(J))*TSQ*Y(reagent_1_idx(J))*H_number_density
+      ACCRETION_RATES(reagent_2_idx(J))=ACCRETION_RATES(reagent_1_idx(J))
+      reaction_rates(J)=A(J)*branching_ratio(J)*ACCRETION_RATES(reagent_1_idx(J))/Y(reagent_1_idx(J))/GTODN
     enddo
 
     ! ====== Rxn ITYPE 14
@@ -936,8 +936,8 @@ end subroutine get_temporal_derivatives
       endif
 
       ! --------- Thermal hopping diffusion method
-      diffusion_rates_1(J)=THERMAL_HOPING_RATE(reactant_1_idx(J))
-      diffusion_rates_2(J)=THERMAL_HOPING_RATE(reactant_2_idx(J))
+      THERMAL_DIFFUSION_RATE_1(J)=THERMAL_HOPING_RATE(reagent_1_idx(J))
+      THERMAL_DIFFUSION_RATE_2(J)=THERMAL_HOPING_RATE(reagent_2_idx(J))
 
       ! --------- Check for JH,JH2
       if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
@@ -950,26 +950,26 @@ end subroutine get_temporal_derivatives
         ! ------------ QM1 - Tunnelling (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.1) then
           if ((IMOD1.NE.0).AND.&
-          (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1(J))) diffusion_rates_1(J)=RQ1(reactant_1_idx(J))
+          (RQ1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) THERMAL_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
           if ((IMOD2.NE.0).AND.&
-          (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2(J))) diffusion_rates_2(J)=RQ1(reactant_2_idx(J))
+          (RQ1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) THERMAL_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
         endif
         ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.2) then
           if ((IMOD1.NE.0).AND.&
-          (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1(J))) diffusion_rates_1(J)=RQ2(reactant_1_idx(J))
+          (RQ2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) THERMAL_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
           if ((IMOD2.NE.0).AND.&
-          (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2(J))) diffusion_rates_2(J)=RQ2(reactant_2_idx(J))
+          (RQ2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) THERMAL_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
         endif
         ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
         if (GRAIN_TUNNELING_DIFFUSION.EQ.3) then
           if (IMOD1.NE.0) then
-            if (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1(J)) diffusion_rates_1(J)=RQ1(reactant_1_idx(J))
-            if (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1(J)) diffusion_rates_1(J)=RQ2(reactant_1_idx(J))
+            if (RQ1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) THERMAL_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
+            if (RQ2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) THERMAL_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
           endif
           if (IMOD2.NE.0) then
-            if (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2(J)) diffusion_rates_2(J)=RQ1(reactant_2_idx(J))
-            if (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2(J)) diffusion_rates_2(J)=RQ2(reactant_2_idx(J))
+            if (RQ1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J)) THERMAL_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
+            if (RQ2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J)) THERMAL_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
           endif
         endif
       endif
@@ -1014,13 +1014,13 @@ end subroutine get_temporal_derivatives
           (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
         endif
 
-        ! ------------ Modify rates (diffusion_rates_1 & diffusion_rates_2) according to their own evap/acc rates
-        YMOD1=Y(reactant_1_idx(J))
-        YMOD2=Y(reactant_2_idx(J))
+        ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
+        YMOD1=Y(reagent_1_idx(J))
+        YMOD2=Y(reagent_2_idx(J))
         call modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
       endif
 
-      DIFF=diffusion_rates_1(J)+diffusion_rates_2(J)
+      DIFF=THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J)
 
       reaction_rates(J)=A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
       ! reaction_rates(J)=0.D0
@@ -1043,8 +1043,8 @@ end subroutine get_temporal_derivatives
             ENDIF
 
             ! --------- Thermal hopping diffusion method
-            diffusion_rates_1CR(J)=CR_HOPING_RATE(reactant_1_idx(J))
-            diffusion_rates_2CR(J)=CR_HOPING_RATE(reactant_2_idx(J))
+            CR_DIFFUSION_RATE_1(J)=CR_HOPING_RATE(reagent_1_idx(J))
+            CR_DIFFUSION_RATE_2(J)=CR_HOPING_RATE(reagent_2_idx(J))
 
             ! --------- Check for JH,JH2
             IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
@@ -1059,26 +1059,26 @@ end subroutine get_temporal_derivatives
                ! ------------ QM1 - Tunnelling (if it's faster than thermal)
                IF (grain_tunneling_diffusion.EQ.1) THEN
                   IF ((IMOD1.NE.0).AND.&
-                     (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1CR(J))) diffusion_rates_1CR(J)=RQ1(reactant_1_idx(J))
+                     (RQ1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) CR_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
                   IF ((IMOD2.NE.0).AND.&
-                     (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2CR(J))) diffusion_rates_2CR(J)=RQ1(reactant_2_idx(J))
+                     (RQ1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) CR_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
                ENDIF
                ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
                IF (grain_tunneling_diffusion.EQ.2) THEN
                   IF ((IMOD1.NE.0).AND.&
-                     (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1CR(J))) diffusion_rates_1CR(J)=RQ2(reactant_1_idx(J))
+                     (RQ2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) CR_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
                   IF ((IMOD2.NE.0).AND.&
-                     (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2CR(J))) diffusion_rates_2CR(J)=RQ2(reactant_2_idx(J))
+                     (RQ2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) CR_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
                ENDIF
                ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
                IF (grain_tunneling_diffusion.EQ.3) THEN
                   IF (IMOD1.NE.0) THEN
-                     IF (RQ1(reactant_1_idx(J)).GT.diffusion_rates_1CR(J)) diffusion_rates_1CR(J)=RQ1(reactant_1_idx(J))
-                     IF (RQ2(reactant_1_idx(J)).GT.diffusion_rates_1CR(J)) diffusion_rates_1CR(J)=RQ2(reactant_1_idx(J))
+                     IF (RQ1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) CR_DIFFUSION_RATE_1(J)=RQ1(reagent_1_idx(J))
+                     IF (RQ2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) CR_DIFFUSION_RATE_1(J)=RQ2(reagent_1_idx(J))
                   ENDIF
                   IF (IMOD2.NE.0) THEN
-                     IF (RQ1(reactant_2_idx(J)).GT.diffusion_rates_2CR(J)) diffusion_rates_2CR(J)=RQ1(reactant_2_idx(J))
-                     IF (RQ2(reactant_2_idx(J)).GT.diffusion_rates_2CR(J)) diffusion_rates_2CR(J)=RQ2(reactant_2_idx(J))
+                     IF (RQ1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) CR_DIFFUSION_RATE_2(J)=RQ1(reagent_2_idx(J))
+                     IF (RQ2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) CR_DIFFUSION_RATE_2(J)=RQ2(reagent_2_idx(J))
                   ENDIF
                ENDIF
             ENDIF
@@ -1123,13 +1123,13 @@ end subroutine get_temporal_derivatives
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
                ENDIF
 
-                  ! ------------ Modify rates (diffusion_rates_1 & diffusion_rates_2) according to their own evap/acc rates
-                  YMOD1=Y(reactant_1_idx(J))
-                  YMOD2=Y(reactant_2_idx(J))
+                  ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
+                  YMOD1=Y(reagent_1_idx(J))
+                  YMOD2=Y(reagent_2_idx(J))
                   CALL modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
             ENDIF
 
-            DIFFCR=diffusion_rates_1CR(J)+diffusion_rates_2CR(J)
+            DIFFCR=CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J)
 
             reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*CRFE*PEAK_DURATION*A(J)*branching_ratio(J)* &
                                BARRCR*DIFFCR*GTODN/H_number_density
@@ -1193,7 +1193,7 @@ end subroutine get_temporal_derivatives
   ! VW Fev 2012 - this process has been removed
   !      do j=type_id_start(0),type_id_stop(0)
   !      if ((REACTION_SUBSTANCES_NAMES(1,J).eq.YH).and.(REACTION_SUBSTANCES_NAMES(2,j).eq.YH)) then
-  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(reactant_1_idx(j))
+  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(reagent_1_idx(j))
   !      endif
   !      enddo
 
@@ -1236,11 +1236,11 @@ end subroutine get_temporal_derivatives
   ! --- Check value of x = t_acc/t_evap
   ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
-  if (ACCRETION_RATES(reactant_1_idx(J)).GT.0.d0) then
-    EX1(J)=EVAPORATION_RATES(reactant_1_idx(J))/ACCRETION_RATES(reactant_1_idx(J))
+  if (ACCRETION_RATES(reagent_1_idx(J)).GT.0.d0) then
+    EX1(J)=EVAPORATION_RATES(reagent_1_idx(J))/ACCRETION_RATES(reagent_1_idx(J))
   endif
-  if (ACCRETION_RATES(reactant_2_idx(J)).GT.0.d0) then
-    EX2(J)=EVAPORATION_RATES(reactant_2_idx(J))/ACCRETION_RATES(reactant_2_idx(J))
+  if (ACCRETION_RATES(reagent_2_idx(J)).GT.0.d0) then
+    EX2(J)=EVAPORATION_RATES(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
   endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1249,19 +1249,25 @@ end subroutine get_temporal_derivatives
   if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
       if (EX1(J).LT.1.0d0) then
-        if (diffusion_rates_1(J).GT.ACCRETION_RATES(reactant_1_idx(J))) diffusion_rates_1(J)=ACCRETION_RATES(reactant_1_idx(J))
-      endif
-      if (EX1(J).GE.1.0d0) then
-        if (diffusion_rates_1(J).GT.EVAPORATION_RATES(reactant_1_idx(J))) diffusion_rates_1(J)=EVAPORATION_RATES(reactant_1_idx(J))
+        if (THERMAL_DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
+          THERMAL_DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
+        endif
+      else
+        if (THERMAL_DIFFUSION_RATE_1(J).GT.EVAPORATION_RATES(reagent_1_idx(J))) then
+          THERMAL_DIFFUSION_RATE_1(J) = EVAPORATION_RATES(reagent_1_idx(J))
+        endif
       endif
     endif
 
     if (IMOD2.NE.0) then
       if (EX2(J).LT.1.0d0) then
-        if (diffusion_rates_2(J).GT.ACCRETION_RATES(reactant_2_idx(J))) diffusion_rates_2(J)=ACCRETION_RATES(reactant_2_idx(J))
-      endif
-      if (EX2(J).GE.1.0d0) then
-        if (diffusion_rates_2(J).GT.EVAPORATION_RATES(reactant_2_idx(J))) diffusion_rates_2(J)=EVAPORATION_RATES(reactant_2_idx(J))
+        if (THERMAL_DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
+          THERMAL_DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
+        endif
+      else
+        if (THERMAL_DIFFUSION_RATE_2(J).GT.EVAPORATION_RATES(reagent_2_idx(J))) then
+          THERMAL_DIFFUSION_RATE_2(J) = EVAPORATION_RATES(reagent_2_idx(J))
+        endif
       endif
     endif
   endif
@@ -1270,32 +1276,32 @@ end subroutine get_temporal_derivatives
   if (BARR.NE.1.0d0) then
     PICK=0.d0
 
-    TESTREF1=ACCRETION_RATES(reactant_1_idx(J))
-    if (EX1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATES(reactant_1_idx(J))
-    TESTREF2=ACCRETION_RATES(reactant_2_idx(J))
-    if (EX2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATES(reactant_2_idx(J))
+    TESTREF1=ACCRETION_RATES(reagent_1_idx(J))
+    if (EX1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATES(reagent_1_idx(J))
+    TESTREF2=ACCRETION_RATES(reagent_2_idx(J))
+    if (EX2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATES(reagent_2_idx(J))
 
-    if (diffusion_rates_1(J).GE.diffusion_rates_2(J)) then
-      TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR*YMOD2*GTODN
-      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR
+    if (THERMAL_DIFFUSION_RATE_1(J).GE.THERMAL_DIFFUSION_RATE_2(J)) then
+      TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD2*GTODN
+      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR
       if (TESTNUM.GT.TESTREF1) PICK=1.d0
     endif
-    if (diffusion_rates_2(J).GT.diffusion_rates_1(J)) then
-      TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR*YMOD1*GTODN
-      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(diffusion_rates_1(J)+diffusion_rates_2(J))*BARR
+    if (THERMAL_DIFFUSION_RATE_2(J).GT.THERMAL_DIFFUSION_RATE_1(J)) then
+      TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD1*GTODN
+      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR
       if (TESTNUM.GT.TESTREF2) PICK=2.d0
     endif
 
     if (PICK.EQ.1) then
-      diffusion_rates_1(J)=TESTREF1/BARR/YMOD2/GTODN
-      if (YMOD2*GTODN.LT.1.0d0) diffusion_rates_1(J)=TESTREF1/BARR
-      diffusion_rates_2(J)=0.d0
+      THERMAL_DIFFUSION_RATE_1(J)=TESTREF1/BARR/YMOD2/GTODN
+      if (YMOD2*GTODN.LT.1.0d0) THERMAL_DIFFUSION_RATE_1(J)=TESTREF1/BARR
+      THERMAL_DIFFUSION_RATE_2(J)=0.d0
     endif
 
     if (PICK.EQ.2) then
-      diffusion_rates_2(J)=TESTREF2/BARR/YMOD1/GTODN
-      if (YMOD1*GTODN.LT.1.0d0) diffusion_rates_2(J)=TESTREF2/BARR
-      diffusion_rates_1(J)=0.d0
+      THERMAL_DIFFUSION_RATE_2(J)=TESTREF2/BARR/YMOD1/GTODN
+      if (YMOD1*GTODN.LT.1.0d0) THERMAL_DIFFUSION_RATE_2(J)=TESTREF2/BARR
+      THERMAL_DIFFUSION_RATE_1(J)=0.d0
     endif
 
   endif
@@ -1329,11 +1335,11 @@ end subroutine get_temporal_derivatives
   ! --- Check value of x = t_acc/t_evap
   ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
-  IF (ACCRETION_RATES(reactant_1_idx(J)).GT.0.0D+0) THEN
-     EX1(J)=EVAPORATION_RATESCR(reactant_1_idx(J))/ACCRETION_RATES(reactant_1_idx(J))
+  IF (ACCRETION_RATES(reagent_1_idx(J)).GT.0.0D+0) THEN
+     EX1(J)=EVAPORATION_RATESCR(reagent_1_idx(J))/ACCRETION_RATES(reagent_1_idx(J))
   ENDIF
-  IF (ACCRETION_RATES(reactant_2_idx(J)).GT.0.0D+0) THEN
-     EX2(J)=EVAPORATION_RATESCR(reactant_2_idx(J))/ACCRETION_RATES(reactant_2_idx(J))
+  IF (ACCRETION_RATES(reagent_2_idx(J)).GT.0.0D+0) THEN
+     EX2(J)=EVAPORATION_RATESCR(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
   ENDIF
   ! Hence x = 0 if t_evap or t_acc = 0
 
@@ -1342,24 +1348,24 @@ end subroutine get_temporal_derivatives
   IF (BARRCR.EQ.1.0D+0) THEN
      IF (IMOD1.NE.0) THEN
         if (EX1(J).LT.1.0D+0) THEN
-          if (diffusion_rates_1CR(J).GT.ACCRETION_RATES(reactant_1_idx(J))) then
-            diffusion_rates_1CR(J) = ACCRETION_RATES(reactant_1_idx(J))
+          if (CR_DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
+            CR_DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
           endif
         else
-          if (diffusion_rates_1CR(J).GT.EVAPORATION_RATESCR(reactant_1_idx(J))) then
-            diffusion_rates_1CR(J) = EVAPORATION_RATESCR(reactant_1_idx(J))
+          if (CR_DIFFUSION_RATE_1(J).GT.EVAPORATION_RATESCR(reagent_1_idx(J))) then
+            CR_DIFFUSION_RATE_1(J) = EVAPORATION_RATESCR(reagent_1_idx(J))
           endif
         endif
      ENDIF
 
      IF (IMOD2.NE.0) THEN
         if (EX2(J).LT.1.0D+0) THEN
-          if (diffusion_rates_2CR(J).GT.ACCRETION_RATES(reactant_2_idx(J))) then
-            diffusion_rates_2CR(J) = ACCRETION_RATES(reactant_2_idx(J))
+          if (CR_DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
+            CR_DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
           endif
         else
-          if (diffusion_rates_2CR(J).GT.EVAPORATION_RATESCR(reactant_2_idx(J))) then
-            diffusion_rates_2CR(J) = EVAPORATION_RATESCR(reactant_2_idx(J))
+          if (CR_DIFFUSION_RATE_2(J).GT.EVAPORATION_RATESCR(reagent_2_idx(J))) then
+            CR_DIFFUSION_RATE_2(J) = EVAPORATION_RATESCR(reagent_2_idx(J))
           endif
         endif
      ENDIF
@@ -1369,32 +1375,32 @@ end subroutine get_temporal_derivatives
   IF (BARRCR.NE.1.0D+0) THEN
      PICK=0
 
-     TESTREF1=ACCRETION_RATES(reactant_1_idx(J))
-     IF (EX1(J).GE.1.0D+0) TESTREF1=EVAPORATION_RATESCR(reactant_1_idx(J))
-     TESTREF2=ACCRETION_RATES(reactant_2_idx(J))
-     IF (EX2(J).GE.1.0D+0) TESTREF2=EVAPORATION_RATESCR(reactant_2_idx(J))
+     TESTREF1=ACCRETION_RATES(reagent_1_idx(J))
+     IF (EX1(J).GE.1.0D+0) TESTREF1=EVAPORATION_RATESCR(reagent_1_idx(J))
+     TESTREF2=ACCRETION_RATES(reagent_2_idx(J))
+     IF (EX2(J).GE.1.0D+0) TESTREF2=EVAPORATION_RATESCR(reagent_2_idx(J))
 
-     IF (diffusion_rates_1CR(J).GE.diffusion_rates_2CR(J)) THEN
-        TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR*YMOD2*GTODN
-        IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR
+     IF (CR_DIFFUSION_RATE_1(J).GE.CR_DIFFUSION_RATE_2(J)) THEN
+        TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD2*GTODN
+        IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
         IF (TESTNUM.GT.TESTREF1) PICK=1
      ENDIF
-     IF (diffusion_rates_2CR(J).GT.diffusion_rates_1CR(J)) THEN
-        TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR*YMOD1*GTODN
-        IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(diffusion_rates_1CR(J)+diffusion_rates_2CR(J))*BARRCR
+     IF (CR_DIFFUSION_RATE_2(J).GT.CR_DIFFUSION_RATE_1(J)) THEN
+        TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD1*GTODN
+        IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
         IF (TESTNUM.GT.TESTREF2) PICK=2
      ENDIF
 
      IF (PICK.EQ.1) THEN
-        diffusion_rates_1CR(J)=TESTREF1/BARRCR/YMOD2/GTODN
-        IF (YMOD2*GTODN.LT.1.0D+0) diffusion_rates_1CR(J)=TESTREF1/BARRCR
-        diffusion_rates_2CR(J)=0.0D+0
+        CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR/YMOD2/GTODN
+        IF (YMOD2*GTODN.LT.1.0D+0) CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR
+        CR_DIFFUSION_RATE_2(J)=0.0D+0
      ENDIF
 
      IF (PICK.EQ.2) THEN
-        diffusion_rates_2CR(J)=TESTREF2/BARRCR/YMOD1/GTODN
-        IF (YMOD1*GTODN.LT.1.0D+0) diffusion_rates_2CR(J)=TESTREF2/BARRCR
-        diffusion_rates_1CR(J)=0.0D+0
+        CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR/YMOD1/GTODN
+        IF (YMOD1*GTODN.LT.1.0D+0) CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR
+        CR_DIFFUSION_RATE_1(J)=0.0D+0
      ENDIF
 
   ENDIF
