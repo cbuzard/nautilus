@@ -30,6 +30,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Types&#160;List</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -72,12 +73,33 @@ Modules</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">module &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html">ode_solver</a></td></tr>
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#abac34fc1c4b1aaafdb2b5f8a31047b19">ode_solver::set_chemical_reactants</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize reactants and products of all reactions.  <a href="#abac34fc1c4b1aaafdb2b5f8a31047b19"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#a7e9f5bc8e28b55183b04c3f8855c26f2">ode_solver::set_chemical_reagents</a> ()</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Initialize reagents and products of all reactions.  <a href="#a7e9f5bc8e28b55183b04c3f8855c26f2"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#a189c718d380fc76ca74216614500dc51">ode_solver::count_nonzeros</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Count the number of non-zeros elements in each line of the jacobian to dimension the arrays used in ODEPACK.  <a href="#a189c718d380fc76ca74216614500dc51"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#ab4f6e9df4bbbf021406f9838848da9fd">ode_solver::get_jacobian</a> (N, T, Y, J, IAN, JAN, PDJ)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a column (for the J-th species) of the chemical jacobian.  <a href="#ab4f6e9df4bbbf021406f9838848da9fd"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes a column (for the J-th species) of the chemical jacobian. <br/>
+ Documentation from ODEPACK:-supplied subroutine defining the <br/>
+ ODE system. The system must be put in the first-order <br/>
+ form dy/dt = f(t,y), where f is a vector-valued function <br/>
+ of the scalar t and the vector y. Subroutine F is to <br/>
+ compute the function f. It is to have the form <br/>
+ SUBROUTINE F (NEQ, T, Y, YDOT) <br/>
+ DOUBLE PRECISION T, Y(*), YDOT(*) <br/>
+ where NEQ, T, and Y are input, and the array YDOT = f(t,y) <br/>
+ is output. Y and YDOT are arrays of length NEQ. <br/>
+ Subroutine F should not alter y(1),...,y(NEQ). <br/>
+ F must be declared External in the calling program. <br/>
+ <br/>
+ Subroutine F may access user-defined quantities in <br/>
+ NEQ(2),... and/or in Y(NEQ(1)+1),... if NEQ is an array <br/>
+ (dimensioned in F) and/or Y has length exceeding NEQ(1). <br/>
+ See the descriptions of NEQ and Y below. <br/>
+ <br/>
+ If quantities computed in the F routine are needed <br/>
+ externally to DLSODES, an extra call to F should be made <br/>
+ for this purpose, for consistent and accurate results. <br/>
+ If only the derivative dy/dt is needed, use DINTDY instead.  <a href="#ab4f6e9df4bbbf021406f9838848da9fd"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#a91d7fbde01a8dbba46768a40fe2ff9f1">ode_solver::init_relevant_reactions</a> ()</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Read the full list of reactions and retrieve, for each species the list of reactions involving it. This will be used in get_jacobian to increase speed. <br/>
 <br/>
@@ -89,11 +111,19 @@ Functions/Subroutines</h2></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#a6058cfe03a6f2d7768e6569b08d72859">ode_solver::get_temporal_derivatives</a> (N, T, Y, YDOT)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the chemical evolution. In particular, calculate all the derivatives for abundances.  <a href="#a6058cfe03a6f2d7768e6569b08d72859"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#a206b100daf9bc03a1aca5e40c4732222">ode_solver::set_constant_rates</a> ()</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Reactions coefficient formally dependent on the abundances Y are computed in a companion subroutine: set_dependant_rates Grain surface reactions, self shielding, etc...  <a href="#a206b100daf9bc03a1aca5e40c4732222"></a><br/></td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Constant reactions rates with respect to abundances. Reactions coefficient formally dependent on the abundances Y are computed in a companion subroutine: set_dependant_rates Grain surface reactions, self shielding, etc...  <a href="#a206b100daf9bc03a1aca5e40c4732222"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5">ode_solver::set_dependant_rates</a> (Y)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Set Reactions coefficient formally dependent on the abundances Y. Grain surface reactions, self shielding, etc...  <a href="#a64d20641c5a00a70ff85ee375eb619d5"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251">ode_solver::modify_specific_rates</a> (J, IMOD1, IMOD2, BARR, YMOD1, YMOD2)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify some reaction rates on the grain surface (itype=14) in various conditions. Test to estimates the fastest process and replace them.  <a href="#ab3252c79536b1c3506f8fd613dce0251"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#ae6ef1750c55da0b1e6dea87e151074fc">ode_solver::modify_specific_rates_cr</a> (J, IMOD1, IMOD2, BARRCR, YMOD1, YMOD2)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Modify some reaction rates on the grain surface (itype=21) in various conditions. Test to estimates the fastest process and replace them.  <a href="#ae6ef1750c55da0b1e6dea87e151074fc"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceode__solver.html#aabbb1f1957404228d2cadb4414cab7d4">ode_solver::photodesorption_special_cases</a> (J, SUMLAY)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Treat special cases of photodesorption such as CO2, CO, H2O, CH3OH and N2 <br/>
+ Data from Oberg et al. 2009: <br/>
+ a - A&amp;A, 496, 281-293 <br/>
+ b - ApJ, 693, 1209-1218 <br/>
+ c - A&amp;A, 504, 891-913.  <a href="#aabbb1f1957404228d2cadb4414cab7d4"></a><br/></td></tr>
 </table>
 </div>
 <!-- window showing the filter options -->
@@ -101,7 +131,7 @@ Functions/Subroutines</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -110,7 +140,7 @@ Functions/Subroutines</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed May 28 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

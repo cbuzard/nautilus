@@ -30,6 +30,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Types&#160;List</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -101,8 +102,8 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00039"></a>00039 nb_outputs = nb_outputs - 1
 <a name="l00040"></a>00040 
 <a name="l00041"></a>00041 <span class="comment">! We get the number of reactions and species</span>
-<a name="l00042"></a>00042 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_species.in&#39;</span>, nb_lines=nb_species_for_gas)
-<a name="l00043"></a>00043 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_species.in&#39;</span>, nb_lines=nb_species_for_grain)
+<a name="l00042"></a>00042 call <a class="code" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_species.in&#39;</span>, nb_lines=nb_species_for_gas)
+<a name="l00043"></a>00043 call <a class="code" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_species.in&#39;</span>, nb_lines=nb_species_for_grain)
 <a name="l00044"></a>00044 
 <a name="l00045"></a>00045 nb_species = nb_species_for_gas + nb_species_for_grain <span class="comment">! The total number of species, sum of species in gas and grain</span>
 <a name="l00046"></a>00046 
@@ -172,7 +173,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -181,7 +182,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed May 28 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

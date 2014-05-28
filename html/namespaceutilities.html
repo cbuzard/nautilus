@@ -30,6 +30,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li class="current"><a href="namespaces.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Types&#160;List</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -69,15 +70,15 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <table class="memberdecls">
 <tr><td colspan="2"><h2><a name="func-members"></a>
 Functions/Subroutines</h2></td></tr>
-<tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a> (filename, nb_lines)</td></tr>
-<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Routine to retrieve the number of lines of a given file whose filename is passed as an argument.  <a href="#a0d7fc77fca8bc3c15c98da2b7db4cc93"></a><br/></td></tr>
+<tr><td class="memItemLeft" align="right" valign="top">subroutine&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a> (filename, nb_lines, opt_comment)</td></tr>
+<tr><td class="mdescLeft">&#160;</td><td class="mdescRight">Routine to retrieve the number of lines of a given file whose filename is passed as an argument. Commented lines are excluded.  <a href="#aadbaa796071651209db7abd2c5dc004e"></a><br/></td></tr>
 <tr><td class="memItemLeft" align="right" valign="top">integer&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceutilities.html#a811b0dd252293960fa46375ff203a463">get_nb_columns</a> (filename)</td></tr>
 <tr><td class="mdescLeft">&#160;</td><td class="mdescRight">For a given line passed as an argument, return the number of columns on this line i.e, the number of tokens separated by spaces.  <a href="#a811b0dd252293960fa46375ff203a463"></a><br/></td></tr>
 </table>
 <hr/><a name="details" id="details"></a><h2>Detailed Description</h2>
 <div class="textblock"><p>Module that contains all the routines linked to generic features such as getting the number of lines in a files etc... </p>
 </div><hr/><h2>Function/Subroutine Documentation</h2>
-<a class="anchor" id="a0d7fc77fca8bc3c15c98da2b7db4cc93"></a><!-- doxytag: member="utilities::get_linenumber" ref="a0d7fc77fca8bc3c15c98da2b7db4cc93" args="(filename, nb_lines)" -->
+<a class="anchor" id="aadbaa796071651209db7abd2c5dc004e"></a><!-- doxytag: member="utilities::get_linenumber" ref="aadbaa796071651209db7abd2c5dc004e" args="(filename, nb_lines, opt_comment)" -->
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
@@ -91,7 +92,13 @@ Functions/Subroutines</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">integer,intent(out)&#160;</td>
-          <td class="paramname"><em>nb_lines</em>&#160;</td>
+          <td class="paramname"><em>nb_lines</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">character(len=1),intent(in),optional&#160;</td>
+          <td class="paramname"><em>opt_comment</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -102,13 +109,14 @@ Functions/Subroutines</h2></td></tr>
 </div>
 <div class="memdoc">
 
-<p>Routine to retrieve the number of lines of a given file whose filename is passed as an argument. </p>
+<p>Routine to retrieve the number of lines of a given file whose filename is passed as an argument. Commented lines are excluded. </p>
 <dl class="author"><dt><b>Author:</b></dt><dd>Christophe Cossou </dd></dl>
 <dl class="date"><dt><b>Date:</b></dt><dd>2014 </dd></dl>
 <dl><dt><b>Parameters:</b></dt><dd>
   <table class="params">
     <tr><td class="paramname">filename</td><td>[in] the filename of the file we want the number of lines</td></tr>
-    <tr><td class="paramname">nb_lines</td><td>[out] the number of line of the input file </td></tr>
+    <tr><td class="paramname">nb_lines</td><td>[out] the number of line of the input file</td></tr>
+    <tr><td class="paramname">opt_comment</td><td>[in] optional input parameter to define a </td></tr>
   </table>
   </dd>
 </dl>
@@ -143,7 +151,7 @@ Functions/Subroutines</h2></td></tr>
   </dd>
 </dl>
 
-<p>Definition at line <a class="el" href="utilities_8f90_source.html#l00099">99</a> of file <a class="el" href="utilities_8f90_source.html">utilities.f90</a>.</p>
+<p>Definition at line <a class="el" href="utilities_8f90_source.html#l00109">109</a> of file <a class="el" href="utilities_8f90_source.html">utilities.f90</a>.</p>
 
 </div>
 </div>
@@ -153,7 +161,7 @@ Functions/Subroutines</h2></td></tr>
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -162,7 +170,7 @@ Functions/Subroutines</h2></td></tr>
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed May 28 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

@@ -30,6 +30,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Types&#160;List</span></a></li>
       <li class="current"><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -71,7 +72,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00009"></a>00009 <span class="comment">! Locals</span>
 <a name="l00010"></a>00010 <span class="keywordtype">character(len=80)</span> :: filename_output
 <a name="l00011"></a>00011 <span class="keywordtype">integer</span> :: species, output, reaction <span class="comment">! index for loops</span>
-<a name="l00012"></a>00012 <span class="keywordtype">integer</span> :: reactant1, reactant2, reactant3 <span class="comment">! to store indexes of the 3 possible reactants of a given reaction</span>
+<a name="l00012"></a>00012 <span class="keywordtype">integer</span> :: reagent1, reagent2, reagent3 <span class="comment">! to store indexes of the 3 possible reagents of a given reaction</span>
 <a name="l00013"></a>00013 <span class="keywordtype">integer</span> :: error <span class="comment">! to store the state of a read instruction</span>
 <a name="l00014"></a>00014 <span class="keywordtype">logical</span> :: isDefined
 <a name="l00015"></a>00015 
@@ -99,7 +100,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00037"></a>00037 <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">dimension(:,:)</span>, <span class="keywordtype">allocatable</span> :: zeta
 <a name="l00038"></a>00038 
 <a name="l00039"></a>00039 <span class="comment">! For rates</span>
-<a name="l00040"></a>00040 <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">allocatable</span>, <span class="keywordtype">dimension(:,:)</span> :: XK <span class="comment">! (nb_outputs, nb_reactions)</span>
+<a name="l00040"></a>00040 <span class="keywordtype">real(double_precision)</span>, <span class="keywordtype">allocatable</span>, <span class="keywordtype">dimension(:,:)</span> :: reaction_rates <span class="comment">! (nb_outputs, nb_reactions)</span>
 <a name="l00041"></a>00041 <span class="keywordtype">character(len=11)</span>, <span class="keywordtype">allocatable</span>, <span class="keywordtype">dimension(:,:)</span> :: SYMBOL
 <a name="l00042"></a>00042 <span class="keywordtype">integer</span>, <span class="keywordtype">allocatable</span>, <span class="keywordtype">dimension(:)</span> :: NUM <span class="comment">!&lt; index of the reactions (one of the columns of the concerned file, </span>
 <a name="l00043"></a>00043 <span class="comment">!! declaring a given number for each reaction, like a hashtag.</span>
@@ -120,11 +121,11 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00058"></a>00058 nb_outputs = nb_outputs - 1
 <a name="l00059"></a>00059 
 <a name="l00060"></a>00060 <span class="comment">! We get the number of reactions and species</span>
-<a name="l00061"></a>00061 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_species.in&#39;</span>, nb_lines=nb_species_for_gas)
-<a name="l00062"></a>00062 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_reactions.in&#39;</span>, nb_lines=nb_gas_phase_reactions)
+<a name="l00061"></a>00061 call <a class="code" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_species.in&#39;</span>, nb_lines=nb_species_for_gas)
+<a name="l00062"></a>00062 call <a class="code" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a>(filename=<span class="stringliteral">&#39;gas_reactions.in&#39;</span>, nb_lines=nb_gas_phase_reactions)
 <a name="l00063"></a>00063 
-<a name="l00064"></a>00064 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_species.in&#39;</span>, nb_lines=nb_species_for_grain)
-<a name="l00065"></a>00065 call <a class="code" href="namespaceutilities.html#a0d7fc77fca8bc3c15c98da2b7db4cc93">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_reactions.in&#39;</span>, nb_lines=nb_surface_reactions)
+<a name="l00064"></a>00064 call <a class="code" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_species.in&#39;</span>, nb_lines=nb_species_for_grain)
+<a name="l00065"></a>00065 call <a class="code" href="namespaceutilities.html#aadbaa796071651209db7abd2c5dc004e">get_linenumber</a>(filename=<span class="stringliteral">&#39;grain_reactions.in&#39;</span>, nb_lines=nb_surface_reactions)
 <a name="l00066"></a>00066 
 <a name="l00067"></a>00067 nb_species = nb_species_for_gas + nb_species_for_grain <span class="comment">! The total number of species, sum of species in gas and grain</span>
 <a name="l00068"></a>00068 nb_reactions = nb_gas_phase_reactions + nb_surface_reactions <span class="comment">! The total number of reactions, sum of species in gas and grain</span>
@@ -146,7 +147,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00084"></a>00084 <span class="keyword">allocate</span>(abundances(nb_outputs, nb_species+1, nptmax)) <span class="comment">! We create an extra species that will always have an abundance of 1</span>
 <a name="l00085"></a>00085 
 <a name="l00086"></a>00086 <span class="keyword">allocate</span>(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
-<a name="l00087"></a>00087 <span class="keyword">allocate</span>(xk(nb_outputs, nb_reactions))
+<a name="l00087"></a>00087 <span class="keyword">allocate</span>(reaction_rates(nb_outputs, nb_reactions))
 <a name="l00088"></a>00088 <span class="keyword">allocate</span>(REACTION_ID(nb_reactions))
 <a name="l00089"></a>00089 <span class="keyword">allocate</span>(REACTION_SUBSTANCES_ID(3, nb_reactions))
 <a name="l00090"></a>00090 
@@ -170,19 +171,19 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00108"></a>00108   <span class="keyword">open</span>(10, file=filename_output, status=<span class="stringliteral">&#39;old&#39;</span>, form=<span class="stringliteral">&#39;unformatted&#39;</span>)
 <a name="l00109"></a>00109   <span class="keyword">read</span>(10) species_name(1:nb_species)
 <a name="l00110"></a>00110   <span class="keyword">read</span>(10) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
-<a name="l00111"></a>00111   <span class="keyword">read</span>(10) xk(output,1:nb_reactions)
+<a name="l00111"></a>00111   <span class="keyword">read</span>(10) reaction_rates(output,1:nb_reactions)
 <a name="l00112"></a>00112   <span class="keyword">read</span>(10) REACTION_ID(1:nb_reactions)
 <a name="l00113"></a>00113   <span class="keyword">close</span>(10)
 <a name="l00114"></a>00114 <span class="keyword">enddo</span>
 <a name="l00115"></a>00115 <span class="comment">! achar(13) is carriage return &#39;\r&#39;. Allow to go back to the beginning of the line</span>
 <a name="l00116"></a>00116 <span class="keyword">write</span>(*,<span class="stringliteral">&#39;(a,a)&#39;</span>) achar(13), <span class="stringliteral">&#39;Reading unformatted outputs... Done&#39;</span>
 <a name="l00117"></a>00117 
-<a name="l00118"></a>00118 <span class="comment">! For non existing reactants in reactions, we create a new species whose abundance is always 1, so that we can calculate the fluxes </span>
+<a name="l00118"></a>00118 <span class="comment">! For non existing reagents in reactions, we create a new species whose abundance is always 1, so that we can calculate the fluxes </span>
 <a name="l00119"></a>00119 <span class="comment">!! more easily.</span>
 <a name="l00120"></a>00120 abundances(1:nb_outputs, nb_species+1, 1:nptmax) = 1.d0
 <a name="l00121"></a>00121 
-<a name="l00122"></a>00122 <span class="comment">! We retrieve indexes of each reactants for each reaction</span>
-<a name="l00123"></a>00123 call set_only_reactants()
+<a name="l00122"></a>00122 <span class="comment">! We retrieve indexes of each reagents for each reaction</span>
+<a name="l00123"></a>00123 call set_only_reagents()
 <a name="l00124"></a>00124 
 <a name="l00125"></a>00125 <span class="comment">! We replace blanck species by &#39;XXX&#39; for the outputs constrains</span>
 <a name="l00126"></a>00126 <span class="keyword">do</span> reaction=1,nb_reactions
@@ -196,12 +197,12 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00134"></a>00134 <span class="comment">! We write fluxes for all reactions and all output times</span>
 <a name="l00135"></a>00135 <span class="keyword">do</span> output=1, nb_outputs
 <a name="l00136"></a>00136   <span class="keyword">do</span> reaction=1, nb_reactions
-<a name="l00137"></a>00137     reactant1 = REACTION_SUBSTANCES_ID(1, reaction)
-<a name="l00138"></a>00138     reactant2 = REACTION_SUBSTANCES_ID(2, reaction)
-<a name="l00139"></a>00139     reactant3 = REACTION_SUBSTANCES_ID(3, reaction)
+<a name="l00137"></a>00137     reagent1 = REACTION_SUBSTANCES_ID(1, reaction)
+<a name="l00138"></a>00138     reagent2 = REACTION_SUBSTANCES_ID(2, reaction)
+<a name="l00139"></a>00139     reagent3 = REACTION_SUBSTANCES_ID(3, reaction)
 <a name="l00140"></a>00140 
-<a name="l00141"></a>00141     reaction_fluxes(output, reaction) = xk(output, reaction) * abundances(output, reactant1, 1) * &amp;
-<a name="l00142"></a>00142                                         abundances(output, reactant2, 1) * abundances(output, reactant3, 1)
+<a name="l00141"></a>00141     reaction_fluxes(output, reaction) = reaction_rates(output, reaction) * abundances(output, reagent1, 1) * &amp;
+<a name="l00142"></a>00142                                         abundances(output, reagent2, 1) * abundances(output, reagent3, 1)
 <a name="l00143"></a>00143   <span class="keyword">enddo</span>
 <a name="l00144"></a>00144 <span class="keyword">enddo</span>
 <a name="l00145"></a>00145 
@@ -227,7 +228,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00165"></a>00165 <span class="keyword">contains</span> 
 <a name="l00166"></a>00166 
 <a name="l00167"></a>00167 <span class="comment">!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%</span>
-<a name="l00177"></a>00177 <span class="keyword">subroutine </span>set_only_reactants()
+<a name="l00177"></a>00177 <span class="keyword">subroutine </span>set_only_reagents()
 <a name="l00178"></a>00178 
 <a name="l00179"></a>00179 <span class="keyword">implicit none</span>
 <a name="l00180"></a>00180 
@@ -238,7 +239,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00185"></a>00185 
 <a name="l00186"></a>00186 no_species = nb_species + 1
 <a name="l00187"></a>00187 
-<a name="l00188"></a>00188 <span class="comment">! By default, non existing reactants (dummy species) will be assigned (nb_species+1)</span>
+<a name="l00188"></a>00188 <span class="comment">! By default, non existing reagents (dummy species) will be assigned (nb_species+1)</span>
 <a name="l00189"></a>00189 REACTION_SUBSTANCES_ID(1:3, 1:nb_reactions) = no_species
 <a name="l00190"></a>00190 
 <a name="l00191"></a>00191 <span class="keyword">do</span> I=1,nb_reactions
@@ -254,7 +255,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 <a name="l00201"></a>00201 <span class="keyword">enddo</span>   
 <a name="l00202"></a>00202 
 <a name="l00203"></a>00203 return
-<a name="l00204"></a>00204 <span class="keyword">end subroutine set_only_reactants</span>
+<a name="l00204"></a>00204 <span class="keyword">end subroutine set_only_reagents</span>
 <a name="l00205"></a>00205 
 <a name="l00206"></a>00206 <span class="keyword">end program nautilus_rates</span>
 </pre></div></div>
@@ -264,7 +265,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -273,7 +274,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed May 28 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

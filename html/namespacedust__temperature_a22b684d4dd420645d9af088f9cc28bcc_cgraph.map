@@ -1,0 +1,12 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$namespacedust__temperature.html#a2adc500d4c408295cc3112df6c558599" title="TODO." alt="" coords="380,5,588,35"/>
+<area shape="rect" id="node7" href="$namespacedust__temperature.html#a1e7bf2929e970cc15fcc78311dbccfc2" title="Compute the incident radiation filed in term of specific intensity (erg cm&#45;2 s&#45;1 Angstrom&#45;1 sr&#45;1) aft..." alt="" coords="380,164,588,193"/>
+<area shape="rect" id="node20" href="$namespacedust__temperature.html#a92b230a057025899e6ffb6767018ecea" title="TODO." alt="" coords="403,59,565,88"/>
+<area shape="rect" id="node5" href="$namespacedust__temperature.html#ab85aa0c1db2b497466aa4d905c03d8a3" title="TODO." alt="" coords="961,32,1135,61"/>
+<area shape="rect" id="node9" href="$namespacedust__temperature.html#ad5db51702b3ba85118fb7d03c6313002" title="Fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)" alt="" coords="681,164,831,193"/>
+<area shape="rect" id="node11" href="$namespacedust__temperature.html#a95dcd697e6ec3c7f9e968e3ff4bf0e9f" title="3rd component &#160;&#160;CMB component at T=2.725 K &#160;&#160;&#45; x in Angstroms &#160;&#160;&#45; starlight(x) in erg cm&#45;2 s&#45;1 Angstr..." alt="" coords="649,217,863,247"/>
+<area shape="rect" id="node15" href="$namespacedust__temperature.html#a37e5d6ae3aade018d041dbdf106e6128" title="1st component &#160;&#160;Local UV background between 912 and 2460 Angstroms (From Mathis et al..." alt="" coords="637,111,875,140"/>
+<area shape="rect" id="node17" href="$namespacedust__temperature.html#a7f496b268572a9ab9ddf748fcc0859df" title="2nd component &#160;&#160;Starlight emission from near&#45;UV, visible and near&#45;IR (From Mathis et al..." alt="" coords="641,271,871,300"/>
+<area shape="rect" id="node13" href="$namespacedust__temperature.html#af3c11422e69dbe76c7de961a8681214d" title="Black body. x in Angstrom, T in K." alt="" coords="923,217,1173,247"/>
+<area shape="rect" id="node22" href="$namespacedust__temperature.html#a8060e9d8cf69cb3521695f85f8627c7a" title="TODO." alt="" coords="653,57,859,87"/>
+</map>

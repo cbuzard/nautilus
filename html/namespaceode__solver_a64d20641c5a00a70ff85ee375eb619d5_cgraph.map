@@ -1,3 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251" title="Modify some reaction rates on the grain surface (itype=14) in various conditions. Test to estimates t..." alt="" coords="271,5,489,35"/>
+<area shape="rect" id="node3" href="$namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251" title="Modify some reaction rates on the grain surface (itype=14) in various conditions. Test to estimates t..." alt="" coords="297,5,516,35"/>
+<area shape="rect" id="node5" href="$namespaceode__solver.html#ae6ef1750c55da0b1e6dea87e151074fc" title="Modify some reaction rates on the grain surface (itype=21) in various conditions. Test to estimates t..." alt="" coords="288,59,525,88"/>
+<area shape="rect" id="node7" href="$namespaceode__solver.html#aabbb1f1957404228d2cadb4414cab7d4" title="Treat special cases of photodesorption such as CO2, CO, H2O, CH3OH and N2 &#160;&#160;Data from Oberg et al..." alt="" coords="269,112,544,141"/>
 </map>

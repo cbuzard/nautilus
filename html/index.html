@@ -30,6 +30,7 @@ var searchBox = new SearchBox("searchBox", "search",false,'Search');
     <ul class="tablist">
       <li class="current"><a href="index.html"><span>Main&#160;Page</span></a></li>
       <li><a href="namespaces.html"><span>Modules</span></a></li>
+      <li><a href="annotated.html"><span>Data&#160;Types&#160;List</span></a></li>
       <li><a href="files.html"><span>Files</span></a></li>
       <li id="searchli">
         <div id="MSearchBox" class="MSearchBoxInactive">
@@ -158,6 +159,11 @@ Errors</h2>
 <p>Error 4: When reordering reactions, it seems that some reactions misses or not expected</p>
 <p>Error 5: In parameter file, IS_DIFFUSIVITY has a value that is not recognized by the code</p>
 <p>Error 6: The number of prime elements in input files *_species.in do not match with the real one coming from element.in</p>
+<p>Error 7: The file "time_evolution.dat" does not exist.</p>
+<p>Error 8: Grain temperature cannot be read from "structure_evolution.dat" if the "structure_evolution" flag is not activated.</p>
+<p>Error 9: IS_STRUCTURE_EVOLUTION has an undefined value.</p>
+<p>Error 10: GRAIN_TEMPERATURE_TYPE is not 'table' and the grain temperature column exist in 'structure_evolution.dat'.</p>
+<p>Error 11: Error in subroutine DICHO of <a class="el" href="dust__temperature_8f90.html">dust_temperature.f90</a>: the sign of the function doesn't change in the interval:"</p>
 <h2><a class="anchor" id="section_warning"></a>
 Warnings</h2>
 <p>A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature (even though this is a problem for readability).</p>
@@ -178,7 +184,7 @@ Error: Type mismatch in argument 'iwk' at (1); passed REAL(8) to INTEGER(4)
      onmouseover="return searchBox.OnSearchSelectShow()"
      onmouseout="return searchBox.OnSearchSelectHide()"
      onkeydown="return searchBox.OnSearchSelectKey(event)">
-<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Variables</a></div>
+<a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(0)"><span class="SelectionMark">&#160;</span>All</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(1)"><span class="SelectionMark">&#160;</span>Classes</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(2)"><span class="SelectionMark">&#160;</span>Namespaces</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(3)"><span class="SelectionMark">&#160;</span>Files</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(4)"><span class="SelectionMark">&#160;</span>Functions</a><a class="SelectItem" href="javascript:void(0)" onclick="searchBox.OnSelectItem(5)"><span class="SelectionMark">&#160;</span>Variables</a></div>
 
 <!-- iframe showing the search results (closed by default) -->
 <div id="MSearchResultsWindow">
@@ -187,7 +193,7 @@ Error: Type mismatch in argument 'iwk' at (1); passed REAL(8) to INTEGER(4)
 </iframe>
 </div>
 
-<hr class="footer"/><address class="footer"><small>Generated on Thu Apr 24 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
+<hr class="footer"/><address class="footer"><small>Generated on Wed May 28 2014 for <a href= http://code.google.com/p/nautilus/>Nautilus</a> by&#160;
 <a href="http://www.doxygen.org/index.html">
 <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.7.4 </small></address>
 </body>

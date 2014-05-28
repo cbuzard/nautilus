@@ -1,11 +1,5 @@
 <map id="G" name="G">
-<area shape="rect" id="node3" href="$nautilus_8f90.html#a42f6d5ee173b3995ec7f09b3bdf661d1" title="Check if elementary abundances are conserved. If not, display a warning. The option CONSERVATION_TYPE..." alt="" coords="288,59,427,88"/>
-<area shape="rect" id="node9" href="$namespaceode__solver.html#ab4f6e9df4bbbf021406f9838848da9fd" title="Computes a column (for the J&#45;th species) of the chemical jacobian." alt="" coords="577,112,743,141"/>
-<area shape="rect" id="node11" href="$namespaceode__solver.html#a6058cfe03a6f2d7768e6569b08d72859" title="Computes the chemical evolution. In particular, calculate all the derivatives for abundances..." alt="" coords="239,217,476,247"/>
-<area shape="rect" id="node17" href="$namespaceode__solver.html#a1a572eac36b0a5cad4862ce2c6f1199f" title="Calculates the position of non&#45;zero values in the jacobian. Set the global variables iwork and rwork..." alt="" coords="263,164,452,193"/>
-<area shape="rect" id="node5" href="$nautilus_8f90.html#af81d33a47a9eeb2442569b3c7e84b3f1" title="Routine that calculate the elemantal abundances from all abundances of all species." alt="" coords="573,59,747,88"/>
-<area shape="rect" id="node7" href="$namespaceinput__output.html#a3050e51d7867537e68fd05ce9f870a52" title="Write the list of elemental species with their abundances and mass." alt="" coords="525,5,795,35"/>
-<area shape="rect" id="node13" href="$namespaceode__solver.html#a64d20641c5a00a70ff85ee375eb619d5" title="Set Reactions coefficient formally dependent on the abundances Y. Grain surface reactions, self shielding, etc..." alt="" coords="553,219,767,248"/>
-<area shape="rect" id="node15" href="$namespaceode__solver.html#ab3252c79536b1c3506f8fd613dce0251" title="Modify some reaction rates on the grain surface (itype=14) in various conditions. Test to estimates t..." alt="" coords="844,219,1063,248"/>
-<area shape="rect" id="node20" href="$namespaceode__solver.html#a206b100daf9bc03a1aca5e40c4732222" title="Reactions coefficient formally dependent on the abundances Y are computed in a companion subroutine: ..." alt="" coords="559,165,761,195"/>
+<area shape="rect" id="node3" href="$namespacenautilus__main.html#a8afb188b4237fe5c237653ac0119c2ca" title="Check if elementary abundances are conserved. If not, display a warning. The option CONSERVATION_TYPE..." alt="" coords="237,32,464,61"/>
+<area shape="rect" id="node5" href="$namespacenautilus__main.html#aa30e81a894d9d68fd65497b9688a6675" title="Routine that calculate the elemantal abundances from all abundances of all species." alt="" coords="516,5,777,35"/>
+<area shape="rect" id="node7" href="$namespaceinput__output.html#a3050e51d7867537e68fd05ce9f870a52" title="Write the list of elemental species with their abundances and mass." alt="" coords="512,59,781,88"/>
 </map>

@@ -1,0 +1,7 @@
+<map id="G" name="G">
+<area shape="rect" id="node3" href="$namespacedust__temperature.html#ad5db51702b3ba85118fb7d03c6313002" title="Fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)" alt="" coords="308,5,457,35"/>
+<area shape="rect" id="node5" href="$namespacedust__temperature.html#a95dcd697e6ec3c7f9e968e3ff4bf0e9f" title="3rd component &#160;&#160;CMB component at T=2.725 K &#160;&#160;&#45; x in Angstroms &#160;&#160;&#45; starlight(x) in erg cm&#45;2 s&#45;1 Angstr..." alt="" coords="276,59,489,88"/>
+<area shape="rect" id="node9" href="$namespacedust__temperature.html#a37e5d6ae3aade018d041dbdf106e6128" title="1st component &#160;&#160;Local UV background between 912 and 2460 Angstroms (From Mathis et al..." alt="" coords="264,112,501,141"/>
+<area shape="rect" id="node11" href="$namespacedust__temperature.html#a7f496b268572a9ab9ddf748fcc0859df" title="2nd component &#160;&#160;Starlight emission from near&#45;UV, visible and near&#45;IR (From Mathis et al..." alt="" coords="268,165,497,195"/>
+<area shape="rect" id="node7" href="$namespacedust__temperature.html#af3c11422e69dbe76c7de961a8681214d" title="Black body. x in Angstrom, T in K." alt="" coords="549,112,800,141"/>
+</map>
