@@ -9,9 +9,6 @@
 !!. If those parameters are constant, you only need to calculate the grain 
 !! temperature once, during initialisation.
 !
-!> @warning initial_tdust must be launched one time (and one time alone) before
-!! retrieving dust temperature with get_grain_temperature_computed.
-!
 !******************************************************************************
 
 module dust_temperature
@@ -21,8 +18,8 @@ use global_variables
 
 implicit none
 
-integer, parameter :: nwlen=500
-real(double_precision), dimension(nwlen) :: wlen = [& !> Wavelength [Angstrom]
+integer, parameter :: nb_wavelengths=500
+real(double_precision), dimension(nb_wavelengths) :: wavelength = [& !< Wavelength [Angstrom]
 9.118d+02, 9.433d+02, 9.759d+02, 1.010d+03, 1.045d+03, 1.081d+03, 1.118d+03, 1.157d+03, 1.197d+03, 1.238d+03, 1.281d+03, &
 1.325d+03, 1.371d+03, 1.418d+03, 1.468d+03, 1.518d+03, 1.571d+03, 1.625d+03, 1.681d+03, 1.739d+03, 1.800d+03, 1.862d+03, &
 1.926d+03, 1.993d+03, 2.062d+03, 2.133d+03, 2.207d+03, 2.283d+03, 2.362d+03, 2.444d+03, 2.528d+03, 2.616d+03, 2.706d+03, &
@@ -70,7 +67,7 @@ real(double_precision), dimension(nwlen) :: wlen = [& !> Wavelength [Angstrom]
 1.277d+10, 1.321d+10, 1.367d+10, 1.414d+10, 1.463d+10, 1.514d+10, 1.566d+10, 1.620d+10, 1.676d+10, 1.734d+10, 1.794d+10, &
 1.856d+10, 1.920d+10, 1.987d+10, 2.055d+10, 2.126d+10]
 
-real(double_precision), dimension(nwlen) :: Iinc_dust = [& !< incident dust flux [erg.cm-2.s-1.A-1.sr-1]
+real(double_precision), dimension(nb_wavelengths) :: Iinc_dust = [& !< incident dust flux [erg.cm-2.s-1.A-1.sr-1]
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
@@ -118,7 +115,7 @@ real(double_precision), dimension(nwlen) :: Iinc_dust = [& !< incident dust flux
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00]
 
-real(double_precision), dimension(nwlen) :: Qabs = [&
+real(double_precision), dimension(nb_wavelengths) :: Qabs = [&
 1.176d+00, 1.176d+00, 1.200d+00, 1.226d+00, 1.226d+00, 1.261d+00, 1.261d+00, 1.282d+00, 1.314d+00, 1.314d+00, 1.336d+00, &
 1.336d+00, 1.345d+00, 1.343d+00, 1.343d+00, 1.405d+00, 1.405d+00, 1.420d+00, 1.332d+00, 1.332d+00, 1.151d+00, 1.151d+00, &
 7.968d-01, 7.966d-01, 7.173d-01, 4.604d-01, 4.603d-01, 3.486d-01, 3.485d-01, 3.906d-01, 4.159d-01, 4.159d-01, 3.543d-01, &
@@ -166,7 +163,7 @@ real(double_precision), dimension(nwlen) :: Qabs = [&
 6.897d-12, 6.440d-12, 6.013d-12, 5.614d-12, 5.242d-12, 4.894d-12, 4.570d-12, 4.267d-12, 3.984d-12, 3.720d-12, 3.473d-12, &
 3.243d-12, 3.028d-12, 2.827d-12, 2.640d-12, 2.465d-12]
 
-real(double_precision), dimension(nwlen) :: Iinc !< sum of the 4 composant in the incident flux, 3 parts of the spectrum, and dust
+real(double_precision), dimension(nb_wavelengths) :: Iinc !< sum of the 4 composant in the incident flux, 3 parts of the spectrum, and dust
 real(double_precision) :: rate_abs
 
 private
@@ -175,10 +172,20 @@ public :: get_grain_temperature_computed !< Only get_grain_temperature_computed 
 
 contains
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SUBROUTINE get_grain_temperature_computed(time, gas_temperature, grain_temperature)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud & Christophe Cossou
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief At a given time, compute the dust temperature using Uv_flux and 
+!! Visual_extinction.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_grain_temperature_computed(time, gas_temperature, grain_temperature)
 
-IMPLICIT NONE
+implicit none
 
 ! Inputs
 real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
@@ -187,11 +194,12 @@ real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
 ! Outputs
 real(double_precision), intent(out) :: grain_temperature !<[out] Steady state dust temperature [K]
 
-REAL(double_precision)                  :: Tleft, Tright ! Temperature boundary
-REAL(double_precision), PARAMETER       :: eps = 1.0D-08 ! Tolerance
-REAL(double_precision)                  :: fss           ! Rq: fss should be equal to zero
-INTEGER                       :: i
-INTEGER                       :: etat          ! flag
+! Locals
+real(double_precision) :: Tleft, Tright ! Temperature boundary
+real(double_precision), PARAMETER :: eps = 1.0D-08 ! Tolerance
+real(double_precision) :: fss ! Rq: fss should be equal to zero
+integer :: i
+integer :: etat ! flag
 
 ! Initialisation is done in nautilus_main:initialisation() only if the flag for grain_temperature is 'computed'
 
@@ -199,11 +207,11 @@ INTEGER                       :: etat          ! flag
 ! Compute the incident radiation filed in term of specific
 ! intensity (erg cm-2 s-1 Angstrom-1 sr-1) after screening 
 ! by dust
-CALL compute_Iinc(wlen,Iinc)
+CALL compute_Iinc(wavelength,Iinc)
 
 !----
 ! Compute the absorption rate by dust
-CALL compute_abs(wlen,Iinc,Qabs,rate_abs)
+CALL compute_abs(wavelength,Iinc,Qabs,rate_abs)
 
 !----
 ! Find the steady state dust temperature using a 
@@ -215,222 +223,249 @@ Tright = 1.0D+03
 
 CALL dicho(Tleft,Tright,eps,grain_temperature,fss,etat)
 
-!----
-! Check the dust emission
-!~ CALL initial_tdust(wlen,Qabs,Iinc_dust)
-!~ OPEN(10,FILE='dust_em.dat',STATUS='unknown')
-!~ DO i = 1, nwlen
-!~    WRITE(10,*), wlen(i),Qabs(i)*bbody(wlen(i),grain_temperature)
-!~ ENDDO
-!~ CLOSE(10)
-
-END SUBROUTINE get_grain_temperature_computed
+end subroutine get_grain_temperature_computed
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SUBROUTINE compute_Iinc(x,Iout)
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief Compute the incident radiation filed in term of specific
+!! intensity (erg cm-2 s-1 Angstrom-1 sr-1) after screening 
+!! by dust
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subroutine compute_Iinc(x,Iout)
 
+implicit none
 
+! Inputs
+real(double_precision), dimension(nb_wavelengths), intent(in) :: x !<[in] Wavelength [Angstrom]
 
-IMPLICIT NONE
+! Outputs
+real(double_precision), dimension(nb_wavelengths), intent(out) :: Iout !<[out] Incident flux after dust screening [erg cm-2 s-1 Angstrom-1 sr-1]
 
-REAL(KIND=8), DIMENSION(nwlen), INTENT(IN)    :: x
-REAL(KIND=8)                                  :: Iin
-REAL(KIND=8), DIMENSION(nwlen), INTENT(OUT)   :: Iout
-INTEGER                                       :: i
+! Locals
+integer :: i
+real(double_precision) :: Iin
 
 Iout = 0.0
-!OPEN(10,FILE="extinction_curve.dat",STATUS="UNKNOWN")
-DO i=1,nwlen
-   Iin = max(Iinc1(x(i)),Iinc2(x(i)),Iinc3(x(i)),Iinc_dust(i))
+DO i=1,nb_wavelengths
+   Iin = max(get_local_UV_flux(x(i)),get_starlight_flux(x(i)),get_CMB_flux(x(i)),Iinc_dust(i))
    Iout(i) = Iin * 10**(-ext(x(i))*visual_extinction/2.5)
-!~    WRITE(10,*) x(i), ext(x(i))
 ENDDO
-!CLOSE(10)
 
 
-END SUBROUTINE compute_Iinc
+end subroutine compute_Iinc
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SUBROUTINE compute_abs(x,Iin,Q,dustabs)
+subroutine compute_abs(x,Iin,Q,dustabs)
 
+implicit none
 
+! Inputs
+real(double_precision), dimension(nb_wavelengths), intent(in) :: x
+real(double_precision), dimension(nb_wavelengths), intent(in) :: Iin
+real(double_precision), dimension(nb_wavelengths), intent(in) :: Q
 
-IMPLICIT NONE
-REAL(KIND=8), DIMENSION(nwlen), INTENT(IN)    :: x
-REAL(KIND=8), DIMENSION(nwlen), INTENT(IN)    :: Iin
-REAL(KIND=8), DIMENSION(nwlen), INTENT(IN)    :: Q
-REAL(KIND=8), INTENT(OUT)                     :: dustabs
-REAL(KIND=8), DIMENSION(nwlen)                :: Uin
-REAL(KIND=8)                                  :: sigmabs
-REAL(KIND=8)                                  :: test
-REAL(KIND=8), DIMENSION(nwlen)                :: Utest
-INTEGER :: i
+! Outputs
+real(double_precision), intent(out) :: dustabs
+
+! Locals
+real(double_precision), dimension(nb_wavelengths) :: Uin
+real(double_precision) :: sigmabs
+real(double_precision) :: test
+real(double_precision), dimension(nb_wavelengths) :: Utest
+integer :: i
 
 ! --- Convert the specific intensity into specific energy density
 Uin = 4.0 * pi * Iin / SPEED_OF_LIGHT
-!OPEN(10,FILE="ISRF.dat",STATUS="UNKNOWN")
-!DO i =1,nwlen
-!   WRITE(10,*), wlen(i), Uin(i)
-!ENDDO
-!CLOSE(10)
 
 ! --- Test: Compute the integrated energy density
 Utest=0.0
-DO i = 1,nwlen
+DO i = 1,nb_wavelengths
    IF(x(i).ge.911.0 .AND. x(i).le. 2460.0) Utest(i) = Uin(i)
 ENDDO
 
-CALL trap_int(nwlen,x,Utest,test)
-!~ WRITE(*,70), "ISRF from 912 to 2460 Angstroms = ", test,"erg.cm-3"
-!~ 70   FORMAT(A35,2X,ES14.8,2X,A8)
+CALL trap_int(nb_wavelengths,x,Utest,test)
 
-CALL trap_int(nwlen,x,Uin,test)
-!~ WRITE(*,70), "ISRF from 912 to 2E10 Angstroms = ", test,"erg.cm-3"
+CALL trap_int(nb_wavelengths,x,Uin,test)
 !---
 
 ! --- Compute the heating rate by absorption of radiation
-CALL trap_int(nwlen,x,Uin*Q,sigmabs)
+CALL trap_int(nb_wavelengths,x,Uin*Q,sigmabs)
 dustabs = sigmabs * pi * grain_radius**2 * SPEED_OF_LIGHT
 
-END SUBROUTINE compute_abs
+end subroutine compute_abs
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-REAL(KIND=8)  FUNCTION get_ss_grain(Tss)
+real(double_precision)  function get_ss_grain(Tss)
 
+implicit none
 
+! Inputs
+real(double_precision), intent(in) :: Tss
 
-IMPLICIT NONE
-
-REAL(KIND=8), INTENT(IN)                   :: Tss
-REAL(KIND=8)                               :: rate_emi
-REAL(KIND=8), DIMENSION(nwlen)             :: dustem
-REAL(KIND=8)                               :: sigmaem
-INTEGER :: i
+! Locals
+real(double_precision) :: rate_emi
+real(double_precision), dimension(nb_wavelengths) :: dustem
+real(double_precision) :: sigmaem
+integer :: i
 
 ! --- Compute the cooling rate by infrared emission
-DO i = 1, nwlen
-   dustem(i) = bbody(wlen(i),Tss)
+DO i = 1, nb_wavelengths
+   dustem(i) = bbody(wavelength(i),Tss)
 ENDDO
 
-CALL trap_int(nwlen,wlen,dustem*Qabs, sigmaem)
-rate_emi = 4.0D+00 * pi**2 * grain_radius**2 * sigmaem
+CALL trap_int(nb_wavelengths,wavelength,dustem*Qabs, sigmaem)
+rate_emi = 4.d0 * pi**2 * grain_radius**2 * sigmaem
 
 ! --- cooling balance heating
 get_ss_grain = rate_emi - rate_abs
 
-END FUNCTION get_ss_grain
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end function get_ss_grain
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-REAL(KIND=8) FUNCTION  Iinc1(x)
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!------------------------------------------------------------------------------
-! 1st component
-!   Local UV background between 912 and 2460 Angstroms (From Mathis et al. 1983)
-!   The fit parameters come from "Physics of the ISM and IGM", Draine, 2011
-!      - x in Angstroms
-!      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
-!------------------------------------------------------------------------------
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief 1st component
+!!\n   Local UV background between 912 and 2460 Angstroms (From Mathis et al. 1983)
+!!\n   The fit parameters come from "Physics of the ISM and IGM", Draine, 2011
+!!\n      - x in Angstroms
+!!\n      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+real(double_precision) function  get_local_UV_flux(x)
 
+implicit none
 
+! Inputs
+real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-IMPLICIT NONE
-
-REAL (KIND = 8), INTENT (IN)      :: x          ! Wavelength (Angstrom)
-REAL (KIND = 8)                   :: aux
+! Locals
+real(double_precision) :: aux
 
 IF (x .GE. 1340.0 .AND. x .LT. 2460.0) THEN
-   Iinc1 = 2.373D-14 * (x/1e4)**(-0.6678)
+   get_local_UV_flux = 2.373D-14 * (x/1e4)**(-0.6678)
 ELSEIF (x .GE. 1100.0 .AND. x .LT. 1340.0) THEN
-   Iinc1 = 6.825D-13*(x/1e4)
+   get_local_UV_flux = 6.825D-13*(x/1e4)
 ELSEIF (x .GE. 912.0 .AND. x .LT. 1100.0) THEN
-   Iinc1 = 1.287D-9 * (x/1e4)**(4.4172)
+   get_local_UV_flux = 1.287D-9 * (x/1e4)**(4.4172)
 ELSE
-   Iinc1 = 0.0D+00
+   get_local_UV_flux = 0.0D+00
 ENDIF
 
-Iinc1 = Iinc1*SPEED_OF_LIGHT/4.0D+00/pi/x*UV_FLUX
+get_local_UV_flux = get_local_UV_flux * SPEED_OF_LIGHT / (4.d0*pi) / x * UV_FLUX
 
-END FUNCTION Iinc1
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end function get_local_UV_flux
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-REAL(KIND=8) FUNCTION  Iinc2(x)
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!------------------------------------------------------------------------------
-! 2nd component
-!   Starlight emmission from near-UV, visible and near-IR (From Mathis et al. 1983)
-!   3 diluted Black Body (From Mathis et al. 1983)
-!      - x in Angstroms
-!      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
-!------------------------------------------------------------------------------
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief 2nd component
+!!\n   Starlight emission from near-UV, visible and near-IR (From Mathis et al. 1983)
+!!\n   3 diluted Black Body (From Mathis et al. 1983)
+!!\n      - x in Angstroms
+!!\n      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+real(double_precision) function  get_starlight_flux(x)
 
-IMPLICIT NONE
+implicit none
 
-REAL (KIND = 8), INTENT (IN)      :: x          ! Wavelength (Angstrom)
+! Inputs
+real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-Iinc2 =  1.0e-14*bbody(x,7500D+00) &
+get_starlight_flux =  1.0e-14*bbody(x,7500D+00) &
        + 1.0e-13*bbody(x,4000D+00) &
        + 4.0e-13*bbody(x,3000D+00)
 
-END FUNCTION Iinc2
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+end function get_starlight_flux
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-REAL(KIND=8) FUNCTION  Iinc3(x)
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!------------------------------------------------------------------------------
-! 3rd component
-!   CMB component at T=2.725 K
-!      - x in Angstroms
-!      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
-!------------------------------------------------------------------------------
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief 3rd component
+!!\n   CMB component at T=2.725 K
+!!\n      - x in Angstroms
+!!\n      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+real(double_precision) function  get_CMB_flux(x)
 
-IMPLICIT NONE
+implicit none
 
-REAL (KIND = 8), INTENT (IN)      :: x          ! Wavelength (Angstrom)
+! Inputs
+real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
+get_CMB_flux = bbody(x,2.725d0)
 
-Iinc3 = bbody(x,2.725D+00)
+end function get_CMB_flux
 
-END FUNCTION Iinc3
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief Black body. x in Angstrom, T in K, bbody in erg cm-2 s-1 Angstrom-1 sr-1
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+real(double_precision) function  bbody(x,T)
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-REAL(KIND=8) FUNCTION  bbody(x,T)
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-!------------------------------------------------------------------------------
-! Black body. x in Angstrom, T in K, bbody in erg cm-2 s-1 Angstrom-1 sr-1
-!------------------------------------------------------------------------------
+implicit none
 
-
-
-IMPLICIT NONE
-
-REAL (KIND = 8), INTENT (IN)      :: x          ! Wavelength (Angstrom)
-REAL (KIND = 8), INTENT (IN)      :: T          ! Temperature (K)
+! Inputs
+real(double_precision), intent(in) :: x !<[in] Wavelength  [Angstrom]
+real(double_precision), intent(in) :: T !<[in] Temperature [K]
 
 bbody = 2.0 * PLANCK_CONSTANT * SPEED_OF_LIGHT**2 * 1.0e32 / &
        (x**5 * (exp((PLANCK_CONSTANT*SPEED_OF_LIGHT/K_B)*1.0e8 / (x*T)) - 1.0))
 
-END FUNCTION bbody
+end function bbody
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-REAL(KIND=8) FUNCTION  ext(wl)
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-! Fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)
-! -- The x range is optimized to have a smooth transition between each
-!    components of the extinction curve
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief Fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)
+!! -- The x range is optimized to have a smooth transition between each
+!!    components of the extinction curve
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+real(double_precision) function  ext(wl)
 
-IMPLICIT NONE
-REAL(KIND=8), INTENT(IN) :: wl
-REAL(KIND=8) :: x
-REAL(KIND=8) :: a, b, fa, fb,y
+implicit none
+
+! Inputs
+real(double_precision), intent(in) :: wl !< Wavelength [Angstrom]
+
+! Locals
+real(double_precision) :: x
+real(double_precision) :: a, b, fa, fb,y
 
 ! convert x which is in Angstrom to micrometer-1
 x = 1.0e4/wl
@@ -467,47 +502,58 @@ ENDIF
 
 ext = a + b/3.1
 
-END FUNCTION ext
+end function ext
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SUBROUTINE trap_int(n,x,f,res)
+subroutine trap_int(n,x,f,res)
 
-IMPLICIT NONE
-INTEGER :: i
-REAL(KIND=8) :: h, int
-REAL(KIND=8), INTENT(OUT) :: res
-REAL(KIND=8),DIMENSION(n), INTENT(IN) :: x, f
-INTEGER, INTENT(IN) :: n
+implicit none
+
+! Inputs
+integer, intent(in) :: n
+real(double_precision),dimension(n), intent(in) :: x, f
+
+! Outputs
+real(double_precision), intent(out) :: res
+
+! Locals
+integer :: i
+real(double_precision) :: h, int
 
 res = 0.0
 int = 0.0
 
 DO i=1,n-1
-h = abs((x(i+1) - x(i))/2.0)
-int = h * (f(i) + f(i+1))
-res = res + int
+  h = abs((x(i+1) - x(i))/2.0)
+  int = h * (f(i) + f(i+1))
+  res = res + int
 ENDDO
 
-END SUBROUTINE trap_int
+end subroutine trap_int
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-SUBROUTINE dicho(xl_in,xr_in,eps_in,xtry,ftry,etat)
+subroutine dicho(xl_in,xr_in,eps_in,xtry,ftry,etat)
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-IMPLICIT NONE
+implicit none
 
-REAL(KIND=8), INTENT(IN)  :: xl_in, xr_in       ! Borne gauche et droite initiale
-REAL(KIND=8), INTENT(IN)  :: eps_in             ! Precision
-REAL(KIND=8)              :: xl, xr             ! Borne gauche et droite
-REAL(KIND=8)              :: fl, fr             ! f(xl) et f(xr)
-REAL(KIND=8), INTENT(OUT) :: xtry, ftry         ! Point milieu
-INTEGER,       INTENT(OUT):: etat               ! Flag
-REAL(KIND=8)              :: dxrel              ! Variation
-INTEGER                   :: i                  ! Compteur
-INTEGER ,      PARAMETER  :: imax = 10000
-REAL(KIND=8) :: ss_grain
+! Inputs
+real(double_precision), intent(in) :: xl_in, xr_in !<[in] Borne gauche et droite initiale
+real(double_precision), intent(in) :: eps_in !<[in] Precision
+
+! Outputs
+real(double_precision), intent(out) :: xtry, ftry ![out] Point milieu
+integer,       intent(out):: etat ![out] Flag
+
+! Locals
+real(double_precision) :: xl, xr ! Borne gauche et droite
+real(double_precision) :: fl, fr ! f(xl) et f(xr)
+real(double_precision) :: dxrel ! Variation
+integer :: i ! Compteur
+integer , PARAMETER :: imax = 10000
+real(double_precision) :: ss_grain
 
 !--- Initialisation
 
@@ -523,8 +569,8 @@ IF (xl >= xr) THEN
    STOP
 ENDIF
 
-IF (fl*fr < 0.0D+00) THEN                       ! The zero is between xl and xr
-   etat = 0                                     ! No solution found yet
+IF (fl*fr < 0.0D+00) THEN ! The zero is between xl and xr
+   etat = 0 ! No solution found yet
    i    = 0
    DO WHILE (etat == 0)
       i = i + 1
@@ -551,8 +597,6 @@ IF (fl*fr < 0.0D+00) THEN                       ! The zero is between xl and xr
       ENDIF
    ENDDO
 
-   !PRINT*, "Number of iter =",i
-
 ELSE
    etat = 3
 ENDIF
@@ -569,7 +613,7 @@ IF (etat == 3)THEN
    call exit(11)
 ENDIF
 
-END SUBROUTINE dicho
+end subroutine dicho
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 end module dust_temperature

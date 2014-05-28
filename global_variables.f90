@@ -170,15 +170,15 @@ abstract interface
 end interface
 
 
-integer :: IS_GRAIN_REACTIONS
+integer :: IS_GRAIN_REACTIONS !< Accretion, grain surface reactions
 integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
-integer :: CONSERVATION_TYPE
-integer :: MODIFY_RATE_FLAG !< Modify rates flag 
-integer :: IS_ABSORPTION
+integer :: CONSERVATION_TYPE !< 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
+integer :: MODIFY_RATE_FLAG !< Modify rates flag ; 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
+integer :: IS_ABSORPTION !< H2 AND CO SELF-SHIELDING
 
 ! About IS_STRUCTURE_EVOLUTION, describing the evolution of the physical structure properties with time
 integer :: IS_STRUCTURE_EVOLUTION = 0 !< if 1, physical structure properties evolve with time. They come from structure_evolution.dat file, containing
-!! {time [Myr], number density [part/cm3], temperature [K] and Av [mag]} for the structure
+!! {time [Myr], Av [mag], number density [part/cm3], gas temperature [K] and possibly grain temperature [K]} for the structure
 procedure(get_structure_properties_interface), pointer :: get_structure_properties
 
 abstract interface 
@@ -211,7 +211,7 @@ real(double_precision), dimension(:), allocatable :: RWORK !< dim(lrw)
 integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 ! Diffusion and 1D variables
-real(double_precision) :: X_IONISATION_RATE
+real(double_precision) :: X_IONISATION_RATE !< Ionisation rate due to X-rays [s-1]
 real(double_precision) :: NCO ! column density [cm-2] (for the self shielding)
 real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)
 

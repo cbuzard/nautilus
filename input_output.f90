@@ -1039,7 +1039,7 @@ use global_variables
 implicit none
 
 ! Input
-character(len=*), intent(in) :: filename !< [in] the name of the output file
+character(len=*), intent(in) :: filename !<[in] the name of the output file
 
 ! Locals
 integer :: i

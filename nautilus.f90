@@ -170,10 +170,10 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
   integer, intent(in) :: itask
   integer, intent(in) :: iopt
   integer, intent(in) :: mf
-  real(double_precision), intent(in) :: atol
+  real(double_precision), intent(in) :: atol !<[in] integrator tolerance
 
   ! Outputs
-  integer, intent(out) :: istate
+  integer, intent(out) :: istate !<[out] return code of the integrator
  
   ! Locals
   integer :: i

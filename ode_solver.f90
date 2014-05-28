@@ -435,15 +435,14 @@ implicit none
 ! Inputs
 integer, intent(in) :: N
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
-real(double_precision), intent(in) :: T ! Not used by the code, but needed for the ODEPACK call format expected for FCHEM in dlsodes
+real(double_precision), intent(in) :: T !<[in] Not used by the code, but needed for the ODEPACK call format expected for FCHEM in dlsodes
 
 ! Outputs
-real(double_precision), intent(out), dimension(nb_species) :: YDOT
+real(double_precision), intent(out), dimension(nb_species) :: YDOT !<[out] derivative of the abundances
 
 ! Locals
 integer :: no_species
 real(double_precision), dimension(nb_species+1) :: YD2
-!REAL(KIND=16), dimension(nb_species+1) :: YD2
 integer :: i
 integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx
 real(double_precision) :: rate
@@ -1257,7 +1256,7 @@ end subroutine get_temporal_derivatives
   implicit none
 
   ! Inputs
-  integer, intent(in) :: J
+  integer, intent(in) :: J !<[in] index of a given reaction
   integer, intent(in) :: IMOD1
   integer, intent(in) :: IMOD2
   real(double_precision), intent(in) :: BARR
@@ -1357,14 +1356,14 @@ end subroutine get_temporal_derivatives
 !! various conditions. Test to estimates the fastest process and replace them.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-  SUBROUTINE modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
+  subroutine modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
 
   use global_variables
 
   implicit none
 
   integer :: J,IMOD1,IMOD2
-  real(kind=8) :: BARRCR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
+  real(double_precision) :: BARRCR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
 
   EVAP_OVER_ACC_RATIO_1(J)=0.0D+0
   EVAP_OVER_ACC_RATIO_2(J)=0.0D+0
@@ -1443,7 +1442,7 @@ end subroutine get_temporal_derivatives
   ENDIF
 
 RETURN
-END SUBROUTINE modify_specific_rates_cr
+end subroutine modify_specific_rates_cr
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -1459,18 +1458,13 @@ END SUBROUTINE modify_specific_rates_cr
 !!\n      c - A&A, 504, 891-913
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-SUBROUTINE photodesorption_special_cases(J,SUMLAY)
-! Treat special cases of photodesorption such as CO2, CO, H2O, CH3OH and N2
-! Data from Oberg et al. 2009:
-!      a - A&A, 496, 281-293
-!      b - ApJ, 693, 1209-1218
-!      c - A&A, 504, 891-913
+subroutine photodesorption_special_cases(J,SUMLAY)
 
 use global_variables
 
-IMPLICIT NONE
+implicit none
 
-INTEGER, INTENT(IN) :: J
+INTEGER, INTENT(IN) :: J !<[in] index of a given reaction
 REAL(double_precision), INTENT(IN) :: SUMLAY
 REAL(double_precision) :: LTD
 REAL(double_precision) :: fH2O
@@ -1517,7 +1511,7 @@ IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
    ENDIF
 ENDIF
 
-END SUBROUTINE photodesorption_special_cases
+end subroutine photodesorption_special_cases
 
 ! ======================================================================
 
