@@ -198,7 +198,6 @@ real(double_precision), intent(out) :: grain_temperature !<[out] Steady state du
 real(double_precision) :: Tleft, Tright ! Temperature boundary
 real(double_precision), PARAMETER :: eps = 1.0D-08 ! Tolerance
 real(double_precision) :: fss ! Rq: fss should be equal to zero
-integer :: i
 integer :: etat ! flag
 
 ! Initialisation is done in nautilus_main:initialisation() only if the flag for grain_temperature is 'computed'
@@ -252,10 +251,10 @@ real(double_precision), dimension(nb_wavelengths), intent(out) :: Iout !<[out] I
 integer :: i
 real(double_precision) :: Iin
 
-Iout = 0.0
+Iout = 0.d0
 DO i=1,nb_wavelengths
    Iin = max(get_local_UV_flux(x(i)),get_starlight_flux(x(i)),get_CMB_flux(x(i)),Iinc_dust(i))
-   Iout(i) = Iin * 10**(-ext(x(i))*visual_extinction/2.5)
+   Iout(i) = Iin * 10.d0**(-ext(x(i)) * visual_extinction / 2.5d0)
 ENDDO
 
 
@@ -286,7 +285,7 @@ integer :: i
 Uin = 4.0 * pi * Iin / SPEED_OF_LIGHT
 
 ! --- Test: Compute the integrated energy density
-Utest=0.0
+Utest=0.d0
 DO i = 1,nb_wavelengths
    IF(x(i).ge.911.0 .AND. x(i).le. 2460.0) Utest(i) = Uin(i)
 ENDDO
@@ -319,7 +318,7 @@ integer :: i
 
 ! --- Compute the cooling rate by infrared emission
 DO i = 1, nb_wavelengths
-   dustem(i) = bbody(wavelength(i),Tss)
+   dustem(i) = get_black_body_flux(wavelength(i),Tss)
 ENDDO
 
 CALL trap_int(nb_wavelengths,wavelength,dustem*Qabs, sigmaem)
@@ -350,9 +349,6 @@ implicit none
 
 ! Inputs
 real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
-
-! Locals
-real(double_precision) :: aux
 
 IF (x .GE. 1340.0 .AND. x .LT. 2460.0) THEN
    get_local_UV_flux = 2.373D-14 * (x/1e4)**(-0.6678)
@@ -389,9 +385,9 @@ implicit none
 ! Inputs
 real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-get_starlight_flux =  1.0e-14*bbody(x,7500D+00) &
-       + 1.0e-13*bbody(x,4000D+00) &
-       + 4.0e-13*bbody(x,3000D+00)
+get_starlight_flux =  1.0d-14*get_black_body_flux(x,7500.d0) &
+       + 1.0d-13*get_black_body_flux(x,4000.d0) &
+       + 4.0d-13*get_black_body_flux(x,3000.d0)
 
 end function get_starlight_flux
 
@@ -415,7 +411,7 @@ implicit none
 ! Inputs
 real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-get_CMB_flux = bbody(x,2.725d0)
+get_CMB_flux = get_black_body_flux(x,2.725d0)
 
 end function get_CMB_flux
 
@@ -426,10 +422,10 @@ end function get_CMB_flux
 !> @date may 2014
 !
 ! DESCRIPTION: 
-!> @brief Black body. x in Angstrom, T in K, bbody in erg cm-2 s-1 Angstrom-1 sr-1
+!> @brief Black body. x in Angstrom, T in K, get_black_body_flux in erg cm-2 s-1 Angstrom-1 sr-1
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-real(double_precision) function  bbody(x,T)
+real(double_precision) function  get_black_body_flux(x,T)
 
 implicit none
 
@@ -437,10 +433,10 @@ implicit none
 real(double_precision), intent(in) :: x !<[in] Wavelength  [Angstrom]
 real(double_precision), intent(in) :: T !<[in] Temperature [K]
 
-bbody = 2.0 * PLANCK_CONSTANT * SPEED_OF_LIGHT**2 * 1.0e32 / &
-       (x**5 * (exp((PLANCK_CONSTANT*SPEED_OF_LIGHT/K_B)*1.0e8 / (x*T)) - 1.0))
+get_black_body_flux = 2.d0 * PLANCK_CONSTANT * SPEED_OF_LIGHT**2 * 1.0d32 / &
+       (x**5 * (exp((PLANCK_CONSTANT*SPEED_OF_LIGHT/K_B)*1.0d8 / (x*T)) - 1.d0))
 
-end function bbody
+end function get_black_body_flux
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
@@ -470,8 +466,8 @@ real(double_precision) :: a, b, fa, fb,y
 ! convert x which is in Angstrom to micrometer-1
 x = 1.0e4/wl
 
-a = 0.0
-b = 0.0
+a = 0.d0
+b = 0.d0
 ! --- Infrared: 0.0 to 1.4 micrometer-1
 IF(x .lt. 1.4) THEN
    a =  0.574 * x**1.61
@@ -489,8 +485,8 @@ ELSEIF(x .ge. 2.7 .and. x .le. 8.0) THEN
      fa = -0.04473*(x-5.9)**2 - 0.009779*(x-5.9)**3
      fb =  0.2130*(x-5.9)**2 + 0.1207*(x-5.9)**3
   ELSEIF(x .le. 5.9) THEN
-     fa = 0.0
-     fb = 0.0
+     fa = 0.d0
+     fb = 0.d0
   ENDIF
   a = 1.752 - 0.316*x - 0.104/((x-4.47)**2 + 0.341) + fa
   b = -3.090 + 1.825*x + 1.206/((x-4.62)**2 + 0.263) + fb
@@ -521,8 +517,8 @@ real(double_precision), intent(out) :: res
 integer :: i
 real(double_precision) :: h, int
 
-res = 0.0
-int = 0.0
+res = 0.d0
+int = 0.d0
 
 DO i=1,n-1
   h = abs((x(i+1) - x(i))/2.0)
@@ -553,7 +549,6 @@ real(double_precision) :: fl, fr ! f(xl) et f(xr)
 real(double_precision) :: dxrel ! Variation
 integer :: i ! Compteur
 integer , PARAMETER :: imax = 10000
-real(double_precision) :: ss_grain
 
 !--- Initialisation
 

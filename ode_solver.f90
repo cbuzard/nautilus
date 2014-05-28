@@ -832,16 +832,16 @@ end subroutine get_temporal_derivatives
   XNH2=Y(indH2)
   XNCO=Y(indCO)
   
-  XNDTOT = 0.0E+00
+  XNDTOT = 0.d0
   DO J = nb_gaseous_species+1,nb_species
     IF(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
                                                   & "grain surface include gas-phase species"
     XNDTOT = XNDTOT + Y(J)
   ENDDO
 
-  MLAY = 5.0E+00
+  MLAY = 5.d0
   SUMLAY = XNDTOT*GTODN/nb_sites_per_grain
-  UVCR = 1.300D-17 / CR_IONISATION_RATE
+  UVCR = 1.300d-17 / CR_IONISATION_RATE
 
   !PRINT*, MLAY, SUMLAY
 
@@ -1264,10 +1264,11 @@ end subroutine get_temporal_derivatives
   real(double_precision), intent(in) :: YMOD2
   
   ! Locals
-  real(double_precision) :: PICK, TESTREF1, TESTREF2, TESTNUM
+  real(double_precision) :: TESTREF1, TESTREF2, TESTNUM
+  integer :: PICK
 
-  EVAP_OVER_ACC_RATIO_1(J)=0.d0
-  EVAP_OVER_ACC_RATIO_2(J)=0.d0
+  EVAP_OVER_ACC_RATIO_1(J) = 0.d0
+  EVAP_OVER_ACC_RATIO_2(J) = 0.d0
 
   ! --- Check value of x = t_acc/t_evap
   ! EVAPORATION_RATES = 1/t_evap
@@ -1310,7 +1311,7 @@ end subroutine get_temporal_derivatives
 
   ! --- Species rate to compare chosen by fastest diffusion rate
   if (BARR.NE.1.0d0) then
-    PICK=0.d0
+    PICK=0
 
     TESTREF1=ACCRETION_RATES(reagent_1_idx(J))
     if (EVAP_OVER_ACC_RATIO_1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATES(reagent_1_idx(J))
@@ -1320,12 +1321,12 @@ end subroutine get_temporal_derivatives
     if (THERMAL_DIFFUSION_RATE_1(J).GE.THERMAL_DIFFUSION_RATE_2(J)) then
       TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD2*GTODN
       if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR
-      if (TESTNUM.GT.TESTREF1) PICK=1.d0
+      if (TESTNUM.GT.TESTREF1) PICK=1
     endif
     if (THERMAL_DIFFUSION_RATE_2(J).GT.THERMAL_DIFFUSION_RATE_1(J)) then
       TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD1*GTODN
       if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR
-      if (TESTNUM.GT.TESTREF2) PICK=2.d0
+      if (TESTNUM.GT.TESTREF2) PICK=2
     endif
 
     if (PICK.EQ.1) then
@@ -1362,8 +1363,8 @@ end subroutine get_temporal_derivatives
 
   implicit none
 
-  integer :: J,IMOD1,IMOD2
-  real(double_precision) :: BARRCR,YMOD1,YMOD2, PICK, TESTREF1, TESTREF2, TESTNUM
+  integer :: J,IMOD1,IMOD2, PICK
+  real(double_precision) :: BARRCR,YMOD1,YMOD2, TESTREF1, TESTREF2, TESTNUM
 
   EVAP_OVER_ACC_RATIO_1(J)=0.0D+0
   EVAP_OVER_ACC_RATIO_2(J)=0.0D+0
@@ -1419,24 +1420,24 @@ end subroutine get_temporal_derivatives
      IF (CR_DIFFUSION_RATE_1(J).GE.CR_DIFFUSION_RATE_2(J)) THEN
         TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD2*GTODN
         IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
-        IF (TESTNUM.GT.TESTREF1) PICK=1
+        IF (TESTNUM.GT.TESTREF1) PICK = 1
      ENDIF
      IF (CR_DIFFUSION_RATE_2(J).GT.CR_DIFFUSION_RATE_1(J)) THEN
         TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD1*GTODN
         IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
-        IF (TESTNUM.GT.TESTREF2) PICK=2
+        IF (TESTNUM.GT.TESTREF2) PICK = 2
      ENDIF
 
      IF (PICK.EQ.1) THEN
         CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR/YMOD2/GTODN
         IF (YMOD2*GTODN.LT.1.0D+0) CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR
-        CR_DIFFUSION_RATE_2(J)=0.0D+0
+        CR_DIFFUSION_RATE_2(J) = 0.0D+0
      ENDIF
 
      IF (PICK.EQ.2) THEN
         CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR/YMOD1/GTODN
         IF (YMOD1*GTODN.LT.1.0D+0) CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR
-        CR_DIFFUSION_RATE_1(J)=0.0D+0
+        CR_DIFFUSION_RATE_1(J) = 0.0D+0
      ENDIF
 
   ENDIF
@@ -1472,15 +1473,15 @@ REAL(double_precision) :: fH2O
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
 IF (dust_temperature.LE.3.5E+01) THEN
     IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
-        reaction_rates(J) = reaction_rates(J) * 1.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/2.9E+00) ) / RATE_A(J)
+        reaction_rates(J) = reaction_rates(J) * 1.2E-03 * (1.d0 - EXP(-SUMLAY/2.9E+00) ) / RATE_A(J)
     ENDIF
     IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
        (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
-        reaction_rates(J) = reaction_rates(J) * 1.1E-03 * ( 1.0E+00 - EXP(-SUMLAY/4.6E+00) ) / RATE_A(J)
+        reaction_rates(J) = reaction_rates(J) * 1.1E-03 * (1.d0 - EXP(-SUMLAY/4.6E+00) ) / RATE_A(J)
     ENDIF
 ELSEIF(dust_temperature.GT.3.5E+01) THEN
     IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
-        reaction_rates(J) = reaction_rates(J) * 2.2E-03 * ( 1.0E+00 - EXP(-SUMLAY/5.8E+00) ) / RATE_A(J)
+        reaction_rates(J) = reaction_rates(J) * 2.2E-03 * (1.d0 - EXP(-SUMLAY/5.8E+00) ) / RATE_A(J)
     ENDIF
     IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
        (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
@@ -1504,7 +1505,7 @@ IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
    LTD = 6.0E-01 + 2.4E-02 * dust_temperature
    fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
    reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
-           & * ( 1.0E+00 - EXP(-SUMLAY/LTD) ) * fH2O / RATE_A(J)
+           & * (1.d0 - EXP(-SUMLAY/LTD) ) * fH2O / RATE_A(J)
    IF((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
       (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) THEN
       reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
