@@ -205,9 +205,24 @@ integer, dimension(:,:), allocatable :: relevant_reactions !< dim(max_reactions_
 integer, dimension(:), allocatable :: nb_reactions_using_species !< dim(nb_species) For each species, the number of reactions in which it is used
 
 ! For LSODES
-integer :: lrw, liw
-integer, dimension(:), allocatable :: IWORK !< dim(liw)
-real(double_precision), dimension(:), allocatable :: RWORK !< dim(lrw)
+integer :: lrw !< declared length of RWORK (in user dimension).
+integer :: liw !< declared length of IWORK (in user dimension).
+integer, dimension(:), allocatable :: IWORK !< dim(liw) integer work array of length at least 30.
+real(double_precision), dimension(:), allocatable :: RWORK !< dim(lrw) real work array of length at least:
+!!\n             20 + 16*NEQ            for MF = 10,
+!!\n             20 + (2 + 1./LENRAT)*NNZ + (11 + 9./LENRAT)*NEQ
+!!\n                                    for MF = 121 or 222,
+!!\n          where:
+!!\n          NNZ    = the number of nonzero elements in the sparse
+!!\n                   Jacobian (if this is unknown, use an estimate), and
+!!\n          LENRAT = the real to integer wordlength ratio (usually 1 in
+!!\n                   single precision and 2 in double precision).
+!!\n          In any case, the required size of RWORK cannot generally
+!!\n          be predicted in advance if MF = 121 or 222, and the value
+!!\n          above is a rough estimate of a crude lower bound.  Some
+!!\n          experimentation with this size may be necessary.
+!!\n          (When known, the correct required length is an optional
+!!\n          output, available in IWORK(17).)
 integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. This is usefull for ODEPACK, to increase speed
 
 ! Diffusion and 1D variables

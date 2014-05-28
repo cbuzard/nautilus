@@ -221,7 +221,6 @@ Tright = 1.0d03
 call dicho(Tleft, Tright, eps, grain_temperature, fss, etat)
 
 end subroutine get_grain_temperature_computed
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -257,9 +256,17 @@ enddo
 
 
 end subroutine compute_Iinc
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief TODO
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subroutine compute_abs(x, Iin, Q, dustabs)
 
 implicit none
@@ -298,9 +305,19 @@ call trap_int(nb_wavelengths, x, Uin*Q, sigmabs)
 dustabs = sigmabs * pi * grain_radius**2 * SPEED_OF_LIGHT
 
 end subroutine compute_abs
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief TODO
+!
+!> @return TODO
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 real(double_precision)  function get_ss_grain(Tss)
 
 implicit none
@@ -340,6 +357,8 @@ end function get_ss_grain
 !!\n      - x in Angstroms
 !!\n      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
 !
+!> @return get the local UV flux at the given wavelength
+!
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 real(double_precision) function  get_local_UV_flux(x)
 
@@ -375,6 +394,8 @@ end function get_local_UV_flux
 !!\n      - x in Angstroms
 !!\n      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
 !
+!> @return Starlight emission at a given wavelength
+!
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 real(double_precision) function  get_starlight_flux(x)
 
@@ -401,6 +422,8 @@ end function get_starlight_flux
 !!\n      - x in Angstroms
 !!\n      - starlight(x) in erg cm-2 s-1 Angstrom-1 sr-1
 !
+!> @return Return the Black body spectrum of the CMB at the given wavelength
+!
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 real(double_precision) function  get_CMB_flux(x)
 
@@ -420,7 +443,10 @@ end function get_CMB_flux
 !> @date may 2014
 !
 ! DESCRIPTION: 
-!> @brief Black body. x in Angstrom, T in K, get_black_body_flux in erg cm-2 s-1 Angstrom-1 sr-1
+!> @brief Black body. x in Angstrom, T in K
+!
+!
+!> @return get_black_body_flux in erg cm-2 s-1 Angstrom-1 sr-1
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 real(double_precision) function  get_black_body_flux(x, T)
@@ -448,6 +474,8 @@ end function get_black_body_flux
 !> @brief Fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)
 !! -- The x range is optimized to have a smooth transition between each
 !!    components of the extinction curve
+!
+!> @return TODO
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 real(double_precision) function  ext(wl)
@@ -497,9 +525,17 @@ endif
 ext = a + b/3.1
 
 end function ext
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief TODO
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subroutine trap_int(n, x, f, res)
 
 implicit none
@@ -525,11 +561,18 @@ do i=1, n-1
 enddo
 
 end subroutine trap_int
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Maxime Ruaud
+!
+!> @date may 2014
+!
+! DESCRIPTION: 
+!> @brief TODO
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subroutine dicho(xl_in, xr_in, eps_in, xtry, ftry, etat)
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 implicit none
 
@@ -608,6 +651,5 @@ if (etat == 3) then
 endif
 
 end subroutine dicho
-!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 end module dust_temperature

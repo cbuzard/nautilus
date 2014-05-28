@@ -98,12 +98,26 @@ use nautilus_main
 
 implicit none
 
-integer :: itol = 2
-integer :: itask = 1
-integer :: istate = 1
-integer :: iopt = 1
-integer :: mf = 21
-real(double_precision) :: atol = 1.d-99
+integer :: itol = 2 !< ITOL = 1 or 2 according as ATOL (below) is a scalar or array.
+integer :: itask = 1 !< ITASK = 1 for normal computation of output values of Y at t = TOUT.
+integer :: istate = 1 !< ISTATE = integer flag (input and output).  Set ISTATE = 1.
+integer :: iopt = 1 !< IOPT = 0 to indicate no optional inputs used.
+integer :: mf = 21 !< method flag.  Standard values are:
+!!\n          10  for nonstiff (Adams) method, no Jacobian used
+!!\n          121 for stiff (BDF) method, user-supplied sparse Jacobian
+!!\n          222 for stiff method, internally generated sparse Jacobian
+real(double_precision) :: atol = 1.d-99 !< absolute tolerance parameter (scalar or array).
+!!\n          The estimated local error in Y(i) will be controlled so as
+!!\n          to be roughly less (in magnitude) than
+!!\n             EWT(i) = RTOL*ABS(Y(i)) + ATOL     if ITOL = 1, or
+!!\n             EWT(i) = RTOL*ABS(Y(i)) + ATOL(i)  if ITOL = 2.
+!!\n          Thus the local error test passes if, in each component,
+!!\n          either the absolute error is less than ATOL (or ATOL(i)),
+!!\n          or the relative error is less than RTOL.
+!!\n          Use RTOL = 0.0 for pure absolute error control, and
+!!\n          use ATOL = 0.0 (or ATOL(i) = 0.0) for pure relative error
+!!\n          control.  Caution: actual (global) errors may exceed these
+!!\n          local tolerances, so choose them conservatively.
 real(double_precision) :: integration_timestep !< Timestep of the present step, starting from current_time [s]
 
 call initialisation()
@@ -163,17 +177,35 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
   use global_variables
   
   implicit none
-  
+
   ! Inputs
   real(double_precision), intent(in) :: delta_t !<[in] time during which we must integrate
-  integer, intent(in) :: itol
-  integer, intent(in) :: itask
-  integer, intent(in) :: iopt
-  integer, intent(in) :: mf
+  integer, intent(in) :: itol !<[in] ITOL   = 1 or 2 according as ATOL (below) is a scalar or array.
+  integer, intent(in) :: itask !<[in] ITASK  = 1 for normal computation of output values of Y at t = TOUT.
+  integer, intent(in) :: iopt !<[in] IOPT   = 0 to indicate no optional inputs used.
+  integer, intent(in) :: mf !<[in] method flag.  Standard values are:
+!!\n          10  for nonstiff (Adams) method, no Jacobian used
+!!\n          121 for stiff (BDF) method, user-supplied sparse Jacobian
+!!\n          222 for stiff method, internally generated sparse Jacobian
   real(double_precision), intent(in) :: atol !<[in] integrator tolerance
 
   ! Outputs
-  integer, intent(out) :: istate !<[out] return code of the integrator
+  integer, intent(out) :: istate !<[out] ISTATE = 2  if DLSODES was successful, negative otherwise.
+!!\n          -1 means excess work done on this call (perhaps wrong MF).
+!!\n          -2 means excess accuracy requested (tolerances too small).
+!!\n          -3 means illegal input detected (see printed message).
+!!\n          -4 means repeated error test failures (check all inputs).
+!!\n          -5 means repeated convergence failures (perhaps bad Jacobian
+!!\n             supplied or wrong choice of MF or tolerances).
+!!\n          -6 means error weight became zero during problem. (Solution
+!!\n             component i vanished, and ATOL or ATOL(i) = 0.)
+!!\n          -7 means a fatal error return flag came from sparse solver
+!!\n             CDRV by way of DPRJS or DSOLSS.  Should never happen.
+!!\n          A return with ISTATE = -1, -4, or -5 may result from using
+!!\n          an inappropriate sparsity structure, one that is quite
+!!\n          different from the initial structure.  Consider calling
+!!\n          DLSODES again with ISTATE = 3 to force the structure to be
+!!\n          reevaluated. 
  
   ! Locals
   integer :: i

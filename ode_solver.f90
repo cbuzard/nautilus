@@ -117,6 +117,27 @@ end subroutine count_nonzeros
 !
 ! DESCRIPTION: 
 !> @brief Computes a column (for the J-th species) of the chemical jacobian. 
+!!\n Documentation from ODEPACK:\nuser-supplied subroutine defining the
+!!\n ODE system.  The system must be put in the first-order
+!!\n form dy/dt = f(t,y), where f is a vector-valued function
+!!\n of the scalar t and the vector y.  Subroutine F is to
+!!\n compute the function f.  It is to have the form
+!!\n      SUBROUTINE F (NEQ, T, Y, YDOT)
+!!\n      DOUBLE PRECISION T, Y(*), YDOT(*)
+!!\n where NEQ, T, and Y are input, and the array YDOT = f(t,y)
+!!\n is output.  Y and YDOT are arrays of length NEQ.
+!!\n Subroutine F should not alter y(1),...,y(NEQ).
+!!\n F must be declared External in the calling program.
+!!\n 
+!!\n Subroutine F may access user-defined quantities in
+!!\n NEQ(2),... and/or in Y(NEQ(1)+1),... if NEQ is an array
+!!\n (dimensioned in F) and/or Y has length exceeding NEQ(1).
+!!\n See the descriptions of NEQ and Y below.
+!!\n 
+!!\n If quantities computed in the F routine are needed
+!!\n externally to DLSODES, an extra call to F should be made
+!!\n for this purpose, for consistent and accurate results.
+!!\n If only the derivative dy/dt is needed, use DINTDY instead.
 !
 !> @warning Even if N, T, IAN, and JAN are not actually used, they are needed
 !! because ODEPACK need a routine with a specific format, and specific inputs
@@ -128,15 +149,30 @@ use global_variables
 implicit none
 
 ! Inputs
-integer, intent(in) :: N
-integer, intent(in) :: J
-real(double_precision), intent(in) :: T
-real(double_precision), intent(in), dimension(N) :: IAN
-real(double_precision), intent(in), dimension(N) :: JAN
+integer, intent(in) :: N !<[in] number of first order ODEs.
+integer, intent(in) :: J !<[in] Index representing the J-th column of the jacobian
+real(double_precision), intent(in) :: T !<[in] the initial value of the independent variable t.
+real(double_precision), intent(in), dimension(N) :: IAN !<[in] structure descriptor array of size N + 1.
+real(double_precision), intent(in), dimension(N) :: JAN !<[in] structure descriptor array of size NNZ.
+!!\n IAN and JAN together describe the sparsity
+!!\n structure of the Jacobian matrix, as used by
+!!\n DLSODES when MITER = 1 or 2.
+!!\n JAN contains the row indices of the nonzero
+!!\n locations, reading in columnwise order, and
+!!\n IAN contains the starting locations in JAN of
+!!\n the descriptions of columns 1,...,NEQ, in
+!!\n that order, with IAN(1) = 1.  Thus for each
+!!\n j = 1,...,NEQ, the row indices i of the
+!!\n nonzero locations in column j are
+!!\n i = JAN(k),  IAN(j) .le. k .lt. IAN(j+1).
+!!\n Note that IAN(NEQ+1) = NNZ + 1.
+!!\n (If MOSS = 0, IAN/JAN may differ from the
+!!\n input IA/JA because of a different ordering
+!!\n in each column, and added diagonal entries.)
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 
 ! Outputs
-real(double_precision), intent(out), dimension(nb_species) :: PDJ
+real(double_precision), intent(out), dimension(nb_species) :: PDJ !<[out] J-th column of df/dy
 
 ! Locals
 integer :: no_species
@@ -433,7 +469,7 @@ use global_variables
 implicit none
 
 ! Inputs
-integer, intent(in) :: N
+integer, intent(in) :: N !<[in] number of first order ODEs.
 real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
 real(double_precision), intent(in) :: T !<[in] Not used by the code, but needed for the ODEPACK call format expected for FCHEM in dlsodes
 
