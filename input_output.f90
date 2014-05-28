@@ -386,8 +386,8 @@ if (isDefined) then
       case('grain_tunneling_diffusion')
         read(value, '(i2)') GRAIN_TUNNELING_DIFFUSION
       
-      case('IMODH')
-        read(value, '(i2)') IMODH
+      case('modify_rate_flag')
+        read(value, '(i2)') MODIFY_RATE_FLAG
       
       case('conservation_type')
         read(value, '(i2)') CONSERVATION_TYPE
@@ -439,16 +439,16 @@ if (isDefined) then
       case('site_density')
         read(value, '(e12.6)') SITE_DENSITY
       
-      case('EBFAC')
-        read(value, '(e12.6)') EBFAC
+      case('diff_desorp_default_ratio')
+        read(value, '(e12.6)') DIFF_DESORP_DEFAULT_RATIO
       
       case('ACT')
         read(value, '(e12.6)') ACT
       
-      case('PEAK_GRAIN_TEMPERATURE')
+      case('peak_grain_temperature')
         read(value, '(e12.6)') PEAK_GRAIN_TEMPERATURE
       
-      case('PEAK_DURATION')
+      case('peak_duration')
         read(value, '(e12.6)') PEAK_DURATION
       
       case('CRFE')
@@ -549,7 +549,7 @@ use global_variables
   write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
-  write(10,'(a,i2,a)') 'IMODH = ', IMODH, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
+  write(10,'(a,i2,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
@@ -576,10 +576,11 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius [cm]'
   write(10,'(a,es10.3e2,a)') 'site_spacing = ', SITE_SPACING, ' ! site spacing [cm]'
   write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density [cm-2]'
-  write(10,'(a,es10.3e2,a)') 'EBFAC = ', EBFAC, ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
+  write(10,'(a,es10.3e2,a)') 'diff_desorp_default_ratio = ', DIFF_DESORP_DEFAULT_RATIO, &
+                             ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
-  write(10,'(a,es10.3e2,a)') 'PEAK_GRAIN_TEMPERATURE = ', PEAK_GRAIN_TEMPERATURE, ' ! peak grain temperature [K] (CR heating)'
-  write(10,'(a,es10.3e2,a)') 'PEAK_DURATION = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'
+  write(10,'(a,es10.3e2,a)') 'peak_grain_temperature = ', PEAK_GRAIN_TEMPERATURE, ' ! peak grain temperature [K] (CR heating)'
+  write(10,'(a,es10.3e2,a)') 'peak_duration = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'
   write(10,'(a,es10.3e2,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)'
   write(10,'(a,es10.3e2,a)') 'ARRK = ', ARRK, ' ! a-coefficient for RRK-style formation-desorption'
   write(10,'(a)') ""

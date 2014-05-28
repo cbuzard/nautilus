@@ -110,7 +110,7 @@ real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 1
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 2
 
-real(double_precision) :: initial_dtg_mass_ratio
+real(double_precision) :: initial_dtg_mass_ratio !< [no unit] initial dust to gas mass ratio
 real(double_precision) :: GTODN !< Gas to dust number ratio. 1/GTODN is equivalent to the grain abundance [no unit]
 real(double_precision) :: AV_NH_ratio !< Extinction over total hydrogen column density [mag/cm-2]
 real(double_precision) :: grain_radius !< Grain radius [cm]
@@ -128,16 +128,16 @@ real(double_precision) :: initial_dust_temperature !< initial dust temperature [
 real(double_precision) :: visual_extinction !< visual extinction [mag] of the molecular cloud (or other astronomical object). 
 !! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION !< initial visual extinction [mag] 
-real(double_precision) :: CR_IONISATION_RATE
-real(double_precision) :: UV_FLUX
-real(double_precision) :: SITE_SPACING
-real(double_precision) :: SITE_DENSITY
-real(double_precision) :: nb_sites_per_grain
+real(double_precision) :: CR_IONISATION_RATE !< cosmic ray ionisation rate [s-1]
+real(double_precision) :: UV_FLUX !< Scale factor for the UV flux, in unit of the reference flux (1.=nominal)
+real(double_precision) :: SITE_SPACING !< site spacing [cm]
+real(double_precision) :: SITE_DENSITY !< site density [cm-2]
+real(double_precision) :: nb_sites_per_grain !< Number of site per grain (site density * surface of the grain)
 real(double_precision) :: ACT !< grain reaction activation energy constant [TODO unit]
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
 real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
 real(double_precision) :: CRFE !< Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
-real(double_precision) :: EBFAC !<  DIFFUSION_BARRIER/DESORPTION_ENERGY. Assumed to be 0.5 by default.  [no unit]
+real(double_precision) :: DIFF_DESORP_DEFAULT_RATIO !< [no unit] DIFFUSION_BARRIER/DESORPTION_ENERGY. Ratio used if DIFFUSION_BARRIER is not known
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
@@ -173,7 +173,7 @@ end interface
 integer :: IS_GRAIN_REACTIONS
 integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
 integer :: CONSERVATION_TYPE
-integer :: IMODH !< Modify rates flag 
+integer :: MODIFY_RATE_FLAG !< Modify rates flag 
 integer :: IS_ABSORPTION
 
 ! About IS_STRUCTURE_EVOLUTION, describing the evolution of the physical structure properties with time

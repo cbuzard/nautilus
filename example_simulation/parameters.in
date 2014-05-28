@@ -17,7 +17,7 @@ grain_temperature_type = computed                                               
 is_grain_reactions =  1 ! Accretion, grain surface reactions
 is_absorption =  1 ! H2 AND CO SELF-SHIELDING
 grain_tunneling_diffusion =  0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
-IMODH =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
+modify_rate_flag =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 conservation_type =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 
 !*****************************
@@ -44,10 +44,10 @@ grain_density =  3.000E+00 ! mass density of grain material
 grain_radius =  1.000E-05 ! grain radius [cm]
 site_spacing =  1.000E-08 ! site spacing [cm]
 site_density =  1.500E+15 ! site density [cm-2]
-EBFAC =  5.000E-01 ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values
+diff_desorp_default_ratio =  5.000E-01 ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values
 ACT =  1.000E-08 ! grain rxn activation energy constant
-PEAK_GRAIN_TEMPERATURE =  7.000E+01 ! peak grain temperature [K] (CR heating)
-PEAK_DURATION =  1.000E-05 ! duration [s] of peak grain temperature
+peak_grain_temperature =  7.000E+01 ! peak grain temperature [K] (CR heating)
+peak_duration =  1.000E-05 ! duration [s] of peak grain temperature
 CRFE =  3.000E-14 ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
 ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
 

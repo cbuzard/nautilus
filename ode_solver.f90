@@ -999,20 +999,20 @@ end subroutine get_temporal_derivatives
         endif
       endif
 
-      ! --------- Modify according to IMODH switch:
-      if (IMODH.NE.0) then
+      ! --------- Modify according to MODIFY_RATE_FLAG switch:
+      if (MODIFY_RATE_FLAG.NE.0) then
         ! ------------ if H+H->H2 is only modified rxn:
-        if ((IMODH.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) then
+        if ((MODIFY_RATE_FLAG.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) then
           IMOD1=0
           IMOD2=0
         endif
 
         ! ------------ if only H is modified:
-        if ((IMODH.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
-        if ((IMODH.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
+        if ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
+        if ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
 
         ! ------------ Set to modify all rates, if selected (just atoms)
-        if (IMODH.EQ.3) then
+        if (MODIFY_RATE_FLAG.EQ.3) then
           if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
           (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JHe        ').OR.&
           (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JC         ').OR.&
@@ -1120,20 +1120,20 @@ end subroutine get_temporal_derivatives
               ENDIF
             ENDIF
 
-            ! --------- Modify according to IMODH switch:
-            IF (IMODH.NE.0) THEN
+            ! --------- Modify according to MODIFY_RATE_FLAG switch:
+            IF (MODIFY_RATE_FLAG.NE.0) THEN
                ! ------------ If H+H->H2 is only modified rxn:
-               IF ((IMODH.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) THEN
+               IF ((MODIFY_RATE_FLAG.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) THEN
                   IMOD1=0
                   IMOD2=0
                ENDIF
 
                ! ------------ If only H is modified:
-               IF ((IMODH.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
-               IF ((IMODH.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
+               IF ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
+               IF ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
 
                ! ------------ Set to modify all rates, if selected (just atoms)
-               IF (IMODH.EQ.3) THEN
+               IF (MODIFY_RATE_FLAG.EQ.3) THEN
                   IF ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JHe        ').OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JC         ').OR.&
