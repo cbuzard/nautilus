@@ -67,7 +67,7 @@ real(double_precision), dimension(nb_wavelengths) :: wavelength = [& !< Waveleng
 1.277d+10, 1.321d+10, 1.367d+10, 1.414d+10, 1.463d+10, 1.514d+10, 1.566d+10, 1.620d+10, 1.676d+10, 1.734d+10, 1.794d+10, &
 1.856d+10, 1.920d+10, 1.987d+10, 2.055d+10, 2.126d+10]
 
-real(double_precision), dimension(nb_wavelengths) :: Iinc_dust = [& !< incident dust flux [erg.cm-2.s-1.A-1.sr-1]
+real(double_precision), dimension(nb_wavelengths) :: incident_dust_flux = [& !< incident dust flux [erg.cm-2.s-1.A-1.sr-1]
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
@@ -196,31 +196,29 @@ real(double_precision), intent(out) :: grain_temperature !<[out] Steady state du
 
 ! Locals
 real(double_precision) :: Tleft, Tright ! Temperature boundary
-real(double_precision), PARAMETER :: eps = 1.0D-08 ! Tolerance
+real(double_precision), parameter :: eps = 1.0D-08 ! Tolerance
 real(double_precision) :: fss ! Rq: fss should be equal to zero
 integer :: etat ! flag
-
-! Initialisation is done in nautilus_main:initialisation() only if the flag for grain_temperature is 'computed'
 
 !----
 ! Compute the incident radiation filed in term of specific
 ! intensity (erg cm-2 s-1 Angstrom-1 sr-1) after screening 
 ! by dust
-CALL compute_Iinc(wavelength,Iinc)
+call compute_Iinc(wavelength, Iinc)
 
 !----
 ! Compute the absorption rate by dust
-CALL compute_abs(wavelength,Iinc,Qabs,rate_abs)
+call compute_abs(wavelength, Iinc, Qabs, rate_abs)
 
 !----
 ! Find the steady state dust temperature using a 
 ! dichotomy algorithm.
 
 ! Temperature boundary
-Tleft = 2.73D+00
-Tright = 1.0D+03
+Tleft = 2.73d00
+Tright = 1.0d03
 
-CALL dicho(Tleft,Tright,eps,grain_temperature,fss,etat)
+call dicho(Tleft, Tright, eps, grain_temperature, fss, etat)
 
 end subroutine get_grain_temperature_computed
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -237,7 +235,7 @@ end subroutine get_grain_temperature_computed
 !! by dust
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subroutine compute_Iinc(x,Iout)
+subroutine compute_Iinc(x, Iout)
 
 implicit none
 
@@ -252,17 +250,17 @@ integer :: i
 real(double_precision) :: Iin
 
 Iout = 0.d0
-DO i=1,nb_wavelengths
-   Iin = max(get_local_UV_flux(x(i)),get_starlight_flux(x(i)),get_CMB_flux(x(i)),Iinc_dust(i))
+do i=1, nb_wavelengths
+   Iin = max(get_local_UV_flux(x(i)), get_starlight_flux(x(i)), get_CMB_flux(x(i)), incident_dust_flux(i))
    Iout(i) = Iin * 10.d0**(-ext(x(i)) * visual_extinction / 2.5d0)
-ENDDO
+enddo
 
 
 end subroutine compute_Iinc
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subroutine compute_abs(x,Iin,Q,dustabs)
+subroutine compute_abs(x, Iin, Q, dustabs)
 
 implicit none
 
@@ -286,17 +284,17 @@ Uin = 4.0 * pi * Iin / SPEED_OF_LIGHT
 
 ! --- Test: Compute the integrated energy density
 Utest=0.d0
-DO i = 1,nb_wavelengths
-   IF(x(i).ge.911.0 .AND. x(i).le. 2460.0) Utest(i) = Uin(i)
-ENDDO
+do i = 1, nb_wavelengths
+   if(x(i).ge.911.0 .AND. x(i).le. 2460.0) Utest(i) = Uin(i)
+enddo
 
-CALL trap_int(nb_wavelengths,x,Utest,test)
+call trap_int(nb_wavelengths, x, Utest, test)
 
-CALL trap_int(nb_wavelengths,x,Uin,test)
+call trap_int(nb_wavelengths, x, Uin, test)
 !---
 
 ! --- Compute the heating rate by absorption of radiation
-CALL trap_int(nb_wavelengths,x,Uin*Q,sigmabs)
+call trap_int(nb_wavelengths, x, Uin*Q, sigmabs)
 dustabs = sigmabs * pi * grain_radius**2 * SPEED_OF_LIGHT
 
 end subroutine compute_abs
@@ -317,11 +315,11 @@ real(double_precision) :: sigmaem
 integer :: i
 
 ! --- Compute the cooling rate by infrared emission
-DO i = 1, nb_wavelengths
-   dustem(i) = get_black_body_flux(wavelength(i),Tss)
-ENDDO
+do i = 1, nb_wavelengths
+   dustem(i) = get_black_body_flux(wavelength(i), Tss)
+enddo
 
-CALL trap_int(nb_wavelengths,wavelength,dustem*Qabs, sigmaem)
+call trap_int(nb_wavelengths, wavelength, dustem*Qabs, sigmaem)
 rate_emi = 4.d0 * pi**2 * grain_radius**2 * sigmaem
 
 ! --- cooling balance heating
@@ -350,15 +348,15 @@ implicit none
 ! Inputs
 real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-IF (x .GE. 1340.0 .AND. x .LT. 2460.0) THEN
+if (x .GE. 1340.0 .AND. x .LT. 2460.0) then
    get_local_UV_flux = 2.373D-14 * (x/1e4)**(-0.6678)
-ELSEIF (x .GE. 1100.0 .AND. x .LT. 1340.0) THEN
+elseif (x .GE. 1100.0 .AND. x .LT. 1340.0) then
    get_local_UV_flux = 6.825D-13*(x/1e4)
-ELSEIF (x .GE. 912.0 .AND. x .LT. 1100.0) THEN
+elseif (x .GE. 912.0 .AND. x .LT. 1100.0) then
    get_local_UV_flux = 1.287D-9 * (x/1e4)**(4.4172)
-ELSE
-   get_local_UV_flux = 0.0D+00
-ENDIF
+else
+   get_local_UV_flux = 0.0d00
+endif
 
 get_local_UV_flux = get_local_UV_flux * SPEED_OF_LIGHT / (4.d0*pi) / x * UV_FLUX
 
@@ -385,9 +383,9 @@ implicit none
 ! Inputs
 real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-get_starlight_flux =  1.0d-14*get_black_body_flux(x,7500.d0) &
-       + 1.0d-13*get_black_body_flux(x,4000.d0) &
-       + 4.0d-13*get_black_body_flux(x,3000.d0)
+get_starlight_flux =  1.0d-14*get_black_body_flux(x, 7500.d0) &
+       + 1.0d-13*get_black_body_flux(x, 4000.d0) &
+       + 4.0d-13*get_black_body_flux(x, 3000.d0)
 
 end function get_starlight_flux
 
@@ -411,7 +409,7 @@ implicit none
 ! Inputs
 real(double_precision), intent(in) :: x !<[in] Wavelength (Angstrom)
 
-get_CMB_flux = get_black_body_flux(x,2.725d0)
+get_CMB_flux = get_black_body_flux(x, 2.725d0)
 
 end function get_CMB_flux
 
@@ -425,7 +423,7 @@ end function get_CMB_flux
 !> @brief Black body. x in Angstrom, T in K, get_black_body_flux in erg cm-2 s-1 Angstrom-1 sr-1
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-real(double_precision) function  get_black_body_flux(x,T)
+real(double_precision) function  get_black_body_flux(x, T)
 
 implicit none
 
@@ -461,7 +459,7 @@ real(double_precision), intent(in) :: wl !< Wavelength [Angstrom]
 
 ! Locals
 real(double_precision) :: x
-real(double_precision) :: a, b, fa, fb,y
+real(double_precision) :: a, b, fa, fb, y
 
 ! convert x which is in Angstrom to micrometer-1
 x = 1.0e4/wl
@@ -469,32 +467,32 @@ x = 1.0e4/wl
 a = 0.d0
 b = 0.d0
 ! --- Infrared: 0.0 to 1.4 micrometer-1
-IF(x .lt. 1.4) THEN
+if(x .lt. 1.4) then
    a =  0.574 * x**1.61
    b = -0.527 * x**1.61
 ! Optical/NIR: 1.4 to 2.7 micrometer-1
-ELSEIF(x .ge. 1.4 .and. x .le. 2.7) THEN
+elseif(x .ge. 1.4 .and. x .le. 2.7) then
   y = x - 1.82
   a = 1.00 + 0.17699*y - 0.50447*y**2 - 0.02427*y**3 + 0.72085*y**4 + &
       0.01979*y**5 - 0.77530*y**6 + 0.32999*y**7
   b = 1.41338*y + 2.28305*y**2 + 1.07233*y**3 - 5.38434*y**4 - &
       0.62251*y**5 + 5.30260*y**5 - 2.09002*y**7
 ! UV: 2.7 to 8.0 micrometer-1
-ELSEIF(x .ge. 2.7 .and. x .le. 8.0) THEN
-  IF(x .ge. 5.9 .and. x .le. 8.0) THEN
+elseif(x .ge. 2.7 .and. x .le. 8.0) then
+  if(x .ge. 5.9 .and. x .le. 8.0) then
      fa = -0.04473*(x-5.9)**2 - 0.009779*(x-5.9)**3
      fb =  0.2130*(x-5.9)**2 + 0.1207*(x-5.9)**3
-  ELSEIF(x .le. 5.9) THEN
+  elseif(x .le. 5.9) then
      fa = 0.d0
      fb = 0.d0
-  ENDIF
+  endif
   a = 1.752 - 0.316*x - 0.104/((x-4.47)**2 + 0.341) + fa
   b = -3.090 + 1.825*x + 1.206/((x-4.62)**2 + 0.263) + fb
 ! Far-UV: 8.0 to ...  micrometer-1
-ELSEIF(x .ge. 8.0) THEN
+elseif(x .ge. 8.0) then
   a = -1.073 - 0.628*(x-8.0) + 0.137*(x-8.0)**2 - 0.070*(x-8.0)**3
   b = 13.670 + 4.257*(x-8.0) - 0.420*(x-8.0)**2 + 0.374*(x-8.0)**3
-ENDIF
+endif
 
 ext = a + b/3.1
 
@@ -502,13 +500,13 @@ end function ext
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subroutine trap_int(n,x,f,res)
+subroutine trap_int(n, x, f, res)
 
 implicit none
 
 ! Inputs
 integer, intent(in) :: n
-real(double_precision),dimension(n), intent(in) :: x, f
+real(double_precision), dimension(n), intent(in) :: x, f
 
 ! Outputs
 real(double_precision), intent(out) :: res
@@ -520,17 +518,17 @@ real(double_precision) :: h, int
 res = 0.d0
 int = 0.d0
 
-DO i=1,n-1
+do i=1, n-1
   h = abs((x(i+1) - x(i))/2.0)
   int = h * (f(i) + f(i+1))
   res = res + int
-ENDDO
+enddo
 
 end subroutine trap_int
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subroutine dicho(xl_in,xr_in,eps_in,xtry,ftry,etat)
+subroutine dicho(xl_in, xr_in, eps_in, xtry, ftry, etat)
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 implicit none
@@ -540,15 +538,15 @@ real(double_precision), intent(in) :: xl_in, xr_in !<[in] Borne gauche et droite
 real(double_precision), intent(in) :: eps_in !<[in] Precision
 
 ! Outputs
-real(double_precision), intent(out) :: xtry, ftry ![out] Point milieu
-integer,       intent(out):: etat ![out] Flag
+real(double_precision), intent(out) :: xtry, ftry !<[out] Point milieu
+integer, intent(out):: etat !<[out] Flag
 
 ! Locals
 real(double_precision) :: xl, xr ! Borne gauche et droite
 real(double_precision) :: fl, fr ! f(xl) et f(xr)
 real(double_precision) :: dxrel ! Variation
 integer :: i ! Compteur
-integer , PARAMETER :: imax = 10000
+integer, parameter :: imax = 10000
 
 !--- Initialisation
 
@@ -559,54 +557,55 @@ fl = get_ss_grain(xl)
 fr = get_ss_grain(xr)
 
 !--- consistency test
-IF (xl >= xr) THEN
-   PRINT *, " Il faut xl < xr", xl, xr
-   STOP
-ENDIF
+if (xl >= xr) then
+   write(Error_unit,*) "Error: In dust_temperature:dicho"
+   write(Error_unit,*) "We need xl < xr but xl=", xl, " and xr=", xr
+   stop
+endif
 
-IF (fl*fr < 0.0D+00) THEN ! The zero is between xl and xr
+if (fl*fr < 0.0d00) then ! The zero is between xl and xr
    etat = 0 ! No solution found yet
    i    = 0
-   DO WHILE (etat == 0)
+   do while (etat == 0)
       i = i + 1
-      xtry = 0.5D+00 * (xl + xr)
+      xtry = 0.5d00 * (xl + xr)
       ftry = get_ss_grain(xtry)
-      IF (fl*ftry > 0.0D+00) THEN
+      if (fl*ftry > 0.0d00) then
          xl = xtry
          fl = ftry
-      ELSE
+      else
          xr = xtry
          fr = ftry
-      ENDIF
+      endif
 
 
-      IF (xtry /= 0.0D+00) THEN
+      if (xtry /= 0.0d00) then
          dxrel = ABS((xr-xl)/xtry)
-      ELSE
+      else
          dxrel = ABS(xr-xl)
-      ENDIF
-      IF (dxrel < eps_in .AND. ABS(ftry) < eps_in) THEN
+      endif
+      if (dxrel < eps_in .AND. ABS(ftry) < eps_in) then
          etat = 1
-      ELSE IF (i > imax) THEN
+      else if (i > imax) then
          etat = 2
-      ENDIF
-   ENDDO
+      endif
+   enddo
 
-ELSE
+else
    etat = 3
-ENDIF
+endif
 
-IF (etat == 3)THEN
-   write(Error_unit,*) " "
-   write(Error_unit,*) "--------------------------------------------------------  "
-   write(Error_unit,*) " Error in subroutine DICHO of dust_temperature.f90:"
-   write(Error_unit,*) " the sign of the function doesn't change in the interval:"
-   write(Error_unit,*) " x(left)  :", xl," f(left)   :", fl
-   write(Error_unit,*) " x(right) :", xr," f(right)  :", fr
-   write(Error_unit,*) "--------------------------------------------------------  "
-   write(Error_unit,*) " "
+if (etat == 3) then
+   write(Error_unit, *) " "
+   write(Error_unit, *) "--------------------------------------------------------  "
+   write(Error_unit, *) " Error in subroutine DICHO of dust_temperature.f90:"
+   write(Error_unit, *) " the sign of the function doesn't change in the interval:"
+   write(Error_unit, *) " x(left)  :", xl, " f(left)   :", fl
+   write(Error_unit, *) " x(right) :", xr, " f(right)  :", fr
+   write(Error_unit, *) "--------------------------------------------------------  "
+   write(Error_unit, *) " "
    call exit(11)
-ENDIF
+endif
 
 end subroutine dicho
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

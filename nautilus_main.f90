@@ -252,7 +252,7 @@ do i=1,NB_PRIME_ELEMENTS
 enddo
 
 ! Compute the grain abundance
-GTODN=(4.D+0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.D+0*initial_dtg_mass_ratio*AMU)
+GTODN=(4.d0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.d0*initial_dtg_mass_ratio*AMU)
 
 where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
 
@@ -463,18 +463,18 @@ end subroutine index_datas
       else ! (SPECIES_CHARGE(I).LT.0)
         STICK = sticking_coeff_negative 
       endif
-      !         if (species_name(I).EQ.YH2)      STICK=0.D+0 
-      !         if (species_name(I).EQ.YHE)      STICK=0.D+0 
-      !         if (species_name(I).EQ.YH)       STICK=0.D+0 
-      if (species_name(I).EQ.YHEP)     STICK=0.D+0 
-      if (species_name(I).EQ.'e-         ')      STICK=0.D+0
-      if (species_name(I).EQ.'H+         ')     STICK=0.D+0
-      if (species_name(I).EQ.YGRAIN)   STICK=0.D+0
-      if (species_name(I).EQ.'GRAIN-     ') STICK=0.D+0
-      !         if (species_name(I).EQ.'H-')     STICK=0.D+0
-      !         if (species_name(I).EQ.'H2+')    STICK=0.D+0
+      !         if (species_name(I).EQ.YH2)      STICK=0.d0 
+      !         if (species_name(I).EQ.YHE)      STICK=0.d0 
+      !         if (species_name(I).EQ.YH)       STICK=0.d0 
+      if (species_name(I).EQ.YHEP)     STICK=0.d0 
+      if (species_name(I).EQ.'e-         ')      STICK=0.d0
+      if (species_name(I).EQ.'H+         ')     STICK=0.d0
+      if (species_name(I).EQ.YGRAIN)   STICK=0.d0
+      if (species_name(I).EQ.'GRAIN-     ') STICK=0.d0
+      !         if (species_name(I).EQ.'H-')     STICK=0.d0
+      !         if (species_name(I).EQ.'H2+')    STICK=0.d0
 
-      if (I.GT.nb_gaseous_species) STICK=0.D+0
+      if (I.GT.nb_gaseous_species) STICK=0.d0
       CONDSP(I)=COND*STICK/SQRT(SPECIES_MASS(I))
     enddo
 
@@ -630,7 +630,7 @@ end subroutine index_datas
 
         ! ------ Check for branching
         do K=1,nb_reactions
-           if(REACTION_TYPE(K).EQ.REACTION_TYPE(J)) THEN
+           if(REACTION_TYPE(K).EQ.REACTION_TYPE(J)) then
              if (((REACTION_SUBSTANCES_NAMES(1,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
                   (REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(2,K))).OR.&
                  ((REACTION_SUBSTANCES_NAMES(2,J).EQ.REACTION_SUBSTANCES_NAMES(1,K)).AND.&
@@ -692,7 +692,7 @@ end subroutine index_datas
     if (N5.NE.0) DHFSUM=DHFSUM-FORMATION_ENTHALPY(N5)
     if (N6.NE.0) DHFSUM=DHFSUM-FORMATION_ENTHALPY(N6)
     ! ------ Convert from kcal to J, from J to K
-    DHFSUM=DHFSUM*4.184D+03/1.38054D-23
+    DHFSUM=DHFSUM*4.184d03/1.38054D-23
     ! ------ Convert from #moles-1 to #reactions-1
     DHFSUM=DHFSUM/AVOGADRO
 

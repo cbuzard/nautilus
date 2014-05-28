@@ -520,7 +520,7 @@ end subroutine get_temporal_derivatives
   integer, dimension(10) :: indice
   real(double_precision), dimension(10) :: distmin, distmax
 
-  T300=gas_temperature/300.D+0
+  T300=gas_temperature/300.d0
   TI=1.0d00/gas_temperature
   TSQ=SQRT(gas_temperature)
 
@@ -598,7 +598,7 @@ end subroutine get_temporal_derivatives
 
         do M=1,W
           N=INDICE(M)
-          !IF(IT==1) write(*,*) N,M, REACTION_SUBSTANCES_NAMES(:,N), REACTION_TMIN(N), REACTION_TMAX(N),distmin(M),distmax(M)
+          !if(IT==1) write(*,*) N,M, REACTION_SUBSTANCES_NAMES(:,N), REACTION_TMIN(N), REACTION_TMAX(N),distmin(M),distmax(M)
           if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)=0.d0
           if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)=0.d0
         enddo
@@ -825,7 +825,7 @@ end subroutine get_temporal_derivatives
                                            ! The reference used is 1.3x10^-17 s-1
 
 
-  T300=gas_temperature/300.D+0
+  T300=gas_temperature/300.d0
   TI=1.0d00/gas_temperature
   TSQ=SQRT(gas_temperature)
 
@@ -833,11 +833,11 @@ end subroutine get_temporal_derivatives
   XNCO=Y(indCO)
   
   XNDTOT = 0.d0
-  DO J = nb_gaseous_species+1,nb_species
-    IF(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
+  do J = nb_gaseous_species+1,nb_species
+    if(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
                                                   & "grain surface include gas-phase species"
     XNDTOT = XNDTOT + Y(J)
-  ENDDO
+  enddo
 
   MLAY = 5.d0
   SUMLAY = XNDTOT*GTODN/nb_sites_per_grain
@@ -1057,83 +1057,83 @@ end subroutine get_temporal_derivatives
        do J=type_id_start(21),type_id_stop(21)
             IMOD1=0
             IMOD2=0
-            BARRCR=1.0D+0
+            BARRCR=1.0d0
             ! --------- Calculate activation energy barrier multiplier
-            IF (ACTIVATION_ENERGY(J).GE.1.0D-40) THEN
+            if (ACTIVATION_ENERGY(J).GE.1.0D-40) then
                ACTIVCR=ACTIVATION_ENERGY(J)/PEAK_GRAIN_TEMPERATURE
                ! ------------ Choose fastest of classical or tunnelling
-               IF (ACTIVCR.GT.quantum_activation_energy(J)) ACTIVCR=quantum_activation_energy(J)
+               if (ACTIVCR.GT.quantum_activation_energy(J)) ACTIVCR=quantum_activation_energy(J)
                BARRCR=EXP(-ACTIVCR)
-            ENDIF
+            endif
 
             ! --------- Thermal hopping diffusion method
             CR_DIFFUSION_RATE_1(J)=CR_HOPING_RATE(reagent_1_idx(J))
             CR_DIFFUSION_RATE_2(J)=CR_HOPING_RATE(reagent_2_idx(J))
 
             ! --------- Check for JH,JH2
-            IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
-            IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH2) IMOD1=2
-            IF (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH)  IMOD2=1
-            IF (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH2) IMOD2=2
-            !IF (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJO)  IMOD1=4
-            !IF (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJO)  IMOD2=4
+            if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
+            if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH2) IMOD1=2
+            if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH)  IMOD2=1
+            if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH2) IMOD2=2
+            !if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJO)  IMOD1=4
+            !if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJO)  IMOD2=4
 
             ! --------- QM for JH,JH2 only - others are too heavy
-            IF (IMOD1+IMOD2.NE.0) THEN
+            if (IMOD1+IMOD2.NE.0) then
               ! ------------ QM1 - Tunnelling (if it's faster than thermal)
-              IF (grain_tunneling_diffusion.EQ.1) THEN
+              if (grain_tunneling_diffusion.EQ.1) then
                 if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) then
                   CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
                 endif
                 if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) then
                   CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
                 endif
-              ENDIF
+              endif
               ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
-              IF (grain_tunneling_diffusion.EQ.2) THEN
+              if (grain_tunneling_diffusion.EQ.2) then
                 if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J))) then
                   CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
                 endif
                 if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J))) then
                   CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
                 endif
-              ENDIF
+              endif
               ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
-              IF (grain_tunneling_diffusion.EQ.3) THEN
-                IF (IMOD1.NE.0) THEN
+              if (grain_tunneling_diffusion.EQ.3) then
+                if (IMOD1.NE.0) then
                   if (TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) then
                     CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
                   endif
                   if (TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.CR_DIFFUSION_RATE_1(J)) then
                     CR_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
                   endif
-                ENDIF
-                IF (IMOD2.NE.0) THEN
+                endif
+                if (IMOD2.NE.0) then
                   if (TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) then
                     CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
                   endif
                   if (TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.CR_DIFFUSION_RATE_2(J)) then
                     CR_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
                   endif
-                ENDIF
-              ENDIF
-            ENDIF
+                endif
+              endif
+            endif
 
             ! --------- Modify according to MODIFY_RATE_FLAG switch:
-            IF (MODIFY_RATE_FLAG.NE.0) THEN
+            if (MODIFY_RATE_FLAG.NE.0) then
                ! ------------ If H+H->H2 is only modified rxn:
-               IF ((MODIFY_RATE_FLAG.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) THEN
+               if ((MODIFY_RATE_FLAG.EQ.-1).AND.(IMOD1.NE.1.OR.IMOD2.NE.1)) then
                   IMOD1=0
                   IMOD2=0
-               ENDIF
+               endif
 
                ! ------------ If only H is modified:
-               IF ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
-               IF ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
+               if ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD1.NE.1)) IMOD1=0
+               if ((MODIFY_RATE_FLAG.EQ.1).AND.(IMOD2.NE.1)) IMOD2=0
 
                ! ------------ Set to modify all rates, if selected (just atoms)
-               IF (MODIFY_RATE_FLAG.EQ.3) THEN
-                  IF ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
+               if (MODIFY_RATE_FLAG.EQ.3) then
+                  if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JHe        ').OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JC         ').OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JN         ').OR.&
@@ -1145,7 +1145,7 @@ end subroutine get_temporal_derivatives
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JMg        ').OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JP         ').OR.&
                       (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JCl        ')) IMOD1=3
-                  IF ((REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH).OR.&
+                  if ((REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH).OR.&
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JHe        ').OR.&
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JC         ').OR.&
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JN         ').OR.&
@@ -1157,13 +1157,13 @@ end subroutine get_temporal_derivatives
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JMg        ').OR.&
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JP         ').OR.&
                       (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
-               ENDIF
+               endif
 
                   ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
                   YMOD1=Y(reagent_1_idx(J))
                   YMOD2=Y(reagent_2_idx(J))
-                  CALL modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
-            ENDIF
+                  call modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
+            endif
 
             DIFFCR=CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J)
 
@@ -1186,30 +1186,30 @@ end subroutine get_temporal_derivatives
 ! ========= Rxn ITYPE 66
 ! ITYPE 66: Photodesorption by external UV
 ! 1.d8 is I_ISRF-FUV from Oberg et al. 2007, ApJ, 662, 23
-    IF (type_id_start(66).NE.0) THEN
-        DO J = type_id_start(66),type_id_stop(66)
+    if (type_id_start(66).NE.0) then
+        do J = type_id_start(66),type_id_stop(66)
 !---- Used for all species
            reaction_rates(J)=RATE_A(J)/SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
 !---- Specific cases
-           CALL photodesorption_special_cases(J,SUMLAY)
+           call photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
-           IF(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
-        ENDDO
-    ENDIF
+           if(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
+        enddo
+    endif
 
 ! ========= Rxn ITYPE 67
 ! ITYPE 67: Photodesorption by CR generated UV
-    IF (type_id_start(67).NE.0) THEN
-        DO J = type_id_start(67),type_id_stop(67)
+    if (type_id_start(67).NE.0) then
+        do J = type_id_start(67),type_id_stop(67)
 !---- Used for all species
            reaction_rates(J)=RATE_A(J)/SITE_DENSITY*1.d4*UVCR
-           CALL photodesorption_special_cases(J,SUMLAY)
+           call photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
-           IF(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
-        ENDDO
-    ENDIF
+           if(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
+        enddo
+    endif
 
     ! Useful for testing
     ! To disable some reaction types
@@ -1366,25 +1366,25 @@ end subroutine get_temporal_derivatives
   integer :: J,IMOD1,IMOD2, PICK
   real(double_precision) :: BARRCR,YMOD1,YMOD2, TESTREF1, TESTREF2, TESTNUM
 
-  EVAP_OVER_ACC_RATIO_1(J)=0.0D+0
-  EVAP_OVER_ACC_RATIO_2(J)=0.0D+0
+  EVAP_OVER_ACC_RATIO_1(J)=0.0d0
+  EVAP_OVER_ACC_RATIO_2(J)=0.0d0
 
   ! --- Check value of x = t_acc/t_evap
   ! EVAPORATION_RATES = 1/t_evap
   ! ACCRETION_RATES = 1/t_acc
-  IF (ACCRETION_RATES(reagent_1_idx(J)).GT.0.0D+0) THEN
+  if (ACCRETION_RATES(reagent_1_idx(J)).GT.0.0d0) then
      EVAP_OVER_ACC_RATIO_1(J) = EVAPORATION_RATESCR(reagent_1_idx(J)) / ACCRETION_RATES(reagent_1_idx(J))
-  ENDIF
-  IF (ACCRETION_RATES(reagent_2_idx(J)).GT.0.0D+0) THEN
+  endif
+  if (ACCRETION_RATES(reagent_2_idx(J)).GT.0.0d0) then
      EVAP_OVER_ACC_RATIO_2(J)=EVAPORATION_RATESCR(reagent_2_idx(J))/ACCRETION_RATES(reagent_2_idx(J))
-  ENDIF
+  endif
   ! Hence x = 0 if t_evap or t_acc = 0
 
   ! --- Assign max rates
 
-  IF (BARRCR.EQ.1.0D+0) THEN
-     IF (IMOD1.NE.0) THEN
-        if (EVAP_OVER_ACC_RATIO_1(J).LT.1.0D+0) THEN ! accretion dominates
+  if (BARRCR.EQ.1.0d0) then
+     if (IMOD1.NE.0) then
+        if (EVAP_OVER_ACC_RATIO_1(J).LT.1.0d0) then ! accretion dominates
           if (CR_DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
             CR_DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
           endif
@@ -1393,10 +1393,10 @@ end subroutine get_temporal_derivatives
             CR_DIFFUSION_RATE_1(J) = EVAPORATION_RATESCR(reagent_1_idx(J))
           endif
         endif
-     ENDIF
+     endif
 
-     IF (IMOD2.NE.0) THEN
-        if (EVAP_OVER_ACC_RATIO_2(J).LT.1.0D+0) THEN ! accretion dominates
+     if (IMOD2.NE.0) then
+        if (EVAP_OVER_ACC_RATIO_2(J).LT.1.0d0) then ! accretion dominates
           if (CR_DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
             CR_DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
           endif
@@ -1405,42 +1405,42 @@ end subroutine get_temporal_derivatives
             CR_DIFFUSION_RATE_2(J) = EVAPORATION_RATESCR(reagent_2_idx(J))
           endif
         endif
-     ENDIF
-  ENDIF
+     endif
+  endif
 
   ! --- Species rate to compare chosen by fastest diffusion rate
-  IF (BARRCR.NE.1.0D+0) THEN
+  if (BARRCR.NE.1.0d0) then
      PICK=0
 
      TESTREF1=ACCRETION_RATES(reagent_1_idx(J))
-     IF (EVAP_OVER_ACC_RATIO_1(J).GE.1.0D+0) TESTREF1=EVAPORATION_RATESCR(reagent_1_idx(J))
+     if (EVAP_OVER_ACC_RATIO_1(J).GE.1.0d0) TESTREF1=EVAPORATION_RATESCR(reagent_1_idx(J))
      TESTREF2=ACCRETION_RATES(reagent_2_idx(J))
-     IF (EVAP_OVER_ACC_RATIO_2(J).GE.1.0D+0) TESTREF2=EVAPORATION_RATESCR(reagent_2_idx(J))
+     if (EVAP_OVER_ACC_RATIO_2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATESCR(reagent_2_idx(J))
 
-     IF (CR_DIFFUSION_RATE_1(J).GE.CR_DIFFUSION_RATE_2(J)) THEN
+     if (CR_DIFFUSION_RATE_1(J).GE.CR_DIFFUSION_RATE_2(J)) then
         TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD2*GTODN
-        IF (YMOD2*GTODN.LT.1.0D+0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
-        IF (TESTNUM.GT.TESTREF1) PICK = 1
-     ENDIF
-     IF (CR_DIFFUSION_RATE_2(J).GT.CR_DIFFUSION_RATE_1(J)) THEN
+        if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
+        if (TESTNUM.GT.TESTREF1) PICK = 1
+     endif
+     if (CR_DIFFUSION_RATE_2(J).GT.CR_DIFFUSION_RATE_1(J)) then
         TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR*YMOD1*GTODN
-        IF (YMOD1*GTODN.LT.1.0D+0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
-        IF (TESTNUM.GT.TESTREF2) PICK = 2
-     ENDIF
+        if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J))*BARRCR
+        if (TESTNUM.GT.TESTREF2) PICK = 2
+     endif
 
-     IF (PICK.EQ.1) THEN
+     if (PICK.EQ.1) then
         CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR/YMOD2/GTODN
-        IF (YMOD2*GTODN.LT.1.0D+0) CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR
-        CR_DIFFUSION_RATE_2(J) = 0.0D+0
-     ENDIF
+        if (YMOD2*GTODN.LT.1.0d0) CR_DIFFUSION_RATE_1(J)=TESTREF1/BARRCR
+        CR_DIFFUSION_RATE_2(J) = 0.0d0
+     endif
 
-     IF (PICK.EQ.2) THEN
+     if (PICK.EQ.2) then
         CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR/YMOD1/GTODN
-        IF (YMOD1*GTODN.LT.1.0D+0) CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR
-        CR_DIFFUSION_RATE_1(J) = 0.0D+0
-     ENDIF
+        if (YMOD1*GTODN.LT.1.0d0) CR_DIFFUSION_RATE_2(J)=TESTREF2/BARRCR
+        CR_DIFFUSION_RATE_1(J) = 0.0d0
+     endif
 
-  ENDIF
+  endif
 
 RETURN
 end subroutine modify_specific_rates_cr
@@ -1471,46 +1471,46 @@ REAL(double_precision) :: LTD
 REAL(double_precision) :: fH2O
 
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
-IF (dust_temperature.LE.3.5E+01) THEN
-    IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
+if (dust_temperature.LE.3.5E+01) then
+    if (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') then
         reaction_rates(J) = reaction_rates(J) * 1.2E-03 * (1.d0 - EXP(-SUMLAY/2.9E+00) ) / RATE_A(J)
-    ENDIF
-    IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
-       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
+    endif
+    if((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
+       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) then
         reaction_rates(J) = reaction_rates(J) * 1.1E-03 * (1.d0 - EXP(-SUMLAY/4.6E+00) ) / RATE_A(J)
-    ENDIF
-ELSEIF(dust_temperature.GT.3.5E+01) THEN
-    IF (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') THEN
+    endif
+elseif(dust_temperature.GT.3.5E+01) then
+    if (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') then
         reaction_rates(J) = reaction_rates(J) * 2.2E-03 * (1.d0 - EXP(-SUMLAY/5.8E+00) ) / RATE_A(J)
-    ENDIF
-    IF((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
-       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) THEN
+    endif
+    if((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
+       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) then
        reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / RATE_A(J)
-    ENDIF
-ENDIF
+    endif
+endif
 !------ Photodesorption of CO
-IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') THEN
+if(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') then
    reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / RATE_A(J)
-ENDIF
+endif
 !------ Photodesorption of N2
-IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') THEN
+if(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') then
    reaction_rates(J) = reaction_rates(J) * 4.0E-04 / RATE_A(J)
-ENDIF
+endif
 !------ Photodesorption of CH3OH
-IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') THEN
+if(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') then
    reaction_rates(J) = reaction_rates(J) * 2.1E-03 / RATE_A(J)
-ENDIF
+endif
 !------ Photodesorption of H2O
-IF(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') THEN
+if(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') then
    LTD = 6.0E-01 + 2.4E-02 * dust_temperature
    fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
    reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
            & * (1.d0 - EXP(-SUMLAY/LTD) ) * fH2O / RATE_A(J)
-   IF((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
-      (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) THEN
+   if((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
+      (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) then
       reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
-   ENDIF
-ENDIF
+   endif
+endif
 
 end subroutine photodesorption_special_cases
 
