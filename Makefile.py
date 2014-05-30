@@ -82,12 +82,12 @@ def get_current_branch():
 
 def get_current_revision():
   """function that return as a string the current revision of the git repository"""
-  (stdout, stderr, returnCode) = run_command("git log|head -1")
+  (stdout, stderr, returnCode) = run_command("git rev-parse HEAD")
   
   if (returnCode != 0):
     return None
   
-  commit = stdout.split()[1]
+  commit = stdout.rstrip("\n")
   return commit
 
 def is_non_committed_modifs():
