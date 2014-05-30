@@ -554,14 +554,14 @@ end subroutine index_datas
       SMASS(I)=0.d0
       DESORPTION_ENERGY(I)=0.d0
       DIFFUSION_BARRIER(I)=0.d0
-      DEB(I)=0.d0
+      DIFFUSION_BARRIER_WIDTH(I)=0.d0
       FORMATION_ENTHALPY(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=dble(INT1(J))
           DESORPTION_ENERGY(I)=REA1(J)
           DIFFUSION_BARRIER(I)=REA2(J)
-          DEB(I)=REA3(J)
+          DIFFUSION_BARRIER_WIDTH(I)=REA3(J)
           FORMATION_ENTHALPY(I)=REA4(J)
           if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.(DIFF_DESORP_DEFAULT_RATIO.GE.0.d0)) then
             DIFFUSION_BARRIER(I)=DIFF_DESORP_DEFAULT_RATIO*DESORPTION_ENERGY(I)
@@ -602,8 +602,8 @@ end subroutine index_datas
         ! --------- Set characteristic frequency
         VIBRATION_FREQUENCY(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*DESORPTION_ENERGY(I)/SMA)
         ! --------- Set quantum rates
-        if (DEB(I).GE.1.0D-38) then
-          TUNNELING_RATE_TYPE_1(I)=DEB(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
+        if (DIFFUSION_BARRIER_WIDTH(I).GE.1.0D-38) then
+          TUNNELING_RATE_TYPE_1(I)=DIFFUSION_BARRIER_WIDTH(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
         else
           TUNNELING_RATE_TYPE_1(I)=0.d0
         endif
