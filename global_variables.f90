@@ -13,6 +13,18 @@ use iso_fortran_env
 use utilities
 
 implicit none
+
+! Theses 3 parameters are only intended to easy the transition when one want to add a reagent or a 
+!! product (product are fairly easy, reagent are not). But some things needed to be modified in the 
+!! code anyway when you want to add either a reagent or a product
+integer, parameter :: MAX_REAGENTS = 3 !< The maximum number of reagents for one reaction. 
+!! Do not think that changing this parameter alone is sufficient to allow the code to handle it directly !!
+integer, parameter :: MAX_PRODUCTS = 5 !< The maximum number of products for one reaction. 
+!! Do not think that changing this parameter alone is sufficient to allow the code to handle it directly !!
+integer, parameter :: MAX_COMPOUNDS = MAX_REAGENTS + MAX_PRODUCTS !< Total maximum number of compounds for one reaction (reagents + products)
+!! Warning: If this number change, get_jacobian(N, T, Y, J, IAN, JAN, PDJ) must be actualised, since each reagent and product has
+!! its own variable, a new one must be created for the new column possible. 
+
 integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species
 integer :: nb_gaseous_species !< number of species that are gaseous
@@ -34,7 +46,7 @@ real(double_precision), parameter :: AVOGADRO = 6.02214129d23 !< avogadro number
 real(double_precision), parameter :: YEAR = 3.15576d7 !< one year in seconds
 real(double_precision), parameter :: AU = 1.49597871d13 !< Astronomical unit in cm (mean earth-sun distance)
 
-real(double_precision) :: RELATIVE_TOLERANCE
+real(double_precision) :: RELATIVE_TOLERANCE !< relative tolerance parameter (scalar) of DLSODES (of the ODEPACK package to solve ODE's)
 
 ! Name of key species
 character(len=11) :: YH     = 'H          ' !< Gas phase Hydrogen
@@ -83,8 +95,8 @@ real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_2 !< di
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
-character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(7,nb_reactions)
-integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(7, nb_reactions) for all reactions, list for reagents (first 3) and products (last 4).
+character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(MAX_COMPOUNDS,nb_reactions)
+integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, list for reagents (first 3) and products (last 5).
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
 real(double_precision), allocatable, dimension(:) :: RATE_A !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: RATE_B !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
@@ -321,8 +333,8 @@ allocate(reagent_1_idx(nb_reactions))
 allocate(reagent_2_idx(nb_reactions))
 allocate(RATE_FORMULA(nb_reactions))
 allocate(REACTION_ID(nb_reactions))
-allocate(REACTION_SUBSTANCES_ID(7,nb_reactions))
-allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
+allocate(REACTION_SUBSTANCES_ID(MAX_COMPOUNDS,nb_reactions))
+allocate(REACTION_SUBSTANCES_NAMES(MAX_COMPOUNDS,nb_reactions))
 
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
@@ -363,8 +375,8 @@ reagent_1_idx(1:nb_reactions) = 0
 reagent_2_idx(1:nb_reactions) = 0
 RATE_FORMULA(1:nb_reactions) = 0
 REACTION_ID(1:nb_reactions) = 0
-REACTION_SUBSTANCES_ID(1:7,1:nb_reactions) = 0
-REACTION_SUBSTANCES_NAMES(1:7,1:nb_reactions) = ''
+REACTION_SUBSTANCES_ID(1:MAX_COMPOUNDS,1:nb_reactions) = 0
+REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS,1:nb_reactions) = ''
 INITIAL_ELEMENTAL_ABUNDANCE(1:NB_PRIME_ELEMENTS) = 0.d0
 PRIME_ELEMENT_IDX(1:NB_PRIME_ELEMENTS) = 0
 species_composition(1:NB_PRIME_ELEMENTS,nb_species) = 0

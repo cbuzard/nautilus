@@ -83,7 +83,7 @@ allocate(zeta(nptmax, nb_outputs))
 
 allocate(abundances(nb_outputs, nb_species+1, nptmax)) ! We create an extra species that will always have an abundance of 1
 
-allocate(REACTION_SUBSTANCES_NAMES(7,nb_reactions))
+allocate(REACTION_SUBSTANCES_NAMES(MAX_COMPOUNDS,nb_reactions))
 allocate(reaction_rates(nb_outputs, nb_reactions))
 allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_SUBSTANCES_ID(3, nb_reactions))
@@ -107,7 +107,7 @@ do output=1,nb_outputs
 
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) species_name(1:nb_species)
-  read(10) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
+  read(10) REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
   read(10) reaction_rates(output,1:nb_reactions)
   read(10) REACTION_ID(1:nb_reactions)
   close(10)
@@ -124,7 +124,7 @@ call set_only_reagents()
 
 ! We replace blanck species by 'XXX' for the outputs constrains
 do reaction=1,nb_reactions
-  do species=1,7
+  do species=1,MAX_COMPOUNDS
     if (REACTION_SUBSTANCES_NAMES(species, reaction).eq.'   ') then
       REACTION_SUBSTANCES_NAMES(species, reaction) = 'XXX'
     endif
@@ -146,16 +146,17 @@ enddo
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Writing rates ASCII files...'
 
-write(rate_format, '(a,i5,a)') '(7(a11," "),', nb_outputs, '(es12.4e2),i5)'
+write(rate_format, '(a,i2,a,i5,a)') '(',MAX_COMPOUNDS,'(a11," "),', nb_outputs, '(es12.4e2),i5)'
 write(time_format, '(a,i5,a)') '(73(" "),a11,', nb_outputs, '(es12.4e2))'
 
 ! We write ASCII output file
 open(10, file='rates.out')
-! all 7 species involved ('XXX' if no species) ; Each column is the flux for several output times'
+! all MAX_COMPOUNDS species involved ('XXX' if no species) ; Each column is the flux for several output times'
 ! The first line list time for each column of flux
 write(10, time_format) ' Time (yr)', time(1:nb_outputs)
 do reaction=1, nb_reactions
-  write(10,rate_format) REACTION_SUBSTANCES_NAMES(1:7, reaction), reaction_fluxes(1:nb_outputs, reaction), REACTION_ID(reaction)
+  write(10,rate_format) REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS, reaction), reaction_fluxes(1:nb_outputs, reaction), &
+                        REACTION_ID(reaction)
 enddo
 close(10)
 
@@ -191,7 +192,7 @@ REACTION_SUBSTANCES_ID(1:3, 1:nb_reactions) = no_species
 do I=1,nb_reactions
   do J=1,nb_species
 
-    do L=1,3
+    do L=1,MAX_REAGENTS
       if (REACTION_SUBSTANCES_NAMES(L,I).EQ.species_name(J)) then
         REACTION_SUBSTANCES_ID(L,I) = J
       endif

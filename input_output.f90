@@ -50,17 +50,22 @@ integer :: error !< to store the state of a read instruction
 logical :: isDefined
 
 ! Variables for the unordered reaction file
-character(len=11), dimension(7,nb_gas_phase_reactions) :: SYMBOLUO1 
+character(len=11), dimension(MAX_COMPOUNDS,nb_gas_phase_reactions) :: SYMBOLUO1 
 real(double_precision), dimension(nb_gas_phase_reactions) :: AUO1,BUO1,CUO1 
 integer, dimension(nb_gas_phase_reactions) :: itypeUO1,Tmin1,Tmax1,FORMULA1,NUM1 
 
-character (len=11), dimension(7,nb_surface_reactions) :: SYMBOLUO2 
+character (len=11), dimension(MAX_COMPOUNDS,nb_surface_reactions) :: SYMBOLUO2 
 real(double_precision), dimension(nb_surface_reactions) :: AUO2,BUO2,CUO2 
 integer, dimension(nb_surface_reactions) :: itypeUO2,Tmin2,Tmax2,FORMULA2,NUM2 
 
-character (len=11), dimension(7,nb_reactions) :: SYMBOLUO
+character (len=11), dimension(MAX_COMPOUNDS,nb_reactions) :: SYMBOLUO
 real(double_precision), dimension(nb_reactions) :: AUO,BUO,CUO
 integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
+
+character(len=80) :: line_format !< format of one line of gas_reaction.in or grain_reaction.in
+
+! Definition of the line format, common to gas_reaction.in and grain_reaction.in
+write(line_format, '(a,i1,a,i1,a)') '(', MAX_REAGENTS, 'A11,1x,', MAX_PRODUCTS, 'A11,3D11.3,23x,I3,2i7,i3,i6)'
 
 ! Reading list of reaction for gas phase
 filename = 'gas_reactions.in'
@@ -84,7 +89,7 @@ if (isDefined) then
     
     if (line.ne.'') then
       j = j + 1
-      read(line, '(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)')  (SYMBOLUO1(I,J),I=1,7),AUO1(J),BUO1(J),CUO1(J), &
+      read(line, line_format)  (SYMBOLUO1(I,J),I=1,MAX_COMPOUNDS),AUO1(J),BUO1(J),CUO1(J), &
 ITYPEUO1(J),Tmin1(j),Tmax1(j),FORMULA1(J),NUM1(J)
     
     end if
@@ -118,7 +123,7 @@ if (isDefined) then
     
     if (line.ne.'') then
       j = j + 1
-      read(line, '(3A11,1x,4A11,11x,3D11.3,23x,I3,2i7,i3,i6)')  (SYMBOLUO2(I,J),I=1,7),AUO2(J),BUO2(J),CUO2(J), &
+      read(line, line_format)  (SYMBOLUO2(I,J),I=1,MAX_COMPOUNDS),AUO2(J),BUO2(J),CUO2(J), &
 ITYPEUO2(J),Tmin2(j),Tmax2(j),FORMULA2(J),NUM2(J)
     
     end if
@@ -132,7 +137,7 @@ end if
 
 ! putting everything back into the big tables
 do I=1,nb_gas_phase_reactions 
-  do k=1,7
+  do k=1,MAX_COMPOUNDS
     SYMBOLUO(k,I)=SYMBOLUO1(k,I)
   enddo
   AUO(I)=AUO1(I)
@@ -146,7 +151,7 @@ do I=1,nb_gas_phase_reactions
 enddo
 
 do I=1,nb_surface_reactions 
-  do  k=1,7
+  do k=1,MAX_COMPOUNDS
     SYMBOLUO(k,nb_gas_phase_reactions+I)=SYMBOLUO2(k,I)
   enddo
   AUO(nb_gas_phase_reactions+I)=AUO2(I)
@@ -187,7 +192,7 @@ endif
 
 !       replace the species names by blanks for non chemical species                                                                        
 do j=1,nb_reactions-1
-  do i=1,7
+  do i=1,MAX_COMPOUNDS
     select case(REACTION_SUBSTANCES_NAMES(i,j))
       case ('CR', 'CRP', 'Photon')
         REACTION_SUBSTANCES_NAMES(i,j) = '           '
@@ -656,10 +661,10 @@ implicit none
 ! Locals
 integer :: i
 
-open(4, file='species.out')
+open(10, file='species.out')
 ! Write 'ggo_spec.d': 5 columns of numbered species=====================
-write(4,'(5(I4,")",1X,A11,1X))') (I,species_name(I),I=1,nb_species)
-close(4)
+write(10,'(5(I4,")",1X,A11,1X))') (I,species_name(I),I=1,nb_species)
+close(10)
 
 return
 end subroutine write_species
@@ -1011,7 +1016,7 @@ write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
 open(45, file=filename_output, form='unformatted')
 
 write(45) species_name
-write(45) REACTION_SUBSTANCES_NAMES(1:7, 1:nb_reactions)
+write(45) REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
 write(45) reaction_rates
 write(45) REACTION_ID
 

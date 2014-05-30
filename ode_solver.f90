@@ -29,12 +29,12 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reagents (dummy species) will be assigned (nb_species+1)
-REACTION_SUBSTANCES_ID(1:7, 1:nb_reactions) = no_species
+REACTION_SUBSTANCES_ID(1:MAX_COMPOUNDS, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
-    do L=1,7
+    do L=1,MAX_COMPOUNDS
       if (REACTION_SUBSTANCES_NAMES(L,I).EQ.species_name(J)) then
         REACTION_SUBSTANCES_ID(L,I) = J
       endif
@@ -179,7 +179,7 @@ integer :: no_species
 
 real(double_precision), dimension(nb_species+1) :: PDJ2
 integer :: i
-integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx, product5_idx
 integer :: reaction_idx ! The index of a given reaction
 
 ! Temp values to increase speed
@@ -198,10 +198,12 @@ do i=1,nb_reactions_using_species(j)
   reagent1_idx = REACTION_SUBSTANCES_ID(1, reaction_idx)
   reagent2_idx = REACTION_SUBSTANCES_ID(2, reaction_idx)
   reagent3_idx = REACTION_SUBSTANCES_ID(3, reaction_idx)
+  
   product1_idx = REACTION_SUBSTANCES_ID(4, reaction_idx)
   product2_idx = REACTION_SUBSTANCES_ID(5, reaction_idx)
   product3_idx = REACTION_SUBSTANCES_ID(6, reaction_idx)
   product4_idx = REACTION_SUBSTANCES_ID(7, reaction_idx)
+  product5_idx = REACTION_SUBSTANCES_ID(8, reaction_idx)
   
   ! if statements are written in a specific order to increase speed. The goal is to test first the most probable event, and 
   !! then always go to 'else' statement, not to test if we have already found our case. One, then two bodies reactions are the most 
@@ -211,10 +213,11 @@ do i=1,nb_reactions_using_species(j)
   if (reagent2_idx.eq.no_species) then
     if (reagent1_idx.eq.J) then 
       tmp_value = reaction_rates(reaction_idx)
-      PDJ2(product1_idx)   = PDJ2(product1_idx) + tmp_value
-      PDJ2(product2_idx)   = PDJ2(product2_idx) + tmp_value
-      PDJ2(product3_idx)   = PDJ2(product3_idx) + tmp_value
-      PDJ2(product4_idx)   = PDJ2(product4_idx) + tmp_value
+      PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
+      PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
+      PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
+      PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(product5_idx) = PDJ2(product5_idx) + tmp_value
       PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
     endif
   
@@ -226,6 +229,7 @@ do i=1,nb_reactions_using_species(j)
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(product5_idx) = PDJ2(product5_idx) + tmp_value
       PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
       PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
     endif
@@ -236,6 +240,7 @@ do i=1,nb_reactions_using_species(j)
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(product5_idx) = PDJ2(product5_idx) + tmp_value
       PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
       PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
     endif
@@ -248,6 +253,7 @@ do i=1,nb_reactions_using_species(j)
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(product5_idx) = PDJ2(product5_idx) + tmp_value
       PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
       PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
       PDJ2(reagent3_idx) = PDJ2(reagent3_idx) - tmp_value
@@ -259,6 +265,7 @@ do i=1,nb_reactions_using_species(j)
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(product5_idx) = PDJ2(product5_idx) + tmp_value
       PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
       PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
       PDJ2(reagent3_idx) = PDJ2(reagent3_idx) - tmp_value
@@ -270,6 +277,7 @@ do i=1,nb_reactions_using_species(j)
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
       PDJ2(product4_idx) = PDJ2(product4_idx) + tmp_value
+      PDJ2(product5_idx) = PDJ2(product5_idx) + tmp_value
       PDJ2(reagent1_idx) = PDJ2(reagent1_idx) - tmp_value
       PDJ2(reagent2_idx) = PDJ2(reagent2_idx) - tmp_value
       PDJ2(reagent3_idx) = PDJ2(reagent3_idx) - tmp_value
@@ -480,7 +488,7 @@ real(double_precision), intent(out), dimension(nb_species) :: YDOT !<[out] deriv
 integer :: no_species
 real(double_precision), dimension(nb_species+1) :: YD2
 integer :: i
-integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx
+integer :: reagent1_idx, reagent2_idx, reagent3_idx, product1_idx, product2_idx, product3_idx, product4_idx, product5_idx
 real(double_precision) :: rate
 
 call set_dependant_rates(y)
@@ -502,6 +510,7 @@ do I=1,nb_reactions
   product2_idx = REACTION_SUBSTANCES_ID(5, i)
   product3_idx = REACTION_SUBSTANCES_ID(6, i)
   product4_idx = REACTION_SUBSTANCES_ID(7, i)
+  product5_idx = REACTION_SUBSTANCES_ID(8, i)
 
   ! One reagent only
   if (reagent2_idx.eq.no_species) then
@@ -520,6 +529,8 @@ do I=1,nb_reactions
   YD2(product2_idx) = YD2(product2_idx) + RATE
   YD2(product3_idx) = YD2(product3_idx) + RATE
   YD2(product4_idx) = YD2(product4_idx) + RATE
+  YD2(product5_idx) = YD2(product5_idx) + RATE
+  
   YD2(reagent1_idx) = YD2(reagent1_idx) - RATE
   YD2(reagent2_idx) = YD2(reagent2_idx) - RATE
   YD2(reagent3_idx) = YD2(reagent3_idx) - RATE
@@ -1520,50 +1531,56 @@ implicit none
 
 ! Inputs 
 integer, intent(in) :: J !<[in] index of a given reaction
-real(double_precision), intent(in) :: SUMLAY
+real(double_precision), intent(in) :: SUMLAY !<[in] TODO description/units ???
 
 ! Locals
 real(double_precision) :: LTD
 real(double_precision) :: fH2O
+character(len=11) :: reagent1, product1, product2 !< species names for first reagent, and first and second products of a given reaction
 
+reagent1 = REACTION_SUBSTANCES_NAMES(1,J)
+product1 = REACTION_SUBSTANCES_NAMES(MAX_REAGENTS+1,J)
+product2 = REACTION_SUBSTANCES_NAMES(MAX_REAGENTS+2,J)
+
+! TODO are extra spaces in names really necessary? Test that.
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
 if (dust_temperature.LE.3.5E+01) then
-    if (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') then
+    if (product1 == 'CO2        ') then
         reaction_rates(J) = reaction_rates(J) * 1.2E-03 * (1.d0 - EXP(-SUMLAY/2.9E+00) ) / RATE_A(J)
     endif
-    if((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
-       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) then
+    if((product1 == 'CO         ' .AND. product2 == 'O          ') .OR. &
+       (product1 == 'O          ' .AND. product2 == 'CO         ')) then
         reaction_rates(J) = reaction_rates(J) * 1.1E-03 * (1.d0 - EXP(-SUMLAY/4.6E+00) ) / RATE_A(J)
     endif
 elseif(dust_temperature.GT.3.5E+01) then
-    if (REACTION_SUBSTANCES_NAMES(4,J) == 'CO2        ') then
+    if (product1 == 'CO2        ') then
         reaction_rates(J) = reaction_rates(J) * 2.2E-03 * (1.d0 - EXP(-SUMLAY/5.8E+00) ) / RATE_A(J)
     endif
-    if((REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'O          ') .OR. &
-       (REACTION_SUBSTANCES_NAMES(4,J) == 'O          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'CO         ')) then
+    if((product1 == 'CO         ' .AND. product2 == 'O          ') .OR. &
+       (product1 == 'O          ' .AND. product2 == 'CO         ')) then
        reaction_rates(J) = reaction_rates(J) * 2.2E-04 * SUMLAY / RATE_A(J)
     endif
 endif
 !------ Photodesorption of CO
-if(REACTION_SUBSTANCES_NAMES(1,J) == 'JCO        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CO         ') then
+if(reagent1 == 'JCO        ' .AND. product1 == 'CO         ') then
    reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / RATE_A(J)
 endif
 !------ Photodesorption of N2
-if(REACTION_SUBSTANCES_NAMES(1,J) == 'JN2        ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'N2         ') then
+if(reagent1 == 'JN2        ' .AND. product1 == 'N2         ') then
    reaction_rates(J) = reaction_rates(J) * 4.0E-04 / RATE_A(J)
 endif
 !------ Photodesorption of CH3OH
-if(REACTION_SUBSTANCES_NAMES(1,J) == 'JCH3OH     ' .AND. REACTION_SUBSTANCES_NAMES(4,J) == 'CH3OH      ') then
+if(reagent1 == 'JCH3OH     ' .AND. product1 == 'CH3OH      ') then
    reaction_rates(J) = reaction_rates(J) * 2.1E-03 / RATE_A(J)
 endif
 !------ Photodesorption of H2O
-if(REACTION_SUBSTANCES_NAMES(1,J) == 'JH2O       ') then
+if(reagent1 == 'JH2O       ') then
    LTD = 6.0E-01 + 2.4E-02 * dust_temperature
    fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
    reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
            & * (1.d0 - EXP(-SUMLAY/LTD) ) * fH2O / RATE_A(J)
-   if((REACTION_SUBSTANCES_NAMES(4,J) == 'OH         ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'H          ') .OR. &
-      (REACTION_SUBSTANCES_NAMES(4,J) == 'H          ' .AND. REACTION_SUBSTANCES_NAMES(5,J) == 'OH         ')) then
+   if((product1 == 'OH         ' .AND. product2 == 'H          ') .OR. &
+      (product1 == 'H          ' .AND. product2 == 'OH         ')) then
       reaction_rates(J) = reaction_rates(J) * (1.0E+00 - fH2O)/fH2O
    endif
 endif
