@@ -842,23 +842,29 @@ end subroutine get_temporal_derivatives
   implicit none
   
   ! Inputs
-  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances
+  real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances (relative to H) [number ratio]
 
   ! Locals
-  real(double_precision) :: ACTIV,BARR,DIFF,ACTIVCR,BARRCR,DIFFCR
+  real(double_precision) :: ACTIV !< TODO description/units ???
+  real(double_precision) :: BARR !< TODO description/units ???
+  real(double_precision) :: DIFF !< TODO description/units ???
+  real(double_precision) :: ACTIVCR !< TODO description/units ???
+  real(double_precision) :: BARRCR !< TODO description/units ???
+  real(double_precision) :: DIFFCR !< TODO description/units ???
   real(double_precision) :: XNH2,XNCO
   real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
   real(double_precision) :: T300, TI, TSQ
   real(double_precision) :: YMOD1, YMOD2
-  integer IMOD1,IMOD2
+  integer :: IMOD1 !< modify rate flag for reagent 1
+  integer :: IMOD2 !< modify rate flag for reagent 2 
   integer :: j, l
-  REAL(double_precision) :: XNDTOT         ! Sum of all abundances on grain surfaces
-                                           ! Used to compute the photodesorption by FUV photons
-                                           ! proposed by Hassel,G and following Oberg mesurments
-  REAL(double_precision) :: MLAY           ! Number of layers from which species can desorb
-  REAL(double_precision) :: SUMLAY         ! Total number of layers on the grain surface
-  REAL(double_precision) :: UVCR           ! Scaling factor for CR generated UV
-                                           ! The reference used is 1.3x10^-17 s-1
+  REAL(double_precision) :: XNDTOT !< Sum of all abundances on grain surfaces
+                                   !! Used to compute the photodesorption by FUV photons
+                                   !! proposed by Hassel,G and following Oberg mesurments
+  REAL(double_precision) :: MLAY   !< Number of layers from which species can desorb
+  REAL(double_precision) :: SUMLAY !< Total number of layers on the grain surface
+  REAL(double_precision) :: UVCR   !< Scaling factor for CR generated UV
+                                   !! The reference used is 1.3x10^-17 s-1
 
 
   T300=gas_temperature/300.d0
@@ -1293,11 +1299,11 @@ end subroutine get_temporal_derivatives
 
   ! Inputs
   integer, intent(in) :: J !<[in] index of a given reaction
-  integer, intent(in) :: IMOD1
-  integer, intent(in) :: IMOD2
-  real(double_precision), intent(in) :: BARR
-  real(double_precision), intent(in) :: YMOD1
-  real(double_precision), intent(in) :: YMOD2
+  integer, intent(in) :: IMOD1 !<[in] modify rate flag for reagent 1
+  integer, intent(in) :: IMOD2 !<[in] modify rate flag for reagent 2
+  real(double_precision), intent(in) :: BARR !<[in] TODO Description/units ???
+  real(double_precision), intent(in) :: YMOD1 !<[in] Abundance (relative to H) [number ratio] for reagent 1
+  real(double_precision), intent(in) :: YMOD2 !<[in] Abundance (relative to H) [number ratio] for reagent 2
   
   ! Locals
   real(double_precision) :: TESTREF1, TESTREF2, TESTNUM
@@ -1399,8 +1405,19 @@ end subroutine get_temporal_derivatives
 
   implicit none
 
-  integer :: J,IMOD1,IMOD2, PICK
-  real(double_precision) :: BARRCR,YMOD1,YMOD2, TESTREF1, TESTREF2, TESTNUM
+  ! Inputs
+  integer, intent(in) :: J !<[in]  index of a given reaction
+  integer, intent(in) :: IMOD1 !<[in] modify rate flag for reagent 1
+  integer, intent(in) :: IMOD2 !<[in] modify rate flag for reagent 2
+  real(double_precision), intent(in) :: BARRCR !<[in] TODO Description/units ???
+  real(double_precision), intent(in) :: YMOD1 !<[in] Abundance (relative to H) [number ratio] for reagent 1
+  real(double_precision), intent(in) :: YMOD2 !<[in] Abundance (relative to H) [number ratio] for reagent 2
+  
+  ! Locals
+  real(double_precision) :: TESTREF1 !< TODO Description/units ???
+  real(double_precision) :: TESTREF2 !< TODO Description/units ???
+  real(double_precision) :: TESTNUM !< TODO Description/units ???
+  integer :: PICK !< TODO Description/units ???
 
   EVAP_OVER_ACC_RATIO_1(J)=0.0d0
   EVAP_OVER_ACC_RATIO_2(J)=0.0d0
@@ -1501,10 +1518,13 @@ use global_variables
 
 implicit none
 
-INTEGER, INTENT(IN) :: J !<[in] index of a given reaction
-REAL(double_precision), INTENT(IN) :: SUMLAY
-REAL(double_precision) :: LTD
-REAL(double_precision) :: fH2O
+! Inputs 
+integer, intent(in) :: J !<[in] index of a given reaction
+real(double_precision), intent(in) :: SUMLAY
+
+! Locals
+real(double_precision) :: LTD
+real(double_precision) :: fH2O
 
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
 if (dust_temperature.LE.3.5E+01) then
