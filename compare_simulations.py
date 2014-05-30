@@ -28,13 +28,17 @@ problem_message = "Script that run a mercury simulation and test if the outputs 
 "\n\nThe script can take various arguments :" + "\n" + \
 "(no spaces between the key and the values, only separated by '=')" + "\n" + \
 " * help : display a little help message on HOW to use various options" + "\n" + \
-" * force : To force generation of outputs for the 'old' program" + "\n" + \
+" * force : To force generation of outputs for the 'old' program (after copying simulation files from the example)" + "\n" + \
+" * actual : To force copying HEAD simulation, compyling it, then generating simulation outputs" + "\n" + \
 " * faq : Display possible problems that might occurs during comparison" + "\n" + \
 " * rev=%s : (previous, actual, current) are possible. Else, every Git ID syntax is OK." % REVISION + \
 "the reference revision for the comparison with actual code" + "\n" + \
 " Example : " + "\n" + \
-" compare_simulations.py force" + "\n" + \
-" compare_simulations.py rev=cdabb998"
+"(examples are ordered. From the more common, to the more drastic.)" + "\n" + \
+" compare_simulations.py #only generate new outputs, do nothing for the old one" + "\n" + \
+" compare_simulations.py force # copy inputs in old folder, then generate outputs for both binaries" + "\n" + \
+" compare_simulations.py actual # compile HEAD, copy inputs in old folder, then generate outputs for for both binaries" + "\n" + \
+" compare_simulations.py rev=cdabb998 # compile the given revision, copy input in old folder then generate outputs for both binaries"
 
 isFAQ = False
 faq_message = """* If parameters changes between the two versions, using 'rev' or 'force' 
@@ -46,18 +50,33 @@ parameters, leading sometimes to infinite loop such as :
       In above message,  R1 =                  NaN"
 """
 
+value_message = "/!\ Warning: %s does not need any value, but you defined '%s=%s' ; value ignored."
+
 # We get arguments from the script
 for arg in sys.argv[1:]:
   try:
     (key, value) = arg.split("=")
   except:
     key = arg
+    value = None
   if (key == 'force'):
     force_simulation = True
+    if (value != None):
+      print(value_message % (key, key, value))
+  elif (key == 'actual'):
+    force_source = True
+    force_simulation = True
+    REVISION = "HEAD"
+    if (value != None):
+      print(value_message % (key, key, value))
   elif (key == 'help'):
     isProblem = True
+    if (value != None):
+      print(value_message % (key, key, value))
   elif (key == 'faq'):
     isFAQ = True
+    if (value != None):
+      print(value_message % (key, key, value))
   elif (key == 'rev'):
     # If a revision is specified, we force the actualisation of source code, compilation and simulation.
     force_source = True
