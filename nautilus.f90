@@ -98,6 +98,7 @@ use nautilus_main
 
 implicit none
 
+! Parameters for DLSODES. RTOL is the RELATIVE_ABUNDANCE parameter in global_variables.f90
 integer :: itol = 2 !< ITOL = 1 or 2 according as ATOL (below) is a scalar or array.
 integer :: itask = 1 !< ITASK = 1 for normal computation of output values of Y at t = TOUT.
 integer :: istate = 1 !< ISTATE = integer flag (input and output).  Set ISTATE = 1.
