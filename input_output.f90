@@ -378,88 +378,88 @@ if (isDefined) then
     if (isParameter) then
       select case(identificator)
       ! Solver
-      case('relative_tolerance')
+      case('relative_tolerance', 'RTOL') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') RELATIVE_TOLERANCE
       
       !Switches
-      case('is_grain_reactions')
+      case('is_grain_reactions', 'IDUST') ! The old name is kept for compatibility reasons
         read(value, '(i2)') IS_GRAIN_REACTIONS
       
-      case('is_absorption')
+      case('is_absorption', 'ISABS') ! The old name is kept for compatibility reasons
         read(value, '(i2)') IS_ABSORPTION
       
-      case('grain_tunneling_diffusion')
+      case('grain_tunneling_diffusion', 'IGRQM') ! The old name is kept for compatibility reasons
         read(value, '(i2)') GRAIN_TUNNELING_DIFFUSION
       
-      case('modify_rate_flag')
+      case('modify_rate_flag', 'IMODH') ! The old name is kept for compatibility reasons
         read(value, '(i2)') MODIFY_RATE_FLAG
       
-      case('conservation_type')
+      case('conservation_type', 'ICONS') ! The old name is kept for compatibility reasons
         read(value, '(i2)') CONSERVATION_TYPE
       
       ! Gas phase
-      case('initial_gas_density')
+      case('initial_gas_density', 'XNT0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_gas_density
       
-      case('initial_gas_temperature')
+      case('initial_gas_temperature', 'TEMP0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_gas_temperature
       
-      case('initial_visual_extinction')
+      case('initial_visual_extinction', 'TAU0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') INITIAL_VISUAL_EXTINCTION
       
-      case('cr_ionisation_rate')
+      case('cr_ionisation_rate', 'ZETA0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') CR_IONISATION_RATE
       
-      case('x_ionisation_rate')
+      case('x_ionisation_rate', 'ZETAX') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') X_IONISATION_RATE
       
-      case('uv_flux')
+      case('uv_flux', 'UVGAS') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') UV_FLUX
       
       ! Grain
-      case('initial_dust_temperature')
+      case('initial_dust_temperature', 'DTEMP0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_dust_temperature
       
-      case('initial_dtg_mass_ratio')
+      case('initial_dtg_mass_ratio', 'DTOGM') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_dtg_mass_ratio
       
-      case('sticking_coeff_neutral')
+      case('sticking_coeff_neutral', 'STICK0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') sticking_coeff_neutral
       
-      case('sticking_coeff_positive')
+      case('sticking_coeff_positive', 'STICKP') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') sticking_coeff_positive
       
-      case('sticking_coeff_negative')
+      case('sticking_coeff_negative', 'STICKN') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') sticking_coeff_negative
       
-      case('grain_density')
+      case('grain_density', 'RHOD') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') GRAIN_DENSITY
       
-      case('grain_radius')
+      case('grain_radius', 'RD') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') GRAIN_RADIUS
         
-      case('site_spacing')
+      case('site_spacing', 'ACM') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') SITE_SPACING
       
-      case('site_density')
+      case('site_density', 'SNS') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') SITE_DENSITY
       
-      case('diff_desorp_default_ratio')
+      case('diff_desorp_default_ratio', 'EBFAC') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') DIFF_DESORP_DEFAULT_RATIO
       
-      case('ACT')
-        read(value, '(e12.6)') ACT
+      case('activation_barrier_width', 'ACT') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') ACTIVATION_BARRIER_WIDTH
       
-      case('peak_grain_temperature')
+      case('peak_grain_temperature', 'TSMAX') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') PEAK_GRAIN_TEMPERATURE
       
-      case('peak_duration')
+      case('peak_duration', 'CRT') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') PEAK_DURATION
       
-      case('CRFE')
+      case('CRFE') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') CRFE
       
-      case('ARRK')
+      case('ARRK') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') ARRK
       
       ! Outputs
@@ -583,7 +583,8 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density [cm-2]'
   write(10,'(a,es10.3e2,a)') 'diff_desorp_default_ratio = ', DIFF_DESORP_DEFAULT_RATIO, &
                              ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
-  write(10,'(a,es10.3e2,a)') 'ACT = ', ACT, ' ! grain rxn activation energy constant'
+  write(10,'(a,es10.3e2,a)') 'activation_barrier_width = ', ACTIVATION_BARRIER_WIDTH, &
+                             ' ! grain reaction activation energy barrier width. [cm]'
   write(10,'(a,es10.3e2,a)') 'peak_grain_temperature = ', PEAK_GRAIN_TEMPERATURE, ' ! peak grain temperature [K] (CR heating)'
   write(10,'(a,es10.3e2,a)') 'peak_duration = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'
   write(10,'(a,es10.3e2,a)') 'CRFE = ', CRFE, ' ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)'
