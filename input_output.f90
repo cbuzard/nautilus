@@ -169,7 +169,7 @@ jk=1
 do i=0,MAX_NUMBER_REACTION_TYPE
   do j=1,nb_reactions
     if (itypeuo(j).eq.i) then
-      REACTION_SUBSTANCES_NAMES(:,jk)=SYMBOLUO(:,j)     
+      REACTION_COMPOUNDS_NAMES(:,jk)=SYMBOLUO(:,j)     
       RATE_A(jk)=AUO(j)
       RATE_B(jk)=BUO(j)
       RATE_C(jk)=CUO(j)
@@ -193,9 +193,9 @@ endif
 !       replace the species names by blanks for non chemical species                                                                        
 do j=1,nb_reactions-1
   do i=1,MAX_COMPOUNDS
-    select case(REACTION_SUBSTANCES_NAMES(i,j))
+    select case(REACTION_COMPOUNDS_NAMES(i,j))
       case ('CR', 'CRP', 'Photon')
-        REACTION_SUBSTANCES_NAMES(i,j) = '           '
+        REACTION_COMPOUNDS_NAMES(i,j) = '           '
     end select
   enddo
 
@@ -1016,7 +1016,7 @@ write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
 open(45, file=filename_output, form='unformatted')
 
 write(45) species_name
-write(45) REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
+write(45) REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
 write(45) reaction_rates
 write(45) REACTION_ID
 

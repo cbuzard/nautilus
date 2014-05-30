@@ -95,8 +95,8 @@ real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_2 !< di
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
-character(len=11), allocatable, dimension(:,:) :: REACTION_SUBSTANCES_NAMES !< dim(MAX_COMPOUNDS,nb_reactions)
-integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, list for reagents (first 3) and products (last 5).
+character(len=11), allocatable, dimension(:,:) :: REACTION_COMPOUNDS_NAMES !< dim(MAX_COMPOUNDS,nb_reactions)
+integer, allocatable, dimension(:,:) :: REACTION_COMPOUNDS_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, list for reagents (first 3) and products (last 5).
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
 real(double_precision), allocatable, dimension(:) :: RATE_A !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: RATE_B !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
@@ -333,8 +333,8 @@ allocate(reagent_1_idx(nb_reactions))
 allocate(reagent_2_idx(nb_reactions))
 allocate(RATE_FORMULA(nb_reactions))
 allocate(REACTION_ID(nb_reactions))
-allocate(REACTION_SUBSTANCES_ID(MAX_COMPOUNDS,nb_reactions))
-allocate(REACTION_SUBSTANCES_NAMES(MAX_COMPOUNDS,nb_reactions))
+allocate(REACTION_COMPOUNDS_ID(MAX_COMPOUNDS,nb_reactions))
+allocate(REACTION_COMPOUNDS_NAMES(MAX_COMPOUNDS,nb_reactions))
 
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
@@ -375,8 +375,8 @@ reagent_1_idx(1:nb_reactions) = 0
 reagent_2_idx(1:nb_reactions) = 0
 RATE_FORMULA(1:nb_reactions) = 0
 REACTION_ID(1:nb_reactions) = 0
-REACTION_SUBSTANCES_ID(1:MAX_COMPOUNDS,1:nb_reactions) = 0
-REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS,1:nb_reactions) = ''
+REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,1:nb_reactions) = 0
+REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS,1:nb_reactions) = ''
 INITIAL_ELEMENTAL_ABUNDANCE(1:NB_PRIME_ELEMENTS) = 0.d0
 PRIME_ELEMENT_IDX(1:NB_PRIME_ELEMENTS) = 0
 species_composition(1:NB_PRIME_ELEMENTS,nb_species) = 0

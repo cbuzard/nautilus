@@ -41,7 +41,7 @@ real(double_precision), allocatable, dimension(:,:) :: reaction_rates ! (nb_outp
 character(len=11), allocatable, dimension(:,:) :: SYMBOL
 integer, allocatable, dimension(:) :: NUM !< index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
-integer, allocatable, dimension(:,:) :: REACTION_SUBSTANCES_ID
+integer, allocatable, dimension(:,:) :: REACTION_COMPOUNDS_ID
 
 ! Output of the code
 real(double_precision), allocatable, dimension(:,:) :: reaction_fluxes
@@ -83,10 +83,10 @@ allocate(zeta(nptmax, nb_outputs))
 
 allocate(abundances(nb_outputs, nb_species+1, nptmax)) ! We create an extra species that will always have an abundance of 1
 
-allocate(REACTION_SUBSTANCES_NAMES(MAX_COMPOUNDS,nb_reactions))
+allocate(REACTION_COMPOUNDS_NAMES(MAX_COMPOUNDS,nb_reactions))
 allocate(reaction_rates(nb_outputs, nb_reactions))
 allocate(REACTION_ID(nb_reactions))
-allocate(REACTION_SUBSTANCES_ID(3, nb_reactions))
+allocate(REACTION_COMPOUNDS_ID(3, nb_reactions))
 
 ! Outputs
 allocate(reaction_fluxes(nb_outputs, nb_reactions))
@@ -107,7 +107,7 @@ do output=1,nb_outputs
 
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) species_name(1:nb_species)
-  read(10) REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
+  read(10) REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
   read(10) reaction_rates(output,1:nb_reactions)
   read(10) REACTION_ID(1:nb_reactions)
   close(10)
@@ -125,8 +125,8 @@ call set_only_reagents()
 ! We replace blanck species by 'XXX' for the outputs constrains
 do reaction=1,nb_reactions
   do species=1,MAX_COMPOUNDS
-    if (REACTION_SUBSTANCES_NAMES(species, reaction).eq.'   ') then
-      REACTION_SUBSTANCES_NAMES(species, reaction) = 'XXX'
+    if (REACTION_COMPOUNDS_NAMES(species, reaction).eq.'   ') then
+      REACTION_COMPOUNDS_NAMES(species, reaction) = 'XXX'
     endif
   enddo
 enddo
@@ -134,9 +134,9 @@ enddo
 ! We write fluxes for all reactions and all output times
 do output=1, nb_outputs
   do reaction=1, nb_reactions
-    reagent1 = REACTION_SUBSTANCES_ID(1, reaction)
-    reagent2 = REACTION_SUBSTANCES_ID(2, reaction)
-    reagent3 = REACTION_SUBSTANCES_ID(3, reaction)
+    reagent1 = REACTION_COMPOUNDS_ID(1, reaction)
+    reagent2 = REACTION_COMPOUNDS_ID(2, reaction)
+    reagent3 = REACTION_COMPOUNDS_ID(3, reaction)
 
     reaction_fluxes(output, reaction) = reaction_rates(output, reaction) * abundances(output, reagent1, 1) * &
                                         abundances(output, reagent2, 1) * abundances(output, reagent3, 1)
@@ -155,7 +155,7 @@ open(10, file='rates.out')
 ! The first line list time for each column of flux
 write(10, time_format) ' Time (yr)', time(1:nb_outputs)
 do reaction=1, nb_reactions
-  write(10,rate_format) REACTION_SUBSTANCES_NAMES(1:MAX_COMPOUNDS, reaction), reaction_fluxes(1:nb_outputs, reaction), &
+  write(10,rate_format) REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, reaction), reaction_fluxes(1:nb_outputs, reaction), &
                         REACTION_ID(reaction)
 enddo
 close(10)
@@ -187,14 +187,14 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reagents (dummy species) will be assigned (nb_species+1)
-REACTION_SUBSTANCES_ID(1:3, 1:nb_reactions) = no_species
+REACTION_COMPOUNDS_ID(1:3, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
     do L=1,MAX_REAGENTS
-      if (REACTION_SUBSTANCES_NAMES(L,I).EQ.species_name(J)) then
-        REACTION_SUBSTANCES_ID(L,I) = J
+      if (REACTION_COMPOUNDS_NAMES(L,I).EQ.species_name(J)) then
+        REACTION_COMPOUNDS_ID(L,I) = J
       endif
     enddo
 

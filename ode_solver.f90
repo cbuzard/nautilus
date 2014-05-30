@@ -29,14 +29,14 @@ integer :: no_species
 no_species = nb_species + 1
 
 ! By default, non existing reagents (dummy species) will be assigned (nb_species+1)
-REACTION_SUBSTANCES_ID(1:MAX_COMPOUNDS, 1:nb_reactions) = no_species
+REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
     do L=1,MAX_COMPOUNDS
-      if (REACTION_SUBSTANCES_NAMES(L,I).EQ.species_name(J)) then
-        REACTION_SUBSTANCES_ID(L,I) = J
+      if (REACTION_COMPOUNDS_NAMES(L,I).EQ.species_name(J)) then
+        REACTION_COMPOUNDS_ID(L,I) = J
       endif
     enddo
 
@@ -195,15 +195,15 @@ PDJ2(1:nb_species+1) = 0.d0
 do i=1,nb_reactions_using_species(j)
   reaction_idx = relevant_reactions(i, j) ! j being the species index, given as a parameter
 
-  reagent1_idx = REACTION_SUBSTANCES_ID(1, reaction_idx)
-  reagent2_idx = REACTION_SUBSTANCES_ID(2, reaction_idx)
-  reagent3_idx = REACTION_SUBSTANCES_ID(3, reaction_idx)
+  reagent1_idx = REACTION_COMPOUNDS_ID(1, reaction_idx)
+  reagent2_idx = REACTION_COMPOUNDS_ID(2, reaction_idx)
+  reagent3_idx = REACTION_COMPOUNDS_ID(3, reaction_idx)
   
-  product1_idx = REACTION_SUBSTANCES_ID(4, reaction_idx)
-  product2_idx = REACTION_SUBSTANCES_ID(5, reaction_idx)
-  product3_idx = REACTION_SUBSTANCES_ID(6, reaction_idx)
-  product4_idx = REACTION_SUBSTANCES_ID(7, reaction_idx)
-  product5_idx = REACTION_SUBSTANCES_ID(8, reaction_idx)
+  product1_idx = REACTION_COMPOUNDS_ID(4, reaction_idx)
+  product2_idx = REACTION_COMPOUNDS_ID(5, reaction_idx)
+  product3_idx = REACTION_COMPOUNDS_ID(6, reaction_idx)
+  product4_idx = REACTION_COMPOUNDS_ID(7, reaction_idx)
+  product5_idx = REACTION_COMPOUNDS_ID(8, reaction_idx)
   
   ! if statements are written in a specific order to increase speed. The goal is to test first the most probable event, and 
   !! then always go to 'else' statement, not to test if we have already found our case. One, then two bodies reactions are the most 
@@ -321,9 +321,9 @@ is_species_used(1:nb_reactions, 1:nb_species+1) = 0
 
 do reaction=1,nb_reactions
 
-  reagent1_idx = REACTION_SUBSTANCES_ID(1, reaction)
-  reagent2_idx = REACTION_SUBSTANCES_ID(2, reaction)
-  reagent3_idx = REACTION_SUBSTANCES_ID(3, reaction)
+  reagent1_idx = REACTION_COMPOUNDS_ID(1, reaction)
+  reagent2_idx = REACTION_COMPOUNDS_ID(2, reaction)
+  reagent3_idx = REACTION_COMPOUNDS_ID(3, reaction)
   
   is_species_used(reaction, reagent1_idx) = 1
   is_species_used(reaction, reagent2_idx) = 1
@@ -502,15 +502,15 @@ yd2(1:nb_species) = 0.d0
 ! The differential equations are calculated in a loop here
 do I=1,nb_reactions
 
-  reagent1_idx = REACTION_SUBSTANCES_ID(1, i)
-  reagent2_idx = REACTION_SUBSTANCES_ID(2, i)
-  reagent3_idx = REACTION_SUBSTANCES_ID(3, i)
+  reagent1_idx = REACTION_COMPOUNDS_ID(1, i)
+  reagent2_idx = REACTION_COMPOUNDS_ID(2, i)
+  reagent3_idx = REACTION_COMPOUNDS_ID(3, i)
 
-  product1_idx = REACTION_SUBSTANCES_ID(4, i)
-  product2_idx = REACTION_SUBSTANCES_ID(5, i)
-  product3_idx = REACTION_SUBSTANCES_ID(6, i)
-  product4_idx = REACTION_SUBSTANCES_ID(7, i)
-  product5_idx = REACTION_SUBSTANCES_ID(8, i)
+  product1_idx = REACTION_COMPOUNDS_ID(4, i)
+  product2_idx = REACTION_COMPOUNDS_ID(5, i)
+  product3_idx = REACTION_COMPOUNDS_ID(6, i)
+  product4_idx = REACTION_COMPOUNDS_ID(7, i)
+  product5_idx = REACTION_COMPOUNDS_ID(8, i)
 
   ! One reagent only
   if (reagent2_idx.eq.no_species) then
@@ -645,7 +645,7 @@ end subroutine get_temporal_derivatives
 
         do M=1,W
           N=INDICE(M)
-          !if(IT==1) write(*,*) N,M, REACTION_SUBSTANCES_NAMES(:,N), REACTION_TMIN(N), REACTION_TMAX(N),distmin(M),distmax(M)
+          !if(IT==1) write(*,*) N,M, REACTION_COMPOUNDS_NAMES(:,N), REACTION_TMIN(N), REACTION_TMAX(N),distmin(M),distmax(M)
           if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)=0.d0
           if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)=0.d0
         enddo
@@ -914,7 +914,7 @@ end subroutine get_temporal_derivatives
     if (IS_ABSORPTION.EQ.1) then 
 
       ! ====== Compute the H2 self-shielding
-      if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YH2) then
+      if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YH2) then
         TETABIS=1.D0
 
         NH2 = visual_extinction/AV_NH_ratio * XNH2
@@ -933,7 +933,7 @@ end subroutine get_temporal_derivatives
       endif
 
       ! ====== Compute the CO self-shielding
-      if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YCO) then
+      if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YCO) then
 
         TETABIS1=1.D0
         TETABIS2=1.D0
@@ -1005,10 +1005,10 @@ end subroutine get_temporal_derivatives
       THERMAL_DIFFUSION_RATE_2(J)=THERMAL_HOPING_RATE(reagent_2_idx(J))
 
       ! --------- Check for JH,JH2
-      if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
-      if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH2) IMOD1=2
-      if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH)  IMOD2=1
-      if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH2) IMOD2=2
+      if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH)  IMOD1=1
+      if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH2) IMOD1=2
+      if (REACTION_COMPOUNDS_NAMES(2,J).EQ.YJH)  IMOD2=1
+      if (REACTION_COMPOUNDS_NAMES(2,J).EQ.YJH2) IMOD2=2
 
       ! --------- QM for JH,JH2 only - others are too heavy
       if (IMOD1+IMOD2.NE.0) then
@@ -1065,30 +1065,30 @@ end subroutine get_temporal_derivatives
 
         ! ------------ Set to modify all rates, if selected (just atoms)
         if (MODIFY_RATE_FLAG.EQ.3) then
-          if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JHe        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JC         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JN         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JO         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JS         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JSi        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JFe        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JNa        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JMg        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JP         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JCl        ')) IMOD1=3
-          if ((REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH).OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JHe        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JC         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JN         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JO         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JS         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JSi        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JFe        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JNa        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JMg        ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JP         ').OR.&
-          (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
+          if ((REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH).OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JHe        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JC         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JN         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JO         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JS         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JSi        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JFe        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JNa        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JMg        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JP         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JCl        ')) IMOD1=3
+          if ((REACTION_COMPOUNDS_NAMES(2,J).EQ.YJH).OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JHe        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JC         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JN         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JO         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JS         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JSi        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JFe        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JNa        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JMg        ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JP         ').OR.&
+          (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
         endif
 
         ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
@@ -1124,12 +1124,12 @@ end subroutine get_temporal_derivatives
             CR_DIFFUSION_RATE_2(J)=CR_HOPING_RATE(reagent_2_idx(J))
 
             ! --------- Check for JH,JH2
-            if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH)  IMOD1=1
-            if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH2) IMOD1=2
-            if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH)  IMOD2=1
-            if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH2) IMOD2=2
-            !if (REACTION_SUBSTANCES_NAMES(1,J).EQ.YJO)  IMOD1=4
-            !if (REACTION_SUBSTANCES_NAMES(2,J).EQ.YJO)  IMOD2=4
+            if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH)  IMOD1=1
+            if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH2) IMOD1=2
+            if (REACTION_COMPOUNDS_NAMES(2,J).EQ.YJH)  IMOD2=1
+            if (REACTION_COMPOUNDS_NAMES(2,J).EQ.YJH2) IMOD2=2
+            !if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YJO)  IMOD1=4
+            !if (REACTION_COMPOUNDS_NAMES(2,J).EQ.YJO)  IMOD2=4
 
             ! --------- QM for JH,JH2 only - others are too heavy
             if (IMOD1+IMOD2.NE.0) then
@@ -1186,30 +1186,30 @@ end subroutine get_temporal_derivatives
 
                ! ------------ Set to modify all rates, if selected (just atoms)
                if (MODIFY_RATE_FLAG.EQ.3) then
-                  if ((REACTION_SUBSTANCES_NAMES(1,J).EQ.YJH).OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JHe        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JC         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JN         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JO         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JS         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JSi        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JFe        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JNa        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JMg        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JP         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(1,J).EQ.'JCl        ')) IMOD1=3
-                  if ((REACTION_SUBSTANCES_NAMES(2,J).EQ.YJH).OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JHe        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JC         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JN         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JO         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JS         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JSi        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JFe        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JNa        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JMg        ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JP         ').OR.&
-                      (REACTION_SUBSTANCES_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
+                  if ((REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH).OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JHe        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JC         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JN         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JO         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JS         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JSi        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JFe        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JNa        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JMg        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JP         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(1,J).EQ.'JCl        ')) IMOD1=3
+                  if ((REACTION_COMPOUNDS_NAMES(2,J).EQ.YJH).OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JHe        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JC         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JN         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JO         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JS         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JSi        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JFe        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JNa        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JMg        ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JP         ').OR.&
+                      (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
                endif
 
                   ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
@@ -1281,7 +1281,7 @@ end subroutine get_temporal_derivatives
   ! cf GRAINRATE
   ! VW Fev 2012 - this process has been removed
   !      do j=type_id_start(0),type_id_stop(0)
-  !      if ((REACTION_SUBSTANCES_NAMES(1,J).eq.YH).and.(REACTION_SUBSTANCES_NAMES(2,j).eq.YH)) then
+  !      if ((REACTION_COMPOUNDS_NAMES(1,J).eq.YH).and.(REACTION_COMPOUNDS_NAMES(2,j).eq.YH)) then
   !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(reagent_1_idx(j))
   !      endif
   !      enddo
@@ -1538,9 +1538,9 @@ real(double_precision) :: LTD
 real(double_precision) :: fH2O
 character(len=11) :: reagent1, product1, product2 !< species names for first reagent, and first and second products of a given reaction
 
-reagent1 = REACTION_SUBSTANCES_NAMES(1,J)
-product1 = REACTION_SUBSTANCES_NAMES(MAX_REAGENTS+1,J)
-product2 = REACTION_SUBSTANCES_NAMES(MAX_REAGENTS+2,J)
+reagent1 = REACTION_COMPOUNDS_NAMES(1,J)
+product1 = REACTION_COMPOUNDS_NAMES(MAX_REAGENTS+1,J)
+product2 = REACTION_COMPOUNDS_NAMES(MAX_REAGENTS+2,J)
 
 ! TODO are extra spaces in names really necessary? Test that.
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
