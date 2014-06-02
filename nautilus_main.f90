@@ -475,7 +475,7 @@ end subroutine index_datas
       !         if (species_name(I).EQ.'H2+')    STICK=0.d0
 
       if (I.GT.nb_gaseous_species) STICK=0.d0
-      CONDSP(I)=COND*STICK/SQRT(SPECIES_MASS(I))
+      ACC_RATES_PREFACTOR(I)=COND*STICK/SQRT(SPECIES_MASS(I))
     enddo
 
 

@@ -90,7 +90,8 @@ real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER_WIDTH !< 
 !! Width of the energy barrier for diffusion. The thicker, the less quantum tunneling diffusion will be efficient.
 real(double_precision), allocatable, dimension(:) :: FORMATION_ENTHALPY !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
 real(double_precision), allocatable, dimension(:) :: VIBRATION_FREQUENCY !< dim(nb_species) Characteristic vibration frequency [s-1] of the adsorbed species  as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
-real(double_precision), allocatable, dimension(:) :: CONDSP !< dim(nb_species) Just used to compute ACCRETION_RATES
+real(double_precision), allocatable, dimension(:) :: ACC_RATES_PREFACTOR !< dim(nb_species) Interrim calculation variable for ACCRETION_RATES
+!! that contain cross section, probability and constant needed for thermal motion
 real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_1 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Watson 1976) (dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain)
 real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_2 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Hasegawa & Herbst 1992) VIBRATION_FREQUENCY / nb_sites_per_grain.EXP(-2.SITE_SPACING / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2)
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
@@ -308,7 +309,7 @@ allocate(DIFFUSION_BARRIER(nb_species))
 allocate(DIFFUSION_BARRIER_WIDTH(nb_species))
 allocate(FORMATION_ENTHALPY(nb_species))
 allocate(VIBRATION_FREQUENCY(nb_species))
-allocate(condsp(nb_species))
+allocate(ACC_RATES_PREFACTOR(nb_species))
 allocate(TUNNELING_RATE_TYPE_1(nb_species))
 allocate(TUNNELING_RATE_TYPE_2(nb_species))
 allocate(SPECIES_CHARGE(nb_species))
@@ -352,7 +353,7 @@ DIFFUSION_BARRIER(1:nb_species) = 0.d0
 DIFFUSION_BARRIER_WIDTH(1:nb_species) = 0.d0
 FORMATION_ENTHALPY(1:nb_species) = 0.d0
 VIBRATION_FREQUENCY(1:nb_species) = 0.d0
-condsp(1:nb_species) = 0.d0
+ACC_RATES_PREFACTOR(1:nb_species) = 0.d0
 TUNNELING_RATE_TYPE_1(1:nb_species) = 0.d0
 TUNNELING_RATE_TYPE_2(1:nb_species) = 0.d0
 SPECIES_CHARGE(1:nb_species) = 0

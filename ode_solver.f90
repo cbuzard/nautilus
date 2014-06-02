@@ -981,7 +981,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 99: Adsorption on grains
     do J=type_id_start(99),type_id_stop(99)
       ! ========= Set accretion rates
-      ACCRETION_RATES(reagent_1_idx(J))=CONDSP(reagent_1_idx(J))*TSQ*Y(reagent_1_idx(J))*H_number_density
+      ACCRETION_RATES(reagent_1_idx(J))=ACC_RATES_PREFACTOR(reagent_1_idx(J))*TSQ*Y(reagent_1_idx(J))*H_number_density
       ACCRETION_RATES(reagent_2_idx(J))=ACCRETION_RATES(reagent_1_idx(J))
       reaction_rates(J)=RATE_A(J)*branching_ratio(J)*ACCRETION_RATES(reagent_1_idx(J))/Y(reagent_1_idx(J))/GTODN
     enddo
