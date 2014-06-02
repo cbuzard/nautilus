@@ -48,7 +48,8 @@ diff_desorp_default_ratio =  5.000E-01 ! ratio Eb(I):Ed(I) (excludes H,H2); -ve 
 activation_barrier_width =  1.000E-08 ! grain reaction activation energy barrier width. [cm]
 peak_grain_temperature =  7.000E+01 ! peak grain temperature [K] (CR heating)
 peak_duration =  1.000E-05 ! duration [s] of peak grain temperature
-CRFE =  3.000E-14 ! Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
+Fe_ionisation_rate =  3.000E-14 ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] 
+(for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
 ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
 
 !*****************************

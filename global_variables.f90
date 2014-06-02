@@ -150,7 +150,8 @@ real(double_precision) :: nb_sites_per_grain !< Number of site per grain (site d
 real(double_precision) :: ACTIVATION_BARRIER_WIDTH !< grain reaction activation energy barrier width. [cm]
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
 real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
-real(double_precision) :: CRFE !< Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain)
+real(double_precision) :: FE_IONISATION_RATE !< (cosmic) Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain) 
+!! For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
 real(double_precision) :: DIFF_DESORP_DEFAULT_RATIO !< [no unit] DIFFUSION_BARRIER/DESORPTION_ENERGY. Ratio used if DIFFUSION_BARRIER is not known
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
