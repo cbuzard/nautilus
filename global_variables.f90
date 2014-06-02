@@ -117,10 +117,12 @@ integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of 
 ! Specific variables for first or second reagent of each reactions
 integer, allocatable, dimension(:) :: reagent_1_idx !< dim(nb_reactions) Index of the first reagent species involved in the reaction
 integer, allocatable, dimension(:) :: reagent_2_idx !< dim(nb_reactions) Index of the second reagent species involved in the reaction
-real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate for reagent 1
-real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate for reagent 2
-real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating for reagent 1
-real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) Diffusion rates used to compute the grain reaction rate by cosmic rays heating for reagent 2
+real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the grain reaction rate for reagent 1
+real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the grain reaction rate for reagent 2
+real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
+!! the grain reaction rate by cosmic rays heating for reagent 1. Used for reaction_type=21
+real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
+!! the grain reaction rate by cosmic rays heating for reagent 2. Used for reaction_type=21
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 1
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 2
 

@@ -459,7 +459,7 @@ if (isDefined) then
       case('Fe_ionisation_rate', 'CRFE') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') FE_IONISATION_RATE
       
-      case('vib_to_dissip_freq_ratio') ! The old name is kept for compatibility reasons
+      case('vib_to_dissip_freq_ratio', 'ARRK') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') VIB_TO_DISSIP_FREQ_RATIO
       
       ! Outputs
