@@ -211,8 +211,10 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
   ! Locals
   integer :: i
   real(double_precision) :: t !< The local time, starting from 0 to delta_t
-  real(double_precision), dimension(nb_species) :: satol
-  real(double_precision), dimension(nb_species) :: temp_abundances
+  real(double_precision), dimension(nb_species) :: satol !< Array that contain the absolute tolerance, 
+  !! one value per species, either a minimum value or a value related to its abundance.
+  real(double_precision), dimension(nb_species) :: temp_abundances !< Temporary array that contain the 
+  !! abundances for the duration of the timestep, a sort of buffer.
 
   real(double_precision) :: t_stop_step
 
@@ -229,7 +231,7 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
     ! H2 for instance. Helps running a bit faster
 
     do i=1,nb_species
-      satol(i)=max(atol,1.d-16*temp_abundances(i))
+      satol(i) = max(atol, 1.d-16 * temp_abundances(i))
     enddo
 
     ! Feed IWORK with IA and JA
