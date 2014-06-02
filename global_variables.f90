@@ -156,8 +156,10 @@ real(double_precision) :: DIFF_DESORP_DEFAULT_RATIO !< [no unit] DIFFUSION_BARRI
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]
-real(double_precision) :: ARRK !< The ratio of the surface-molecule bond frequency to the frequency at which energy is lost to the 
-!! grain surface [no unit]. Used for the reactive desorption mechanism (see Garrod el al. 2007 for more). Assumed to be 1% by default.
+real(double_precision) :: VIB_TO_DISSIP_FREQ_RATIO !< [no unit] For the RRK (Rice Ramsperger-Kessel) desorption mechanism. Ratio of the vibration 
+!! frequency (proper energy of a species when it is created on a grain) to the dissipation frequency (energy needed by the 
+!! molecule to be evaporated from the grain surface). This ratio help to determine if a species evaporate after its formation 
+!! on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1%.
 
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.

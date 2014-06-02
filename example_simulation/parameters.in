@@ -50,7 +50,9 @@ peak_grain_temperature =  7.000E+01 ! peak grain temperature [K] (CR heating)
 peak_duration =  1.000E-05 ! duration [s] of peak grain temperature
 Fe_ionisation_rate =  3.000E-14 ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] 
 (for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
-ARRK =  1.000E-02 ! a-coefficient for RRK-style formation-desorption
+vib_to_dissip_freq_ratio =  1.000E-02 ! [no unit] The ratio of the surface-molecule bond frequency to the frequency at
+!! which energy is lost to the grain surface. Used for the RRK (Rice Ramsperger-Kessel) desorption mechanism
+!! (see Garrod el al. 2007 for more). Assumed to be 1% by default.
 
 !*****************************
 !*  Integration and Outputs  *

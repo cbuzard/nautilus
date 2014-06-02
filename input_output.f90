@@ -459,8 +459,8 @@ if (isDefined) then
       case('Fe_ionisation_rate', 'CRFE') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') FE_IONISATION_RATE
       
-      case('ARRK') ! The old name is kept for compatibility reasons
-        read(value, '(e12.6)') ARRK
+      case('vib_to_dissip_freq_ratio') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') VIB_TO_DISSIP_FREQ_RATIO
       
       ! Outputs
       case('output_per_decade')
@@ -589,7 +589,10 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'peak_duration = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'
   write(10,'(a,es10.3e2,a)') 'Fe_ionisation_rate = ', FE_IONISATION_RATE, ' ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] ', &
                             '(for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. '
-  write(10,'(a,es10.3e2,a)') 'ARRK = ', ARRK, ' ! a-coefficient for RRK-style formation-desorption'
+  write(10,'(a,es10.3e2,a)') 'vib_to_dissip_freq_ratio = ', VIB_TO_DISSIP_FREQ_RATIO, &
+                             ' ! [no unit] The ratio of the surface-molecule bond frequency to the frequency at'
+  write(10,'(a)') '!! which energy is lost to the grain surface. Used for the RRK (Rice Ramsperger-Kessel) desorption mechanism'
+  write(10,'(a)') '!! (see Garrod el al. 2007 for more). Assumed to be 1% by default.'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*  Integration and Outputs  *"

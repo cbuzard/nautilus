@@ -711,7 +711,7 @@ end subroutine index_datas
     if (ATOMS.EQ.2) SUM2=SUM2**(3*ATOMS-5)
     if (ATOMS.GT.2) SUM2=SUM2**(3*ATOMS-6)
     !         SUM2=SUM2**(3*ATOMS-6)
-    SUM2=ARRK*SUM2
+    SUM2=VIB_TO_DISSIP_FREQ_RATIO*SUM2
     EVFRAC=SUM2/(1+SUM2)
 
     !        V.W. Jul 2006 f=evfrac=0.009 for H2O (Kroes & Anderson 2006) 
