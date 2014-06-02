@@ -857,10 +857,10 @@ end subroutine get_temporal_derivatives
   real(double_precision), intent(in), dimension(nb_species) :: Y !< [in] abundances (relative to H) [number ratio]
 
   ! Locals
-  real(double_precision) :: ACTIV !< TODO description/units ???
-  real(double_precision) :: BARR !< TODO description/units ???
+  real(double_precision) :: ACTIV !< [no unit] ratio between the energy barrier (in K) and the temperature of the grain
+  real(double_precision) :: BARR !< Probability to cross the barrier (interrim calculation variable) TODO unit?
   real(double_precision) :: DIFF !< TODO description/units ???
-  real(double_precision) :: ACTIVCR !< TODO description/units ???
+  real(double_precision) :: ACTIVCR !< [no unit] ratio between the energy barrier (in K) and the peak temperature of the grain when hit by a cosmic ray
   real(double_precision) :: BARRCR !< TODO description/units ???
   real(double_precision) :: DIFFCR !< TODO description/units ???
   real(double_precision) :: XNH2,XNCO
