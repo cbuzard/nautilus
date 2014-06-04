@@ -249,10 +249,12 @@ real(double_precision) :: X_IONISATION_RATE !< Ionisation rate due to X-rays [s-
 real(double_precision) :: NCO ! column density [cm-2] (for the self shielding)
 real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)
 
-integer :: timestep
-integer :: OUTPUT_PER_DECADE
-integer :: wstep
-integer :: wstepr
+logical :: first_step_done = .false. !< do we have currently done the first step of the integrator ?
+integer :: NB_OUTPUTS !< Total number of outputs in the simulation
+character(len=80) :: OUTPUT_TYPE !< Type of output times sampling. linear, log, table\n
+!! linear: Output times are linearly spaced\n 
+!! log   : Outputs times are log-spaced 
+!! table : Outputs times are read from time_evolution.dat'
 
 contains 
 

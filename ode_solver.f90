@@ -431,7 +431,7 @@ RWORK(6) = 3.154D14
 IWORK(6) = 10000
 IWORK(7) = 2
 
-if (timestep.eq.1) then
+if (.not.(first_step_done)) then
   IWORK(6)=2000
 endif
 
@@ -825,7 +825,7 @@ end subroutine get_temporal_derivatives
   endif
 
   ! When dust is turned off, zero all dust rates==========================
-  if ((IS_GRAIN_REACTIONS.EQ.0).AND.(timestep.EQ.1)) then
+  if ((IS_GRAIN_REACTIONS.EQ.0).AND.(.not.(first_step_done))) then
     do J=type_id_start(14),type_id_stop(99)
       reaction_rates(J)=0.d0
       branching_ratio(J)=0.d0

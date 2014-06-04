@@ -235,8 +235,6 @@ call get_gas_surface_species()
 ! Initialization of elemental/chemical quantities
 call index_datas()
 
-timestep=0
-
 ! Calculate the initial abundances for all elements that compose 
 call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
 

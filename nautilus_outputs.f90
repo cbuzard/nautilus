@@ -12,6 +12,8 @@ integer :: species, output ! index for loops
 integer :: error ! to store the state of a read instruction
 logical :: isDefined
 
+real(double_precision), parameter :: YEAR = 3.15576d7 !< one year in seconds
+
 integer :: nptmax = 1
 integer :: nb_outputs !< The total number of outputs
 integer :: nb_species !< the total number of species
@@ -86,9 +88,13 @@ end if
 ! Remove all existing *.ab if needed. Will return a warning in standard output if nothing exists
 call system("rm ab/*.ab")
 
+!####################################################@@
+! This part is to write one file per species, each line being one output time
+!####################################################@@
+
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Writing *.ab ASCII files...'
-! We write ASCII output file
+! We write ASCII output file, one file per species
 do species=1, nb_species
   write(filename_output, '(a,a,a)') 'ab/', trim(species_name(species)), '.ab'
   open(10, file=filename_output)
@@ -99,7 +105,26 @@ do species=1, nb_species
   close(10)
 enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
-write(*,'(a,a)') achar(13), 'Writing *.ab ASCII files... Done'
+write(*,'(a,a)') achar(13), 'Writing output files... Done'
 
+!####################################################@@
+! This part is to write one file per output time, each line being one species
+!####################################################@@
+
+!~ ! The next write will be written in the same line
+!~ write(*,'(a)', advance='no') 'Writing output ASCII files...'
+!~ ! We write ASCII output file, one file per output
+!~ do output=1, nb_outputs
+!~   write(filename_output, '(a,i0.5,a)') 'ab/abundances.', output, '.ab'
+!~   open(10, file=filename_output)
+!~   write(10,'(a,es10.2e2, a)') '! time =', time(output) / YEAR, ' years'
+!~   write(10,'(a)') '! species name ; Abundance'
+!~   do species=1, nb_species
+!~     write(10,*) species_name(species), abundances(output, species, 1:nptmax)
+!~   enddo
+!~   close(10)
+!~ enddo
+!~ ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
+!~ write(*,'(a,a)') achar(13), 'Writing output files... Done'
 
 end program nautilus_outputs

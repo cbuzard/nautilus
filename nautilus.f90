@@ -121,40 +121,72 @@ real(double_precision) :: atol = 1.d-99 !< absolute tolerance parameter (scalar 
 !!\n          local tolerances, so choose them conservatively.
 real(double_precision) :: integration_timestep !< Timestep of the present step, starting from current_time [s]
 
+real(double_precision), dimension(:), allocatable :: output_times !< [s] dim(NB_OUTPUTS or nb_times in data file) 
+!! will store the list of times at which we want outputs
+real(double_precision) :: output_step !< [s] used to compute the list of output time, depending if its linear or log spaced
+integer :: output_idx !< integer for the output time loop
+
+integer :: i !< For loops
+
 call initialisation()
 
 call initialize_work_arrays()
 
-! The real time loop
-do while (current_time.lt.0.9*STOP_TIME)
+select case(OUTPUT_TYPE)
+  case('linear')! nb_output is used
+    allocate(output_times(NB_OUTPUTS))
+    output_step = (STOP_TIME - START_TIME) / dfloat(NB_OUTPUTS - 1.d0)
+    do i=1, NB_OUTPUTS - 1
+      output_times(i) = START_TIME + output_step * dfloat(i)
+    enddo
+    output_times(NB_OUTPUTS) = STOP_TIME ! To ensure the exact same final value
+    
 
-  ! Log spacing of time outputs when there is no diffusion
-  if (current_time.gt.1.d-2) then
-    integration_timestep = current_time*(10.**(1.d0/OUTPUT_PER_DECADE)-1.)
-  else
-    integration_timestep = 1.d0 * YEAR
-  endif
+  case('log')! nb_output is used
+    allocate(output_times(NB_OUTPUTS))
+    
+    output_step = (STOP_TIME/START_TIME) ** (1.d0/dfloat(NB_OUTPUTS-1.d0))
+    do i=1, NB_OUTPUTS -1
+      output_times(i) = START_TIME * output_step ** (i - 1.d0)
+    enddo
+    output_times(NB_OUTPUTS) = STOP_TIME ! To ensure the exact same final value
+    
+  case('table')! nb_output is ignored. Only time_evolution.dat data set are used
+    NB_OUTPUTS = structure_sample
+    allocate(output_times(NB_OUTPUTS))
+    output_times(1:NB_OUTPUTS) = structure_time(1:NB_OUTPUTS)
+    
+  case default
+    write(error_unit,*) 'The OUTPUT_TYPE="', OUTPUT_TYPE,'" cannot be found.'
+    write(error_unit,*) 'Values possible : linear, log, table'
+    write(error_unit, '(a)') 'Error in nautilus: main program gasgrain' 
+    call exit(12)
+end select
+
+! The real time loop
+do output_idx=1, NB_OUTPUTS
+
+  integration_timestep = output_times(output_idx) - current_time
   
   call get_structure_properties(time=current_time, & ! Inputs
                               Av=visual_extinction, density=H_number_density, & ! Outputs
                               gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
                                 
-  current_time = current_time + integration_timestep ! Final time for chemistry T -> T + integration_timestep
-  timestep = timestep + 1
+  current_time = output_times(output_idx) ! New current time at which abundances are valid
 
-  write(Output_Unit,'(A,I5,A,1PD10.3,A)') 'Time=',timestep,', TIME=',current_time/YEAR,' yrs'
+  write(Output_Unit,'(a,i5,a,1pd10.3,a)') 'step ',output_idx,', time =',current_time/YEAR,' years'
 
   call integrate_chemical_scheme(integration_timestep,itol,atol,itask,istate,iopt,mf)
 
-  ! Output of the rates once every 10 chemical outputs
-  call write_current_rates()
+  ! Output of the rates
+  call write_current_rates(index=output_idx)
 
   if (istate.eq.-3) stop
-
-  if (mod(timestep,wstep).eq.0) then
-    call write_current_output()
-  endif
-
+  
+  ! Output of the abundances
+  call write_current_output(index=output_idx)
+  
+  first_step_done = .true.
 enddo
 
 call write_abundances('abundances.tmp')

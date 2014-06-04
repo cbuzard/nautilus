@@ -463,8 +463,8 @@ if (isDefined) then
         read(value, '(e12.6)') VIB_TO_DISSIP_FREQ_RATIO
       
       ! Outputs
-      case('output_per_decade')
-        read(value, '(i4)') OUTPUT_PER_DECADE
+      case('nb_outputs')
+        read(value, '(i4)') NB_OUTPUTS
       
       case('start_time')
         read(value, '(e12.6)') START_TIME
@@ -472,11 +472,8 @@ if (isDefined) then
       case('stop_time')
         read(value, '(e12.6)') STOP_TIME
       
-      case('WSTEP')
-        read(value, '(i5)') WSTEP
-      
-      case('WSTEPR')
-        read(value, '(i5)') WSTEPR
+      case('output_type')
+        read(value, *) OUTPUT_TYPE
       
       ! Initial abundances
       case('minimum_initial_abundance')
@@ -546,10 +543,11 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
                         &time, values come from structure_evolution.dat file that must exists'
-  write(10,'(a,a,a)') 'grain_temperature_type = ', GRAIN_TEMPERATURE_TYPE, ' ! fixed, gas, table or computed&
-                        &fixed: Tgrain = Tgrain_initial ; gas: Tgrain=Tgas ; table: Tgrain is interpolated from &
-                        &structure_evolution.dat data file (5th optional column) ; computed: calculated from uv_flux &
-                        &and visual extinction by radiative equilibrium'
+  write(10,'(a,a,a)') 'grain_temperature_type = ', GRAIN_TEMPERATURE_TYPE, ' ! fixed, gas, table or computed\n&
+                        &! fixed: Tgrain = Tgrain_initial. &
+                        &! gas: Tgrain=Tgas ; \n&
+                        &! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; \n&
+                        &! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
   write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
@@ -598,11 +596,13 @@ use global_variables
   write(10,'(a)') "!*  Integration and Outputs  *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! first output time, after zero [yrs]'
-  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! last output time [yrs]'
-  write(10,'(a,i4,a)') 'output_per_decade = ', OUTPUT_PER_DECADE, ' ! outputs per decade (Only without diffusion)'
-  write(10,'(a,i5,a)') 'WSTEP = ', WSTEP, ' ! Outputs every WSTEP timesteps (/=1 only for 1D outputs)'
-  write(10,'(a,i5,a)') 'WSTEPR = ', WSTEPR, ' ! Outputs every WSTEPR timesteps for the rate coefficients'
+  write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! [yrs] first output time'
+  write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! [yrs] last output time'
+  write(10,'(a,i4,a)') 'nb_outputs = ', NB_OUTPUTS, ' ! Total number of outputs (used for linear or log spaced outputs)'
+  write(10,'(a,a,a)') 'output_type = ', OUTPUT_TYPE, ' ! linear, log, table\n&
+                        &! linear: Output times are linearly spaced\n &
+                        &! log   : Outputs times are log-spaced &
+                        &! table : Outputs times are read from time_evolution.dat'
   write(10,'(a,es10.3e2, a)') 'relative_tolerance = ',RELATIVE_TOLERANCE, ' ! Relative tolerance of the solver'
   write(10,'(a,es10.3e2,a)') 'minimum_initial_abundance = ', MINIMUM_INITIAL_ABUNDANCE, ' ! default minimum initial &
                              &fraction abundance'
@@ -972,16 +972,19 @@ end subroutine read_element_in
 !! Output filename is of the form : abundances.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_current_output()
+subroutine write_current_output(index)
 ! Writes 1D outputs
 use global_variables
 
 implicit none
 
+! Input
+integer, intent(in) :: index !<[in] The reference index of the current output
+
 ! Locals
 character(len=80) :: filename_output
 
-write(filename_output, '(a,i0.6,a)') 'abundances.',timestep,'.out'
+write(filename_output, '(a,i0.6,a)') 'abundances.',index,'.out'
 
 
 open(UNIT=35, file=filename_output, form='unformatted')
@@ -1007,16 +1010,19 @@ end subroutine write_current_output
 !! Output filename is of the form : rates.000001.out
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine write_current_rates()
+subroutine write_current_rates(index)
 
 use global_variables
 
 implicit none
 
+! Input
+integer, intent(in) :: index !<[in] The reference index of the current output
+
 ! Locals
 character(len=80) :: filename_output
 
-write(filename_output, '(a,i0.6,a)') 'rates.',timestep,'.out'
+write(filename_output, '(a,i0.6,a)') 'rates.',index,'.out'
 
 open(45, file=filename_output, form='unformatted')
 
