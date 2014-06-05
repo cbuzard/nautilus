@@ -543,7 +543,7 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
                         &time, values come from structure_evolution.dat file that must exists'
-  write(10,'(a,a,a)') 'grain_temperature_type = ', GRAIN_TEMPERATURE_TYPE, ' ! fixed, gas, table or computed\n&
+  write(10,'(a,a,a)') 'grain_temperature_type = ', trim(GRAIN_TEMPERATURE_TYPE), ' ! fixed, gas, table or computed\n&
                         &! fixed: Tgrain = Tgrain_initial. &
                         &! gas: Tgrain=Tgas ; \n&
                         &! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; \n&
@@ -599,7 +599,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! [yrs] first output time'
   write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! [yrs] last output time'
   write(10,'(a,i4,a)') 'nb_outputs = ', NB_OUTPUTS, ' ! Total number of outputs (used for linear or log spaced outputs)'
-  write(10,'(a,a,a)') 'output_type = ', OUTPUT_TYPE, ' ! linear, log, table\n&
+  write(10,'(a,a,a)') 'output_type = ', trim(OUTPUT_TYPE), ' ! linear, log, table\n&
                         &! linear: Output times are linearly spaced\n &
                         &! log   : Outputs times are log-spaced &
                         &! table : Outputs times are read from time_evolution.dat'
