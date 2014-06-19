@@ -172,7 +172,7 @@ real(double_precision) :: CR_PEAK_GRAIN_TEMP !< Peak grain temperature when stru
 real(double_precision) :: CR_PEAK_DURATION !< Peak duration [s] of CR_PEAK_GRAIN_TEMP
 real(double_precision) :: FE_IONISATION_RATE !< (cosmic) Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain) 
 !! For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
-real(double_precision) :: DIFF_DESORP_DEFAULT_RATIO !< [no unit] DIFFUSION_BARRIER/BINDING_ENERGY. Ratio used if DIFFUSION_BARRIER is not known
+real(double_precision) :: DIFF_BINDING_RATIO !< [no unit] Ratio used to compute the DIFFUSION_BARRIER from the BINDING_ENERGY if not known
 real(double_precision) :: START_TIME !< Start time of the simulation [s]
 real(double_precision) :: STOP_TIME !< Stop time of the simulation [s]
 real(double_precision) :: current_time !< Global current time of the simulation [s]

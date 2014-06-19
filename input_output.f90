@@ -444,8 +444,8 @@ if (isDefined) then
       case('surface_site_density', 'SNS') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') SURFACE_SITE_DENSITY
       
-      case('diff_desorp_default_ratio', 'EBFAC') ! The old name is kept for compatibility reasons
-        read(value, '(e12.6)') DIFF_DESORP_DEFAULT_RATIO
+      case('diff_binding_ratio', 'EBFAC') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') DIFF_BINDING_RATIO
       
       case('chemical_barrier_thickness', 'ACT') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') CHEMICAL_BARRIER_THICKNESS
@@ -579,8 +579,8 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius [cm]'
   write(10,'(a,es10.3e2,a)') 'diffusion_barrier_thickness = ', DIFFUSION_BARRIER_THICKNESS, ' ! Barrier thickness [cm]'
   write(10,'(a,es10.3e2,a)') 'surface_site_density = ', SURFACE_SITE_DENSITY, ' ! site density [cm-2]'
-  write(10,'(a,es10.3e2,a)') 'diff_desorp_default_ratio = ', DIFF_DESORP_DEFAULT_RATIO, &
-                             ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
+  write(10,'(a,es10.3e2,a)') 'diff_binding_ratio = ', DIFF_BINDING_RATIO, &
+                             ' ! Ratio used to compute the DIFFUSION_BARRIER from the BINDING_ENERGY if not known'
   write(10,'(a,es10.3e2,a)') 'chemical_barrier_thickness = ', CHEMICAL_BARRIER_THICKNESS, &
                              ' ! grain reaction activation energy barrier width. [cm]'
   write(10,'(a,es10.3e2,a)') 'cr_peak_grain_temp = ', CR_PEAK_GRAIN_TEMP, ' ! peak grain temperature [K] (CR heating)'

@@ -563,8 +563,8 @@ end subroutine index_datas
           DIFFUSION_BARRIER(I)=REA2(J)
           GAP_ENERGY_BANDS(I)=REA3(J)
           FORMATION_ENTHALPY(I)=REA4(J)
-          if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.(DIFF_DESORP_DEFAULT_RATIO.GE.0.d0)) then
-            DIFFUSION_BARRIER(I)=DIFF_DESORP_DEFAULT_RATIO*BINDING_ENERGY(I)
+          if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.(DIFF_BINDING_RATIO.GE.0.d0)) then
+            DIFFUSION_BARRIER(I)=DIFF_BINDING_RATIO*BINDING_ENERGY(I)
           endif
         endif
       enddo
