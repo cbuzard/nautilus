@@ -450,8 +450,8 @@ if (isDefined) then
       case('chemical_barrier_thickness', 'ACT') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') CHEMICAL_BARRIER_THICKNESS
       
-      case('peak_grain_temperature', 'TSMAX') ! The old name is kept for compatibility reasons
-        read(value, '(e12.6)') PEAK_GRAIN_TEMPERATURE
+      case('cr_peak_grain_temp', 'TSMAX') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') CR_PEAK_GRAIN_TEMP
       
       case('peak_duration', 'CRT') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') PEAK_DURATION
@@ -583,7 +583,7 @@ use global_variables
                              ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'chemical_barrier_thickness = ', CHEMICAL_BARRIER_THICKNESS, &
                              ' ! grain reaction activation energy barrier width. [cm]'
-  write(10,'(a,es10.3e2,a)') 'peak_grain_temperature = ', PEAK_GRAIN_TEMPERATURE, ' ! peak grain temperature [K] (CR heating)'
+  write(10,'(a,es10.3e2,a)') 'cr_peak_grain_temp = ', CR_PEAK_GRAIN_TEMP, ' ! peak grain temperature [K] (CR heating)'
   write(10,'(a,es10.3e2,a)') 'peak_duration = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'
   write(10,'(a,es10.3e2,a)') 'Fe_ionisation_rate = ', FE_IONISATION_RATE, ' ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] ', &
                             '(for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. '

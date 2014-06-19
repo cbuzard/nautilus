@@ -780,9 +780,9 @@ end subroutine get_temporal_derivatives
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
       THERMAL_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/dust_temperature)/nb_sites_per_grain
-      CR_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/PEAK_GRAIN_TEMPERATURE)/nb_sites_per_grain
+      CR_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/CR_PEAK_GRAIN_TEMP)/nb_sites_per_grain
       EVAPORATION_RATES(K)=VIBRATION_FREQUENCY(K)*EXP(-BINDING_ENERGY(K)/dust_temperature)
-      EVAPORATION_RATESCR(K)=VIBRATION_FREQUENCY(K)*EXP(-BINDING_ENERGY(K)/PEAK_GRAIN_TEMPERATURE)
+      EVAPORATION_RATESCR(K)=VIBRATION_FREQUENCY(K)*EXP(-BINDING_ENERGY(K)/CR_PEAK_GRAIN_TEMP)
     enddo
 
     ! ========= Rxn ITYPE 15 - thermal evaporation
@@ -796,7 +796,7 @@ end subroutine get_temporal_derivatives
     do J=type_id_start(16),type_id_stop(16)
       reaction_rates(J) = RATE_A(J) * branching_ratio(J) * ((CR_IONISATION_RATE + X_IONISATION_RATE) / 1.3D-17) &
       * VIBRATION_FREQUENCY(reagent_1_idx(J)) * FE_IONISATION_RATE * PEAK_DURATION &
-      * EXP(-BINDING_ENERGY(reagent_1_idx(J)) / PEAK_GRAIN_TEMPERATURE)
+      * EXP(-BINDING_ENERGY(reagent_1_idx(J)) / CR_PEAK_GRAIN_TEMP)
     enddo
 
 
@@ -1114,7 +1114,7 @@ end subroutine get_temporal_derivatives
             BARRCR=1.0d0
             ! --------- Calculate activation energy barrier multiplier
             if (ACTIVATION_ENERGY(J).GE.1.0D-40) then
-               ACTIVCR=ACTIVATION_ENERGY(J)/PEAK_GRAIN_TEMPERATURE
+               ACTIVCR=ACTIVATION_ENERGY(J)/CR_PEAK_GRAIN_TEMP
                ! ------------ Choose fastest of classical or tunnelling
                if (ACTIVCR.GT.SURF_REACT_PROBA(J)) ACTIVCR=SURF_REACT_PROBA(J)
                BARRCR=EXP(-ACTIVCR)
