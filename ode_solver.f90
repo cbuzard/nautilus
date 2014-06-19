@@ -997,7 +997,7 @@ end subroutine get_temporal_derivatives
       if (ACTIVATION_ENERGY(J).GE.1.0D-40) then
         ACTIV=ACTIVATION_ENERGY(J)/dust_temperature
         ! ------------ Choose fastest of classical or tunnelling
-        if (ACTIV.GT.quantum_activation_energy(J)) ACTIV=quantum_activation_energy(J)
+        if (ACTIV.GT.SURF_REACT_PROBA(J)) ACTIV=SURF_REACT_PROBA(J)
         BARR=EXP(-ACTIV)
       endif
 
@@ -1116,7 +1116,7 @@ end subroutine get_temporal_derivatives
             if (ACTIVATION_ENERGY(J).GE.1.0D-40) then
                ACTIVCR=ACTIVATION_ENERGY(J)/PEAK_GRAIN_TEMPERATURE
                ! ------------ Choose fastest of classical or tunnelling
-               if (ACTIVCR.GT.quantum_activation_energy(J)) ACTIVCR=quantum_activation_energy(J)
+               if (ACTIVCR.GT.SURF_REACT_PROBA(J)) ACTIVCR=SURF_REACT_PROBA(J)
                BARRCR=EXP(-ACTIVCR)
             endif
 

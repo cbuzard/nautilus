@@ -113,7 +113,9 @@ real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_re
 real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy for surface reactions [K]
 real(double_precision), allocatable, dimension(:) :: REACTION_TMIN !< dim(nb_reactions) min temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: REACTION_TMAX !< dim(nb_reactions) max temperature boundary of each reactions [K]
-real(double_precision), allocatable, dimension(:) :: quantum_activation_energy !< dim(nb_reactions) Quantum activation energy
+real(double_precision), allocatable, dimension(:) :: SURF_REACT_PROBA !< dim(nb_reactions) probability for the surface reactions to 
+!! happen upon an encounter. The probability is unity for exothermic reactions without activation energy and has to be computed 
+!! otherwise. See equation 6 from Hasewaga, Herbst & Leung (1992).
 integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For each reaction, what is its type (cosmic ray evaporation, etc...)
 integer, allocatable, dimension(:) :: RATE_FORMULA !< dim(nb_reactions) The index tracing the formula used for each specific 
 !! reaction, defining its reaction rates in function of temperature and abundances.
@@ -342,7 +344,7 @@ allocate(EVAP_OVER_ACC_RATIO_2(nb_reactions))
 allocate(ACTIVATION_ENERGY(nb_reactions))
 allocate(REACTION_TMIN(nb_reactions))
 allocate(REACTION_TMAX(nb_reactions))
-allocate(quantum_activation_energy(nb_reactions))
+allocate(SURF_REACT_PROBA(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
 allocate(reagent_1_idx(nb_reactions))
 allocate(reagent_2_idx(nb_reactions))
@@ -384,7 +386,7 @@ EVAP_OVER_ACC_RATIO_2(1:nb_reactions) = 0.d0
 ACTIVATION_ENERGY(1:nb_reactions) = 0.d0
 REACTION_TMIN(1:nb_reactions) = 0.d0
 REACTION_TMAX(1:nb_reactions) = 0.d0
-quantum_activation_energy(1:nb_reactions) = 0.d0
+SURF_REACT_PROBA(1:nb_reactions) = 0.d0
 REACTION_TYPE(1:nb_reactions) = 0
 reagent_1_idx(1:nb_reactions) = 0
 reagent_2_idx(1:nb_reactions) = 0
