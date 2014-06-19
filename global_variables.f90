@@ -132,9 +132,11 @@ real(double_precision), allocatable, dimension(:) :: DIFFUSION_RATE_2 !< dim(nb_
 !! grain reaction rate for reactant 2. It is equal to either the diffusion rate by thermal hopping or the diffusion rate by quantum 
 !! tunneling.
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
-!! the grain reaction rate by cosmic rays heating for reagent 1. Used for reaction_type=21
+!! the grain reaction rate by cosmic rays heating for reagent 1. Used for reaction_type=21. Can be equal to CR_HOPING_RATE if its 
+!! the fastest rate, or equal to TUNNELING_RATE_TYPE_2 if tunneling diffusion is faster (e.g. when grains are not heated)
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
-!! the grain reaction rate by cosmic rays heating for reagent 2. Used for reaction_type=21
+!! the grain reaction rate by cosmic rays heating for reagent 2. Used for reaction_type=21. Can be equal to CR_HOPING_RATE if its 
+!! the fastest rate, or equal to TUNNELING_RATE_TYPE_2 if tunneling diffusion is faster (e.g. when grains are not heated)
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES 
 !! for reactant 1. This parameter is used in the modified rate subroutine.
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES 
