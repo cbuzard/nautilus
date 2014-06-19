@@ -152,9 +152,20 @@ select case(OUTPUT_TYPE)
     output_times(NB_OUTPUTS) = STOP_TIME ! To ensure the exact same final value
     
   case('table')! nb_output is ignored. Only time_evolution.dat data set are used
-    NB_OUTPUTS = structure_sample
-    allocate(output_times(NB_OUTPUTS))
-    output_times(1:NB_OUTPUTS) = structure_time(1:NB_OUTPUTS)
+    ! We do not want 0 as first output time. 
+    if (structure_time(1).eq.0.d0) then
+      START_TIME = structure_time(2)
+      STOP_TIME = structure_time(structure_sample)
+      NB_OUTPUTS = structure_sample - 1
+      allocate(output_times(NB_OUTPUTS))
+      output_times(1:NB_OUTPUTS) = structure_time(2:structure_sample)
+    else
+      START_TIME = structure_time(1)
+      STOP_TIME = structure_time(structure_sample)
+      NB_OUTPUTS = structure_sample
+      allocate(output_times(NB_OUTPUTS))
+      output_times(1:NB_OUTPUTS) = structure_time(1:NB_OUTPUTS)
+    endif
     
   case default
     write(error_unit,*) 'The OUTPUT_TYPE="', OUTPUT_TYPE,'" cannot be found.'
