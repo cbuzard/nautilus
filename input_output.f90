@@ -543,11 +543,11 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
                         &time, values come from structure_evolution.dat file that must exists'
-  write(10,'(a,a,a)') 'grain_temperature_type = ', trim(GRAIN_TEMPERATURE_TYPE), ' ! fixed, gas, table or computed\n&
-                        &! fixed: Tgrain = Tgrain_initial. &
-                        &! gas: Tgrain=Tgas ; \n&
-                        &! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; \n&
-                        &! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
+  write(10,'(a,a,a)') 'grain_temperature_type = ', trim(GRAIN_TEMPERATURE_TYPE), ' ! fixed, gas, table or computed'
+  write(10,'(a)') '! fixed: Tgrain = Tgrain_initial. ;'
+  write(10,'(a)') '! gas: Tgrain=Tgas ; '
+  write(10,'(a)') '! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; '
+  write(10,'(a)') '! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
   write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
@@ -599,10 +599,10 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! [yrs] first output time'
   write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! [yrs] last output time'
   write(10,'(a,i4,a)') 'nb_outputs = ', NB_OUTPUTS, ' ! Total number of outputs (used for linear or log spaced outputs)'
-  write(10,'(a,a,a)') 'output_type = ', trim(OUTPUT_TYPE), ' ! linear, log, table\n&
-                        &! linear: Output times are linearly spaced\n &
-                        &! log   : Outputs times are log-spaced &
-                        &! table : Outputs times are read from time_evolution.dat'
+  write(10,'(a,a,a)') 'output_type = ', trim(OUTPUT_TYPE), ' ! linear, log, table'
+  write(10, '(a)') '! linear: Output times are linearly spaced'
+  write(10, '(a)') '! log   : Outputs times are log-spaced'
+  write(10, '(a)') '! table : Outputs times are read from time_evolution.dat'
   write(10,'(a,es10.3e2, a)') 'relative_tolerance = ',RELATIVE_TOLERANCE, ' ! Relative tolerance of the solver'
   write(10,'(a,es10.3e2,a)') 'minimum_initial_abundance = ', MINIMUM_INITIAL_ABUNDANCE, ' ! default minimum initial &
                              &fraction abundance'
