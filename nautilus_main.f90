@@ -755,7 +755,7 @@ end subroutine index_datas
 
     ! ------ Calculate quantum activation energy
     REDMAS = SMASS(reagent_1_idx(J)) * SMASS(reagent_2_idx(J)) / (SMASS(reagent_1_idx(J)) + SMASS(reagent_2_idx(J)))
-    SURF_REACT_PROBA(J) = 2.0d0 * ACTIVATION_BARRIER_WIDTH/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*ACTIVATION_ENERGY(J))
+    SURF_REACT_PROBA(J) = 2.0d0 * CHEMICAL_BARRIER_THICKNESS/H_BARRE * SQRT(2.0d0*AMU*REDMAS*K_B*ACTIVATION_ENERGY(J))
   endif
 
   ! === ITYPE 16 - C.R. DESORPTION

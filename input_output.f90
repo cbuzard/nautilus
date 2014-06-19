@@ -447,8 +447,8 @@ if (isDefined) then
       case('diff_desorp_default_ratio', 'EBFAC') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') DIFF_DESORP_DEFAULT_RATIO
       
-      case('activation_barrier_width', 'ACT') ! The old name is kept for compatibility reasons
-        read(value, '(e12.6)') ACTIVATION_BARRIER_WIDTH
+      case('chemical_barrier_thickness', 'ACT') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') CHEMICAL_BARRIER_THICKNESS
       
       case('peak_grain_temperature', 'TSMAX') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') PEAK_GRAIN_TEMPERATURE
@@ -581,7 +581,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'surface_site_density = ', SURFACE_SITE_DENSITY, ' ! site density [cm-2]'
   write(10,'(a,es10.3e2,a)') 'diff_desorp_default_ratio = ', DIFF_DESORP_DEFAULT_RATIO, &
                              ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
-  write(10,'(a,es10.3e2,a)') 'activation_barrier_width = ', ACTIVATION_BARRIER_WIDTH, &
+  write(10,'(a,es10.3e2,a)') 'chemical_barrier_thickness = ', CHEMICAL_BARRIER_THICKNESS, &
                              ' ! grain reaction activation energy barrier width. [cm]'
   write(10,'(a,es10.3e2,a)') 'peak_grain_temperature = ', PEAK_GRAIN_TEMPERATURE, ' ! peak grain temperature [K] (CR heating)'
   write(10,'(a,es10.3e2,a)') 'peak_duration = ', PEAK_DURATION, ' ! duration [s] of peak grain temperature'

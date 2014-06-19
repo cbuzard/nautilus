@@ -165,7 +165,9 @@ real(double_precision) :: DIFFUSION_BARRIER_THICKNESS !< [cm] thickness of the b
 !! , see equation 10 of their paper (parameter a).
 real(double_precision) :: SURFACE_SITE_DENSITY !< density of sites at the surface of the grains [cm-2]
 real(double_precision) :: nb_sites_per_grain !< Number of site per grain (site density * surface of the grain)
-real(double_precision) :: ACTIVATION_BARRIER_WIDTH !< grain reaction activation energy barrier width. [cm]
+real(double_precision) :: CHEMICAL_BARRIER_THICKNESS !< [cm] Parameter used to compute the probability for a surface reaction with 
+!! activation energy to occur through quantum tunneling. This is the thickness of the energy barrier. See equation 6 from 
+!! Hasegawa et al. (1992).
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]
 real(double_precision) :: PEAK_DURATION !< Peak duration [s] of PEAK_GRAIN_TEMPERATURE
 real(double_precision) :: FE_IONISATION_RATE !< (cosmic) Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain) 
