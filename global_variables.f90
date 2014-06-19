@@ -125,8 +125,12 @@ integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of 
 ! Specific variables for first or second reagent of each reactions
 integer, allocatable, dimension(:) :: reagent_1_idx !< dim(nb_reactions) Index of the first reagent species involved in the reaction
 integer, allocatable, dimension(:) :: reagent_2_idx !< dim(nb_reactions) Index of the second reagent species involved in the reaction
-real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the grain reaction rate for reagent 1
-real(double_precision), allocatable, dimension(:) :: THERMAL_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the grain reaction rate for reagent 2
+real(double_precision), allocatable, dimension(:) :: DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the
+!! grain reaction rate for reactant 1. It is equal to either the diffusion rate by thermal hopping or the diffusion rate by quantum 
+!! tunneling.
+real(double_precision), allocatable, dimension(:) :: DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the
+!! grain reaction rate for reactant 2. It is equal to either the diffusion rate by thermal hopping or the diffusion rate by quantum 
+!! tunneling.
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
 !! the grain reaction rate by cosmic rays heating for reagent 1. Used for reaction_type=21
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
@@ -335,9 +339,9 @@ allocate(RATE_A(nb_reactions))
 allocate(RATE_B(nb_reactions))
 allocate(RATE_C(nb_reactions))
 allocate(reaction_rates(nb_reactions))
-allocate(THERMAL_DIFFUSION_RATE_1(nb_reactions))
+allocate(DIFFUSION_RATE_1(nb_reactions))
 allocate(CR_DIFFUSION_RATE_1(nb_reactions))
-allocate(THERMAL_DIFFUSION_RATE_2(nb_reactions))
+allocate(DIFFUSION_RATE_2(nb_reactions))
 allocate(CR_DIFFUSION_RATE_2(nb_reactions))
 allocate(EVAP_OVER_ACC_RATIO_1(nb_reactions))
 allocate(EVAP_OVER_ACC_RATIO_2(nb_reactions))
@@ -379,8 +383,8 @@ RATE_A(1:nb_reactions) = 0.d0
 RATE_B(1:nb_reactions) = 0.d0
 RATE_C(1:nb_reactions) = 0.d0
 reaction_rates(1:nb_reactions) = 0.d0
-THERMAL_DIFFUSION_RATE_1(1:nb_reactions) = 0.d0
-THERMAL_DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
+DIFFUSION_RATE_1(1:nb_reactions) = 0.d0
+DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
 EVAP_OVER_ACC_RATIO_1(1:nb_reactions) = 0.d0
 EVAP_OVER_ACC_RATIO_2(1:nb_reactions) = 0.d0
 ACTIVATION_ENERGY(1:nb_reactions) = 0.d0

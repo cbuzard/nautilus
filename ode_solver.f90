@@ -1002,8 +1002,8 @@ end subroutine get_temporal_derivatives
       endif
 
       ! --------- Thermal hopping diffusion method
-      THERMAL_DIFFUSION_RATE_1(J)=THERMAL_HOPING_RATE(reagent_1_idx(J))
-      THERMAL_DIFFUSION_RATE_2(J)=THERMAL_HOPING_RATE(reagent_2_idx(J))
+      DIFFUSION_RATE_1(J)=THERMAL_HOPING_RATE(reagent_1_idx(J))
+      DIFFUSION_RATE_2(J)=THERMAL_HOPING_RATE(reagent_2_idx(J))
 
       ! --------- Check for JH,JH2
       if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YJH)  IMOD1=1
@@ -1015,38 +1015,38 @@ end subroutine get_temporal_derivatives
       if (IMOD1+IMOD2.NE.0) then
         ! ------------ QM1 - Tunnelling (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.1) then
-          if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) then
-            THERMAL_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
+          if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.DIFFUSION_RATE_1(J))) then
+            DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
           endif
-          if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) then
-            THERMAL_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
+          if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.DIFFUSION_RATE_2(J))) then
+            DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
           endif
         endif
         ! ------------ QM2 - Tunnelling: use estimated width of lowest energy band (if it's faster than thermal)
         if (GRAIN_TUNNELING_DIFFUSION.EQ.2) then
-          if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J))) then
-            THERMAL_DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
+          if ((IMOD1.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.DIFFUSION_RATE_1(J))) then
+            DIFFUSION_RATE_1(J)=TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
           endif
-          if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))) then
-            THERMAL_DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
+          if ((IMOD2.NE.0).AND.(TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.DIFFUSION_RATE_2(J))) then
+            DIFFUSION_RATE_2(J)=TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
           endif
         endif
         ! ------------ QM3 - Fastest out of thermal, QM1, QM2 rates
         if (GRAIN_TUNNELING_DIFFUSION.EQ.3) then
           if (IMOD1.NE.0) then
-            if (TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) then
-              THERMAL_DIFFUSION_RATE_1(J) = TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
+            if (TUNNELING_RATE_TYPE_1(reagent_1_idx(J)).GT.DIFFUSION_RATE_1(J)) then
+              DIFFUSION_RATE_1(J) = TUNNELING_RATE_TYPE_1(reagent_1_idx(J))
             endif
-            if (TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.THERMAL_DIFFUSION_RATE_1(J)) then
-              THERMAL_DIFFUSION_RATE_1(J) = TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
+            if (TUNNELING_RATE_TYPE_2(reagent_1_idx(J)).GT.DIFFUSION_RATE_1(J)) then
+              DIFFUSION_RATE_1(J) = TUNNELING_RATE_TYPE_2(reagent_1_idx(J))
             endif
           endif
           if (IMOD2.NE.0) then
-            if (TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))  then
-              THERMAL_DIFFUSION_RATE_2(J) = TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
+            if (TUNNELING_RATE_TYPE_1(reagent_2_idx(J)).GT.DIFFUSION_RATE_2(J))  then
+              DIFFUSION_RATE_2(J) = TUNNELING_RATE_TYPE_1(reagent_2_idx(J))
             endif
-            if (TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.THERMAL_DIFFUSION_RATE_2(J))  then
-              THERMAL_DIFFUSION_RATE_2(J) = TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
+            if (TUNNELING_RATE_TYPE_2(reagent_2_idx(J)).GT.DIFFUSION_RATE_2(J))  then
+              DIFFUSION_RATE_2(J) = TUNNELING_RATE_TYPE_2(reagent_2_idx(J))
             endif
           endif
         endif
@@ -1092,13 +1092,13 @@ end subroutine get_temporal_derivatives
           (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
         endif
 
-        ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
+        ! ------------ Modify rates (DIFFUSION_RATE_1 & DIFFUSION_RATE_2) according to their own evap/acc rates
         YMOD1=Y(reagent_1_idx(J))
         YMOD2=Y(reagent_2_idx(J))
         call modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
       endif
 
-      DIFF=THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J)
+      DIFF=DIFFUSION_RATE_1(J)+DIFFUSION_RATE_2(J)
 
       reaction_rates(J)=RATE_A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
       ! reaction_rates(J)=0.D0
@@ -1213,7 +1213,7 @@ end subroutine get_temporal_derivatives
                       (REACTION_COMPOUNDS_NAMES(2,J).EQ.'JCl        ')) IMOD2=3
                endif
 
-                  ! ------------ Modify rates (THERMAL_DIFFUSION_RATE_1 & THERMAL_DIFFUSION_RATE_2) according to their own evap/acc rates
+                  ! ------------ Modify rates (DIFFUSION_RATE_1 & DIFFUSION_RATE_2) according to their own evap/acc rates
                   YMOD1=Y(reagent_1_idx(J))
                   YMOD2=Y(reagent_2_idx(J))
                   call modify_specific_rates_cr(J,IMOD1,IMOD2,BARRCR,YMOD1,YMOD2)
@@ -1340,24 +1340,24 @@ end subroutine get_temporal_derivatives
   if (BARR.EQ.1.0d0) then
     if (IMOD1.NE.0) then
       if (EVAP_OVER_ACC_RATIO_1(J).LT.1.0d0) then ! accretion dominates
-        if (THERMAL_DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
-          THERMAL_DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
+        if (DIFFUSION_RATE_1(J).GT.ACCRETION_RATES(reagent_1_idx(J))) then
+          DIFFUSION_RATE_1(J) = ACCRETION_RATES(reagent_1_idx(J))
         endif
       else ! evaporation dominates
-        if (THERMAL_DIFFUSION_RATE_1(J).GT.EVAPORATION_RATES(reagent_1_idx(J))) then
-          THERMAL_DIFFUSION_RATE_1(J) = EVAPORATION_RATES(reagent_1_idx(J))
+        if (DIFFUSION_RATE_1(J).GT.EVAPORATION_RATES(reagent_1_idx(J))) then
+          DIFFUSION_RATE_1(J) = EVAPORATION_RATES(reagent_1_idx(J))
         endif
       endif
     endif
 
     if (IMOD2.NE.0) then
       if (EVAP_OVER_ACC_RATIO_2(J).LT.1.0d0) then ! accretion dominates
-        if (THERMAL_DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
-          THERMAL_DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
+        if (DIFFUSION_RATE_2(J).GT.ACCRETION_RATES(reagent_2_idx(J))) then
+          DIFFUSION_RATE_2(J) = ACCRETION_RATES(reagent_2_idx(J))
         endif
       else ! evaporation dominates
-        if (THERMAL_DIFFUSION_RATE_2(J).GT.EVAPORATION_RATES(reagent_2_idx(J))) then
-          THERMAL_DIFFUSION_RATE_2(J) = EVAPORATION_RATES(reagent_2_idx(J))
+        if (DIFFUSION_RATE_2(J).GT.EVAPORATION_RATES(reagent_2_idx(J))) then
+          DIFFUSION_RATE_2(J) = EVAPORATION_RATES(reagent_2_idx(J))
         endif
       endif
     endif
@@ -1372,27 +1372,27 @@ end subroutine get_temporal_derivatives
     TESTREF2=ACCRETION_RATES(reagent_2_idx(J))
     if (EVAP_OVER_ACC_RATIO_2(J).GE.1.0d0) TESTREF2=EVAPORATION_RATES(reagent_2_idx(J))
 
-    if (THERMAL_DIFFUSION_RATE_1(J).GE.THERMAL_DIFFUSION_RATE_2(J)) then
-      TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD2*GTODN
-      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR
+    if (DIFFUSION_RATE_1(J).GE.DIFFUSION_RATE_2(J)) then
+      TESTNUM=(DIFFUSION_RATE_1(J)+DIFFUSION_RATE_2(J))*BARR*YMOD2*GTODN
+      if (YMOD2*GTODN.LT.1.0d0) TESTNUM=(DIFFUSION_RATE_1(J)+DIFFUSION_RATE_2(J))*BARR
       if (TESTNUM.GT.TESTREF1) PICK=1
     endif
-    if (THERMAL_DIFFUSION_RATE_2(J).GT.THERMAL_DIFFUSION_RATE_1(J)) then
-      TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR*YMOD1*GTODN
-      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(THERMAL_DIFFUSION_RATE_1(J)+THERMAL_DIFFUSION_RATE_2(J))*BARR
+    if (DIFFUSION_RATE_2(J).GT.DIFFUSION_RATE_1(J)) then
+      TESTNUM=(DIFFUSION_RATE_1(J)+DIFFUSION_RATE_2(J))*BARR*YMOD1*GTODN
+      if (YMOD1*GTODN.LT.1.0d0) TESTNUM=(DIFFUSION_RATE_1(J)+DIFFUSION_RATE_2(J))*BARR
       if (TESTNUM.GT.TESTREF2) PICK=2
     endif
 
     if (PICK.EQ.1) then
-      THERMAL_DIFFUSION_RATE_1(J)=TESTREF1/BARR/YMOD2/GTODN
-      if (YMOD2*GTODN.LT.1.0d0) THERMAL_DIFFUSION_RATE_1(J)=TESTREF1/BARR
-      THERMAL_DIFFUSION_RATE_2(J)=0.d0
+      DIFFUSION_RATE_1(J)=TESTREF1/BARR/YMOD2/GTODN
+      if (YMOD2*GTODN.LT.1.0d0) DIFFUSION_RATE_1(J)=TESTREF1/BARR
+      DIFFUSION_RATE_2(J)=0.d0
     endif
 
     if (PICK.EQ.2) then
-      THERMAL_DIFFUSION_RATE_2(J)=TESTREF2/BARR/YMOD1/GTODN
-      if (YMOD1*GTODN.LT.1.0d0) THERMAL_DIFFUSION_RATE_2(J)=TESTREF2/BARR
-      THERMAL_DIFFUSION_RATE_1(J)=0.d0
+      DIFFUSION_RATE_2(J)=TESTREF2/BARR/YMOD1/GTODN
+      if (YMOD1*GTODN.LT.1.0d0) DIFFUSION_RATE_2(J)=TESTREF2/BARR
+      DIFFUSION_RATE_1(J)=0.d0
     endif
 
   endif
