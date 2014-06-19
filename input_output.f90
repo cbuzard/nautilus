@@ -441,8 +441,8 @@ if (isDefined) then
       case('diffusion_barrier_thickness', 'ACM') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') DIFFUSION_BARRIER_THICKNESS
       
-      case('site_density', 'SNS') ! The old name is kept for compatibility reasons
-        read(value, '(e12.6)') SITE_DENSITY
+      case('surface_site_density', 'SNS') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') SURFACE_SITE_DENSITY
       
       case('diff_desorp_default_ratio', 'EBFAC') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') DIFF_DESORP_DEFAULT_RATIO
@@ -578,7 +578,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'grain_density = ', GRAIN_DENSITY, ' ! mass density of grain material'
   write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius [cm]'
   write(10,'(a,es10.3e2,a)') 'diffusion_barrier_thickness = ', DIFFUSION_BARRIER_THICKNESS, ' ! Barrier thickness [cm]'
-  write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density [cm-2]'
+  write(10,'(a,es10.3e2,a)') 'surface_site_density = ', SURFACE_SITE_DENSITY, ' ! site density [cm-2]'
   write(10,'(a,es10.3e2,a)') 'diff_desorp_default_ratio = ', DIFF_DESORP_DEFAULT_RATIO, &
                              ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'
   write(10,'(a,es10.3e2,a)') 'activation_barrier_width = ', ACTIVATION_BARRIER_WIDTH, &

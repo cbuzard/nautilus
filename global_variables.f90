@@ -163,7 +163,7 @@ real(double_precision) :: UV_FLUX !< Scale factor for the UV flux, in unit of th
 real(double_precision) :: DIFFUSION_BARRIER_THICKNESS !< [cm] thickness of the barrier that a surface species need to cross while 
 !! undergoing quantum tunneling to diffuse from one surface site to another. This is used in the formalism by Hasegawa et al. (1992)
 !! , see equation 10 of their paper (parameter a).
-real(double_precision) :: SITE_DENSITY !< site density [cm-2]
+real(double_precision) :: SURFACE_SITE_DENSITY !< density of sites at the surface of the grains [cm-2]
 real(double_precision) :: nb_sites_per_grain !< Number of site per grain (site density * surface of the grain)
 real(double_precision) :: ACTIVATION_BARRIER_WIDTH !< grain reaction activation energy barrier width. [cm]
 real(double_precision) :: PEAK_GRAIN_TEMPERATURE !< Peak grain temperature when struck by a cosmic ray [K]

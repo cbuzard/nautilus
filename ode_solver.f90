@@ -1243,7 +1243,7 @@ end subroutine get_temporal_derivatives
     if (type_id_start(66).NE.0) then
         do J = type_id_start(66),type_id_stop(66)
 !---- Used for all species
-           reaction_rates(J)=RATE_A(J)/SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
+           reaction_rates(J)=RATE_A(J)/SURFACE_SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
 !---- Specific cases
            call photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
@@ -1257,7 +1257,7 @@ end subroutine get_temporal_derivatives
     if (type_id_start(67).NE.0) then
         do J = type_id_start(67),type_id_stop(67)
 !---- Used for all species
-           reaction_rates(J)=RATE_A(J)/SITE_DENSITY*1.d4*UVCR
+           reaction_rates(J)=RATE_A(J)/SURFACE_SITE_DENSITY*1.d4*UVCR
            call photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient

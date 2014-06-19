@@ -401,7 +401,7 @@ do i=1,nb_species
 enddo
 
 ! Compute nb_sites_per_grain = number of sites per grain
-nb_sites_per_grain = SITE_DENSITY*4.d0*PI*grain_radius**2
+nb_sites_per_grain = SURFACE_SITE_DENSITY*4.d0*PI*grain_radius**2
 
 ! Initialise reaction rates=============================================
 call init_reaction_rates()
@@ -600,7 +600,7 @@ end subroutine index_datas
       if (SMASS(I).NE.0) then
         SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
-        VIBRATION_FREQUENCY(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*BINDING_ENERGY(I)/SMA)
+        VIBRATION_FREQUENCY(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SURFACE_SITE_DENSITY*BINDING_ENERGY(I)/SMA)
         ! --------- Set quantum rates
         if (GAP_ENERGY_BANDS(I).GE.1.0D-38) then
           TUNNELING_RATE_TYPE_1(I)=GAP_ENERGY_BANDS(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
