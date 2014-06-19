@@ -16,7 +16,7 @@ use global_variables
 use structure
 use input_output
 use ode_solver
-use dust_temperature
+use dust_temperature_module
 
 implicit none
 

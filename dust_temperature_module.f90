@@ -1,5 +1,5 @@
 !******************************************************************************
-! MODULE: dust_temperature
+! MODULE: dust_temperature_module
 !******************************************************************************
 !
 ! DESCRIPTION: 
@@ -11,7 +11,7 @@
 !
 !******************************************************************************
 
-module dust_temperature
+module dust_temperature_module
 
 use iso_fortran_env, only : error_unit
 use global_variables
@@ -652,4 +652,4 @@ endif
 
 end subroutine dicho
 
-end module dust_temperature
+end module dust_temperature_module
