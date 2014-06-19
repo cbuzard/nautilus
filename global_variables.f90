@@ -14,15 +14,15 @@ use utilities
 
 implicit none
 
-! Theses 3 parameters are only intended to easy the transition when one want to add a reagent or a 
-!! product (product are fairly easy, reagent are not). But some things needed to be modified in the 
-!! code anyway when you want to add either a reagent or a product
-integer, parameter :: MAX_REAGENTS = 3 !< The maximum number of reagents for one reaction. 
+! Theses 3 parameters are only intended to easy the transition when one want to add a reactant or a 
+!! product (product are fairly easy, reactant are not). But some things needed to be modified in the 
+!! code anyway when you want to add either a reactant or a product
+integer, parameter :: MAX_REACTANTS = 3 !< The maximum number of reactants for one reaction. 
 !! Do not think that changing this parameter alone is sufficient to allow the code to handle it directly !!
 integer, parameter :: MAX_PRODUCTS = 5 !< The maximum number of products for one reaction. 
 !! Do not think that changing this parameter alone is sufficient to allow the code to handle it directly !!
-integer, parameter :: MAX_COMPOUNDS = MAX_REAGENTS + MAX_PRODUCTS !< Total maximum number of compounds for one reaction (reagents + products)
-!! Warning: If this number change, get_jacobian(N, T, Y, J, IAN, JAN, PDJ) must be actualised, since each reagent and product has
+integer, parameter :: MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maximum number of compounds for one reaction (reactants + products)
+!! Warning: If this number change, get_jacobian(N, T, Y, J, IAN, JAN, PDJ) must be actualised, since each reactant and product has
 !! its own variable, a new one must be created for the new column possible. 
 
 integer :: nb_reactions !< total number of reactions
@@ -104,7 +104,7 @@ integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< elect
 
 ! Arrays about reactions
 character(len=11), allocatable, dimension(:,:) :: REACTION_COMPOUNDS_NAMES !< dim(MAX_COMPOUNDS,nb_reactions)
-integer, allocatable, dimension(:,:) :: REACTION_COMPOUNDS_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, list for reagents (first 3) and products (last 5).
+integer, allocatable, dimension(:,:) :: REACTION_COMPOUNDS_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, list for reactants (first 3) and products (last 5).
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
 real(double_precision), allocatable, dimension(:) :: RATE_A !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: RATE_B !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
@@ -122,9 +122,9 @@ integer, allocatable, dimension(:) :: RATE_FORMULA !< dim(nb_reactions) The inde
 integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
 !! declaring a given number for each reaction, like a hashtag.
 
-! Specific variables for first or second reagent of each reactions
-integer, allocatable, dimension(:) :: reagent_1_idx !< dim(nb_reactions) Index of the first reagent species involved in the reaction
-integer, allocatable, dimension(:) :: reagent_2_idx !< dim(nb_reactions) Index of the second reagent species involved in the reaction
+! Specific variables for first or second reactant of each reactions
+integer, allocatable, dimension(:) :: reactant_1_idx !< dim(nb_reactions) Index of the first reactant species involved in the reaction
+integer, allocatable, dimension(:) :: reactant_2_idx !< dim(nb_reactions) Index of the second reactant species involved in the reaction
 real(double_precision), allocatable, dimension(:) :: DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute the
 !! grain reaction rate for reactant 1. It is equal to either the diffusion rate by thermal hopping or the diffusion rate by quantum 
 !! tunneling.
@@ -132,10 +132,10 @@ real(double_precision), allocatable, dimension(:) :: DIFFUSION_RATE_2 !< dim(nb_
 !! grain reaction rate for reactant 2. It is equal to either the diffusion rate by thermal hopping or the diffusion rate by quantum 
 !! tunneling.
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
-!! the grain reaction rate by cosmic rays heating for reagent 1. Used for reaction_type=21. Can be equal to CR_HOPING_RATE if its 
+!! the grain reaction rate by cosmic rays heating for reactant 1. Used for reaction_type=21. Can be equal to CR_HOPING_RATE if its 
 !! the fastest rate, or equal to TUNNELING_RATE_TYPE_2 if tunneling diffusion is faster (e.g. when grains are not heated)
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
-!! the grain reaction rate by cosmic rays heating for reagent 2. Used for reaction_type=21. Can be equal to CR_HOPING_RATE if its 
+!! the grain reaction rate by cosmic rays heating for reactant 2. Used for reaction_type=21. Can be equal to CR_HOPING_RATE if its 
 !! the fastest rate, or equal to TUNNELING_RATE_TYPE_2 if tunneling diffusion is faster (e.g. when grains are not heated)
 real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES 
 !! for reactant 1. This parameter is used in the modified rate subroutine.
@@ -358,8 +358,8 @@ allocate(REACTION_TMIN(nb_reactions))
 allocate(REACTION_TMAX(nb_reactions))
 allocate(SURF_REACT_PROBA(nb_reactions))
 allocate(REACTION_TYPE(nb_reactions))
-allocate(reagent_1_idx(nb_reactions))
-allocate(reagent_2_idx(nb_reactions))
+allocate(reactant_1_idx(nb_reactions))
+allocate(reactant_2_idx(nb_reactions))
 allocate(RATE_FORMULA(nb_reactions))
 allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_COMPOUNDS_ID(MAX_COMPOUNDS,nb_reactions))
@@ -400,8 +400,8 @@ REACTION_TMIN(1:nb_reactions) = 0.d0
 REACTION_TMAX(1:nb_reactions) = 0.d0
 SURF_REACT_PROBA(1:nb_reactions) = 0.d0
 REACTION_TYPE(1:nb_reactions) = 0
-reagent_1_idx(1:nb_reactions) = 0
-reagent_2_idx(1:nb_reactions) = 0
+reactant_1_idx(1:nb_reactions) = 0
+reactant_2_idx(1:nb_reactions) = 0
 RATE_FORMULA(1:nb_reactions) = 0
 REACTION_ID(1:nb_reactions) = 0
 REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,1:nb_reactions) = 0

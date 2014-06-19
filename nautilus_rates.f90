@@ -9,7 +9,7 @@ implicit none
 ! Locals
 character(len=80) :: filename_output
 integer :: species, output, reaction ! index for loops
-integer :: reagent1, reagent2, reagent3 ! to store indexes of the 3 possible reagents of a given reaction
+integer :: reactant1, reactant2, reactant3 ! to store indexes of the 3 possible reactants of a given reaction
 integer :: error ! to store the state of a read instruction
 logical :: isDefined
 
@@ -115,12 +115,12 @@ enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
 write(*,'(a,a)') achar(13), 'Reading unformatted outputs... Done'
 
-! For non existing reagents in reactions, we create a new species whose abundance is always 1, so that we can calculate the fluxes 
+! For non existing reactants in reactions, we create a new species whose abundance is always 1, so that we can calculate the fluxes 
 !! more easily.
 abundances(1:nb_outputs, nb_species+1, 1:nptmax) = 1.d0
 
-! We retrieve indexes of each reagents for each reaction
-call set_only_reagents()
+! We retrieve indexes of each reactants for each reaction
+call set_only_reactants()
 
 ! We replace blanck species by 'XXX' for the outputs constrains
 do reaction=1,nb_reactions
@@ -134,12 +134,12 @@ enddo
 ! We write fluxes for all reactions and all output times
 do output=1, nb_outputs
   do reaction=1, nb_reactions
-    reagent1 = REACTION_COMPOUNDS_ID(1, reaction)
-    reagent2 = REACTION_COMPOUNDS_ID(2, reaction)
-    reagent3 = REACTION_COMPOUNDS_ID(3, reaction)
+    reactant1 = REACTION_COMPOUNDS_ID(1, reaction)
+    reactant2 = REACTION_COMPOUNDS_ID(2, reaction)
+    reactant3 = REACTION_COMPOUNDS_ID(3, reaction)
 
-    reaction_fluxes(output, reaction) = reaction_rates(output, reaction) * abundances(output, reagent1, 1) * &
-                                        abundances(output, reagent2, 1) * abundances(output, reagent3, 1)
+    reaction_fluxes(output, reaction) = reaction_rates(output, reaction) * abundances(output, reactant1, 1) * &
+                                        abundances(output, reactant2, 1) * abundances(output, reactant3, 1)
   enddo
 enddo
 
@@ -172,10 +172,10 @@ contains
 !> @date 2014
 !
 ! DESCRIPTION: 
-!> @brief Initialize reagents indexes for all reactions. Usefull to retrieve abundances quickly
+!> @brief Initialize reactants indexes for all reactions. Usefull to retrieve abundances quickly
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine set_only_reagents()
+subroutine set_only_reactants()
 
 implicit none
 
@@ -186,13 +186,13 @@ integer :: no_species
 
 no_species = nb_species + 1
 
-! By default, non existing reagents (dummy species) will be assigned (nb_species+1)
+! By default, non existing reactants (dummy species) will be assigned (nb_species+1)
 REACTION_COMPOUNDS_ID(1:3, 1:nb_reactions) = no_species
 
 do I=1,nb_reactions
   do J=1,nb_species
 
-    do L=1,MAX_REAGENTS
+    do L=1,MAX_REACTANTS
       if (REACTION_COMPOUNDS_NAMES(L,I).EQ.species_name(J)) then
         REACTION_COMPOUNDS_ID(L,I) = J
       endif
@@ -202,6 +202,6 @@ do I=1,nb_reactions
 enddo   
 
 return
-end subroutine set_only_reagents
+end subroutine set_only_reactants
 
 end program nautilus_rates

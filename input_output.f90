@@ -65,7 +65,7 @@ integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 character(len=80) :: line_format !< format of one line of gas_reaction.in or grain_reaction.in
 
 ! Definition of the line format, common to gas_reaction.in and grain_reaction.in
-write(line_format, '(a,i1,a,i1,a)') '(', MAX_REAGENTS, 'A11,1x,', MAX_PRODUCTS, 'A11,3D11.3,23x,I3,2i7,i3,i6)'
+write(line_format, '(a,i1,a,i1,a)') '(', MAX_REACTANTS, 'A11,1x,', MAX_PRODUCTS, 'A11,3D11.3,23x,I3,2i7,i3,i6)'
 
 ! Reading list of reaction for gas phase
 filename = 'gas_reactions.in'
