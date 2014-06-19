@@ -99,7 +99,7 @@ real(double_precision), allocatable, dimension(:) :: VIBRATION_FREQUENCY !< dim(
 real(double_precision), allocatable, dimension(:) :: ACC_RATES_PREFACTOR !< dim(nb_species) Interrim calculation variable for ACCRETION_RATES
 !! that contain cross section, probability and constant needed for thermal motion
 real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_1 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Watson 1976) (dEB.BOLTZ) / (4.HBAR.nb_sites_per_grain)
-real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_2 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Hasegawa & Herbst 1992) VIBRATION_FREQUENCY / nb_sites_per_grain.EXP(-2.SITE_SPACING / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2)
+real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_2 !< dim(nb_species) Quantum tunneling diffusion rate [s-1] (Hasegawa & Herbst 1992) VIBRATION_FREQUENCY / nb_sites_per_grain.EXP(-2.DIFFUSION_BARRIER_THICKNESS / HBAR.(2.AMU.SMA.BOLTZ.EB)^1/2)
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
@@ -160,7 +160,9 @@ real(double_precision) :: visual_extinction !< visual extinction [mag] of the mo
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION !< initial visual extinction [mag] 
 real(double_precision) :: CR_IONISATION_RATE !< cosmic ray ionisation rate [s-1]
 real(double_precision) :: UV_FLUX !< Scale factor for the UV flux, in unit of the reference flux (1.=nominal)
-real(double_precision) :: SITE_SPACING !< site spacing [cm]
+real(double_precision) :: DIFFUSION_BARRIER_THICKNESS !< [cm] thickness of the barrier that a surface species need to cross while 
+!! undergoing quantum tunneling to diffuse from one surface site to another. This is used in the formalism by Hasegawa et al. (1992)
+!! , see equation 10 of their paper (parameter a).
 real(double_precision) :: SITE_DENSITY !< site density [cm-2]
 real(double_precision) :: nb_sites_per_grain !< Number of site per grain (site density * surface of the grain)
 real(double_precision) :: ACTIVATION_BARRIER_WIDTH !< grain reaction activation energy barrier width. [cm]

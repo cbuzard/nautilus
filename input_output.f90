@@ -438,8 +438,8 @@ if (isDefined) then
       case('grain_radius', 'RD') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') GRAIN_RADIUS
         
-      case('site_spacing', 'ACM') ! The old name is kept for compatibility reasons
-        read(value, '(e12.6)') SITE_SPACING
+      case('diffusion_barrier_thickness', 'ACM') ! The old name is kept for compatibility reasons
+        read(value, '(e12.6)') DIFFUSION_BARRIER_THICKNESS
       
       case('site_density', 'SNS') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') SITE_DENSITY
@@ -577,7 +577,7 @@ use global_variables
   write(10,'(a,es10.3e2,a)') 'sticking_coeff_negative = ', sticking_coeff_negative, ' ! sticking coeff for negative species'
   write(10,'(a,es10.3e2,a)') 'grain_density = ', GRAIN_DENSITY, ' ! mass density of grain material'
   write(10,'(a,es10.3e2,a)') 'grain_radius = ', grain_radius, ' ! grain radius [cm]'
-  write(10,'(a,es10.3e2,a)') 'site_spacing = ', SITE_SPACING, ' ! site spacing [cm]'
+  write(10,'(a,es10.3e2,a)') 'diffusion_barrier_thickness = ', DIFFUSION_BARRIER_THICKNESS, ' ! Barrier thickness [cm]'
   write(10,'(a,es10.3e2,a)') 'site_density = ', SITE_DENSITY, ' ! site density [cm-2]'
   write(10,'(a,es10.3e2,a)') 'diff_desorp_default_ratio = ', DIFF_DESORP_DEFAULT_RATIO, &
                              ' ! ratio Eb(I):Ed(I) (excludes H,H2); -ve means use given values'

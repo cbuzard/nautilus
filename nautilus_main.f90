@@ -608,7 +608,7 @@ end subroutine index_datas
           TUNNELING_RATE_TYPE_1(I)=0.d0
         endif
         TUNNELING_RATE_TYPE_2(I) = VIBRATION_FREQUENCY(I) / nb_sites_per_grain * &
-                 EXP(-2.0d0*SITE_SPACING/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*DIFFUSION_BARRIER(I)))
+                 EXP(-2.0d0*DIFFUSION_BARRIER_THICKNESS/H_BARRE*SQRT(2.0d0*AMU*SMA*K_B*DIFFUSION_BARRIER(I)))
       endif
     enddo
 
