@@ -169,7 +169,7 @@ real(double_precision) :: CHEMICAL_BARRIER_THICKNESS !< [cm] Parameter used to c
 !! activation energy to occur through quantum tunneling. This is the thickness of the energy barrier. See equation 6 from 
 !! Hasegawa et al. (1992).
 real(double_precision) :: CR_PEAK_GRAIN_TEMP !< Peak grain temperature when struck by a cosmic ray [K]
-real(double_precision) :: PEAK_DURATION !< Peak duration [s] of CR_PEAK_GRAIN_TEMP
+real(double_precision) :: CR_PEAK_DURATION !< Peak duration [s] of CR_PEAK_GRAIN_TEMP
 real(double_precision) :: FE_IONISATION_RATE !< (cosmic) Fe-ion--grain encounter [s-1 grain-1] (for 0.1 micron grain) 
 !! For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
 real(double_precision) :: DIFF_DESORP_DEFAULT_RATIO !< [no unit] DIFFUSION_BARRIER/BINDING_ENERGY. Ratio used if DIFFUSION_BARRIER is not known
