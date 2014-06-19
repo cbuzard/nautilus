@@ -135,8 +135,10 @@ real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_1 !< dim(
 !! the grain reaction rate by cosmic rays heating for reagent 1. Used for reaction_type=21
 real(double_precision), allocatable, dimension(:) :: CR_DIFFUSION_RATE_2 !< dim(nb_reactions) [s-1] Diffusion rates used to compute 
 !! the grain reaction rate by cosmic rays heating for reagent 2. Used for reaction_type=21
-real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 1
-real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES for reagent 2
+real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_1 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES 
+!! for reactant 1. This parameter is used in the modified rate subroutine.
+real(double_precision), allocatable, dimension(:) :: EVAP_OVER_ACC_RATIO_2 !< dim(nb_reactions) EVAPORATION_RATES/ACCRETION_RATES 
+!! for reactant 2. This parameter is used in the modified rate subroutine.
 
 real(double_precision) :: initial_dtg_mass_ratio !< [no unit] initial dust to gas mass ratio
 real(double_precision) :: GTODN !< Gas to dust number ratio. 1/GTODN is equivalent to the grain abundance [no unit]
