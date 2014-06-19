@@ -85,7 +85,10 @@ real(double_precision), allocatable, dimension(:) :: ACCRETION_RATES !< dim(nb_s
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATES !< dim(nb_species) evaporation rate for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: EVAPORATION_RATESCR !< dim(nb_species) evaporation rate  due to cosmic rays for a given species [s-1]
 real(double_precision), allocatable, dimension(:) :: BINDING_ENERGY !< dim(nb_species) [K] Binding energy of a species to the surface (specific to each species). Parameter read in the file surface_parameters.in
-real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER !< dim(nb_species) Diffusion barriers (specific of each species) [K]
+real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER !< dim(nb_species) [K] Potential energy barrier between adjacent surface potential energy wells. 
+!! It is usually a fraction of the binding energy. This parameter is used to compute the rate for thermal hopping and the diffusion 
+!! by quantum tunneling using Hasegawa’s formalism. Parameter read in the file surface_parameters.in for some species and computed 
+!! in the model for the others. (specific of each species)
 real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER_WIDTH !< dim(nb_species) dEb breadth in energy [K] between two surface wells as seen by the quantum mechanical tunneling effect (see Watson 1976)
 !! Width of the energy barrier for diffusion. The thicker, the less quantum tunneling diffusion will be efficient.
 real(double_precision), allocatable, dimension(:) :: FORMATION_ENTHALPY !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
