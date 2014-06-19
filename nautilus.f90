@@ -135,7 +135,7 @@ call initialize_work_arrays()
 select case(OUTPUT_TYPE)
   case('linear')! nb_output is used
     allocate(output_times(NB_OUTPUTS))
-    output_step = (STOP_TIME - START_TIME) / dfloat(NB_OUTPUTS - 1.d0)
+    output_step = (STOP_TIME - START_TIME) / dfloat(NB_OUTPUTS - 1)
     do i=1, NB_OUTPUTS - 1
       output_times(i) = START_TIME + output_step * dfloat(i)
     enddo
@@ -145,7 +145,7 @@ select case(OUTPUT_TYPE)
   case('log')! nb_output is used
     allocate(output_times(NB_OUTPUTS))
     
-    output_step = (STOP_TIME/START_TIME) ** (1.d0/dfloat(NB_OUTPUTS-1.d0))
+    output_step = (STOP_TIME/START_TIME) ** (1.d0/dfloat(NB_OUTPUTS - 1))
     do i=1, NB_OUTPUTS -1
       output_times(i) = START_TIME * output_step ** (i - 1.d0)
     enddo
