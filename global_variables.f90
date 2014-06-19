@@ -93,7 +93,8 @@ real(double_precision), allocatable, dimension(:) :: GAP_ENERGY_BANDS !< dim(nb_
 !! to the fundamental and first excited state (Ricca et al., 1969). This parameter is used to compute the diffusion of species on 
 !! the surface by tunneling using the formalism by Hollenbach & Salpeter (1970) and Watson (1976). It is the parameter dEb in the 
 !! equation 20 of Reboussin et al. (2014). Values of this parameters from the literature are also given in the paper.
-real(double_precision), allocatable, dimension(:) :: FORMATION_ENTHALPY !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
+real(double_precision), allocatable, dimension(:) :: FORMATION_ENTHALPY !< dim(nb_species) Enthalpy of formation of the species 
+!! (read in kcal/mol in the file surface_parameters.in and then converted into Kelvin/reaction via DHFSUM)
 real(double_precision), allocatable, dimension(:) :: VIBRATION_FREQUENCY !< dim(nb_species) Characteristic vibration frequency [s-1] of the adsorbed species  as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 real(double_precision), allocatable, dimension(:) :: ACC_RATES_PREFACTOR !< dim(nb_species) Interrim calculation variable for ACCRETION_RATES
 !! that contain cross section, probability and constant needed for thermal motion
@@ -109,7 +110,7 @@ real(double_precision), allocatable, dimension(:) :: RATE_A !< dim(nb_reactions)
 real(double_precision), allocatable, dimension(:) :: RATE_B !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: RATE_C !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: reaction_rates !< dim(nb_reactions) reaction rate [unit depend on the reaction]
-real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy of reactions [K]
+real(double_precision), allocatable, dimension(:) :: ACTIVATION_ENERGY !< dim(nb_reactions) Activation energy for surface reactions [K]
 real(double_precision), allocatable, dimension(:) :: REACTION_TMIN !< dim(nb_reactions) min temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: REACTION_TMAX !< dim(nb_reactions) max temperature boundary of each reactions [K]
 real(double_precision), allocatable, dimension(:) :: quantum_activation_energy !< dim(nb_reactions) Quantum activation energy
