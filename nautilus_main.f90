@@ -552,23 +552,23 @@ end subroutine index_datas
     ! --- Transfer from dummies to arrays with correct species numbers
     do I=1,nb_species
       SMASS(I)=0.d0
-      DESORPTION_ENERGY(I)=0.d0
+      BINDING_ENERGY(I)=0.d0
       DIFFUSION_BARRIER(I)=0.d0
       DIFFUSION_BARRIER_WIDTH(I)=0.d0
       FORMATION_ENTHALPY(I)=0.d0
       do J=1,NGS
         if (species_name(I).EQ.GSPEC(J)) then
           SMASS(I)=dble(INT1(J))
-          DESORPTION_ENERGY(I)=REA1(J)
+          BINDING_ENERGY(I)=REA1(J)
           DIFFUSION_BARRIER(I)=REA2(J)
           DIFFUSION_BARRIER_WIDTH(I)=REA3(J)
           FORMATION_ENTHALPY(I)=REA4(J)
           if ((species_name(I).NE.YJH).AND.(species_name(I).NE.YJH2).AND.(DIFF_DESORP_DEFAULT_RATIO.GE.0.d0)) then
-            DIFFUSION_BARRIER(I)=DIFF_DESORP_DEFAULT_RATIO*DESORPTION_ENERGY(I)
+            DIFFUSION_BARRIER(I)=DIFF_DESORP_DEFAULT_RATIO*BINDING_ENERGY(I)
           endif
         endif
       enddo
-      !IF(species_name(I) == 'JN2O2      ') write(*,*) DESORPTION_ENERGY(I)
+      !IF(species_name(I) == 'JN2O2      ') write(*,*) BINDING_ENERGY(I)
     enddo
 
     do I=1,nb_reactions
@@ -600,7 +600,7 @@ end subroutine index_datas
       if (SMASS(I).NE.0) then
         SMA=dble(SMASS(I))
         ! --------- Set characteristic frequency
-        VIBRATION_FREQUENCY(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*DESORPTION_ENERGY(I)/SMA)
+        VIBRATION_FREQUENCY(I)=SQRT(2.0d0*K_B/PI/PI/AMU * SITE_DENSITY*BINDING_ENERGY(I)/SMA)
         ! --------- Set quantum rates
         if (DIFFUSION_BARRIER_WIDTH(I).GE.1.0D-38) then
           TUNNELING_RATE_TYPE_1(I)=DIFFUSION_BARRIER_WIDTH(I)*K_B/4.0d0/H_BARRE/nb_sites_per_grain
@@ -698,9 +698,9 @@ end subroutine index_datas
 
     DHFSUM=DHFSUM+ACTIVATION_ENERGY(J)
 
-    SUM1=DESORPTION_ENERGY(N4)
-    if (N5.NE.0) SUM1=MAX(DESORPTION_ENERGY(N4),DESORPTION_ENERGY(N5))
-    if (N6.NE.0) SUM1=MAX(DESORPTION_ENERGY(N4),DESORPTION_ENERGY(N5),DESORPTION_ENERGY(N6))
+    SUM1=BINDING_ENERGY(N4)
+    if (N5.NE.0) SUM1=MAX(BINDING_ENERGY(N4),BINDING_ENERGY(N5))
+    if (N6.NE.0) SUM1=MAX(BINDING_ENERGY(N4),BINDING_ENERGY(N5),BINDING_ENERGY(N6))
 
     ATOMS=0
     do K=1,NB_PRIME_ELEMENTS
