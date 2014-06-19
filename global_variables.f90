@@ -89,8 +89,10 @@ real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER !< dim(nb
 !! It is usually a fraction of the binding energy. This parameter is used to compute the rate for thermal hopping and the diffusion 
 !! by quantum tunneling using Hasegawa’s formalism. Parameter read in the file surface_parameters.in for some species and computed 
 !! in the model for the others. (specific of each species)
-real(double_precision), allocatable, dimension(:) :: DIFFUSION_BARRIER_WIDTH !< dim(nb_species) dEb breadth in energy [K] between two surface wells as seen by the quantum mechanical tunneling effect (see Watson 1976)
-!! Width of the energy barrier for diffusion. The thicker, the less quantum tunneling diffusion will be efficient.
+real(double_precision), allocatable, dimension(:) :: GAP_ENERGY_BANDS !< dim(nb_species) [K] gap between the energy bands corresponding 
+!! to the fundamental and first excited state (Ricca et al., 1969). This parameter is used to compute the diffusion of species on 
+!! the surface by tunneling using the formalism by Hollenbach & Salpeter (1970) and Watson (1976). It is the parameter dEb in the 
+!! equation 20 of Reboussin et al. (2014). Values of this parameters from the literature are also given in the paper.
 real(double_precision), allocatable, dimension(:) :: FORMATION_ENTHALPY !< dim(nb_species) Enthalpy formation (read in kcal/mol and then converted into Kelvin/reaction via DHFSUM)
 real(double_precision), allocatable, dimension(:) :: VIBRATION_FREQUENCY !< dim(nb_species) Characteristic vibration frequency [s-1] of the adsorbed species  as from a harmonic oscillator hypothesis (Hasegawa & Herbst 1992)
 real(double_precision), allocatable, dimension(:) :: ACC_RATES_PREFACTOR !< dim(nb_species) Interrim calculation variable for ACCRETION_RATES
@@ -316,7 +318,7 @@ allocate(EVAPORATION_RATES(nb_species))
 allocate(EVAPORATION_RATEScr(nb_species))
 allocate(BINDING_ENERGY(nb_species))
 allocate(DIFFUSION_BARRIER(nb_species))
-allocate(DIFFUSION_BARRIER_WIDTH(nb_species))
+allocate(GAP_ENERGY_BANDS(nb_species))
 allocate(FORMATION_ENTHALPY(nb_species))
 allocate(VIBRATION_FREQUENCY(nb_species))
 allocate(ACC_RATES_PREFACTOR(nb_species))
@@ -360,7 +362,7 @@ ACCRETION_RATES(1:nb_species) = 0.d0
 EVAPORATION_RATES(1:nb_species) = 0.d0
 BINDING_ENERGY(1:nb_species) = 0.d0
 DIFFUSION_BARRIER(1:nb_species) = 0.d0
-DIFFUSION_BARRIER_WIDTH(1:nb_species) = 0.d0
+GAP_ENERGY_BANDS(1:nb_species) = 0.d0
 FORMATION_ENTHALPY(1:nb_species) = 0.d0
 VIBRATION_FREQUENCY(1:nb_species) = 0.d0
 ACC_RATES_PREFACTOR(1:nb_species) = 0.d0
