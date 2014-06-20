@@ -579,22 +579,20 @@ end subroutine index_datas
     enddo
 
     ! For each reaction, we search if there is an activation energy defined for it.
-    ! TODO make an 'if' to test direclty an array of compounds?
+    ! the "all()" function can compare array element by element to ensure that everything is equal one by one. usefull to find 
+    ! if we have the good reaction
     do I=1,nb_reactions
       ACTIVATION_ENERGY(I)=0.d0
       do J=1,NEA
         if (REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1,I)(:1).EQ.'J') then
-          if ((REACTION_COMPOUNDS_NAMES(1,I).EQ.GSread(1,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(2,I).EQ.GSread(2,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(4,I).EQ.GSread(4,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(5,I).EQ.GSread(5,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(6,I).EQ.GSread(6,J))) ACTIVATION_ENERGY(I)=REA5(J)
+          if (all(REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS,I).EQ.GSread(1:MAX_COMPOUNDS,J))) then
+            ACTIVATION_ENERGY(I) = REA5(J)
+          endif
         else
-          if ((REACTION_COMPOUNDS_NAMES(1,I).EQ.GSread(1,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(2,I).EQ.GSread(2,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(4,I).EQ.GSread(4,J)(2:)).AND.&
-          (REACTION_COMPOUNDS_NAMES(5,I).EQ.GSread(5,J)(2:)).AND.&
-          (REACTION_COMPOUNDS_NAMES(6,I).EQ.GSread(6,J)(2:))) ACTIVATION_ENERGY(I)=REA5(J)
+          if (all((REACTION_COMPOUNDS_NAMES(1:MAX_REACTANTS,I).EQ.GSread(1:MAX_REACTANTS,J))).AND.&
+          (all(REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1:MAX_COMPOUNDS,I).EQ.GSread(MAX_REACTANTS+1:MAX_COMPOUNDS,J)(2:)))) then
+            ACTIVATION_ENERGY(I) = REA5(J)
+          endif
         endif
       enddo
       !IF(REACTION_COMPOUNDS_NAMES(4,i) == 'JO2H       ') write(*,*)  REACTION_COMPOUNDS_NAMES(:,i), ACTIVATION_ENERGY(i)
