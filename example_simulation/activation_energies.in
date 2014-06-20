@@ -1,54 +1,54 @@
-!                                 			    EA(K)
-JCH4       JCCH       JC2H2      JCH3                   2.50e+02   Mitchell 84          
-JH         JC2H6      JC2H5      JH2                    4.89E+03   TranFaradSco 65,2116  
-JH         JC2H2      JC2H3                             1.21e+03   C=_C triple bond HASE  
-JH         JC2H4      JC2H5                             7.50e+02   C=C  double bond HASE  
-JH         Jc-C3H2    JCH3CCH                           1.21e+03   C=_C triple bond       
-JH         Jl-C3H2    JCH3CCH                           1.21e+03   C=_C triple bond       
-JH         JC4H2      JCH3C3                            1.21e+03   C=_C bond HASE         
-JH         JC4H2      JC4H3                             1.21E+03   C=_C bond HASE          
-JH         JC5H2      JC5H3                             1.21E+03   C=_C bond HASE          
-JH         JC6H2      JC6H3                             1.21E+03   C=_C bond HASE          
-JH         JC7H2      JC7H3                             1.21E+03   C=_C bond HASE          
-JH         JC8H2      JC8H3                             1.21E+03   C=_C bond HASE         
-JH         JC9H2      JC9H3                             1.21E+03   C=_C bond HASE         
-JH         JCH4       JCH3       JH2                    5.94e+03   JChPhy 50,5076 (1969)
-JH         JCO        JHCO                              2.50e+03   WOON priv commun -DPR
-JH         JCS        JHCS                              1.00e+03      EH                
-JH         JH2CO      JCH2OH                            2.50E+03   WOON priv commun -DPR 
-JH         JHOOH      JH2O       JOH                    1.40e+03   TH                   
-JH         JHOOH      JO2H       JH2                    1.90e+03   M84                  
-JH         JH2S       JH2        JHS                    8.60e+02   TH 8.60E+02 1.35E+03 
-JH         JHC2O      JH2CCO                            0.         AR                    
-JH         JHNO       JNO        JH2                    1.50e+03   M84,Origin=Igl&Silk  
-JH         JO2        JO2H                              1.20e+03   TH                   
-JH         JO3        JO2        JOH                    4.50e+02   TH                   
-JH2        JC         JCH2                              2.50e+03  92Summer. Exoth.      
-JH2        JC2        JCCH       JH                     4.20e+03  Our test              
-JH2        JCCH       JC2H2      JH                     4.20e+03                        
-JH2        JC3        JC3H       JH                     4.20e+03                        
-JH2        JC3H       Jc-C3H2    JH                     4.20e+03                        
-JH2        JC3H       Jl-C3H2    JH                     4.20e+03                        
-JH2        JC4        JC4H       JH                     4.20e+03                        
-JH2        JC4H       JC4H2      JH                     4.20e+03                        
-JH2        JC5        JC5H       JH                     4.20e+03                        
-JH2        JC5H       JC5H2      JH                     4.20e+03                        
-JH2        JC6        JC6H       JH                     4.20e+03                        
-JH2        JC6H       JC6H2      JH                     4.20e+03                        
-JH2        JC7        JC7H       JH                     4.20e+03                        
-JH2        JC7H       JHC7H      JH                     4.20e+03                        
-JH2        JC8        JC8H       JH                     4.20e+03                        
-JH2        JC8H       JC8H2      JH                     4.20e+03                        
-JH2        JC9        JC9H       JH                     4.20e+03                        
-JH2        JC9H       JC9H2      JH                     4.20e+03                        
-JH2        JCH2       JCH3       JH                     3.53e+03  NSRDS-NBS67 Westley 80
-JH2        JCH3       JCH4       JH                     6.44e+03  JChPhy 50,5076 (1969) 
-JH2        JCN        JHCN       JH                     2.07e+03  M84 and 1988 UMIST    
-JH2        JNH2       JNH3       JH                     6.30e+03  M84                   
-JH2        JOH        JH2O       JH                     2.10e+03  JPhyChRefDat,13,1259  
-JO         JCO        JCO2                              1.00e+03   d'Hendecourt etal    
-JOH        JCO        JCO2       JH                     8.00e+01   Eric/Chun gas rates  
-JH         JCO        JHOC                              1.00e+03      EH      eliminated
+!                                                         EA(K)
+JCH4       JCCH                   -> JC2H2      JCH3                                         2.50e+02   Mitchell 84          
+JH         JC2H6                  -> JC2H5      JH2                                          4.89E+03   TranFaradSco 65,2116  
+JH         JC2H2                  -> JC2H3                                                   1.21e+03   C=_C triple bond HASE  
+JH         JC2H4                  -> JC2H5                                                   7.50e+02   C=C  double bond HASE  
+JH         Jc-C3H2                -> JCH3CCH                                                 1.21e+03   C=_C triple bond       
+JH         Jl-C3H2                -> JCH3CCH                                                 1.21e+03   C=_C triple bond       
+JH         JC4H2                  -> JCH3C3                                                  1.21e+03   C=_C bond HASE         
+JH         JC4H2                  -> JC4H3                                                   1.21E+03   C=_C bond HASE          
+JH         JC5H2                  -> JC5H3                                                   1.21E+03   C=_C bond HASE          
+JH         JC6H2                  -> JC6H3                                                   1.21E+03   C=_C bond HASE          
+JH         JC7H2                  -> JC7H3                                                   1.21E+03   C=_C bond HASE          
+JH         JC8H2                  -> JC8H3                                                   1.21E+03   C=_C bond HASE         
+JH         JC9H2                  -> JC9H3                                                   1.21E+03   C=_C bond HASE         
+JH         JCH4                   -> JCH3       JH2                                          5.94e+03   JChPhy 50,5076 (1969)
+JH         JCO                    -> JHCO                                                    2.50e+03   WOON priv commun -DPR
+JH         JCS                    -> JHCS                                                    1.00e+03      EH                
+JH         JH2CO                  -> JCH2OH                                                  2.50E+03   WOON priv commun -DPR 
+JH         JHOOH                  -> JH2O       JOH                                          1.40e+03   TH                   
+JH         JHOOH                  -> JO2H       JH2                                          1.90e+03   M84                  
+JH         JH2S                   -> JH2        JHS                                          8.60e+02   TH 8.60E+02 1.35E+03 
+JH         JHC2O                  -> JH2CCO                                                  0.         AR                    
+JH         JHNO                   -> JNO        JH2                                          1.50e+03   M84,Origin=Igl&Silk  
+JH         JO2                    -> JO2H                                                    1.20e+03   TH                   
+JH         JO3                    -> JO2        JOH                                          4.50e+02   TH                   
+JH2        JC                     -> JCH2                                                    2.50e+03  92Summer. Exoth.      
+JH2        JC2                    -> JCCH       JH                                           4.20e+03  Our test              
+JH2        JCCH                   -> JC2H2      JH                                           4.20e+03                        
+JH2        JC3                    -> JC3H       JH                                           4.20e+03                        
+JH2        JC3H                   -> Jc-C3H2    JH                                           4.20e+03                        
+JH2        JC3H                   -> Jl-C3H2    JH                                           4.20e+03                        
+JH2        JC4                    -> JC4H       JH                                           4.20e+03                        
+JH2        JC4H                   -> JC4H2      JH                                           4.20e+03                        
+JH2        JC5                    -> JC5H       JH                                           4.20e+03                        
+JH2        JC5H                   -> JC5H2      JH                                           4.20e+03                        
+JH2        JC6                    -> JC6H       JH                                           4.20e+03                        
+JH2        JC6H                   -> JC6H2      JH                                           4.20e+03                        
+JH2        JC7                    -> JC7H       JH                                           4.20e+03                        
+JH2        JC7H                   -> JHC7H      JH                                           4.20e+03                        
+JH2        JC8                    -> JC8H       JH                                           4.20e+03                        
+JH2        JC8H                   -> JC8H2      JH                                           4.20e+03                        
+JH2        JC9                    -> JC9H       JH                                           4.20e+03                        
+JH2        JC9H                   -> JC9H2      JH                                           4.20e+03                        
+JH2        JCH2                   -> JCH3       JH                                           3.53e+03  NSRDS-NBS67 Westley 80
+JH2        JCH3                   -> JCH4       JH                                           6.44e+03  JChPhy 50,5076 (1969) 
+JH2        JCN                    -> JHCN       JH                                           2.07e+03  M84 and 1988 UMIST    
+JH2        JNH2                   -> JNH3       JH                                           6.30e+03  M84                   
+JH2        JOH                    -> JH2O       JH                                           2.10e+03  JPhyChRefDat,13,1259  
+JO         JCO                    -> JCO2                                                    1.00e+03   d'Hendecourt etal    
+JOH        JCO                    -> JCO2       JH                                           8.00e+01   Eric/Chun gas rates  
+JH         JCO                    -> JHOC                                                    1.00e+03      EH      eliminated
 
 !Activiation barrier below are not considered because doubtful (from previous verion of the code - 
 !should be checked)

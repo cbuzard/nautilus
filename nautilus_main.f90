@@ -432,14 +432,15 @@ end subroutine index_datas
     real(double_precision) :: SMA,REDMAS,STICK,EVFRAC,DHFSUM,SUM1,SUM2
     integer, dimension(nb_reactions) :: INT1
     integer :: NGS,NEA,NPATH,NEVAP,BADFLAG,ATOMS
-    character(len=11), dimension(5,nb_reactions) :: GSREAD
+    character(len=11), dimension(MAX_COMPOUNDS,nb_reactions) :: GSREAD
     character(len=11), dimension(nb_species) :: GSPEC
 
     real(double_precision) :: cond
     integer :: i, j,k,l,n4, n5, n6
     
     character(len=80) :: filename !< name of the file to be read
-    character(len=80) :: line
+    character(len=80) :: line_format
+    character(len=200) :: line
     character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
     integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
     integer :: error !< to store the state of a read instruction
@@ -520,6 +521,9 @@ end subroutine index_datas
     inquire(file=filename, exist=isDefined)
     if (isDefined) then
       call get_linenumber(filename=filename, nb_lines=NEA)
+      
+      ! Definition of the line format, common to gas_reaction.in and grain_reaction.in
+      write(line_format, '(a,i1,a,i1,a)') '(', MAX_REACTANTS, 'A11,4x,', MAX_PRODUCTS, 'A11,D9.2)'
 
       open(10, file=filename, status='old')
       
@@ -538,7 +542,10 @@ end subroutine index_datas
         
         if (line.ne.'') then
           i = i + 1
-          read(line, '(5A11,D9.2)') (GSread(L,i),L=1,5),REA5(i)
+!~           write(*,*) "i=",i
+!~           write(*,*) line_format
+!~           write(*,*) line
+          read(line, line_format) (GSread(L,i),L=1,MAX_COMPOUNDS),REA5(i)
         
         end if
       end do
@@ -571,21 +578,23 @@ end subroutine index_datas
       !IF(species_name(I) == 'JN2O2      ') write(*,*) BINDING_ENERGY(I)
     enddo
 
+    ! For each reaction, we search if there is an activation energy defined for it.
+    ! TODO make an 'if' to test direclty an array of compounds?
     do I=1,nb_reactions
       ACTIVATION_ENERGY(I)=0.d0
       do J=1,NEA
-        if (REACTION_COMPOUNDS_NAMES(4,I)(:1).EQ.'J') then
+        if (REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1,I)(:1).EQ.'J') then
           if ((REACTION_COMPOUNDS_NAMES(1,I).EQ.GSread(1,J)).AND.&
           (REACTION_COMPOUNDS_NAMES(2,I).EQ.GSread(2,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(4,I).EQ.GSread(3,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(5,I).EQ.GSread(4,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(6,I).EQ.GSread(5,J))) ACTIVATION_ENERGY(I)=REA5(J)
+          (REACTION_COMPOUNDS_NAMES(4,I).EQ.GSread(4,J)).AND.&
+          (REACTION_COMPOUNDS_NAMES(5,I).EQ.GSread(5,J)).AND.&
+          (REACTION_COMPOUNDS_NAMES(6,I).EQ.GSread(6,J))) ACTIVATION_ENERGY(I)=REA5(J)
         else
           if ((REACTION_COMPOUNDS_NAMES(1,I).EQ.GSread(1,J)).AND.&
           (REACTION_COMPOUNDS_NAMES(2,I).EQ.GSread(2,J)).AND.&
-          (REACTION_COMPOUNDS_NAMES(4,I).EQ.GSread(3,J)(2:)).AND.&
-          (REACTION_COMPOUNDS_NAMES(5,I).EQ.GSread(4,J)(2:)).AND.&
-          (REACTION_COMPOUNDS_NAMES(6,I).EQ.GSread(5,J)(2:))) ACTIVATION_ENERGY(I)=REA5(J)
+          (REACTION_COMPOUNDS_NAMES(4,I).EQ.GSread(4,J)(2:)).AND.&
+          (REACTION_COMPOUNDS_NAMES(5,I).EQ.GSread(5,J)(2:)).AND.&
+          (REACTION_COMPOUNDS_NAMES(6,I).EQ.GSread(6,J)(2:))) ACTIVATION_ENERGY(I)=REA5(J)
         endif
       enddo
       !IF(REACTION_COMPOUNDS_NAMES(4,i) == 'JO2H       ') write(*,*)  REACTION_COMPOUNDS_NAMES(:,i), ACTIVATION_ENERGY(i)
