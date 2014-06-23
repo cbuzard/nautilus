@@ -989,9 +989,9 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',index,'.out'
 
 open(UNIT=35, file=filename_output, form='unformatted')
 
-write(35) current_time, species_name
-write(35) gas_temperature, 0.5d0 * H_number_density, visual_extinction, X_IONISATION_RATE
-write(35) abundances
+write(35) current_time
+write(35) gas_temperature, dust_temperature, 0.5d0 * H_number_density, visual_extinction, X_IONISATION_RATE
+write(35) abundances(1:nb_species)
 close(35)
 
 return
