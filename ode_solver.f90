@@ -886,12 +886,8 @@ end subroutine get_temporal_derivatives
   XNH2=Y(indH2)
   XNCO=Y(indCO)
   
-  XNDTOT = 0.d0
-  do J = nb_gaseous_species+1,nb_species
-    if(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
-                                                  & "grain surface include gas-phase species"
-    XNDTOT = XNDTOT + Y(J)
-  enddo
+  ! Sum of all abundances on grain surfaces
+  XNDTOT = sum(Y(nb_gaseous_species+1:nb_species))
 
   MLAY = 5.d0
   SUMLAY = XNDTOT*GTODN/nb_sites_per_grain

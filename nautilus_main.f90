@@ -152,6 +152,32 @@ end subroutine get_elemental_abundance
 !> @date 2014
 !
 ! DESCRIPTION: 
+!> @brief To check coherence of the parameter files, reactions and so on.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine preliminary_tests()
+
+implicit none
+
+integer :: i !< For loops
+
+! Test if all species whose index is 'grain' type, are effectively "on-grain" species
+do i = nb_gaseous_species+1,nb_species
+  if(species_name(i)(:1).NE.'J          ') then
+    write(Error_unit, *) 'Error: Species number ',i,' (',trim(species_name(i)),' is expected to be a grain species but is not'
+    call exit(13)
+  endif
+enddo
+
+end subroutine preliminary_tests
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
 !> @brief Routine that contain all initialisation that needs to be done in the code
 !! before the integration
 !
@@ -279,6 +305,9 @@ call init_relevant_reactions()
 ! Calculate the optimum number for temporary solving-arrays in ODEPACK, based on the number of non-zeros values in 
 !! the jacobian
 call count_nonzeros()
+
+! Do preliminary tests, before starting the integration
+call preliminary_tests()
 
 ! Write information about the code at the very end of initialisation
 call write_general_infos()
