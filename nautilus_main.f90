@@ -321,6 +321,14 @@ do reaction=1,nb_reactions
   endif
 enddo
 
+! Check reactions with alpha equal 0
+do reaction=1,nb_reactions
+  if (RATE_A(reaction).eq.0.d0) then
+    write(Error_Unit,'(a,i0,a,a)') 'Error: The reaction ',REACTION_ID(reaction), ' has an alpha = 0'
+    call exit(16)
+  endif
+enddo
+
 end subroutine preliminary_tests
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%

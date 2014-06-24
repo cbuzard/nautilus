@@ -164,6 +164,8 @@ Error 14: At least one species have no production or destruction reaction.
 
 Error 15: At least one reaction is not equilibrated (either prime elements or electric charge).
 
+Error 16: At least one reaction has an alpha=0 (first parameter for reaction rate formula)
+
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
 (even though this is a problem for readability). 
