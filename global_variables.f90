@@ -69,7 +69,7 @@ integer :: INDEL !< Index corresponding to e- in nb_species length arrays
 real(double_precision), allocatable, dimension(:) :: INITIAL_ELEMENTAL_ABUNDANCE !< dim(NB_PRIME_ELEMENTS) Store abundances 
 !! (relative to H) for all elemental species before running the simulation [number ratio]
 real(double_precision), allocatable, dimension(:) :: elemental_mass !< dim(NB_PRIME_ELEMENTS) elemental mass [a.m.u]
-character(len=11), allocatable, dimension(:) :: element_name !< dim(NB_PRIME_ELEMENTS) elemental mass.
+character(len=11), allocatable, dimension(:) :: element_name !< dim(NB_PRIME_ELEMENTS) name of the prime elements
 integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENTS) Tell for each prime element its index in the global array of all elements.
 
 ! Arrays about species
@@ -103,8 +103,9 @@ real(double_precision), allocatable, dimension(:) :: TUNNELING_RATE_TYPE_2 !< di
 integer, allocatable, dimension(:) :: SPECIES_CHARGE !< dim(nb_species) !< electric charge [in e-] for each species, 0 if neutral, positive or negative if ions.
 
 ! Arrays about reactions
-character(len=11), allocatable, dimension(:,:) :: REACTION_COMPOUNDS_NAMES !< dim(MAX_COMPOUNDS,nb_reactions)
-integer, allocatable, dimension(:,:) :: REACTION_COMPOUNDS_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, list for reactants (first 3) and products (last 5).
+character(len=11), allocatable, dimension(:,:) :: REACTION_COMPOUNDS_NAMES !< dim(MAX_COMPOUNDS,nb_reactions). Empty string means no species
+integer, allocatable, dimension(:,:) :: REACTION_COMPOUNDS_ID !< dim(MAX_COMPOUNDS, nb_reactions) for all reactions, 
+!! list for reactants (first 3) and products (last 5). "nb_species+1" means no species
 real(double_precision), allocatable, dimension(:) :: branching_ratio !< dim(nb_reactions) Branching ratio of each reaction
 real(double_precision), allocatable, dimension(:) :: RATE_A !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
 real(double_precision), allocatable, dimension(:) :: RATE_B !< dim(nb_reactions) Coefficient used to compute the reaction rate. Formula (and unit) is different in function of the reaction type.
@@ -120,7 +121,8 @@ integer, allocatable, dimension(:) :: REACTION_TYPE !< dim(nb_reactions) For eac
 integer, allocatable, dimension(:) :: RATE_FORMULA !< dim(nb_reactions) The index tracing the formula used for each specific 
 !! reaction, defining its reaction rates in function of temperature and abundances.
 integer, allocatable, dimension(:) :: REACTION_ID !< dim(nb_reactions) index of the reactions (one of the columns of the concerned file, 
-!! declaring a given number for each reaction, like a hashtag.
+!! declaring a given number for each reaction, like a hashtag. Some reactions may have the same ID though, when different 
+!! temperature regimes are defined for instance
 
 ! Specific variables for first or second reactant of each reactions
 integer, allocatable, dimension(:) :: reactant_1_idx !< dim(nb_reactions) Index of the first reactant species involved in the reaction

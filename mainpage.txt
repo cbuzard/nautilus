@@ -160,6 +160,10 @@ Error 12: OUTPUT_TYPE has an undefined value.
 
 Error 13: A species is expected to be on grains (starting with 'J'), but is not.
 
+Error 14: At least one species have no production or destruction reaction.
+
+Error 15: At least one reaction is not equilibrated.
+
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
 (even though this is a problem for readability). 
