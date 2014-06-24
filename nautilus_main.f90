@@ -297,8 +297,29 @@ do reaction=1,nb_reactions
   enddo
 enddo
 
-!TODO CHECK that reactions are equilibrated (for charge)
-
+! CHECK that reactions are equilibrated (for charge)
+do reaction=1,nb_reactions
+  left_sum = 0
+  do compound=1,MAX_REACTANTS
+    tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
+    if (tmp_name.ne.'') then
+      left_sum = left_sum + SPECIES_CHARGE(REACTION_COMPOUNDS_ID(compound, reaction))
+    endif
+  enddo
+  
+  right_sum = 0
+  do compound=MAX_REACTANTS+1,MAX_COMPOUNDS
+    tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
+    if (tmp_name.ne.'') then
+      right_sum = right_sum + SPECIES_CHARGE(REACTION_COMPOUNDS_ID(compound, reaction))
+    endif
+  enddo
+  
+  if (left_sum.ne.right_sum) then
+    write(Error_Unit,'(a,i0,a,a)') 'Error: The reaction ',REACTION_ID(reaction), ' is not equilibrated in electric charge.'
+    call exit(15)
+  endif
+enddo
 
 end subroutine preliminary_tests
 
