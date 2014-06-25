@@ -178,7 +178,9 @@ character(len=80) :: reaction_line !< will store the line of a given reaction, t
 integer :: left_sum, right_sum !< The sum of one prime element for each side of a reaction
 
 ! To check reactions with identical ID's
+integer reaction2 !< Index for the reaction second loop
 integer :: ref_id !< reference ID to find twin reactions
+real(double_precision) :: range1_max, range2_min !< To test overlap between temperature ranges of reactions
 
 !-------------------------------------------------
 open(12, file=information_file, position='append')
@@ -352,13 +354,30 @@ if (IS_TEST.eq.1) then
     ! For each reaction, we check any other reaction (above it) that have the same ID
     ! If so, we compare compounds that MUST be equal
     
-    do i=ref_id+1,nb_reactions
-      if (REACTION_ID(i).eq.ref_id) then
-        if (any(REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,reaction).ne.REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,i))) then
+    do reaction2=reaction+1,nb_reactions
+      if (REACTION_ID(reaction2).eq.ref_id) then
+        ! Check that they have the same reactants and products.
+        if (any(REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,reaction).ne.REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,reaction2))) then
           write(Error_Unit,'(a,i0,a)') 'Error: The reactions with ID=',REACTION_ID(reaction), ' have different compounds.'
           call exit(17)
         endif
         
+        ! Check that temperature ranges do not overlap
+        if (REACTION_TMIN(reaction).gt.REACTION_TMIN(reaction2)) then
+          ! We ensure that range1 is inferior to range2
+          range1_max = REACTION_TMAX(reaction2)
+          range2_min = REACTION_TMIN(reaction)
+        else
+          range1_max = REACTION_TMAX(reaction)
+          range2_min = REACTION_TMIN(reaction2)
+        endif
+        
+        if (range2_min.lt.range1_max) then
+          write(Error_Unit,'(a,i0,a)') 'Error: The reactions with ID=',REACTION_ID(reaction), ' have overlapping temperature ranges'
+          write(Error_Unit,'(a,4(es10.3e2,a))') 'range1 = [',REACTION_TMIN(reaction),';',REACTION_TMAX(reaction),&
+                           '] ; range2 = [',REACTION_TMIN(reaction2),':',REACTION_TMAX(reaction2),']'
+          call exit(17)
+        endif
         
       endif
     enddo
