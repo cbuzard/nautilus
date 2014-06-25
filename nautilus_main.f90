@@ -333,13 +333,15 @@ if (IS_TEST.eq.1) then
   enddo
 
   ! Check reactions with alpha equal 0
+  open(12, file=information_file, position='append')
+
+  write(12, *) ' ### CHECK ### reactions with alpha = 0'
   do reaction=1,nb_reactions
     if (RATE_A(reaction).eq.0.d0) then
-      write(Error_Unit,'(a,i0,a,a)') 'Warning: The reaction ',REACTION_ID(reaction), ' has an alpha = 0'
-  !~     call exit(16)
-    !TODO Warning or Error?
+      write(12,'(a,i0,a,a)') 'Warning: The reaction ',REACTION_ID(reaction), ' has an alpha = 0'
     endif
   enddo
+  close(12)
   
   ! Check if tmin < tmax for all reactions (else, trange is not correctly defined)
   do reaction=1,nb_reactions
