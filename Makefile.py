@@ -220,8 +220,6 @@ def run_compilation(commande):
       f = open(LOG_NAME,'a')
       f.write(process_stderr)
       f.close()
-      
-      print("Warnings: see '%s'" % LOG_NAME)
   
   # there is .poll() or .wait() but I don't remember the difference. For some kind of things, one of the two was not working
   return (process_stdout, process_stderr, returnCode)
@@ -290,5 +288,10 @@ for order in compilation_order:
   (process_stdout, process_stderr, returncode) = run_compilation(command)
 
 LogPostProcessing()
+
+
+if os.path.isfile(LOG_NAME):
+  if 'Warning' in open(LOG_NAME).read():
+    print("Warnings: see '%s'" % LOG_NAME)
 
 #~ pdb.set_trace()
