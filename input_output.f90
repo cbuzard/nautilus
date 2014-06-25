@@ -385,6 +385,9 @@ if (isDefined) then
       case('is_grain_reactions', 'IDUST') ! The old name is kept for compatibility reasons
         read(value, '(i2)') IS_GRAIN_REACTIONS
       
+      case('preliminary_test')
+        read(value, '(i2)') IS_TEST
+      
       case('is_absorption', 'ISABS') ! The old name is kept for compatibility reasons
         read(value, '(i2)') IS_ABSORPTION
       
@@ -541,16 +544,18 @@ use global_variables
   write(10,'(a)') "!*          Switches         *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i2,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
+  write(10,'(a,i0,a)') 'preliminary_test = ', IS_TEST, ' ! Will or will not do comprehensive tests &
+  &before the simulation. Switch it off when lauching thousands or simulations'
+  write(10,'(a,i0,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
                         &time, values come from structure_evolution.dat file that must exists'
   write(10,'(a,a,a)') 'grain_temperature_type = ', trim(GRAIN_TEMPERATURE_TYPE), ' ! fixed, gas, table or computed'
   write(10,'(a)') '! fixed: Tgrain = Tgrain_initial. ;'
   write(10,'(a)') '! gas: Tgrain=Tgas ; '
   write(10,'(a)') '! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; '
   write(10,'(a)') '! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
-  write(10,'(a,i2,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
-  write(10,'(a,i2,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
-  write(10,'(a,i2,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
+  write(10,'(a,i0,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
+  write(10,'(a,i0,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
+  write(10,'(a,i0,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'

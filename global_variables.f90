@@ -210,7 +210,8 @@ abstract interface
   end subroutine get_grain_temperature_interface
 end interface
 
-
+integer :: IS_TEST = 1!< 1:True, 0:False. To thoroughly test reactions and stuff before running the code. This can take a few seconds
+!! so you might switch it off when running several simulations with the exact same chemical network.
 integer :: IS_GRAIN_REACTIONS !< Accretion, grain surface reactions
 integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
 integer :: CONSERVATION_TYPE !< 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc

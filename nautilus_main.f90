@@ -194,90 +194,118 @@ do i = nb_gaseous_species+1,nb_species
   endif
 enddo
 
-! Check if all species have production AND destruction reactions
-! Display a warning if there is only one production or destruction reactions
-open(12, file=information_file, position='append')
+if (IS_TEST.eq.1) then
 
-write(12, *) ' ### CHECK ### if all species have production AND destruction reactions'
-do species=1,nb_species
-  ! This way of doing things is not the fastest, but it is the only convenient way to calculate the number of 
-  ! reactions involving one species without counting twice the same reaction when for instance, we have H + H -> H2
-  
-  nb_production_reactions = 0
-  nb_destruction_reactions = 0
-  
-  do reaction=1,nb_reactions
-    if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS, reaction).eq.species)) then
-      nb_destruction_reactions = nb_destruction_reactions + 1
-      destruction_reaction_id = reaction
+  ! Check if all species have production AND destruction reactions
+  ! Display a warning if there is only one production or destruction reactions
+  open(12, file=information_file, position='append')
+
+  write(12, *) ' ### CHECK ### if all species have production AND destruction reactions'
+  do species=1,nb_species
+    ! This way of doing things is not the fastest, but it is the only convenient way to calculate the number of 
+    ! reactions involving one species without counting twice the same reaction when for instance, we have H + H -> H2
+    
+    nb_production_reactions = 0
+    nb_destruction_reactions = 0
+    
+    do reaction=1,nb_reactions
+      if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS, reaction).eq.species)) then
+        nb_destruction_reactions = nb_destruction_reactions + 1
+        destruction_reaction_id = reaction
+      endif
+      
+      if (any(REACTION_COMPOUNDS_ID(MAX_REACTANTS+1:MAX_COMPOUNDS, reaction).eq.species)) then
+        nb_production_reactions = nb_destruction_reactions + 1
+        production_reaction_id = reaction
+      endif
+    enddo
+    
+    if (nb_destruction_reactions.eq.0) then
+      write(Error_unit,*) 'Error: ',trim(species_name(species)), ' have no destruction reaction.'
+      call exit(14)
+    else if (nb_destruction_reactions.eq.1) then
+      write(12,'(a,a,a,i0,a)') 'Warning: ',trim(species_name(species)), ' have only one destruction reaction (number ',&
+                          &REACTION_ID(destruction_reaction_id),'):'
+      
+      ! We construct the reaction string display
+      reaction_line = trim(REACTION_COMPOUNDS_NAMES(1,destruction_reaction_id))
+      do compound=2,MAX_REACTANTS
+        tmp_name = REACTION_COMPOUNDS_NAMES(compound,destruction_reaction_id)
+        if (tmp_name.ne.'') then
+          reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
+        endif
+      enddo
+      reaction_line = trim(reaction_line)//" -> "//trim(REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1,destruction_reaction_id))
+      do compound=MAX_REACTANTS+2,MAX_COMPOUNDS
+        tmp_name = REACTION_COMPOUNDS_NAMES(compound,destruction_reaction_id)
+        if (tmp_name.ne.'') then
+          reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
+        endif
+      enddo
+      write(12,*) trim(reaction_line)
     endif
     
-    if (any(REACTION_COMPOUNDS_ID(MAX_REACTANTS+1:MAX_COMPOUNDS, reaction).eq.species)) then
-      nb_production_reactions = nb_destruction_reactions + 1
-      production_reaction_id = reaction
+    if (nb_production_reactions.eq.0) then
+      write(Error_unit,*) 'Error: ',trim(species_name(species)), ' have no production reaction.'
+      call exit(14)
+    else if (nb_production_reactions.eq.1) then
+      write(12,'(a,a,a,i0,a)') 'Warning: ',trim(species_name(species)), ' have only one production reaction (number ',&
+                           &REACTION_ID(production_reaction_id),'):'
+      
+      ! We construct the reaction string display
+      reaction_line = trim(REACTION_COMPOUNDS_NAMES(1,production_reaction_id))
+      do compound=2,MAX_REACTANTS
+        tmp_name = REACTION_COMPOUNDS_NAMES(compound,production_reaction_id)
+        if (tmp_name.ne.'') then
+          reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
+        endif
+      enddo
+      reaction_line = trim(reaction_line)//" -> "//trim(REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1,production_reaction_id))
+      do compound=MAX_REACTANTS+2,MAX_COMPOUNDS
+        tmp_name = REACTION_COMPOUNDS_NAMES(compound,production_reaction_id)
+        if (tmp_name.ne.'') then
+          reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
+        endif
+      enddo
+      write(12,*) trim(reaction_line)
     endif
   enddo
-  
-  if (nb_destruction_reactions.eq.0) then
-    write(Error_unit,*) 'Error: ',trim(species_name(species)), ' have no destruction reaction.'
-    call exit(14)
-  else if (nb_destruction_reactions.eq.1) then
-    write(12,'(a,a,a,i0,a)') 'Warning: ',trim(species_name(species)), ' have only one destruction reaction (number ',&
-                        &REACTION_ID(destruction_reaction_id),'):'
-    
-    ! We construct the reaction string display
-    reaction_line = trim(REACTION_COMPOUNDS_NAMES(1,destruction_reaction_id))
-    do compound=2,MAX_REACTANTS
-      tmp_name = REACTION_COMPOUNDS_NAMES(compound,destruction_reaction_id)
-      if (tmp_name.ne.'') then
-        reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
-      endif
-    enddo
-    reaction_line = trim(reaction_line)//" -> "//trim(REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1,destruction_reaction_id))
-    do compound=MAX_REACTANTS+2,MAX_COMPOUNDS
-      tmp_name = REACTION_COMPOUNDS_NAMES(compound,destruction_reaction_id)
-      if (tmp_name.ne.'') then
-        reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
-      endif
-    enddo
-    write(12,*) trim(reaction_line)
-  endif
-  
-  if (nb_production_reactions.eq.0) then
-    write(Error_unit,*) 'Error: ',trim(species_name(species)), ' have no production reaction.'
-    call exit(14)
-  else if (nb_production_reactions.eq.1) then
-    write(12,'(a,a,a,i0,a)') 'Warning: ',trim(species_name(species)), ' have only one production reaction (number ',&
-                         &REACTION_ID(production_reaction_id),'):'
-    
-    ! We construct the reaction string display
-    reaction_line = trim(REACTION_COMPOUNDS_NAMES(1,production_reaction_id))
-    do compound=2,MAX_REACTANTS
-      tmp_name = REACTION_COMPOUNDS_NAMES(compound,production_reaction_id)
-      if (tmp_name.ne.'') then
-        reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
-      endif
-    enddo
-    reaction_line = trim(reaction_line)//" -> "//trim(REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+1,production_reaction_id))
-    do compound=MAX_REACTANTS+2,MAX_COMPOUNDS
-      tmp_name = REACTION_COMPOUNDS_NAMES(compound,production_reaction_id)
-      if (tmp_name.ne.'') then
-        reaction_line = trim(reaction_line)//" + "//trim(tmp_name)
-      endif
-    enddo
-    write(12,*) trim(reaction_line)
-  endif
-enddo
-close(12)
+  close(12)
 
-! CHECK that reactions are equilibrated (for prime elements)
-do reaction=1,nb_reactions
-  do element=1,NB_PRIME_ELEMENTS
+  ! CHECK that reactions are equilibrated (for prime elements)
+  do reaction=1,nb_reactions
+    do element=1,NB_PRIME_ELEMENTS
+      left_sum = 0
+      do compound=1,MAX_REACTANTS
+        tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
+        if (tmp_name.ne.'') then
+          left_sum = left_sum + species_composition(element,REACTION_COMPOUNDS_ID(compound, reaction))
+        endif
+      enddo
+      
+      right_sum = 0
+      do compound=MAX_REACTANTS+1,MAX_COMPOUNDS
+        tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
+        if (tmp_name.ne.'') then
+          right_sum = right_sum + species_composition(element,REACTION_COMPOUNDS_ID(compound, reaction))
+        endif
+      enddo
+      
+      if (left_sum.ne.right_sum) then
+        write(Error_Unit,'(a,i0,a,a)') 'Error: The reaction ',REACTION_ID(reaction), ' is not equilibrated in ',&
+                                        trim(element_name(element))
+        call exit(15)
+      endif
+    enddo
+  enddo
+
+  ! CHECK that reactions are equilibrated (for charge)
+  do reaction=1,nb_reactions
     left_sum = 0
     do compound=1,MAX_REACTANTS
       tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
       if (tmp_name.ne.'') then
-        left_sum = left_sum + species_composition(element,REACTION_COMPOUNDS_ID(compound, reaction))
+        left_sum = left_sum + SPECIES_CHARGE(REACTION_COMPOUNDS_ID(compound, reaction))
       endif
     enddo
     
@@ -285,50 +313,26 @@ do reaction=1,nb_reactions
     do compound=MAX_REACTANTS+1,MAX_COMPOUNDS
       tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
       if (tmp_name.ne.'') then
-        right_sum = right_sum + species_composition(element,REACTION_COMPOUNDS_ID(compound, reaction))
+        right_sum = right_sum + SPECIES_CHARGE(REACTION_COMPOUNDS_ID(compound, reaction))
       endif
     enddo
     
     if (left_sum.ne.right_sum) then
-      write(Error_Unit,'(a,i0,a,a)') 'Error: The reaction ',REACTION_ID(reaction), ' is not equilibrated in ',&
-                                      trim(element_name(element))
+      write(Error_Unit,'(a,i0,a,a)') 'Error: The reaction ',REACTION_ID(reaction), ' is not equilibrated in electric charge.'
       call exit(15)
     endif
   enddo
-enddo
 
-! CHECK that reactions are equilibrated (for charge)
-do reaction=1,nb_reactions
-  left_sum = 0
-  do compound=1,MAX_REACTANTS
-    tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
-    if (tmp_name.ne.'') then
-      left_sum = left_sum + SPECIES_CHARGE(REACTION_COMPOUNDS_ID(compound, reaction))
+  ! Check reactions with alpha equal 0
+  do reaction=1,nb_reactions
+    if (RATE_A(reaction).eq.0.d0) then
+      write(Error_Unit,'(a,i0,a,a)') 'Warning: The reaction ',REACTION_ID(reaction), ' has an alpha = 0'
+  !~     call exit(16)
+    !TODO Warning or Error?
     endif
   enddo
-  
-  right_sum = 0
-  do compound=MAX_REACTANTS+1,MAX_COMPOUNDS
-    tmp_name = REACTION_COMPOUNDS_NAMES(compound,reaction)
-    if (tmp_name.ne.'') then
-      right_sum = right_sum + SPECIES_CHARGE(REACTION_COMPOUNDS_ID(compound, reaction))
-    endif
-  enddo
-  
-  if (left_sum.ne.right_sum) then
-    write(Error_Unit,'(a,i0,a,a)') 'Error: The reaction ',REACTION_ID(reaction), ' is not equilibrated in electric charge.'
-    call exit(15)
-  endif
-enddo
 
-! Check reactions with alpha equal 0
-do reaction=1,nb_reactions
-  if (RATE_A(reaction).eq.0.d0) then
-    write(Error_Unit,'(a,i0,a,a)') 'Warning: The reaction ',REACTION_ID(reaction), ' has an alpha = 0'
-!~     call exit(16)
-  !TODO Warning or Error?
-  endif
-enddo
+endif
 
 end subroutine preliminary_tests
 
