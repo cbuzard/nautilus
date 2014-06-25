@@ -186,23 +186,24 @@ real(double_precision) :: range1_max, range2_min !< To test overlap between temp
 logical :: no_grain_equivalent !< true if a gas species has no grain equivalent.
 
 !-------------------------------------------------
-open(12, file=information_file, position='append')
-
-write(12, '(a)') '!----------------------------'
-write(12, '(a)') '!     Preliminary tests      |'
-write(12, '(a)') '!----------------------------'
-close(12)
 
 
-! Test if all species whose index is 'grain' type, are effectively "on-grain" species
-do i = nb_gaseous_species+1,nb_species
-  if(species_name(i)(:1).NE.'J          ') then
-    write(Error_unit, *) 'Error: Species number ',i,' (',trim(species_name(i)),' is expected to be a grain species but is not'
-    call exit(13)
-  endif
-enddo
 
 if (IS_TEST.eq.1) then
+  open(12, file=information_file, position='append')
+
+  write(12, '(a)') '!----------------------------'
+  write(12, '(a)') '!     Preliminary tests      |'
+  write(12, '(a)') '!----------------------------'
+  close(12)
+
+  ! Test if all species whose index is 'grain' type, are effectively "on-grain" species
+  do i = nb_gaseous_species+1,nb_species
+    if(species_name(i)(:1).NE.'J          ') then
+      write(Error_unit, *) 'Error: Species number ',i,' (',trim(species_name(i)),' is expected to be a grain species but is not'
+      call exit(13)
+    endif
+  enddo
 
   ! Check if all species have production AND destruction reactions
   ! Display a warning if there is only one production or destruction reactions
@@ -388,6 +389,17 @@ if (IS_TEST.eq.1) then
   
   ! Check that each gas species has a grain equivalent (J+name)
   do species=1,nb_gaseous_species
+    ! We are only interested in neutral species
+    if (SPECIES_CHARGE(species).ne.0) then
+      cycle
+    endif
+  
+    ! Grain0 represent a grain, thus you can't have a grain on the surface of itself, we skip this one.
+    if (species_name(species).eq.YGRAIN) then
+      cycle
+    endif
+    
+  
     tmp_name = 'J'//trim(species_name(species))
     
     no_grain_equivalent = .true.
