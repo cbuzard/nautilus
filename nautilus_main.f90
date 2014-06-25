@@ -177,6 +177,9 @@ character(len=80) :: reaction_line !< will store the line of a given reaction, t
 ! To check if reactions are equilibrated
 integer :: left_sum, right_sum !< The sum of one prime element for each side of a reaction
 
+! To check reactions with identical ID's
+integer :: ref_id !< reference ID to find twin reactions
+
 !-------------------------------------------------
 open(12, file=information_file, position='append')
 
@@ -330,6 +333,24 @@ if (IS_TEST.eq.1) then
   !~     call exit(16)
     !TODO Warning or Error?
     endif
+  enddo
+  
+  ! Check reactions with the same reaction ID. We want them to have the same reactants and products. We also want them to have
+  !! complementary temperature ranges
+  do reaction=1,nb_reactions-1
+    ref_id = REACTION_ID(reaction)
+    
+    ! For each reaction, we check any other reaction (above it) that have the same ID
+    ! If so, we compare compounds that MUST be equal
+    
+    do i=ref_id+1,nb_reactions
+      if (REACTION_ID(i).eq.ref_id) then
+        if (any(REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,reaction).ne.REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,i))) then
+          write(Error_Unit,'(a,i0,a)') 'Error: The reactions with ID=',REACTION_ID(reaction), ' have different compounds.'
+          call exit(17)
+        endif
+      endif
+    enddo
   enddo
 
 endif
