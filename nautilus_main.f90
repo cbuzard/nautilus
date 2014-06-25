@@ -182,6 +182,9 @@ integer reaction2 !< Index for the reaction second loop
 integer :: ref_id !< reference ID to find twin reactions
 real(double_precision) :: range1_max, range2_min !< To test overlap between temperature ranges of reactions
 
+! To check gas and grain species
+logical :: no_grain_equivalent !< true if a gas species has no grain equivalent.
+
 !-------------------------------------------------
 open(12, file=information_file, position='append')
 
@@ -381,6 +384,24 @@ if (IS_TEST.eq.1) then
         
       endif
     enddo
+  enddo
+  
+  ! Check that each gas species has a grain equivalent (J+name)
+  do species=1,nb_gaseous_species
+    tmp_name = 'J'//trim(species_name(species))
+    
+    no_grain_equivalent = .true.
+    do i = nb_gaseous_species+1,nb_species
+      if (species_name(i).eq.tmp_name) then
+        no_grain_equivalent = .false.
+      endif
+    enddo
+    
+    if (no_grain_equivalent) then
+      write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no grain equivalent : ',trim(tmp_name)
+      call exit(18)
+    endif
+    
   enddo
 
 ! Above tests are done only if IS_TEST=1. 

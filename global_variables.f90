@@ -26,7 +26,7 @@ integer, parameter :: MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maxi
 !! its own variable, a new one must be created for the new column possible. 
 
 integer :: nb_reactions !< total number of reactions
-integer :: nb_species !< total number of species
+integer :: nb_species !< total number of species. Species are ordered. First, there are the nb_gaseous_species ones, and after, the nb_surface_species ones.
 integer :: nb_gaseous_species !< number of species that are gaseous
 integer :: nb_surface_species !< number of species that are on the surface of grains
 integer :: NB_PRIME_ELEMENTS !< Number of prime element that compose molecules, such as H, He, C and so on.

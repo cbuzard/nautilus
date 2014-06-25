@@ -168,6 +168,8 @@ Error 16: One reaction has an alpha=0 (first parameter for reaction rate formula
 
 Error 17: Two reactions with the same ID have different reactants or product, or incompatible temperature ranges
 
+Error 18: One gas species has no grain equivalent
+
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
 (even though this is a problem for readability). 
