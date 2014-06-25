@@ -160,11 +160,11 @@ Error 12: OUTPUT_TYPE has an undefined value.
 
 Error 13: A species is expected to be on grains (starting with 'J'), but is not.
 
-Error 14: At least one species have no production or destruction reaction.
+Error 14: One species have no production or destruction reaction.
 
-Error 15: At least one reaction is not equilibrated (either prime elements or electric charge).
+Error 15: One reaction is not well defined (either prime elements or electric charge, or temperature range).
 
-Error 16: At least one reaction has an alpha=0 (first parameter for reaction rate formula)
+Error 16: One reaction has an alpha=0 (first parameter for reaction rate formula)
 
 Error 17: Two reactions with the same ID have different reactants or product, or incompatible temperature ranges
 

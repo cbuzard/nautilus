@@ -335,6 +335,15 @@ if (IS_TEST.eq.1) then
     endif
   enddo
   
+  ! Check if tmin < tmax for all reactions (else, trange is not correctly defined)
+  do reaction=1,nb_reactions
+    if (REACTION_TMIN(reaction).gt.REACTION_TMAX(reaction)) then
+      write(Error_Unit,'(a,i0,a,2(es10.3e2,a))') 'Error: The reaction ',REACTION_ID(reaction), ' has Tmin(',&
+                       REACTION_TMIN(reaction),') > Tmax(',REACTION_TMAX(reaction),')'
+      call exit(15)
+    endif
+  enddo
+  
   ! Check reactions with the same reaction ID. We want them to have the same reactants and products. We also want them to have
   !! complementary temperature ranges
   do reaction=1,nb_reactions-1
@@ -349,10 +358,13 @@ if (IS_TEST.eq.1) then
           write(Error_Unit,'(a,i0,a)') 'Error: The reactions with ID=',REACTION_ID(reaction), ' have different compounds.'
           call exit(17)
         endif
+        
+        
       endif
     enddo
   enddo
 
+! Above tests are done only if IS_TEST=1. 
 endif
 
 end subroutine preliminary_tests
