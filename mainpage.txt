@@ -172,6 +172,40 @@ Error 19: One gas species has no adsorption reaction (ITYPE=99)
 
 Error 20: One surface species has no desorption reaction (either ITYPE=15,16,66,67)
 
+@section section_itype Reactions Types
+
+ITYPE 0: Gas phase reactions with GRAINS
+
+ITYPE 1: Photodissoc/ionisation with cosmic rays
+
+ITYPE 2: Gas phase photodissociations/ionisations by UV
+
+ITYPE 4-8: Bimolecular gas phase reactions - several possible formula 
+
+ITYPE 10-11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
+
+ITYPE 14: Grain surface reactions
+
+ITYPE 15: Thermal evaporation
+
+ITYPE 16: Cosmic-ray evaporation
+
+ITYPE 17: Photodissociations by Cosmic rays on grain surfaces
+
+ITYPE 18: Photodissociations by Cosmic rays on grain surfaces
+
+ITYPE 19-20: Photodissociations by UV photons on grain surfaces
+
+ITYPE 21: Grain surface reactions
+
+ITYPE 66: Photodesorption by external UV
+
+ITYPE 67: Photodesorption by CR generated UV
+
+ITYPE 98: storage of H2S under a refractory form
+
+ITYPE 99: Adsorption on grains
+
 @section section_warning Warnings
 A lot of warnings are launched by the ODEPACK files. Some of them are more problematic than others that are just deprecated feature 
 (even though this is a problem for readability). 
