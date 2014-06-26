@@ -185,8 +185,8 @@ real(double_precision) :: range1_max, range2_min !< To test overlap between temp
 ! To check gas and grain species
 logical :: no_grain_equivalent !< true if a gas species has no grain equivalent.
 
-! To check that gas neutral species have itype=99 reaction
-logical :: no_itype_99 !< False if one species is the reactant of at least one adsorption reaction
+! To check that some species are at least reactant of one reaction of a given type
+logical :: no_itype !< False if one species is the reactant of at least one reaction of a given type
 
 !-------------------------------------------------
 
@@ -420,21 +420,75 @@ if (IS_TEST.eq.1) then
     endif
     
     ! Check that each gas neutral species has an ITYPE=99 reaction
-    no_itype_99 = .true. !<There is no itype 99 reaction while we do not find a reactant of one reaction witht he correct ID
+    no_itype = .true. !<There is no itype 99 reaction while we do not find a reactant of one reaction witht he correct ID
     do reaction=type_id_start(99),type_id_stop(99)
       if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS,reaction).eq.species)) then
-        no_itype_99 = .false.
+        no_itype = .false.
       endif
     enddo
     
-    if (no_itype_99) then
+    if (no_itype) then
       write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no adsorption reaction (ITYPE=99)'
       call exit(19)
     endif
-    
-    
   enddo
-
+  
+  ! Check surface species
+  do species=nb_gaseous_species+1,nb_species
+    
+    ! Check that each surface species possess one desorption reaction (for ITYPE 15, 16, 66, 67)
+    no_itype = .true. !< There is no itype 15 reaction while we do not find a reactant of one reaction with the correct ID
+    do reaction=type_id_start(15),type_id_stop(15)
+      if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS,reaction).eq.species)) then
+        no_itype = .false.
+      endif
+    enddo
+    
+    if (no_itype) then
+      write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no desorption reaction (ITYPE=15)'
+      call exit(20)
+    endif
+    
+    ! Check that each surface species possess one desorption reaction (for ITYPE 15, 16, 66, 67)
+    no_itype = .true. !< There is no itype 16 reaction while we do not find a reactant of one reaction with the correct ID
+    do reaction=type_id_start(16),type_id_stop(16)
+      if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS,reaction).eq.species)) then
+        no_itype = .false.
+      endif
+    enddo
+    
+    if (no_itype) then
+      write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no desorption reaction (ITYPE=16)'
+      call exit(20)
+    endif
+    
+    ! Check that each surface species possess one desorption reaction (for ITYPE 15, 16, 66, 67)
+    no_itype = .true. !< There is no itype 66 reaction while we do not find a reactant of one reaction with the correct ID
+    do reaction=type_id_start(66),type_id_stop(66)
+      if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS,reaction).eq.species)) then
+        no_itype = .false.
+      endif
+    enddo
+    
+    if (no_itype) then
+      write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no desorption reaction (ITYPE=66)'
+      call exit(20)
+    endif
+    
+    ! Check that each surface species possess one desorption reaction (for ITYPE 15, 16, 66, 67)
+    no_itype = .true. !< There is no itype 67 reaction while we do not find a reactant of one reaction with the correct ID
+    do reaction=type_id_start(67),type_id_stop(67)
+      if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS,reaction).eq.species)) then
+        no_itype = .false.
+      endif
+    enddo
+    
+    if (no_itype) then
+      write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no desorption reaction (ITYPE=67)'
+      call exit(20)
+    endif
+  enddo
+  
 ! Above tests are done only if IS_TEST=1. 
 endif
 
