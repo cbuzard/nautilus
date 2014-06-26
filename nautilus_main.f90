@@ -397,7 +397,7 @@ if (IS_TEST.eq.1) then
     endif
   
     ! Grain0 represent a grain, thus you can't have a grain on the surface of itself, we skip this one.
-    if (species_name(species).eq.YGRAIN) then
+    if ((species_name(species).eq.YGRAIN).or.species_name(species).eq.'XH') then
       cycle
     endif
     
