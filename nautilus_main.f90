@@ -185,6 +185,9 @@ real(double_precision) :: range1_max, range2_min !< To test overlap between temp
 ! To check gas and grain species
 logical :: no_grain_equivalent !< true if a gas species has no grain equivalent.
 
+! To check that gas neutral species have itype=99 reaction
+logical :: no_itype_99 !< False if one species is the reactant of at least one adsorption reaction
+
 !-------------------------------------------------
 
 
@@ -389,7 +392,7 @@ if (IS_TEST.eq.1) then
     enddo
   enddo
   
-  ! Check that each gas species has a grain equivalent (J+name)
+  ! Check gas neutral species
   do species=1,nb_gaseous_species
     ! We are only interested in neutral species
     if (SPECIES_CHARGE(species).ne.0) then
@@ -401,7 +404,7 @@ if (IS_TEST.eq.1) then
       cycle
     endif
     
-  
+    ! Check that each gas species has a grain equivalent (J+name)
     tmp_name = 'J'//trim(species_name(species))
     
     no_grain_equivalent = .true.
@@ -415,6 +418,20 @@ if (IS_TEST.eq.1) then
       write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no grain equivalent : ',trim(tmp_name)
       call exit(18)
     endif
+    
+    ! Check that each gas neutral species has an ITYPE=99 reaction
+    no_itype_99 = .true. !<There is no itype 99 reaction while we do not find a reactant of one reaction witht he correct ID
+    do reaction=type_id_start(99),type_id_stop(99)
+      if (any(REACTION_COMPOUNDS_ID(1:MAX_REACTANTS,reaction).eq.species)) then
+        no_itype_99 = .false.
+      endif
+    enddo
+    
+    if (no_itype_99) then
+      write(Error_Unit,'(4a)') 'Error: The species ',trim(species_name(species)), ' has no adsorption reaction (ITYPE=99)'
+      call exit(19)
+    endif
+    
     
   enddo
 
