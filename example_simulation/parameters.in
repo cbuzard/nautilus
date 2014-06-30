@@ -15,8 +15,8 @@
 preliminary_test = 1 ! Will or will not do comprehensive tests before the simulation. Switch it off when lauching thousands or simulations
 is_structure_evolution = 0 ! If 1, physical structure properties evolve with time, values come from structure_evolution.dat file that must exists
 grain_temperature_type = computed ! fixed, gas, table or computed
-! fixed: Tgrain = Tgrain_initial. ;
-! gas: Tgrain=Tgas ; 
+! fixed: Tgrain = initial_dust_temperature. ;
+! gas: Tgrain = Tgas ; 
 ! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; 
 ! computed: calculated from uv_flux and visual extinction by radiative equilibrium
 is_grain_reactions = 1 ! Accretion, grain surface reactions
@@ -40,7 +40,7 @@ uv_flux =  1.000E+00 ! Scale factor for the UV flux, in unit of the reference fl
 !*      Grain parameters     *
 !*****************************
 
-initial_dust_temperature =  1.000E+01 ! initial dust temperature [K]
+initial_dust_temperature =  1.000E+01 ! initial dust temperature [K] when grain_temperature_type=fixed
 initial_dtg_mass_ratio =  1.000E-02 ! dust-to-gas ratio by mass
 sticking_coeff_neutral =  1.000E+00 ! sticking coeff for neutral species
 sticking_coeff_positive =  0.000E+00 ! sticking coeff for positive species

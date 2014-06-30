@@ -549,8 +549,8 @@ use global_variables
   write(10,'(a,i0,a)') 'is_structure_evolution = ', IS_STRUCTURE_EVOLUTION, ' ! If 1, physical structure properties evolve with &
                         &time, values come from structure_evolution.dat file that must exists'
   write(10,'(a,a,a)') 'grain_temperature_type = ', trim(GRAIN_TEMPERATURE_TYPE), ' ! fixed, gas, table or computed'
-  write(10,'(a)') '! fixed: Tgrain = Tgrain_initial. ;'
-  write(10,'(a)') '! gas: Tgrain=Tgas ; '
+  write(10,'(a)') '! fixed: Tgrain = initial_dust_temperature. ;'
+  write(10,'(a)') '! gas: Tgrain = Tgas ; '
   write(10,'(a)') '! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; '
   write(10,'(a)') '! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
   write(10,'(a,i0,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
@@ -575,7 +575,8 @@ use global_variables
   write(10,'(a)') "!*      Grain parameters     *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,es10.3e2,a)') 'initial_dust_temperature = ', initial_dust_temperature, ' ! initial dust temperature [K]'
+  write(10,'(a,es10.3e2,a)') 'initial_dust_temperature = ', initial_dust_temperature, ' ! initial dust temperature [K]&
+                              & when grain_temperature_type=fixed'
   write(10,'(a,es10.3e2,a)') 'initial_dtg_mass_ratio = ', initial_dtg_mass_ratio, ' ! dust-to-gas ratio by mass'
   write(10,'(a,es10.3e2,a)') 'sticking_coeff_neutral = ', sticking_coeff_neutral, ' ! sticking coeff for neutral species'
   write(10,'(a,es10.3e2,a)') 'sticking_coeff_positive = ', sticking_coeff_positive, ' ! sticking coeff for positive species'

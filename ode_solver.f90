@@ -902,7 +902,7 @@ end subroutine get_temporal_derivatives
   ! for larger and smaller values of H2, CO column densities and Av not in the 
   ! data tables. I also added the choice of using this approximation in gg_control.d
   !
-  ! ====== Rxn ITYPE 13
+  ! ====== Rxn ITYPE 3
   ! ITYPE 2: Gas phase photodissociations/ionisations by UV
   do J=type_id_start(3),type_id_stop(3)
     reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*visual_extinction)*UV_FLUX
