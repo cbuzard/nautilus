@@ -227,7 +227,7 @@ if (IS_TEST.eq.1) then
       endif
       
       if (any(REACTION_COMPOUNDS_ID(MAX_REACTANTS+1:MAX_COMPOUNDS, reaction).eq.species)) then
-        nb_production_reactions = nb_destruction_reactions + 1
+        nb_production_reactions = nb_production_reactions + 1
         production_reaction_id = reaction
       endif
     enddo
