@@ -164,7 +164,7 @@ implicit none
 character(len=80), parameter :: information_file = 'info.out' !< File in which all warnings will be displayed
 
 ! Locals
-integer :: i, species, reaction, compound, element !< For loops
+integer :: i, j, species, reaction, compound, element !< For loops
 
 ! To check production and destruction reactions for each species
 integer :: nb_production_reactions !< Number of reactions that produce a given species.
@@ -187,6 +187,9 @@ logical :: no_grain_equivalent !< true if a gas species has no grain equivalent.
 
 ! To check that some species are at least reactant of one reaction of a given type
 logical :: no_itype !< False if one species is the reactant of at least one reaction of a given type
+
+! To check reaction_ID index start and stop
+integer :: id_start, id_stop
 
 !-------------------------------------------------
 
@@ -488,6 +491,61 @@ if (IS_TEST.eq.1) then
       call exit(20)
     endif
   enddo
+  
+  ! Check reactions id indexes (if they overlap, or miss some indexes)
+  do i=0,MAX_NUMBER_REACTION_TYPE-1
+    if ((type_id_start(i).eq.0).and.(type_id_stop(i).eq.0)) then
+      cycle ! Reaction type not defined
+    endif
+    
+    if ((type_id_start(i).gt.type_id_stop(i))) then
+      write(Error_Unit,'(3(a,i0),a)') 'Error: For ITYPE=',i, ' index start > index stop (', type_id_start(i),&
+                                    ' > ', type_id_stop(i),')'
+      call exit(21)
+    endif
+  enddo
+  
+  ! To reconstruct the range of indexes only by sub-ranges of each ITYPE. We must then get the total range or reactions ID
+  ! We assume that type_id_start(j) < type_id_stop(j)
+  id_start = -1 !< We must not initialize to 0 because 0 is expected to be the final value. Thus, to avoid problems, -1 is a safe value
+  id_stop = -1
+  do i=0,MAX_NUMBER_REACTION_TYPE-1
+    if (type_id_stop(i).eq.0) then
+      cycle ! Reaction type not defined
+    endif
+    
+    !< We must not initialize to 0 because 0 is expected to be the final value. Thus, to avoid problems, -1 is a safe value
+    if (id_start.eq.-1) then
+      id_start = type_id_start(i)
+    endif
+    
+    if (id_stop.eq.-1) then
+      id_stop = type_id_stop(i)
+    endif
+    
+    do j=0,MAX_NUMBER_REACTION_TYPE-1
+      if ((id_stop+1).eq.type_id_start(j)) then
+        id_stop = type_id_stop(j)
+      else if ((id_start-1).eq.type_id_stop(j)) then
+        id_start = type_id_start(j)
+      endif
+    enddo
+  enddo
+  
+  
+  if (id_start.gt.1) then 
+    write(Error_Unit,'(a,i0,a)') 'Error: Reaction ID = ',id_start-1, " doesn't belong to any reaction type when looking"
+    write(Error_Unit,'(a)')      '       into type_id_start(:) and type_id_stop(:).'
+    write(Error_Unit,'(a,2(i0,a))') 'Reaction range indexed : [',id_start,';', id_stop, ']'
+    write(Error_Unit,*) REACTION_COMPOUNDS_NAMES(:,id_start-1)
+    call exit(21)
+  endif
+  if (id_stop.ne.maxval(type_id_stop(0:MAX_NUMBER_REACTION_TYPE-1))) then
+    write(Error_Unit,'(a,i0,a)') 'Error: Reaction ID = ',id_stop+1, " doesn't belong to any reaction type when looking"
+    write(Error_Unit,'(a)')      '       into type_id_start(:) and type_id_stop(:).'
+    write(Error_Unit,'(a,2(i0,a))') 'Reaction range indexed: [',id_start,';', id_stop, ']'
+    call exit(21)
+  endif
   
 ! Above tests are done only if IS_TEST=1. 
 endif
