@@ -598,6 +598,8 @@ end subroutine get_temporal_derivatives
   do J=type_id_start(1),type_id_stop(1)
     reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
+  
+  ! ITYPE 2: Photodissoc/ionisation with UV induced by cosmic rays
   do J=type_id_start(2),type_id_stop(2)
     reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
   enddo
@@ -903,7 +905,7 @@ end subroutine get_temporal_derivatives
   ! data tables. I also added the choice of using this approximation in gg_control.d
   !
   ! ====== Rxn ITYPE 3
-  ! ITYPE 2: Gas phase photodissociations/ionisations by UV
+  ! ITYPE 3: Gas phase photodissociations/ionisations by UV
   do J=type_id_start(3),type_id_stop(3)
     reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*visual_extinction)*UV_FLUX
 
