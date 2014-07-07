@@ -1,5 +1,6 @@
 \documentclass[english,a4paper,twoside]{article}
 \usepackage{autiwa}
+\usepackage{aas_macros}
 
 \title{Nautilus Documentation}
 \author{Christophe Cossou}
@@ -62,7 +63,7 @@ For all input files, the comment character is " !" and can be either at the begi
 By default, the character "!" comment everything after it. If a line start with it, the line will be completely ignored.
 
 \subsection{Getting the Git repository}
-First, you need to get the Git repository from \textbf{Googlecode} before actually using the code. 
+First, you need to get the Git repository from \gras{Googlecode} before actually using the code. 
 
 I assume you only want to use it, without ever putting on the distant repository anything. This way, you don't even need to have an account and a password. 
 
@@ -72,7 +73,7 @@ git clone https://code.google.com/p/nautilus/
 \end{verbatim}
 
 \subsection{Compilation}
-The script \textbf{Makefile.py} allow you to compile the code. The default compiler is \textbf{gfortran}. 
+The script \gras{Makefile.py} allow you to compile the code. The default compiler is \gras{gfortran}. 
 
 If you want to just run the code, type:
 \begin{verbatim}
@@ -87,12 +88,12 @@ Errors in log files associated with the module incriminated. Warnings are stored
 By default, all warnings issued by \gras{ODEPACK} routines are masked (to increase readability, since nobody can modify this thing from scratch). An option can force their display.
 \end{attention}
 
-If you want to compile the binary \gras{nautilus\_outputs} that generate ASCII from the binary outputs:
+If you want to compile the binary \gras[binary!nautilus\_outputs]{nautilus\_outputs} that generate ASCII from the binary outputs:
 \begin{verbatim}
 Makefile.py output
 \end{verbatim}
 
-If you want to compile the binary \gras{nautilus\_rates} that generate analysis of reaction rates:
+If you want to compile the binary \gras[binary!nautilus\_rates]{nautilus\_rates} that generate analysis of reaction rates:
 \begin{verbatim}
 Makefile.py rates
 \end{verbatim}
@@ -107,7 +108,7 @@ The option \textbf{test} use compilation options that allow comparison of the co
 \subsubsection{Git Prompt}
 You can display in your terminal useful information about a Git repository by modifying your bash profile (assuming you terminal uses Bash, which is also always the case).
 
-Add in your \textbf{.bashrc} or \textbf{.bash\_profile}:
+Add in your \gras{.bashrc} or \gras{.bash\_profile}:
 \begin{verbatim}
 #########################################
 # personnalisation du prompt avec la branche du projet git
@@ -200,31 +201,31 @@ The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \
 
 There are 2 parameter files listing all reactions in a given phase (gas or grain): 
 \begin{itemize}
-\item \gras[input file!gas_reactions.in]{gas\_reactions.in}
-\item \gras[input file!grain_reactions.in]{grain\_reactions.in}
+\item \gras[input file!gas\_reactions.in]{gas\_reactions.in}
+\item \gras[input file!grain\_reactions.in]{grain\_reactions.in}
 \end{itemize}
 and 2 parameter files for species present in a given phase (gas or grain) reactions:
 \begin{itemize}
-\item \gras[input file!gas_species.in]{gas\_species.in}
-\item \gras[input file!grain_species.in]{grain\_species.in}
+\item \gras[input file!gas\_species.in]{gas\_species.in}
+\item \gras[input file!grain\_species.in]{grain\_species.in}
 \end{itemize}
 
 \begin{remarque}
-Species in \gras[input file!gas_species.in]{gas\_species.in}, \gras[input file!grain_species.in]{grain\_species.in} are not necessarily species from one phase. These are species \emph{involved} in a given phase reaction. But adsorption or desorption transform grain species into gas species, and vice versa. 
+Species in \gras[input file!gas\_species.in]{gas\_species.in}, \gras[input file!grain\_species.in]{grain\_species.in} are not necessarily species from one phase. These are species \emph{involved} in a given phase reaction. But adsorption or desorption transform grain species into gas species, and vice versa. 
 \end{remarque}
 
-\gras[input file!activation_energies.in]{activation\_energies.in} provide activation energies for some endothermic reactions. 
+\gras[input file!activation\_energies.in]{activation\_energies.in} provide activation energies for some endothermic reactions. 
 
-\gras[input file!surface_parameters.in]{surface\_parameters.in} provide information about various energies and parameters for diffusion and movements on the grain surface.
+\gras[input file!surface\_parameters.in]{surface\_parameters.in} provide information about various energies and parameters for diffusion and movements on the grain surface.
 
 \section{Test of the code}
 \subsection{Automatic test before computation}
 In \gras[input file!parameters.in]{parameters.in}: 
 \begin{verbatim}
 preliminary_test = 1
-\end{verbatim}
+\end{verbatim}\index{parameter!preliminary\_test}
 
-When set to 1, the parameter \gras[parameter!preliminary_test]{preliminary\_test} will allow you to test thoroughly the chemical network. 
+When set to 1, the parameter \gras[parameter!preliminary\_test]{preliminary\_test} will allow you to test thoroughly the chemical network. 
 
 \begin{remarque}
 This parameter should be set to 0 only in the case of intensive campaign of simulations using the very same network, to avoid wasting computation time doing the sames tests. But in any other cases, I advice you to leave it activated, because it only take around 1 second at the beginning of the simulation.
@@ -248,10 +249,10 @@ The tests currently made are:
 \item Check that all index ranges associated with a reaction type join themselves to cover all the index range of all reactions.
 \end{itemize}
 
-\section{Parameter file : parameters.in}\label{sec:parameters_in}
+\section{Parameter file : parameters.in}\label{sec:parameters_in}\index{input file!parameters.in}
 For generic informations, see \refsec{sec:files_generic_info}.
 
-\textbf{parameters.in} has the particularity to be re-written each time you launch a Nautilus simulation. This ensure several things :
+\gras[input file!parameters.in]{parameters.in} has the particularity to be re-written each time you launch a Nautilus simulation. This ensure several things :
 \begin{itemize}
 \item Parameters can be input in random ways, the code will sort them by categories
 \item New parameters, with default values will be added, to ensure retro-compatibility.
@@ -260,38 +261,43 @@ For generic informations, see \refsec{sec:files_generic_info}.
 \subsection{Simulation parameters}
 \begin{verbatim}
 start_time =  1.000E+00
-\end{verbatim}
-[$\unit{years}$] first output time
+\end{verbatim}\index{parameter!start\_time}
+In years, the first output time of the simulation (all simulation starts from $T=0$).
 
 \begin{verbatim}
 stop_time =  1.000E+01
-\end{verbatim}
-[$\unit{years}$] last output time
+\end{verbatim}\index{parameter!stop\_time}
+End of the simulation in years (and also the last output time)
 
 \begin{verbatim}
 nb_outputs =    3
-\end{verbatim}
-Total number of outputs (used for linear or log spaced outputs)
+\end{verbatim}\index{parameter!nb\_outputs}
+Total number of outputs (including \verb|start_time| and \verb|stop_time|. This number will be used when \gras[parameter!output\_type]{output\_type} is \textbf{log} or \textbf{linear}.
 
 \begin{verbatim}
 output_type = log
-\end{verbatim}
-linear, log, table
+\end{verbatim}\index{parameter!output\_type}
+Define the type of output you want. Possible values are \textbf{linear}, \textbf{log}, and \textbf{table}. 
+\begin{itemize}
+\item \textbf{linear} : The spacing between the different output times will be linear
+\item \textbf{log} : The different output times will be log-spaced.
+\item \textbf{table} : The different output times are read from the file \gras[input file!structure\_evolution.dat]{structure\_evolution.dat}. The parameter \gras[parameter!nb\_outputs]{nb\_outputs} is then completely ignored.
+\end{itemize}
 
 \begin{verbatim}
 relative_tolerance =  1.000E-04
-\end{verbatim}
+\end{verbatim}\index{parameter!relative\_tolerance}
 Relative tolerance of the solver
 
 \begin{verbatim}
 minimum_initial_abundance =  1.000E-40
-\end{verbatim}
-default minimum initial fraction abundance
+\end{verbatim}\index{parameter!minimum\_initial\_abundance}
+default minimum initial fraction abundance applied to species whose abundance is not specified in \gras[input file!abundances.in]{abundances.in}.
 
-\subsection{Time evolution of the physical structure}\label{parameter!is_structure_evolution}
+\subsection{Time evolution of the physical structure}\index{parameter!is\_structure\_evolution}
 \begin{verbatim}
 is_structure_evolution = 1
-\end{verbatim}
+\end{verbatim}\index{parameter!is\_structure\_evolution}
 
 If set, the physical structure we define will evolve with time. This evolution will be read from the file \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} that must exist in the simulation folder. 
 
@@ -314,7 +320,7 @@ Optionally, one can add a 5\th column to define also grain temperature:
 If so, the parameter \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} must be set to:
 \begin{verbatim}
 grain_temperature_type = table
-\end{verbatim}
+\end{verbatim}\index{parameter!grain\_temperature\_table}
 
 \subsection{Grain temperature}
 You have four ways of defining grain temperature in the code. The parameter \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} can have the following values:
@@ -322,37 +328,37 @@ You have four ways of defining grain temperature in the code. The parameter \gra
 \item[\textbf{fixed}] The grain temperature is fixed throughout the simulation, to the value given in \gras[parameter!initial\_dust\_temperature]{initial\_dust\_temperature} ;
 \item[\textbf{gas}] The grain temperature is equal to the gas temperature, no matter what.
 \item[\textbf{computed}] The grain temperature is calculated following an energy equilibrium with the gas in the structure
-\item[\textbf{table}] The grain temperature is then interpolated from the 5\th column of the  \gras[input file!structure_evolution.dat]{structure\_evolution.dat} file. \gras[parameter!is_structure_evolution]{is\_structure\_evolution} must be set to $1$.
+\item[\textbf{table}] The grain temperature is then interpolated from the 5\th column of the  \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} file. \gras[parameter!is\_structure\_evolution]{is\_structure\_evolution} must be set to $1$.
 \end{itemize}
 
 \subsection{Switches}
-To activate (or not) accretiopn on dust grains and grain surface reactions:
+To activate (or not) accretion on dust grains and grain surface reactions:
 \begin{verbatim}
 is_grain_reactions = 1
-\end{verbatim}\label{parameter!is_grain_reaction}
+\end{verbatim}\index{parameter!is\_grain\_reaction}
 
 To activate (or not) the self-shielding of $\molecule{H_2}$ and $\molecule{CO}$, related to visual extinction: 
 \begin{verbatim}
 is_absorption = 1
-\end{verbatim}\label{parameter!is_absorption}
+\end{verbatim}\index{parameter!is\_absorption}
 
 To activate (or not) grain tunneling diffusion (and choose the type of grain tunneling diffusion: 
 \begin{verbatim}
 grain_tunneling_diffusion = 0
-\end{verbatim}\label{parameter!grain_tunneling_diffusion}
+\end{verbatim}\index{parameter!grain\_tunneling\_diffusion}
 
 Different types are:
 \begin{itemize}
 \item[0] : Thermal for H, \molecule{H_2}
-\item[1] : Quantum tunneling diffusion rate [s-1] (Watson 1976)
-\item[2] : Quantum tunneling diffusion rate [s-1] (Hasegawa \& Herbst 1992)
+\item[1] : Quantum tunneling diffusion rate [\unit{s^{-1}}] \citep{1976RvMP...48..513W}
+\item[2] : Quantum tunneling diffusion rate [\unit{s^{-1}}] \citep{1992ApJS...82..167H}
 \item[3] : Choose fastest
 \end{itemize}
 
 To choose whether or not we can modify some rates:
 \begin{verbatim}
 modify_rate_flag = 1
-\end{verbatim}
+\end{verbatim}\index{parameter!modify\_rate\_flag}
 
 Different types are:
 \begin{itemize}
@@ -367,115 +373,113 @@ Different types are:
 
 \begin{verbatim}
 initial_gas_density =  2.000E+04
-\end{verbatim}
-initial gas density in $\unit{part/cm^{-3}}$
+\end{verbatim}\index{parameter!initial\_gas\_density}
+initial gas density in $\unit{particule/cm^{-3}}$
 
 \begin{verbatim}
 initial_gas_temperature =  1.000E+01
-\end{verbatim}
+\end{verbatim}\index{parameter!initial\_gas\_temperature}
 initial gas temperature  in $\unit{K}$
 
 \begin{verbatim}
 initial_visual_extinction =  1.500E+01
-\end{verbatim}
+\end{verbatim}\index{parameter!initial\_visual\_extinction}
 initial visual extinction in magnitude
 
 \begin{verbatim}
 cr_ionisation_rate =  1.300E-17
-\end{verbatim}
-cosmic ray ionisation rate [$\unit{s^{-1}}$] (standard=1.3e-17)
+\end{verbatim}\index{parameter!cr\_ionisation\_rate}
+cosmic ray ionization rate in $\unit{s^{-1}}$. A standard value is $1.3\cdot 10^{-17}$.
 
 \begin{verbatim}
 x_ionisation_rate =  0.000E+00
-\end{verbatim}
-Ionisation rate due to X-rays [$\unit{s^{-1}}$]
+\end{verbatim}\index{parameter!x\_ionisation\_rate}
+Ionisation rate due to X-rays in $\unit{s^{-1}}$.
 
 \begin{verbatim}
 uv_flux =  1.000E+00
-\end{verbatim}
-Scale factor for the UV flux, in unit of the reference flux (1.=nominal)
+\end{verbatim}\index{parameter!uv\_flux}
+Scale factor for the UV flux, in unit of the reference flux. By choosing $1$, you will use the nominal value.
 
 \subsection{Grain parameters}
 \begin{verbatim}
 initial_dust_temperature =  1.000E+01
-\end{verbatim}
-initial dust temperature [$\unit{K}$] when \verb|grain_temperature_type=fixed|
+\end{verbatim}\index{parameter!initial\_dust\_temperature}
+initial dust temperature in $\unit{K}$, used when \verb|grain_temperature_type=fixed|
 
 \begin{verbatim}
 initial_dtg_mass_ratio =  1.000E-02
-\end{verbatim}
-dust-to-gas ratio by mass
+\end{verbatim}\index{parameter!initial\_dtg\_mass\_ratio}
+Total mass of dust divided by total mass of gas (adimensioned).
 
 \begin{verbatim}
 sticking_coeff_neutral =  1.000E+00
-\end{verbatim}
-sticking coeff for neutral species
+\end{verbatim}\index{parameter!sticking\_coeff\_neutral}
+sticking coefficient for neutral species
 
 \begin{verbatim}
 sticking_coeff_positive =  0.000E+00
-\end{verbatim}
-sticking coeff for positive species
+\end{verbatim}\index{parameter!sticking\_coeff\_positive}
+sticking coefficient for positive species
 
 \begin{verbatim}
 sticking_coeff_negative =  0.000E+00
-\end{verbatim}
-sticking coeff for negative species
+\end{verbatim}\index{parameter!sticking\_coeff\_negative}
+sticking coefficient for negative species
 
 \begin{verbatim}
 grain_density =  3.000E+00
-\end{verbatim}
-mass density of grain material
+\end{verbatim}\index{parameter!grain\_density}
+mass density of grain material in \unit{g/cm^3}
 
 \begin{verbatim}
 grain_radius =  1.000E-05
-\end{verbatim}
-grain radius [$\unit{cm}$]
+\end{verbatim}\index{parameter!grain\_radius}
+grain radius in $\unit{cm}$.
 
 \begin{verbatim}
 diffusion_barrier_thickness =  1.000E-08
-\end{verbatim}
-Barrier thickness [$\unit{cm}$]
+\end{verbatim}\index{parameter!diffusion\_barrier\_thickness}
+Thickness of the barrier in $\unit{cm}$ that a surface species need to cross while undergoing quantum tunneling to diffuse from one surface site to another. This is used in the formalism \citep[see equation 10 (parameter a)]{1992ApJS...82..167H}.
 
 \begin{verbatim}
 surface_site_density =  1.500E+15
-\end{verbatim}
-site density [$\unit{cm^{-2}}$]
+\end{verbatim}\index{parameter!surface\_site\_density}
+density of sites at the surface of the grains in $\unit{number/cm^{2}}$.
 
 \begin{verbatim}
 diff_binding_ratio =  5.000E-01
-\end{verbatim}
-Ratio used to compute the DIFFUSION\_BARRIER from the BINDING\_ENERGY if not known
+\end{verbatim}\index{parameter!diff\_binding\_ratio}
+Ratio (adimensioned) used to compute the DIFFUSION\_BARRIER from the BINDING\_ENERGY if not known
 
 \begin{verbatim}
 chemical_barrier_thickness =  1.000E-08
-\end{verbatim}
-grain reaction activation energy barrier width. [$\unit{cm}$]
+\end{verbatim}\index{parameter!chemical\_barrier\_thickness}
+Parameter (in cm) used to compute the probability for a surface reaction with activation energy to occur through quantum tunneling. This is the thickness of the energy barrier \citep[See equation 6]{1992ApJS...82..167H}.
 
 \begin{verbatim}
 cr_peak_grain_temp =  7.000E+01
-\end{verbatim}
-peak grain temperature [$\unit{K}$] (CR heating)
+\end{verbatim}\index{parameter!cr\_peak\_grain\_temp}
+Peak grain temperature in K when struck by a cosmic ray.
 
 \begin{verbatim}
 cr_peak_duration =  1.000E-05
-\end{verbatim}
+\end{verbatim}\index{parameter!cr\_peak\_duration}
 duration [$\unit{s}$] of peak grain temperature
 
 \begin{verbatim}
 Fe_ionisation_rate =  3.000E-14
-\end{verbatim}
-(cosmic) Fe-ion--grain encounter [$\unit{s^{-1} grain^{-1}}$] 
-
-(for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
+\end{verbatim}\index{parameter!Fe\_ionisation\_rate}
+(cosmic) Fe-ion--grain encounter [$\unit{s^{-1} grain^{-1}}$] for 0.1 micron grain. For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
 
 \begin{verbatim}
 vib_to_dissip_freq_ratio =  1.000E-02
-\end{verbatim}
-[$\unit{no unit}$] The ratio of the surface-molecule bond frequency to the frequency at
+\end{verbatim}\index{parameter!vib\_to\_dissip\_freq\_ratio}
+(adimensioned) For the RRK (Rice Ramsperger-Kessel) desorption mechanism. Ratio of the vibration frequency (proper energy of a species when it is created on a grain) to the dissipation frequency (energy needed by the molecule to be evaporated from the grain surface). This ratio help to determine if a species evaporate after its formation on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1\%.
 
 \section{Chemical network}
 \subsection{Reaction files}
-The files concerned are : \gras{gas\_reactions.in}, \gras{grain\_reactions.in} and \gras{activation\_energies.in}
+The files concerned are : \gras[input file!gas\_reactions.in]{gas\_reactions.in}, \gras[input file!grain\_reactions.in]{grain\_reactions.in} and \gras[input file!activation\_energies.in]{activation\_energies.in}
 
 All reaction files have the same format. Depending on the evolution of the code, the number of reactants or products may vary (increase), so theses files must be modified to take that into account. 
 
@@ -527,19 +531,19 @@ All output files have the same \textbf{*.out} extension.
 
 Output files are:
 \begin{itemize}
-\item \textbf{info.out}: Various information about the simulation
-\item \textbf{species.out}: The list of species and their corresponding index
-\item \textbf{elemental\_abundances.out}: The prime elements abundances and mass at the beginning of the simulation. A \textbf{*.tmp} version display the same infos, but at the last output.
-\item \textbf{abundances.*.out}: In binary format, abundances of all species, each file for a different output time. \gras[binary!nautilus_outputs]{nautilus\_outputs} read theses files to generate ASCII files.
-\item \textbf{rates.*.out}: In binary format, rates of all reactions, each file for a different output time. \gras[binary!nautilus_rates]{nautilus\_rates} read theses files to generate ASCII files.
-\item \textbf{abundances.tmp}: The abundances of all species at the last output in ASCII.
+\item \gras[output file!info.out]{info.out}: Various information about the simulation
+\item \gras[output file!species.out]{species.out}: The list of species and their corresponding index
+\item \gras[output file!elemental\_abundances.out]{elemental\_abundances.out}: The prime elements abundances and mass at the beginning of the simulation. A \textbf{*.tmp} version display the same infos, but at the last output.
+\item \gras[output file!abundances.*.out]{abundances.*.out}: In binary format, abundances of all species, each file for a different output time. \gras[binary!nautilus\_outputs]{nautilus\_outputs} read theses files to generate ASCII files.
+\item \gras[output file!rates.*.out]{rates.*.out}: In binary format, rates of all reactions, each file for a different output time. \gras[binary!nautilus\_rates]{nautilus\_rates} read theses files to generate ASCII files.
+\item \gras[output file!abundances.tmp]{abundances.tmp}: The abundances of all species at the last output in ASCII.
 \end{itemize}
 
 \subsection{Informations : info.out}
-In the file \textbf{info.out}, the ID reference of the current version of nautilus, used to run the simulation is printed, as well as other usefull information about the state of Nautilus and how the simulation was executed.
+In the file \gras[output file!info.out]{info.out}, the ID reference of the current version of nautilus, used to run the simulation is printed, as well as other usefull information about the state of Nautilus and how the simulation was executed.
 
 \subsection{Abundances}
-Files are named \textbf{abundances.000001.out} and so on, for each output time. Outputs are stored in binary format. Format is as follow : 
+Files are named \gras[output file!abundances.*.out]{abundances.000001.out} and so on, for each output time. Outputs are stored in binary format. Format is as follow : 
 On a first line: time in seconds
 
 On a second line, information about the physical structure properties: \\
@@ -556,7 +560,7 @@ Makefile.py output
 Then, in your simulation folder, type:
 \begin{verbatim}
 nautilus_outputs
-\end{verbatim}
+\end{verbatim}\index{binary!nautilus\_outputs}
 (this assume you have an alias, but absolute path also work)
 
 \section{For developpers}
@@ -568,7 +572,7 @@ Generic informations to start with:
 \subsection{Check before commit}\label{sec:compare_simulation}
 You can have two types of modifications in the code, those that modify the outputs, and those that do not.
 
-I created a Python script \textbf{compare\_simulations.py} that can help you ensure the code do not change the results between two versions. It's up to you to check your modifications when the outputs are different though.
+I created a Python script \gras{compare\_simulations.py} that can help you ensure the code do not change the results between two versions. It's up to you to check your modifications when the outputs are different though.
 
 \bigskip
 
@@ -651,6 +655,9 @@ doxygen doxygen.conf 2>doxygen.log
 \begin{attention}
 The documentation (in the folder \textbf{html/}) is synchronized with the server repository. Thus, you may generate documentation only after major changes in the Doxygen documentation, to avoid too many changes for too few improvements.
 \end{attention}
+
+\bibliographystyle{plainnat}
+\bibliography{nautilus}%.bib
 
 \printindex
 \end{document}
