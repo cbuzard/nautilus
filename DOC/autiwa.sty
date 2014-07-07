@@ -1,0 +1,266 @@
+\NeedsTeXFormat{LaTeX2e}[1999/01/01]
+\ProvidesPackage{autiwa}[2011/08/18 Extension personnelle, V2.6.1]%aaaa/mm/dd
+%voir le fichier change.log pour l'historique des modification
+
+% On définit les variables de tests
+\newif\if@french \@frenchtrue
+\newif\if@print \@printfalse
+\newif\if@hyperref \@hyperreftrue
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% déclaration des options qui redéfinissent certaines fonctions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Si on veut une version imprimable, on redéfinit certaines choses pour consommer moins d'encre
+\DeclareOption{print}{\@printtrue}
+
+% Si on souhaite faire un document en anglais.
+\DeclareOption{english}{\@frenchfalse}
+
+\DeclareOption{nohyperref}{\@hyperreffalse}
+
+\DeclareOption*{}%% Ne rien faire quand une option est inconnue
+
+\ProcessOptions
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% FIN DES OPTIONS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%% polices %%%
+\RequirePackage[utf8]{inputenc}
+\RequirePackage[T1]{fontenc}  % OT2 c'est pour le cyrillique
+
+\if@french
+  \RequirePackage[frenchb]{babel}
+  \FrenchFootnotes % pour les notes de bas de page
+  \AddThinSpaceBeforeFootnotes % pour les puristes (donc tout le monde!) qui veulent une espace fine entre le mot et l'appel de note
+  \RequirePackage[french]{varioref}
+\else
+  \RequirePackage[english]{babel}
+  \RequirePackage{varioref}
+\fi
+
+\RequirePackage[autolanguage]{numprint}
+\RequirePackage[font=small,format=plain,labelsep=endash]{caption}
+
+%meta paquet qui regroupe des environnements, des commandes persos et cie. Permet de les ajouter plus simplement dans mon paquet pour du latex normal, des beamers ou des posters. Ainsi les commandes ne sont qu'à un seul endroit.
+\RequirePackage{autiwa-macros}
+
+\providecommand\refeq{}%In case \refeq doesn't previously exist, to ensure it will be redefined.
+\renewcommand{\refeq}[1]{(\vref*{#1})}
+
+% If at the beginning of a sentence, use \reffig*{theref}, else, use \reffig{theref}
+\newcommand*\reffig@nostar[1]{[\figurename~\vref{#1}]}
+\newcommand*\reffig@star[1]{Figure~\vref{#1}}
+\newcommand{\reffig}{\@ifstar{\reffig@star}{\reffig@nostar}}
+
+\newcommand{\reftab}[1]{[\tablename~\vref{#1}]}
+\newcommand{\refsec}[1]{[\S~\vref{#1}]}
+
+
+%%% mise en page %%%
+\RequirePackage{multicol}%permet de mettre du texte sur plusieurs colonnes sans changer de pages (très pratique pour deux colonnes, vu que par défaut, il change de page
+\RequirePackage{natbib}%améliore la bibliographie, surtout pour citer les publications scientifiques.
+
+\if@french
+  \RequirePackage{frbib}%pour mettre la bibliographie en français
+\fi
+
+\RequirePackage[nottoc]{tocbibind}%pour que la bibliographie  et l'index apparaissent dans la table des matières. l'option permet de ne pas afficher la table des matières. (notlof, notlot pour table des figures et ou des tableaux)
+\RequirePackage{xspace}%Permet à babel d'utiliser la macro xspace  partout où c'est nécessaire. (Voir la doc de babel pour de plus amples explications.)
+\RequirePackage{acronym}%pour gérer les acronymes. Description du paquet dans mon pdf, ou dans la description du paquet acronym.sty
+\RequirePackage[pdftex]{geometry}
+\geometry{margin=2.5cm}%la redéfinition des marges doit se faire avant l'appel de fancyhdr. Sinon, les entêtes et pieds de pages auront les anciennes marges.
+\RequirePackage{fancyhdr}
+\setlength{\headheight}{13pt}%avertissement dû à fancyhdr disant que \headheight is too small (12.0pt)
+
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[RO,LE]{\footnotesize\textbf{\thepage}}
+\fancyhead[RE]{\footnotesize\scshape\rightmark}
+\fancyhead[LO]{\footnotesize\leftmark}
+
+\if@hyperref
+  \RequirePackage[pdftex]{hyperref}%l'option pagebackref permet d'afficher les pages dans lesquelles sont citées les références (en gros, la position des labels je pense)
+  \hypersetup{
+    colorlinks=true, %colorise les liens
+    breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+    urlcolor= blue,  %couleur des hyperliens
+    linkcolor= refcolor, %couleur des liens internes
+    plainpages=false,  %pour palier à "Bookmark problems can occur when you have duplicate page numbers, for example, if you have a page i and a page 1."
+    citecolor=refcolor % pour définir la couleur des liens de bibliographie
+  }
+\fi
+%%% graphiques et images %%%
+
+\RequirePackage{afterpage} % permet de placer des images plus intelligemment
+\RequirePackage{graphics}
+\RequirePackage[pdftex]{graphicx}
+\usepackage[lflt]{floatflt}%Pour ajouter des graphiques dans des paragraphes, entourés de texte. L'option signifie que le graphique sera mis par défaut sur la gauche du paragraphe. Pour appeler un environnement : \begin{floatingfigure}[l]{0.5\linewidth}. Pour plus d'info, se reporter au pdf de latex que je fais ou à la doc du paquet.
+\RequirePackage[justification=centerfirst]{subfig}%pour pouvoir mettre plusieurs figures dans le même environnement de figure, avec plusieurs caption
+
+%%% divers %%%
+\pdfcompresslevel=9
+\RequirePackage{fancybox}
+\RequirePackage{shorttoc}
+\RequirePackage{makeidx} %pour faire un index. J'ai mis la commande d'indexation dans \gras{} d'ailleurs. Ensuite, on crée l'index via la commande \makeindex et on l'affiche via la commande \printindex. Pour indexer un mot, il faut écrire \index{mot}. Attention à respecter la casse pour le même mot.
+\RequirePackage{ifthen}%permet de faire des tests, utile pour les commandes de commath que j'ai redéfinies ici (à cause d'une incompatibilité expliquée dans le change.log ; va sans doute servir pour d'autres commandes, j'en ai besoin pour \gras{}
+
+%%% environnements et tableaux %%%
+\RequirePackage{shapepar}%pour faire des paragraphes mis en formes selon des figures, par exemple une forme d'étoile, d'hexagone, de coeur et ainsi de suite.
+
+
+%%% verbatim %%%
+\RequirePackage{example}%pour avoir, en un environnement, deux colonnes, la premières en verbatimn, et la 2e qui exécute le code.
+\RequirePackage{listings}
+
+\lstset{%
+%Basic Appearance%
+  basicstyle=\footnotesize\ttfamily,
+  commentstyle=\itshape\color{gray},
+  keywordstyle=\color{purple}\bfseries,
+  stringstyle=\color{blue}\rmfamily,
+%Basic Layout%
+  tabsize=4,
+  showtabs=false,
+  showspaces=false,
+  showstringspaces=false,
+%Numbering%
+  numbers=left,
+  stepnumber=1,
+  numberstyle=\scriptsize,
+  numbersep=5pt,
+%Margins%
+  xleftmargin=0.02\textwidth,
+  xrightmargin=0.02\textwidth,
+  breaklines=true,
+%Frame%
+  frame=leftline,
+  framerule=0.5pt,
+  rulecolor=\color{purple},
+  framexleftmargin=0em,
+%Captions, Index, and so on passed as arguments%
+  }
+
+\RequirePackage{paralist}%permet d'utiliser l'environnement inparaenum qui est une liste numérotée formatée dans un paragraphe (c'est à dire sans retour à la ligne) ; je l'utilise pour définir mon propre environnement de liste, à défaut de savoir le faire depuis la base.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%mise en page selon qu'on est en article, report, ou autre. (à voir)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\@ifclassloaded{article}{
+\renewcommand\theequation{\thesection.\arabic{equation}}%permet de numéroter les équations à partir du numéro de section
+\@addtoreset{equation}{section}%permet de remettre à zéro le compteur des équations à chaque changement de section.
+\newcommand{\annexe}{\clearpage \appendix \fancyhf{} \chead{Annexe}\cfoot{\thepage}}
+}
+
+\@ifclassloaded{report}{
+\RequirePackage[Lenny]{fncychap} % beaux chapitres ; Sonny, Lenny, Glenn, Conny, Rejne, Bjarne
+
+\renewcommand\theequation{\thechapter.\arabic{equation}}
+\@addtoreset{equation}{chapter}
+% \renewcommand{\thechapter}{\Alph{chapter}}
+}
+
+
+\DeclareMathSizes{10}{10}{6}{5}
+\DeclareMathSizes{11}{11}{7}{5}
+\DeclareMathSizes{12}{12}{7}{5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nouveaux environnements basés sur le paquet theorem
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\RequirePackage{theorem}
+    \theoremheaderfont{\scshape} \theoremstyle{break} % style des entêtes
+    \theorembodyfont{\normalfont} % style de police
+    \newtheorem{theoreme}{\theoremname}
+    \newtheorem{definition}{\definitionname}
+    \newtheorem{demonstration}{\demonstrationname}
+    \newtheorem{propriete}{\proprietename}
+
+\if@french
+  \newcommand{\theoremname}{Théorème}
+  \newcommand{\definitionname}{Définition}
+  \newcommand{\demonstrationname}{Démonstration}
+  \newcommand{\proprietename}{Propriété}
+\else
+  \newcommand{\theoremname}{Theorem}
+  \newcommand{\definitionname}{Definition}
+  \newcommand{\demonstrationname}{Proof}
+  \newcommand{\proprietename}{Property}
+\fi
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% macro pour le glossaire
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\if@french
+  \newcommand{\glossaryname}{Glossaire}
+\else
+  \newcommand{\glossaryname}{Glossary}
+\fi
+
+\newcommand{\glossaire}[2]{\item[#1] #2}
+\newcommand{\boiteentreeglossaire}[1]{%
+	\parbox[b]{\labelwidth}{%
+    \setlength{\fboxsep}{3pt}%
+    \setlength{\fboxrule}{.4pt}%
+    \shadowbox{\sffamily#1}\\\hfill\mbox{}}}
+	\newenvironment{leglossaire}{\newpage\section*{\glossaryname}%
+\addcontentsline{toc}{section}{\glossaryname}\begin{list}{}{%
+      \setlength{\labelwidth}{.5\textwidth}%
+      \setlength{\labelsep}{-.8\labelwidth}%
+      \setlength{\itemindent}{\parindent}%
+      \setlength{\leftmargin}{25pt}%
+      \setlength{\rightmargin}{0pt}%
+      \setlength{\itemsep}{.8\baselineskip}%
+      \renewcommand{\makelabel}[1]{\boiteentreeglossaire{##1}}}}
+{\end{list}}
+%on utilise l'environnement 'leglossaire' pour commencer le glossaire, et dans cet environnement, on utilise la commande 'glossaire' avec pour premier argument le nom, et pour 2e argument la description. attention, il faut écrire les définition dans l'ordre où on veut qu'elles apparaissent. Je ne sais pas comment améliorer ça et faire qu'il les classe tout seul.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% déclaration des options qui redéfinissent certaines fonctions
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\if@print
+  \newgray{lightgray}{1}
+  \if@hyperref
+    \hypersetup{
+      colorlinks=true, %colorise les liens
+      breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+      urlcolor= dark,  %couleur des hyperliens
+      linkcolor= black, %couleur des liens internes
+      plainpages=false,  %pour palier à "Bookmark problems can occur when you have duplicate page numbers, for example, if you have a page i and a page 1."
+      citecolor=black % pour définir la couleur des liens de bibliographie
+    }
+   \fi
+  \newrgbcolor{marou}{0 0 0}%redéfinie cette couleur, pour notamment rendre les titres noirs, et aussi les résultats de la commande \gras{}
+
+\fi
+% \DeclareOption{print}{%
+% \newgray{lightgray}{1}
+% \hypersetup{
+%   colorlinks=false, %colorise les liens
+%   breaklinks=true, %permet le retour à la ligne dans les liens trop longs
+%   urlcolor= dark,  %couleur des hyperliens
+%   linkcolor= black, %couleur des liens internes
+%   plainpages=false,  %pour palier à "Bookmark problems can occur when you have duplicate page numbers, for example, if you have a page i and a page 1."
+%   citecolor=black % pour définir la couleur des liens de bibliographie
+% }
+% \newrgbcolor{marou}{0 0 0}%redéfinie cette couleur, pour notamment rendre les titres noirs, et aussi les résultats de la commande \gras{}
+% }
+
+% \DeclareOption{english}{%
+% \renewcommand{\glossaryname}{Glossary}
+% \RequirePackage[english]{babel}
+% }
+% 
+% \DeclareOption{french}{%
+% \renewcommand{\glossaryname}{Glossaire}
+% 
+% }
+% 
+% \DeclareOption*{}%% Ne rien faire quand une option est inconnue
+% 
+% \ProcessOptions
+
+\endinput

@@ -1,0 +1,344 @@
+\NeedsTeXFormat{LaTeX2e}[1999/01/01]
+\ProvidesPackage{autiwa-macros}[2011/06/01 Extension personnelle, V0.20]%aaaa/mm/dd
+%meta paquet qui regroupe des environnements, des commandes persos et cie. Permet de les ajouter plus simplement dans mon paquet pour du latex normal, des beamers ou des posters. Ainsi les commandes ne sont qu'à un seul endroit. Ici, il est censé y avoir un minimum de paquet appelés, et est censé regrouper les commandes perso et autres astuces générales.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Paquets qui regroupes des nouvelles polices de caractères, de nouveaux symboles utiles etc.
+
+\RequirePackage{bbm}%permet d'utiliser une nouvelle police via l'appel \mathbbm{ABC123}. Je l'ai rajouté pour faire l'identité via \mathbbm{1} pour la quantique.
+\RequirePackage{eurosym}%pour écrire le caractère euro avec la macro \officialeuro{}
+\RequirePackage{mathrsfs}% provide a \mathscr command.
+\RequirePackage{textcomp}%rajoute des caractères et macros, en particulier \texttildelow pour faire une tilde dans le texte.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% environnements et tableaux %%%
+
+\RequirePackage{slashbox}%permet de faire ue cellule scindé sur sa diagonale via la commande \backslashbox{titre de la colonne}{titre de la ligne}
+\RequirePackage{fancybox}%used for \touche for instance
+\RequirePackage{multirow}%permet d'utiliser la commande \multirow{numb}*{contenu} pour fusionner des lignes. "*" est un argument optionnel que l'on peut spécifier et qui concerne la largeur de la colonne. \multirow{numb}{2.5cm}{contenu}
+\RequirePackage{array}%permet de rajouter des commandes de définition dans les tableaux, notamment m{2cm} pour une colonne de texte avec le texte centré verticalement, et de pouvoir spécifier, via @{:} un autre caractère pour séparer les colonnes.
+\RequirePackage{framed}%pour les environnements qui dépassent, soient d'une ligne, soit d'une page, cf la doc pour plus d'infos.
+
+\RequirePackage{cancel}%pour barrer des expressions ou du texte.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% maths %%%
+
+\RequirePackage{amsmath}
+\RequirePackage{subeqnarray}
+\RequirePackage{amsfonts}
+\RequirePackage{amssymb}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% macro et fonction pour la page de titre
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nouvelles couleurs pour pstricks
+
+\RequirePackage{pstricks}
+\newrgbcolor{marron}{0.698 0.047 0.047}
+\newrgbcolor{marou}{0.71 0.31 0.09}
+\newrgbcolor{refcolor}{0.71372549 0.145098039 0.109803922}
+\newrgbcolor{vertf}{0.22 0.50 0.20}
+\newgray{darkgray}{.25}
+\newgray{lightgray}{.9}%je définis cette couleur pour \rmq{}
+\newrgbcolor{vertexemple}{0.6 1 0.6}%je définis cette couleur pour les exemples
+\newrgbcolor{rougeattention}{1 0.6 0.6}%je définis cette couleur pour les mises en gardes "\begin{attention}"
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nouveaux environnements
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+%framed, shaded et leftbar sont des environnements qui font partie du package "framed", je les ai recopié ici pour les modifier. En effet, j'ai modifié leftbar, et créé leftbarshaded. Penser à regarder framed.sty si on veut des infos sur les commandes que fourni ce paquet, en effet, il permet de définir des environnements qui peuvent être sur plusieurs pages assez facilement, la preuve en dessous.
+\renewenvironment{framed}% using default \FrameCommand
+  {\MakeFramed {\advance\hsize-\width \FrameRestore}}%
+  {\endMakeFramed}
+
+\renewenvironment{shaded}{%
+  \def\FrameCommand{\fboxsep=\FrameSep \colorbox{lightgray}}%
+  \MakeFramed {\FrameRestore}}%
+ {\endMakeFramed}
+
+\renewenvironment{leftbar}{%
+  \def\FrameCommand{\vrule width 0.3mm \hspace{1mm}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+ \newenvironment{leftbarshaded}{%
+  \def\FrameCommand{\vrule width 0.4mm \colorbox{lightgray}}%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+ \newenvironment{leftbarvert}{%
+  \def\FrameCommand{{\vertexemple\vrule width 0.4mm} }%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+ \newenvironment{leftbarrouge}{%
+  \def\FrameCommand{{\rougeattention\vrule width 0.4mm} }%
+  \MakeFramed {\advance\hsize-\width \FrameRestore}}%
+ {\endMakeFramed}
+
+\newenvironment{important}
+  {\MakeFramed {\advance\hsize-\width \FrameRestore}}%
+  {\endMakeFramed}
+
+% Je ne sais pas à quoi servait la version originale, mais comme elle n'est pas utile pour l'affichage des citations, j'ai effacé par la mienne. Le nom de l'auteur est un paramètre optionnel qu'il faut mettre entre crochets après le début de l'environnement si on souhaite qu'il apparaisse.
+\newenvironment{myquote}[1][]%
+  {\begin{quote}\gdef\citationauthor{#1}\begin{flushleft}\og}%
+{\fg\ifthenelse{\equal{\citationauthor}{}}{}{\\ \qquad  --- \emph{\citationauthor}}\end{flushleft}\end{quote}}
+
+\newenvironment{enuminline}{\begin{inparaenum}[(i)]}{\end{inparaenum}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nouvelles fonctions et macros pour texte normal
+%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\registered}{$^{\text{\textregistered}}$\xspace}%permet d'utiliser le symbole ``marque déposée'' qui sera automatiquement mis en exposant.
+\newcommand{\expo}[1]{\(^{\text{#1}}\)}
+\newcommand{\ind}[1]{\(_{\text{#1}}\)}
+\newcommand{\oldgras}[2]{{{\color{marou} \textsl{#2}}\black\index{#1}}}
+\newcommand{\gras}[2][]{\ifthenelse{\equal{#1}{}}%
+                               {\oldgras{#2}{#2}}%   % argument optionnel vide
+                               {\oldgras{#1}{#2}}}   % argument optionnel non-vide
+%si le premier argument n'est pas défini, le label sera le même que le nom affiché, sinon, on peut définir via le premier argument optionnel l'index, par exemple "commande!label" pour le nom "label" qui s'affiche.
+\newcommand{\mgras}[1]{\( \displaystyle \boldsymbol{#1}\)}
+\newcommand{\com}[1]{\begin{tabular}{c|c}#1 & \verbatim \input{#1}\endverbatim\end{tabular}}
+
+\newenvironment{remarque}{\begin{leftbarshaded}\noindent\textbf{Remark} : }{\end{leftbarshaded}}
+
+
+\newenvironment{attention}{\begin{leftbarrouge}%
+\noindent\includegraphics[width=6mm]{attention.pdf}%
+}{\end{leftbarrouge}}
+\newenvironment{exemple}{\begin{leftbarvert}\noindent\textbf{Exemple} : }{\end{leftbarvert}}
+% Attention, il est possible qu'on ne puisse pas avoir ça sur plusieurs pages...
+% "Si le texte à encadrer s'étend sur plusieurs pages, on aura recours à l'environnement framed de l'extension du même nom, ou bien à l'environnement breakbox de l'extension eclbkbox" à tester si besoin
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nouvelles fonctions pour le mode mathématique
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\newcommand{\unit}[1]{\ensuremath{\mathrm{\thinspace #1}}}%permet d'écrire proprement les unités de mesures telles que le Hz ou autre, dans le mode mathématique qui, par défaut, considère tout les caractères comme des variables
+\newcommand{\sfrac}[2]{{{}^{#1\!\!}/ _{\!#2}}}%pour faire des fractions a/b proprement
+	% Touche clavier
+\newcommand{\touche}[1]{\Ovalbox{#1}}%permet d'encadrer un texte pour signifier que ça correspond à une touche sur le clavier
+\newcommand{\cte}{\mathrm{c^{te}}}%pour écrire "constante" dans une équation, avec une écriture propre, et rapidement.
+% \newcommand{\binom}[2]{\genfrac{(}{)}{0pt}{}{#1}{#2}}%pour écrire le binome de newton (i.e le nombre de combinaison) ; apparemment, cette commande existe déjà.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Redéfinitions des commandes du paquet commath (en effet, celui-ci empêche l'utilisation d'un ":" dans un mode math, sans que je sache pourquoi, alors je vais le faire moi même
+
+\DeclareMathOperator{\dif}{d \!}
+% Command for partial derivatives. The first argument denotes the function and the second argument denotes the variable with respect to which the derivative is taken. The optional argument denotes the order of differentiation. The style (text style/display style) is determined automatically
+\providecommand{\pd}[3][]{\ensuremath{
+\ifinner
+\tfrac{\partial{^{#1}}#2}{\partial{{#3}^{#1}}}
+\else
+\dfrac{\partial{^{#1}}#2}{\partial{{#3}^{#1}}}
+\fi
+}}
+
+% \tpd[2]{f}{k} denotes the second partial derivative of f with respect to k
+% The first letter t means "text style"
+\providecommand{\tpd}[3][]{\ensuremath{\mathinner{
+\tfrac{\partial{^{#1}}#2}{\partial{{#3}^{#1}}}
+}}}
+% \dpd[2]{f}{k} denotes the second partial derivative of f with respect to k
+% The first letter d means "display style"
+\providecommand{\dpd}[3][]{\ensuremath{\mathinner{
+\dfrac{\partial{^{#1}}#2}{\partial{{#3}^{#1}}}
+}}}
+
+% mixed derivative - analogous to the partial derivative command
+% \md{f}{5}{x}{2}{y}{3}
+\providecommand{\md}[6]{\ensuremath{
+\ifinner
+\tfrac{\partial{^{#2}}#1}{\partial{{#3}^{#4}}\partial{{#5}^{#6}}}
+\else
+\dfrac{\partial{^{#2}}#1}{\partial{{#3}^{#4}}\partial{{#5}^{#6}}}
+\fi
+}}
+
+% \tpd[2]{f}{k} denotes the second partial derivative of f with respect to k
+% The first letter t means "text style"
+\providecommand{\tmd}[6]{\ensuremath{\mathinner{
+\tfrac{\partial{^{#2}}#1}{\partial{{#3}^{#4}}\partial{{#5}^{#6}}}
+}}}
+% \dpd[2]{f}{k} denotes the second partial derivative of f with respect to k
+% The first letter d means "display style"
+\providecommand{\dmd}[6]{\ensuremath{\mathinner{
+\dfrac{\partial{^{#2}}#1}{\partial{{#3}^{#4}}\partial{{#5}^{#6}}}
+}}}
+
+
+% ordinary derivative - analogous to the partial derivative command
+\providecommand{\od}[3][]{\ensuremath{
+\ifinner
+\tfrac{\dif{^{#1}}#2}{\dif{{#3}^{#1}}}
+\else
+\dfrac{\dif{^{#1}}#2}{\dif{{#3}^{#1}}}
+\fi
+}}
+
+\providecommand{\tod}[3][]{\ensuremath{\mathinner{
+\tfrac{\dif{^{#1}}#2}{\dif{{#3}^{#1}}}
+}}}
+\providecommand{\dod}[3][]{\ensuremath{\mathinner{
+\dfrac{\dif{^{#1}}#2}{\dif{{#3}^{#1}}}
+}}}
+
+% Notation for an expression evaluated at a particular condition:
+% the value for the optional argument ranges from -1 to 4 with higher values resulting in larger delimiters
+\providecommand{\eval}[2][-1]{
+\ensuremath{\mathinner{
+\ifthenelse{\equal{#1}{-1}}{ % if
+#2\Biggr\rvert}{}
+\ifthenelse{\equal{#1}{0}}{ % if
+#2\rvert}{}
+\ifthenelse{\equal{#1}{1}}{ % if
+#2\bigr\rvert}{}
+\ifthenelse{\equal{#1}{2}}{ % if
+#2\Bigr\rvert}{}
+\ifthenelse{\equal{#1}{3}}{ % if
+#2\biggr\rvert}{}
+\ifthenelse{\equal{#1}{4}}{ % if
+#2\Biggr\rvert}{}
+}} % \ensuremath{\mathinner{
+}
+
+\providecommand{\sVert}[1][0]{
+\ensuremath{\mathinner{
+\ifthenelse{\equal{#1}{0}}{ % if
+\rvert}{}
+\ifthenelse{\equal{#1}{1}}{ % if
+\bigr\rvert}{}
+\ifthenelse{\equal{#1}{2}}{ % if
+\Bigr\rvert}{}
+\ifthenelse{\equal{#1}{3}}{ % if
+\biggr\rvert}{}
+\ifthenelse{\equal{#1}{4}}{ % if
+\Biggr\rvert}{}
+}} % \ensuremath{\mathinner{
+}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Nouvelles fonctions et macros pour les formules mathématiques
+
+\DeclareMathOperator{\pdif}{\delta \!}%pour les différentielles non exactes (je crois, enfin, avec le petit delta quoi)
+\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\norm}[1]{\left\|#1\right\|}
+%notations et lettres
+\DeclareMathAlphabet{\mathpzc}{OT1}{pzc}{m}{it} %pour pouvoir utiliser \mathpzc fait peut-être de jolies lettres, je le voulais pour un V pour un torseur...
+\newcommand{\deff}[5]{$#1 \text{ : } \begin{matrix}   #2 &\longrightarrow & #3 \\  #4 &\longmapsto & #5 \\ \end{matrix}$} %Pour les définitions de fonctions, le premier étant le nom de la fonction, le 2 et 3 les ensemble de départ et d'arrivée, le 4 les variables de départ, la 5 le résultat après application de la fonction.
+\newcommand{\trigo}{\circlearrowleft}%les deux commandes qui suivent permettent d'afficher des flèches renseignant, lors d'intégrales, du sens de parcours des courbes.
+\newcommand{\horaire}{\circlearrowright}
+
+%commandes qui simplifient les écritures
+\newcommand{\vect}[1]{{\overrightarrow{#1}}} % m'évite de devoir recopier à chaque fois la macro pour faire une flèche sur mes vecteurs ; la commande \mathstrut permet d'aligner des symboles, notament la hauteur des flèches quand on inclue \mathstrut dans l'argument de \vect{} (à la fin, juste avant \}). On met tout dans un groupe. Ainsi, ça permet notamment de les mettre en indice ou en exposant directement
+\newcommand{\vectcomp}[1]{\begin{pmatrix}#1\end{pmatrix}} %pour noter des les composantes d'un vecteur.
+\newcommand{\inv}[1]{\frac{1}{#1}}
+\newcommand{\comp}[1]{\overline{#1}} %complémentaire de quelque chose.
+
+%mécanique du solide
+\newcommand{\torseur}[1]{\left \lbrace \begin{matrix} #1 \end{matrix}\right \rbrace}
+
+%opérateurs mathématiques
+\newcommand{\lap}{\mathscr{L}}
+\DeclareMathOperator{\opgrad}{grad}
+\DeclareMathOperator{\oprot}{rot}
+\DeclareMathOperator{\opdiv}{div}
+\DeclareMathOperator{\cov}{cov}%pour la covariance cov(x,y) en statistique
+\newcommand{\rot}[1]{\vect{\nabla} \wedge \left( #1\right) }%j'ai enlevé le vecteur sur l'argument, donc faire attention pour les anciennes occurrences, faut rajouter le vecteur à la main.
+\newcommand{\grad}[1]{\vect{\nabla} \left( #1\right) }
+\renewcommand{\div}[1]{\vect{\nabla} \cdot\left( #1\right) }
+\newcommand{\res}[1]{\text{Rés}\left(#1\right)}%le résidus au point #1 d'une fonction
+\newcommand{\laplacien}[1]{\Delta \left( #1\right) }
+%definition du symbole parallèle (issu d'un paquet, j'ai recopié les lignes ne concernant QUE ce symbole, vu que c'était ça qui m'intéressait.
+\DeclareSymbolFont{stmry}{U}{stmry}{m}{n}
+\SetSymbolFont{stmry}{bold}{U}{stmry}{b}{n}
+\DeclareMathSymbol\sslash\mathbin{stmry}{"0C}
+
+%algèbre linéaire et théorie des groupes
+\DeclareMathOperator{\im}{\Im}%pour écrire l'image d'une application
+\renewcommand{\Re}[1]{\text{Re}\!\left(#1\right)}
+\renewcommand{\Im}[1]{\text{Im}\!\left(#1\right)}
+\DeclareMathOperator{\id}{Id} %matrice identité
+\DeclareMathOperator{\cof}{cof}%pour noter le cofacteur d'un élément d'une matrice
+\newcommand{\transposee}[1]{{\vphantom{#1}}^{\mathit t}{#1}} %permet de faire la transposée d'une matrice
+\DeclareMathOperator{\optrace}{Tr}%permet d'écrire la trace d'une application
+\newcommand{\trace}[1]{\optrace\left(#1\right)}
+\DeclareMathOperator{\card}{card}%permet d'écrire le cardinal d'un ensemble
+\newcommand{\M}[1]{\mathscr{M}_{#1}(\mathbb{K})} %ensemble des matrices carrées (ou classique en précisant deux nombres) d'ordre #1 avec valeurs dans K
+
+\newcommand{\pse}[2]{\left( #1 , #2\right)} %produit scalaire euclidien de #1 et #2
+% \newcommand{\psh}[2]{\left\langle\left. #1 \right\vert #2\right\rangle} %produit scalaire hermitien de #1 et #2
+
+%fonctions
+\newcommand{\porte}{\text{\PulseHigh}}
+\DeclareMathOperator{\stp}{stp}% fonction échelon
+\DeclareMathOperator{\ch}{ch} %cosinus hyperbolique
+\DeclareMathOperator{\sh}{sh} %sinus hyperbolique
+\renewcommand{\th}{\mathrm{th}} %tangente hyperbolique; je ne sais pas pourquoi, mais il semble que je ne puisse pas définir la commande \th. Obligé de la définir avec un \renewcommand{}{}, ce qui n'est pas très propre... (à la place, il y avait un symbole bizarre dont je ne me sers pas. possibilité de définir une nouvelle commande à ce symbole juste avant le renew pour ceux qui en ont besoin.
+
+\DeclareMathOperator{\erf}{erf}% fonction erreur
+\DeclareMathOperator{\erfc}{erf_c}% fonction erreur complémentaire
+
+\DeclareMathOperator{\si}{Si} %sinus intégral
+\DeclareMathOperator{\ci}{Ci} %cosinus intégral
+\DeclareMathOperator{\ei}{Ei} %exponentielle intégrale
+
+\DeclareMathOperator{\sinc}{sin_c} %sinus cardinal
+
+\input cyracc.def
+\font\tencyr=wncyr10
+\def\cyr{\tencyr\cyracc}
+\DeclareMathOperator{\peigne}{\mbox{\cyr sh}}%pour le peigne de dirac, penser aussi à mettre la période en indice. Nécessite l'affichage des caractères cyrilliques. rajouté grâce à \RequirePackage[russian]{babel}
+
+
+%Transformations mathématiques
+\newcommand{\fourier}[1]{\mathscr{F}\left \{ #1\right \}}%transformée de fourrier
+\newcommand{\fourierr}[1]{\mathscr{F}^{-1}\left \{ #1\right \}}%réciproque de la transformée de fourrier
+\newcommand{\laplace}[1]{\mathscr{L}\left \{ #1\right \}}%transformée de laplace
+\newcommand{\laplacer}[1]{\mathscr{L}^{-1}\left \{ #1\right \}}%réciproque de la transformée de laplace
+
+
+\newcommand{\ldbrack}{[\negthinspace [} %double crochet gauche pour ensemble de nombres entiers
+\newcommand{\rdbrack}{]\negthinspace ]} %double crochet droit pour ensemble de nombres entiers
+
+
+%Physique en général
+\newcommand{\moy}[1]{\left\langle #1\right\rangle}%pour noter la moyenne de quelque chose
+\newcommand{\sumint}{\sum\!\!\!\!\!\!\!\!\int\: }%sert en atomistique, pour rendre compte du fait qu'on somme sur le spectre discret et continu
+\newcommand{\edim}[1]{\left[ \mathrm{#1}\right]}% à utiliser en mode math pour représenter les dimensions dans une équation aux dimensions
+
+%Mécanique Quantique
+\newcommand{\commutateur}[2]{\left[ #1 , #2 \right] }
+\newcommand{\bra}[1]{\left\langle #1\right\vert}
+\newcommand{\ket}[1]{\left\vert \mathrm{#1}\right\rangle}
+\newcommand{\qmoy}[1]{\left\langle #1\right\rangle_\Psi}
+\newcommand{\kmoy}[1]{\left\langle #1\right\rangle_{\ket{\Psi}}}
+\newcommand{\cropoi}[2]{\left\{ #1,#2\right\}}
+\newcommand{\psh}[2]{\left\langle #1 \middle\vert #2\right\rangle}%produit scalaire hermitien
+
+%Physique Nucléaire
+\newcommand{\noyau}[3]{\prescript{#2}{#3}{\mathrm{#1}}}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\endinput
