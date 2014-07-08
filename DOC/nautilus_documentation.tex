@@ -595,6 +595,27 @@ nautilus_outputs
 \end{verbatim}\index{binary!nautilus\_outputs}
 (this assume you have an alias, but absolute path also work)
 
+\section{Graphic display}
+Python script were created to help the user display useful informations about their simulations. 
+
+\subsection{Plot abundances}
+The script \gras{nautilus-plot-abundances.py} allow you to display the time evolution of the abundances of one or more species:
+\begin{verbatim}
+nautilus-plot-abundances.py species=CO,H20
+\end{verbatim}
+
+You can zoom in a given period of time (\textbf{tmin}, \textbf{tmax} or both):
+\begin{verbatim}
+nautilus-plot-abundances.py species=CO,H20 tmin=1e4 tmax=1e6
+\end{verbatim}
+
+Even if you can modify and store the result in the graphic windows displayed, a default version is automatically written in \textbf{abundances.pdf} 
+
+Check the other options and detailled examples via:
+\begin{verbatim}
+nautilus-plot-abundances.py help
+\end{verbatim}
+
 \section{For developpers}
 Generic informations to start with:
 \begin{itemize}
