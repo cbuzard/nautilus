@@ -45,22 +45,34 @@
 
 \cleardoublepage
 
+\section{TODO}
+\begin{itemize}
+\item More details on \verb|grain_tunneling_diffusion| flag need to be added by someone who understand it
+\item More details on \verb|modify_rate_flag| flag need to be added by someone who understand it
+\item More details on \verb|conservation_type| flag need to be added by someone who understand it.
+\item idem for \verb|is_absorption|
+\item Reference for cosmic ray ionization rate standard value?
+\item What is the reference UV flux? Paper describing it?
+\item X ionization rate set to 0, is it normal?
+\end{itemize}
+
 \section{Starting with Nautilus}
+\subsection{Generic informations}
+\subsubsection{Python scripts help}\label{sec:python-help}
 From all the python script that come with the code, you can see all parameters and sometimes a few examples by typing:
 \begin{verbatim}
 script_name.py help
 \end{verbatim}
 
-\begin{attention}
-Beware, \textbf{nautilus} is generally the default file browser in GNU/Linux Gnome environment. Thus, by typing \textbf{nautilus} in a terminal, you will not launch the simulation program, but rather the X server and everything that comes with it (if you're in a remote SSH connection).
-\end{attention}
-
+\subsubsection{Comments in input files}\label{sec:files_generic_info}
 For all input files, the comment character is " !" and can be either at the beginning of a line, or anywhere else. Meaningful character must be comprised inside the 80th first characters of a given line.
 
+\subsubsection{Main parameter file}
 \gras[input file!parameters.in]{parameters.in} is the main parameter file, and is rewritten by the code itself each and every time you run the code. 
 
-\subsection{Generic informations about parameter files}\label{sec:files_generic_info}
-By default, the character "!" comment everything after it. If a line start with it, the line will be completely ignored.
+\subsubsection{Browser Vs Simulation}
+Beware, \textbf{nautilus} is generally the default file browser in GNU/Linux Gnome environment. Thus, by typing \textbf{nautilus} in a terminal, you will not launch the simulation program, but rather the X server and everything that comes with it (if you're in a remote SSH connection).
+
 
 \subsection{Getting the Git repository}
 First, you need to get the Git repository from \gras{Googlecode} before actually using the code. 
@@ -73,19 +85,19 @@ git clone https://code.google.com/p/nautilus/
 \end{verbatim}
 
 \subsection{Compilation}
-The script \gras{Makefile.py} allow you to compile the code. The default compiler is \gras{gfortran}. 
+The script \gras{Makefile.py} allow you to compile the code (see \refsec{sec:python-help} for infos about Python scripts). The default compiler is \gras{gfortran}. 
 
-If you want to just run the code, type:
+If you want to just compile the code, type:
 \begin{verbatim}
 Makefile.py
 \end{verbatim}
 
 \begin{remarque}
-Errors in log files associated with the module incriminated. Warnings are stored in a generic file \gras{compilation.log}.
+Errors are in \textbf{*.log} files associated with the module incriminated. Warnings are stored in a generic file \gras{compilation.log}.
 \end{remarque}
 
 \begin{attention}
-By default, all warnings issued by \gras{ODEPACK} routines are masked (to increase readability, since nobody can modify this thing from scratch). An option can force their display.
+By default, all warnings issued by \gras{ODEPACK} routines are masked (to increase readability, since nobody can modify this thing from scratch). An option \textbf{opkd} can force their display.
 \end{attention}
 
 If you want to compile the binary \gras[binary!nautilus\_outputs]{nautilus\_outputs} that generate ASCII from the binary outputs:
@@ -98,7 +110,7 @@ If you want to compile the binary \gras[binary!nautilus\_rates]{nautilus\_rates}
 Makefile.py rates
 \end{verbatim}
 
-If you want to compare versions of the code \ref{sec:compare_simulation}, type:
+If you want to compare versions of the code (see \refsec{sec:compare_simulation}), type:
 \begin{verbatim}
 Makefile.py test
 \end{verbatim}
@@ -106,7 +118,7 @@ The option \textbf{test} use compilation options that allow comparison of the co
 
 \subsection{Usefull tools}
 \subsubsection{Git Prompt}
-You can display in your terminal useful information about a Git repository by modifying your bash profile (assuming you terminal uses Bash, which is also always the case).
+You can display in your terminal useful information about a Git repository by modifying your bash profile (assuming you terminal uses Bash, which is almost always the case).
 
 Add in your \gras{.bashrc} or \gras{.bash\_profile}:
 \begin{verbatim}
@@ -187,17 +199,13 @@ PS1="\h.\u:\[\033[35m\]\W\[\033[0m\]\[\$(git_branch_colour_prompt)\]\$
 \end{verbatim}
 
 \subsection{Input files}
-An example simulation, containing all necessary input files is provided in the subfolder \textbf{example\_simulation}.
-
-\begin{attention}
-All input files have the same \textbf{*.in} extension.
-\end{attention}
+All input files have the same \textbf{*.in} extension. An example simulation, containing all necessary input files is provided in the sub-folder \textbf{example\_simulation}.
 
 The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
 
-\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species (not necessarily all of them). Default minimum values are applied to the species not present in this file (this value is set by the parameter \verb|minimum_initial_abundance| in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
+\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species (not necessarily all of them). Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
 
-\gras[input file!element.in]{element.in} name and mass in Atomic mass unit of all prime elements existing in the simulation (base elements used to construct molecules).
+\gras[input file!element.in]{element.in} gives informations about prime elements (base elements used to construct molecules) existing in the simulation (name and mass in Atomic mass unit).
 
 There are 2 parameter files listing all reactions in a given phase (gas or grain): 
 \begin{itemize}
@@ -225,7 +233,7 @@ In \gras[input file!parameters.in]{parameters.in}:
 preliminary_test = 1
 \end{verbatim}\index{parameter!preliminary\_test}
 
-When set to 1, the parameter \gras[parameter!preliminary\_test]{preliminary\_test} will allow you to test thoroughly the chemical network. 
+When set to 1, the parameter \gras[parameter!preliminary\_test]{preliminary\_test} will allow you to test thoroughly the chemical network and print information in the file \gras[output file!info.out]{info.out}. 
 
 \begin{remarque}
 This parameter should be set to 0 only in the case of intensive campaign of simulations using the very same network, to avoid wasting computation time doing the sames tests. But in any other cases, I advice you to leave it activated, because it only take around 1 second at the beginning of the simulation.
@@ -233,10 +241,10 @@ This parameter should be set to 0 only in the case of intensive campaign of simu
 
 The tests currently made are:
 \begin{itemize}
-\item Check that grain species (read from \gras[input file!grain\_species.in]{grain\_species.in}) are indeed grain species
-\item Check that all species gave production AND destruction reactions (error if none, warning if only one)
+\item Check that grain species judging from their indexes are indeed grain species
+\item Check that all species have production AND destruction reactions (error if none, warning if only one)
 \item Check that each reaction is equilibrated in prime element and in electric charge
-\item Display a warning for each reaction having alpha=0 (first parameter for reaction rate formula
+\item Display a warning for each reaction having alpha=0 (first parameter for reaction rate formula)
 \item Check that $T_\text{min} < T_\text{max}$ for each reaction
 \item For reaction with the same ID:
 \begin{itemize}
@@ -272,7 +280,7 @@ End of the simulation in years (and also the last output time)
 \begin{verbatim}
 nb_outputs =    3
 \end{verbatim}\index{parameter!nb\_outputs}
-Total number of outputs (including \verb|start_time| and \verb|stop_time|. This number will be used when \gras[parameter!output\_type]{output\_type} is \textbf{log} or \textbf{linear}.
+Total number of outputs (including \gras[parameter!start\_time]{start\_time} and \gras[parameter!stop\_time]{stop\_time}). This number will be used when \gras[parameter!output\_type]{output\_type} is \textbf{log} or \textbf{linear}.
 
 \begin{verbatim}
 output_type = log
@@ -304,16 +312,16 @@ If set, the physical structure we define will evolve with time. This evolution w
 This file will have the following format:
 \begin{verbatim}
 ! time    log(Av)    log(n)    log(T)
-! (Myr)   (mag)      (cm-3)    (K)
+! (Myr)   log(mag)  log(cm-3)  log(K)
 0.000e+00 -1.231e+00 1.813e+00 1.698e+00
 2.360e-01 -1.233e+00 1.758e+00 1.712e+00
 \end{verbatim}
 We define respectively time, visual extinction, gas density and gas temperature. 
 
-Optionally, one can add a 5\th column to define also grain temperature:
+Optionally, one can add a 5-th column to define also grain temperature:
 \begin{verbatim}
 ! time    log(Av)    log(n)    log(Tg)     log(Td)
-! (Myr)   (mag)      (cm-3)    (K)          (K)
+! (Myr)   log(mag)  log(cm-3)  log(K)      log(K)
 0.000e+00 -1.231e+00 1.813e+00 1.698e+00 1.500e+00
 2.360e-01 -1.233e+00 1.758e+00 1.712e+00 1.510e+00
 \end{verbatim}
@@ -325,10 +333,10 @@ grain_temperature_type = table
 \subsection{Grain temperature}
 You have four ways of defining grain temperature in the code. The parameter \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} can have the following values:
 \begin{itemize}
-\item[\textbf{fixed}] The grain temperature is fixed throughout the simulation, to the value given in \gras[parameter!initial\_dust\_temperature]{initial\_dust\_temperature} ;
+\item[\textbf{fixed}] The grain temperature is fixed throughout the simulation. \gras[parameter!initial\_dust\_temperature]{initial\_dust\_temperature} defines this fixed value ;
 \item[\textbf{gas}] The grain temperature is equal to the gas temperature, no matter what.
 \item[\textbf{computed}] The grain temperature is calculated following an energy equilibrium with the gas in the structure
-\item[\textbf{table}] The grain temperature is then interpolated from the 5\th column of the  \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} file. \gras[parameter!is\_structure\_evolution]{is\_structure\_evolution} must be set to $1$.
+\item[\textbf{table}] The grain temperature is interpolated from the 5-th column of the  \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} file. \gras[parameter!is\_structure\_evolution]{is\_structure\_evolution} must be set to $1$.
 \end{itemize}
 
 \subsection{Switches}
@@ -368,6 +376,19 @@ Different types are:
 \item[3] : modify all
 \end{itemize}
 
+To choose whether or not we can modify some abundances:
+\begin{verbatim}
+conservation_type = 0
+\end{verbatim}\index{parameter!conservation\_type}
+
+Different types are:
+\begin{itemize}
+\item[0] : Only electrons conserved
+\item[1] : element \#1 conserved
+\item[2] : element \#1 and \#2 conserved
+\item[n] : element \#1\dots\#n conserved
+\end{itemize}
+
 \subsection{Gas parameters}
 
 
@@ -405,7 +426,7 @@ Scale factor for the UV flux, in unit of the reference flux. By choosing $1$, yo
 \begin{verbatim}
 initial_dust_temperature =  1.000E+01
 \end{verbatim}\index{parameter!initial\_dust\_temperature}
-initial dust temperature in $\unit{K}$, used when \verb|grain_temperature_type=fixed|
+initial dust temperature in $\unit{K}$, used when \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} is \textbf{fixed}.
 
 \begin{verbatim}
 initial_dtg_mass_ratio =  1.000E-02
@@ -481,9 +502,22 @@ vib_to_dissip_freq_ratio =  1.000E-02
 \subsection{Reaction files}
 The files concerned are : \gras[input file!gas\_reactions.in]{gas\_reactions.in}, \gras[input file!grain\_reactions.in]{grain\_reactions.in} and \gras[input file!activation\_energies.in]{activation\_energies.in}
 
-All reaction files have the same format. Depending on the evolution of the code, the number of reactants or products may vary (increase), so theses files must be modified to take that into account. 
+A typical reaction line is:
+\begin{lstlisting}[language=Fortran]
+!    Reactants                    ->     Products                                                A          B          C      xxxxxxxxxxxxxxxxxxxxx ITYPE Tmin   Tmax formula ID xxxxx
+C+         CH2OH                  -> CH2+       HCO                                           7.500E-10 -5.000E-01  0.000E+00 0.00e+00 0.00e+00   NA  4     10    280  3  6098 1  1
+\end{lstlisting}
+The reaction displayed here is:
+\begin{align*}
+\mathrm{C^+} + \mathrm{CH_2OH} &\rightarrow \mathrm{CH_2}^+ + \mathrm{HCO}
+\end{align*}
+The temperature range is $T\in[10;280]\unit{K}$. The type of reaction is $4$. The ID of the reaction is $6098$. The formula used to compute reaction rate is $3$, with the 3 parameters $A=7.5\cdot 10^{-10}$, $B=-0.5$ and $C=0$. Other columns are ignored, as the "xxx" emphasize in the legend line associated.
 
-Each species name is encoded with 11 characters
+\bigskip
+
+Each species name is encoded with 11 characters.
+
+All reaction files have the same format. Depending on the evolution of the code, the number of reactants (\verb|MAX_REACTANTS|) or products (\verb|MAX_PRODUCTS|) may vary (increase), so theses files must be modified to take that into account. 
 
 The following global variables are here to tell to the code that theses number have changed. 
 \begin{lstlisting}[language=Fortran]
@@ -491,8 +525,6 @@ MAX_REACTANTS = 3 !< The maximum number of reactants for one reaction.
 MAX_PRODUCTS = 5 !< The maximum number of products for one reaction.
 MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maximum number of compounds for one reaction (reactants + products)
 \end{lstlisting}
-
-
 
 \begin{attention}
 Pay attention to the fact that some things might need manual modifications in the code. If this number change, \verb|get_jacobian(N, T, Y, J, IAN, JAN, PDJ)| must be actualised, since each reactant and product has its own variable, a new one must be created for the new column possible. 
@@ -504,13 +536,13 @@ Chemical reactions can be of several types.
 Here is the list:
 \begin{itemize}
 \item[\textbf{0}] Gas phase reactions with GRAINS
-\item[\textbf{1}] Photodissoc/ionisation with cosmic rays (CR)
+\item[\textbf{1}] Photodissociation/ionisation with cosmic rays (CR)
 \item[\textbf{2}] Gas phase photodissociations/ionisations by secondary UV photons generated by CR
 \item[\textbf{3}] Gas phase photodissociations/ionisations by UV
 \item[\textbf{4-8}] Bimolecular gas phase reactions - several possible formula 
-\item[\textbf{10-11}] \molecule{H_2} formation on the grains when IS\_GRAIN\_REACTIONS eq 0
+\item[\textbf{10-11}] \molecule{H_2} formation on the grains when \verb|IS_GRAIN_REACTIONS=0|
 \begin{remarque}
-Only one reaction each.
+Only one reaction for each of the two types (10 and 11).
 \end{remarque}
 \item[\textbf{14}] Grain surface reactions
 \item[\textbf{15}] Thermal evaporation
@@ -519,7 +551,7 @@ Only one reaction each.
 \item[\textbf{19-20}] Photodissociations by UV photons on grain surfaces
 \item[\textbf{21}] Grain surface reactions
 \item[\textbf{66}] Photodesorption by external UV
-\item[\textbf{67}] Photodesorption by CR generated UV
+\item[\textbf{67}] Photodesorption by UV induced by cosmic rays
 \item[\textbf{98}] storage of $\molecule{H_2S}$ under a refractory form
 \item[\textbf{99}] Adsorption on grains
 \end{itemize}
@@ -531,18 +563,18 @@ All output files have the same \textbf{*.out} extension.
 
 Output files are:
 \begin{itemize}
-\item \gras[output file!info.out]{info.out}: Various information about the simulation
+\item \gras[output file!info.out]{info.out}: Various information about the simulation (see \refsec{sec:info-out} for more details)
 \item \gras[output file!species.out]{species.out}: The list of species and their corresponding index
 \item \gras[output file!elemental\_abundances.out]{elemental\_abundances.out}: The prime elements abundances and mass at the beginning of the simulation. A \textbf{*.tmp} version display the same infos, but at the last output.
-\item \gras[output file!abundances.*.out]{abundances.*.out}: In binary format, abundances of all species, each file for a different output time. \gras[binary!nautilus\_outputs]{nautilus\_outputs} read theses files to generate ASCII files.
-\item \gras[output file!rates.*.out]{rates.*.out}: In binary format, rates of all reactions, each file for a different output time. \gras[binary!nautilus\_rates]{nautilus\_rates} read theses files to generate ASCII files.
+\item \gras[output file!abundances.*.out]{abundances.*.out}: In binary format (unformatted), abundances of all species, each file for a different output time. \gras[binary!nautilus\_outputs]{nautilus\_outputs} read theses files to generate ASCII files (see \refsec{sec:abundances} for more details).
+\item \gras[output file!rates.*.out]{rates.*.out}: In binary format (unformatted), rates of all reactions, each file for a different output time. \gras[binary!nautilus\_rates]{nautilus\_rates} read theses files to generate ASCII files.
 \item \gras[output file!abundances.tmp]{abundances.tmp}: The abundances of all species at the last output in ASCII.
 \end{itemize}
 
-\subsection{Informations : info.out}
+\subsection{Informations : info.out}\label{sec:info-out}
 In the file \gras[output file!info.out]{info.out}, the ID reference of the current version of nautilus, used to run the simulation is printed, as well as other usefull information about the state of Nautilus and how the simulation was executed.
 
-\subsection{Abundances}
+\subsection{Abundances}\label{sec:abundances}
 Files are named \gras[output file!abundances.*.out]{abundances.000001.out} and so on, for each output time. Outputs are stored in binary format. Format is as follow : 
 On a first line: time in seconds
 
@@ -591,6 +623,24 @@ compare_simulation.py rev=HEAD
 
 \subsection{How to write documentation with Doxygen}
 \subsubsection{General informations}
+Doxygen comments generally have a marker and the description. The character to declare the marker is \verb|@|, but one need to start the commented line by \verb|>| to declare there is something here. 
+
+If this is an inline comment, with the code on the left, comments are like this:
+\begin{verbatim}
+the code !< the doxygen description
+\end{verbatim}
+just to say that the description refers to the code on the left.
+
+To continue a description on another comment line, just double the comment character:
+\begin{verbatim}
+!> @brief I describe something
+!! on several lines.
+\end{verbatim}
+
+\begin{remarque}
+This will not make two lines in the generated documentation though. This is only a way to avoid never ending lines with thousands of characters.
+\end{remarque}
+
 
 \subsubsection{For a module}
 Start the module file with:
