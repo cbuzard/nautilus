@@ -48,6 +48,7 @@ problem_message = "AIM : Display in log-log the evolution of abundances for a se
 " * tmax=1.e6 : the end of the output [year]" + "\n" + \
 " * tmin=5e5 : the beginning of the output [year]" + "\n" + \
 " * species=CO,H20 : the list of species we want to display /!\ no space !" + "\n" + \
+" * dir=simu0001,simu0002 : the list of sub-folder we want to display /!\ no space !" + "\n" + \
 " * ext=%s : The extension for the output files" % OUTPUT_EXTENSION + "\n" + \
 " * help : display a little help message on HOW to use various options.\n\n" + \
 "EXAMPLE:\n" + \
@@ -72,6 +73,8 @@ for arg in sys.argv[1:]:
     OUTPUT_EXTENSION = value
   elif (key == 'species'):
     species_name = value.split(',')
+  elif (key == 'dir'):
+    directories = value.split(',')
   elif (key == 'help'):
     isProblem = True
     if (value != None):
