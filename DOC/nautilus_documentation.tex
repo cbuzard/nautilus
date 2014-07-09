@@ -117,6 +117,14 @@ Makefile.py test
 The option \textbf{test} use compilation options that allow comparison of the code between different versions. 
 
 \subsection{Usefull tools}
+\subsection{Cleaning a simulation folder}
+The script \gras{nautilus-clean.sh} helps you delete all output files to have a clean simulation folder, with input only
+
+To clean the current working directory, launch:
+\begin{verbatim}
+nautilus-clean.sh
+\end{verbatim}
+
 \subsubsection{Git Prompt}
 You can display in your terminal useful information about a Git repository by modifying your bash profile (assuming you terminal uses Bash, which is almost always the case).
 
@@ -226,7 +234,15 @@ Species in \gras[input file!gas\_species.in]{gas\_species.in}, \gras[input file!
 
 \gras[input file!surface\_parameters.in]{surface\_parameters.in} provide information about various energies and parameters for diffusion and movements on the grain surface.
 
-\section{Test of the code}
+\section{Parameter file : parameters.in}\label{sec:parameters_in}\index{input file!parameters.in}
+For generic informations, see \refsec{sec:files_generic_info}.
+
+\gras[input file!parameters.in]{parameters.in} has the particularity to be re-written each time you launch a Nautilus simulation. This ensure several things :
+\begin{itemize}
+\item Parameters can be input in random ways, the code will sort them by categories
+\item New parameters, with default values will be added, to ensure retro-compatibility.
+\end{itemize}
+
 \subsection{Automatic test before computation}
 In \gras[input file!parameters.in]{parameters.in}: 
 \begin{verbatim}
@@ -255,15 +271,6 @@ The tests currently made are:
 \item Check that each gas neutral species has an adsorption reaction (ITYPE=99) (excluding \textbf{GRAIN0} and \textbf{XH}).
 \item Check that each grain species has at least one reaction of each of the following types: 15, 16, 66, 67 (desorption reactions).
 \item Check that all index ranges associated with a reaction type join themselves to cover all the index range of all reactions.
-\end{itemize}
-
-\section{Parameter file : parameters.in}\label{sec:parameters_in}\index{input file!parameters.in}
-For generic informations, see \refsec{sec:files_generic_info}.
-
-\gras[input file!parameters.in]{parameters.in} has the particularity to be re-written each time you launch a Nautilus simulation. This ensure several things :
-\begin{itemize}
-\item Parameters can be input in random ways, the code will sort them by categories
-\item New parameters, with default values will be added, to ensure retro-compatibility.
 \end{itemize}
 
 \subsection{Simulation parameters}
@@ -498,7 +505,7 @@ vib_to_dissip_freq_ratio =  1.000E-02
 \end{verbatim}\index{parameter!vib\_to\_dissip\_freq\_ratio}
 (adimensioned) For the RRK (Rice Ramsperger-Kessel) desorption mechanism. Ratio of the vibration frequency (proper energy of a species when it is created on a grain) to the dissipation frequency (energy needed by the molecule to be evaporated from the grain surface). This ratio help to determine if a species evaporate after its formation on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1\%.
 
-\section{Chemical network}
+\section{Chemical network}\index{chemical network}
 \subsection{Reaction files}
 The files concerned are : \gras[input file!gas\_reactions.in]{gas\_reactions.in}, \gras[input file!grain\_reactions.in]{grain\_reactions.in} and \gras[input file!activation\_energies.in]{activation\_energies.in}
 
@@ -530,7 +537,7 @@ MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maximum number of compound
 Pay attention to the fact that some things might need manual modifications in the code. If this number change, \verb|get_jacobian(N, T, Y, J, IAN, JAN, PDJ)| must be actualised, since each reactant and product has its own variable, a new one must be created for the new column possible. 
 \end{attention}
 
-\subsection{Reaction types}
+\subsection{Reaction types}\index{reaction types}
 Chemical reactions can be of several types. 
 
 Here is the list:
@@ -579,7 +586,7 @@ Files are named \gras[output file!abundances.*.out]{abundances.000001.out} and s
 On a first line: time in seconds
 
 On a second line, information about the physical structure properties: \\
-gas temperature [\unit{K}], dust temperature [\unit{K}], \molecule{H_2} gas density [\unit{part/cm^3}] (assuming H2 is the main reservoir for H), visual extinction [\unit{mag}], x ionization rate [\unit{s^{-1}}]
+gas temperature [\unit{K}], dust temperature [\unit{K}], \molecule{H_2} gas density [\unit{part/cm^3}] (assuming \molecule{H_2} is the main reservoir for H), visual extinction [\unit{mag}], x ionization rate [\unit{s^{-1}}]
 
 And finally a line containing the abundances relative to H for all species [number ratio]
 
@@ -616,11 +623,93 @@ Check the other options and detailled examples via:
 nautilus-plot-abundances.py help
 \end{verbatim}
 
+\subsection{Compare abundances}
+The script \gras{nautilus-compare-abundances.py} allow you to display the time evolution of the abundances of one or more species for all sub-folders of the current working directory, assuming each one is a simulation:
+\begin{verbatim}
+nautilus-compare-abundances.py species=CO,H20
+\end{verbatim}
+
+If there is a lot of sub-folder, you can select those you want by:
+\begin{verbatim}
+nautilus-compare-abundances.py species=CO,H20 dir=simu1,simu2
+\end{verbatim}
+
+All option existing for \gras{nautilus-plot-abundances.py} applies here.
+
+Even if you can modify and store the result in the graphic windows displayed, a default version is automatically written in \textbf{compare\_abundances.pdf} 
+
+Check the other options and detailed examples via:
+\begin{verbatim}
+nautilus-compare-abundances.py help
+\end{verbatim}
+
 \section{For developpers}
 Generic informations to start with:
 \begin{itemize}
 \item indentation is made by 2 spaces (no tabulation)
+\item Constants are in capital letters (even if \textbf{fortran} is not case sensitive)
+\item Variable need to be explicit about what they refer to. Use underscore "\_" to separate words if need. Avoid word shortcuts as much as possible since you'd be the only one to understand your rules for the shortcuts definitions.
+\item Add comments for aim of each routine, description of each variable (do not forget input and output flags). 
+\item Add comments about specific portion of the code that are less obvious
+\item use space before and after mathematical operator (=, +, -, *, /). 
+For instance : 
+\begin{verbatim}
+a=(b+c)/(d+2) ! WRONG
+a = (b + c) / (d + 2) ! GOOD
+\end{verbatim}
+\item use space after (but not before) parenthesis and commas
+For instance:
+\begin{verbatim}
+call r(a,e,c,d) ! WRONG
+call get_radius(a, e, c, d) ! GOOD
+call get_radius(arg1=a, radius=e, optional=c, distribution=d) ! BETTER
+\end{verbatim}
 \end{itemize}
+
+Constants and global variables are defined in the module global\_variable.f90. nautilus\_main.f90 contains all the main routines. 
+
+The three main programs are:
+\begin{itemize}
+\item \gras[binary!nautilus]{nautilus} in the source file \textbf{nautilus.f90} (compilation:  \verb|Makefile.py|)
+\item \gras[binary!nautilus\_outputs]{nautilus\_outputs} in the source file \textbf{nautilus\_outputs.f90} (compilation: \verb|Makefile.py output|)
+\item \gras[binary!nautilus\_rates]{nautilus\_rates} in the source file \textbf{nautilus\_rates.f90} (compilation: \verb|Makefile.py rates|).
+\end{itemize}
+
+One last program exist to do some unitary tests on \textbf{Nautilus} (see \refsec{sec:unitary_tests} for more details).
+
+\subsection{Unitary tests}\label{sec:unitary_tests}\index{unitary tests}
+A fortran program \gras[binary!unitary\_tests]{unitary\_tests} (\textbf{unitary\_tests.f90}) was specifically designed to test some routines of the code separately. This is the main reason why a \textbf{nautilus\_main.f90} file was created, because we need to access these routines separately from the \gras[binary!nautilus]{nautilus} program.
+
+To run the unitary tests, use the Python script designed for that (he will compile the source code too): 
+\begin{verbatim}
+unitary_tests.py
+\end{verbatim}
+
+The code will display some infos and ask you what test you want to display graphically (and generate the corresponding \textbf{.pdf}:
+\begin{verbatim}
+0 : av_interpolation
+1 : density_interpolation
+2 : gas_temperature_interpolation
+3 : grain_temperature_interpolation
+4 : test_av_read
+5 : test_density_read
+6 : test_gas_temperature_read
+What test do you want to display? (0-6 ; 
+'all' treat them all ; 'l' display list again)
+\end{verbatim}
+
+The principle of this code is to do some tests, store the results in data files, generate Gnuplot script files associated. To get the plots, you only have to generate it by:
+\begin{verbatim}
+gnuplot script_name.gnuplot
+\end{verbatim}
+
+All files generated by the program are stored in the "tests" sub-folder. You can generate the .pdf manually if you are familiar with Gnuplot, and of course, view them separately.
+
+\begin{remarque}
+It's up to you to write new routines in \textbf{unitary\_tests.f90} and mimic the way I wrote the previous one to tests new functionality of the code.
+
+Please keep in mind that you need to add a \verb|call new_routine()| in the main program, just before \verb|contains| to ensure your routine is executed.
+\end{remarque}
 
 \subsection{Check before commit}\label{sec:compare_simulation}
 You can have two types of modifications in the code, those that modify the outputs, and those that do not.
