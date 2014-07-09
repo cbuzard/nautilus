@@ -33,6 +33,7 @@ linestyles = ['-', '--', '-.', ':', '.', ',', 'o', 'v', '^', '<', '>', '1', '2']
 
 AB_FOLDER = 'ab' # Name of the sub-folder containing abundances informations for each species
 OUTPUT_EXTENSION = 'pdf' # default value in bitmap, because vectoriel can take time and space if there is a lot of data
+nom_fichier_plot = "compare_abundances"
 
 directories = [dir for dir in os.listdir(".") if os.path.isdir(dir)] # We list folders of the current directory, each one assumed to be a simulation
 directories.sort()
@@ -52,8 +53,9 @@ problem_message = "AIM : Display in log-log the evolution of abundances for a se
 " * ext=%s : The extension for the output files" % OUTPUT_EXTENSION + "\n" + \
 " * help : display a little help message on HOW to use various options.\n\n" + \
 "EXAMPLE:\n" + \
-" > nautilus-plot-abundances.py species=CO,H20,C2H6" + \
-" > nautilus-plot-abundances.py species=CO,H20 tmin=1. tmax=1e6"
+" > nautilus-compare-abundances.py species=CO,H20,C2H6" + \
+" > nautilus-compare-abundances.py species=CO,H20,C2H6 dir=simu1,simu2" + \
+" > nautilus-compare-abundances.py species=CO,H20 tmin=1. tmax=1e6"
 
 
 value_message = "/!\ Warning: %s does not need any value, but you defined '%s=%s' ; value ignored."
@@ -90,6 +92,10 @@ if isProblem:
 if (len(directories)> len(linestyles)):
   print("Error: Not enough linestyles to plot the various simulations")
   exit()
+  
+if not('species_name' in locals()):
+  tmp = raw_input("Enter species names, without space, separated by ',' (e.g.: 'CO,H2O'):\n")
+  species_name = tmp.split(',')
 
 ####################
 # We declare arrays to store read informations
@@ -175,10 +181,7 @@ plot_ab.xaxis.set_major_formatter(timeFormat)
 plot_ab.legend(handles, labels)
 
 
-nom_fichier_plot = "abundances"
 fig.savefig('%s.%s' % (nom_fichier_plot, OUTPUT_EXTENSION), format=OUTPUT_EXTENSION)
-
-#~ pdb.set_trace()
 
 pl.show()
 
