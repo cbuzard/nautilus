@@ -25,6 +25,7 @@ integer, parameter :: MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maxi
 !! Warning: If this number change, get_jacobian(N, T, Y, J, IAN, JAN, PDJ) must be actualised, since each reactant and product has
 !! its own variable, a new one must be created for the new column possible. 
 
+integer :: nb_sample_1D = 1 !< sample in 1D dimension for the physical structure. If 1, then we are in 0D, else, we are in 1D
 integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species. Species are ordered. First, there are the nb_gaseous_species ones, and after, the nb_surface_species ones.
 integer :: nb_gaseous_species !< number of species that are gaseous

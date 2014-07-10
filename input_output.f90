@@ -401,6 +401,9 @@ if (isDefined) then
         read(value, '(i2)') CONSERVATION_TYPE
       
       ! Gas phase
+      case('1D_sample')
+        read(value, '(i4)') nb_sample_1D
+      
       case('initial_gas_density', 'XNT0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_gas_density
       
@@ -564,6 +567,7 @@ use global_variables
   write(10,'(a)') "!*    Gas phase parameters   *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
+  write(10,'(a,i0,a)') '1D_sample = ', nb_sample_1D, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
   write(10,'(a,es10.3e2,a)') 'initial_gas_density = ', initial_gas_density, ' ! initial gas density [part/cm-3]'
   write(10,'(a,es10.3e2,a)') 'initial_gas_temperature = ', initial_gas_temperature, ' ! initial gas temperature [K]'
   write(10,'(a,es10.3e2,a)') 'initial_visual_extinction = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
