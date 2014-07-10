@@ -59,7 +59,7 @@
 \section{Starting with Nautilus}\label{sec:starting}
 Whether you are a developer or a user, you do not have the same expectations about this manual. 
 
-\refsec{sec:starting} explains the basics, mainly how to get the repository, how to compile the simulation code, how to use the various tools. 
+\refsec{sec:starting} explains the basics, mainly how to get the repository, how to compile the simulation code, how to use the various tools. Be sure to read carefully the section about \textbf{Installation} \refsec{sec:installation}.
 
 \refsec{sec:chemical-network} explains the chemical network, its format, and the various types of reactions available. A chemical network is given with the code, but you can use your own. 
 
@@ -84,10 +84,6 @@ For all input files, the comment character is " !" and can be either at the begi
 \subsubsection{Main parameter file}
 \gras[input file!parameters.in]{parameters.in} is the main parameter file, and is rewritten by the code itself each and every time you run the code. 
 
-\subsubsection{Browser Vs Simulation}
-Beware, \textbf{nautilus} is generally the default file browser in GNU/Linux Gnome environment. Thus, by typing \textbf{nautilus} in a terminal, you will not launch the simulation program, but rather the X server and everything that comes with it (if you're in a remote SSH connection).
-
-
 \subsection{Getting the Git repository}
 First, you need to get the Git repository from \gras{Googlecode} before actually using the code. 
 
@@ -97,6 +93,56 @@ In the parent directory where you want to put a \textbf{nautilus} folder contain
 \begin{verbatim}
 git clone https://code.google.com/p/nautilus/
 \end{verbatim}
+
+Be sure to run once in a while the command to get distant \gras[update]{updates} if they exists:
+\begin{verbatim}
+git pull
+\end{verbatim}\index{git pull}\index{update}
+
+\subsection{Installation}\label{sec:installation}
+Once you have the Git repository, I advice you to run the script \gras{configure\_nautilus.py} : 
+\begin{verbatim}
+configure_nautilus.py
+\end{verbatim}
+
+This script will add useful shortcuts in the \gras{.bash\_profile}. When updating your Git repository, the bash commands will also be updated automatically into the \gras{.bash\_profile}.
+
+\begin{attention}
+Nautilus is a file browser in GNU/Linux (Gnome) environments. Thus, You must be \emph{very} careful. 
+
+If you use:
+\begin{verbatim}
+nautilus
+\end{verbatim}
+in a terminal, you will not run the nautilus code, but rather the file browser (which you do not want, especially in a remote server, I assure you). 
+\end{attention}
+
+The improvements brought by this script are:
+\begin{itemize}
+\item You can go to the Nautilus folder by typing:
+\begin{verbatim}
+cd $nautilus
+\end{verbatim}
+\item You can launch the code, the output code and the rates code by these three commands, regardless of the folder you currently are:
+\begin{verbatim}
+nautilus_code
+nautilus_outputs
+nautilus_rates
+\end{verbatim}
+\item You have now usefull informations about Git repositories directly into the Bash prompt.
+\item all scripts in the folder \textbf{scripts/} can be run from any folder. This include:
+\begin{verbatim}
+nautilus-clean.sh # Cleaning a simulation folder
+nautilus-plot-abundances.py # plot abundances of a simulation
+nautilus-compare-abundances.py # compare two simulations or more.
+\end{verbatim}
+\end{itemize}
+
+\begin{remarque}
+All of this will have little interest for you if you don't use 'Bash' as the interpreter for you terminal.
+
+You can also check the options of this script. Especially, you can undo the installation.
+\end{remarque}
 
 \subsection{Compilation}
 The script \gras{Makefile.py} allow you to compile the code (see \refsec{sec:python-help} for infos about Python scripts). The default compiler is \gras{gfortran}. 
@@ -171,87 +217,6 @@ The script \gras{nautilus-clean.sh} helps you delete all output files to have a 
 To clean the current working directory, launch:
 \begin{verbatim}
 nautilus-clean.sh
-\end{verbatim}
-
-\subsubsection{Git Prompt}
-You can display in your terminal useful information about a Git repository by modifying your bash profile (assuming you terminal uses Bash, which is almost always the case).
-
-Add in your \gras{.bashrc} or \gras{.bash\_profile}:
-\begin{verbatim}
-#########################################
-# personnalisation du prompt avec la branche du projet git
-#########################################
-
-git_branch_name_prompt() {
-    # Only do this if the current directory is a git repository
-    if git status 2>/dev/null 1>/dev/null ; then
-        # We keep only the first line, then the last word is our branch
-        git_status_output=$(git status 2> /dev/null|head -1) || return
-
-        branch_name() {
-        # We get the last word with grep
-            echo "$git_status_output"|grep -oE '[^ ]+$' 
-        }
-    
-    
-        echo "($(branch_name))"
-    fi
-}
-
-git_branch_colour_prompt() {
-    # Only do this if the current directory is a git repository
-    if git status 2>/dev/null 1>/dev/null ; then
-        git_status_output=$(git status 2> /dev/null) || return
-
-        find_pattern_in_status() {
-            local pattern="$1"
-            [[ "$git_status_output" =~ ${pattern} ]]
-        }
-
-        is_clean() {
-            local clean_fr='(rien à valider, la copie de travail est propre)'
-            local clean_en='(working directory clean)'
-            find_pattern_in_status "($clean_fr|$clean_en)"
-        }
-
-        is_local_changes() {
-            local added_fr='Modifications qui seront validées :'
-            local not_added_fr='Modifications qui ne seront pas validées :'
-            local added_en='# Changes to be committed'
-            local not_added_en='# Changes not staged for commit'
-            find_pattern_in_status "($added_fr|$not_added_fr|$added_en|$not_added_en)"
-        }
-
-        is_untracked() {
-            local untracked_fr='Fichiers non suivis:'
-            local untracked_en='# Untracked files'
-            find_pattern_in_status "($untracked_fr|$untracked_en)"
-        }
-
-        # local bold="\033[1m"
-        local no_colour="\033[0m"
-        local red="\033[31m"
-        local green="\033[32m"
-        local yellow="\033[33m"
-        local branch_colour=""
-
-        if is_untracked
-        then
-            branch_colour=$red
-        elif is_local_changes
-        then
-            branch_colour=$yellow
-        elif is_clean
-        then
-            branch_colour=$green
-        fi
-
-        echo -e "$branch_colour"
-    fi
-}
-
-PS1="\h.\u:\[\033[35m\]\W\[\033[0m\]\[\$(git_branch_colour_prompt)\]\$
-(git_branch_name_prompt)\[\033[0m\]\$ "
 \end{verbatim}
 
 \section{Parameter file : parameters.in}\label{sec:parameters_in}\index{input file!parameters.in}
@@ -835,6 +800,10 @@ doxygen doxygen.conf 2>doxygen.log
 \begin{attention}
 The documentation (in the folder \textbf{html/}) is synchronized with the server repository. Thus, you may generate documentation only after major changes in the \gras{Doxygen} documentation, to avoid too many changes for too few improvements.
 \end{attention}
+
+
+\subsection{Bash profile}
+The file \gras{.nautilus\_profile} in the Git repository contains Bash commands to give user friendly tools to use \gras{Nautilus} in command line. By running \gras{configure\_nautilus.py}, a call to this file will be done in the \gras{.bash\_profile}.
 
 \bibliographystyle{plainnat}
 \bibliography{nautilus}%.bib
