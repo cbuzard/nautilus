@@ -56,7 +56,21 @@
 \item X ionization rate set to 0, is it normal?
 \end{itemize}
 
-\section{Starting with Nautilus}
+\section{Starting with Nautilus}\label{sec:starting}
+Whether you are a developer or a user, you do not have the same expectations about this manual. 
+
+\refsec{sec:starting} explains the basics, mainly how to get the repository, how to compile the simulation code, how to use the various tools. 
+
+\refsec{sec:chemical-network} explains the chemical network, its format, and the various types of reactions available. A chemical network is given with the code, but you can use your own. 
+
+Input files are presented in \refsec{sec:input-files}, but the most important one, the only one you will modify daily (\gras[input file!parameters.in]{parameters.in}) is dealt with in \refsec{sec:parameters_in}.
+
+Output files are presented in \refsec{sec:output-files}. Simulations information are displayed in \gras[output file!info.out]{info.out} (see \refsec{sec:info-out}).
+
+\refsec{sec:graphic-display} explain what are the Python scripts you can use to plot useful information (mainly abundances) of your simulations (single plot or comparison between several runs).
+
+One last section \refsec{sec:advanced} present technical specifications of the code and how to maintain it. For developers who wants more detailed explanations about the code, please refer to the Doxygen documentation, available in the Git repository at \url{http://nautilus.googlecode.com/git/html/index.html} or in the \textbf{html} repository of any local Git clone.
+
 \subsection{Generic informations}
 \subsubsection{Python scripts help}\label{sec:python-help}
 From all the python script that come with the code, you can see all parameters and sometimes a few examples by typing:
@@ -110,14 +124,48 @@ If you want to compile the binary \gras[binary!nautilus\_rates]{nautilus\_rates}
 Makefile.py rates
 \end{verbatim}
 
-If you want to compare versions of the code (see \refsec{sec:compare_simulation}), type:
+\bigskip
+
+One particular option exist:
 \begin{verbatim}
 Makefile.py test
 \end{verbatim}
-The option \textbf{test} use compilation options that allow comparison of the code between different versions. 
+This option \textbf{test} use compilation options that allow comparison of the code between different versions and is to be used for \gras{compare\_simulations.py} (see \refsec{sec:compare_simulation}). 
+
+\begin{remarque}
+Mainly, these option avoid too hard optimization that can result in slightly different results when the code evolve (not because the maths changes but because of optimization only).
+\end{remarque}
+
+\subsection{Input files}\label{sec:input-files}
+All input files have the same \textbf{*.in} extension. An example simulation, containing all necessary input files is provided in the sub-folder \textbf{example\_simulation}.
+
+The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
+
+\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species (not necessarily all of them). Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
+
+\gras[input file!element.in]{element.in} gives information about prime elements (base elements used to construct molecules) existing in the simulation (name and mass in Atomic mass unit).
+
+There are 2 parameter files listing all reactions in a given phase (gas or grain): 
+\begin{itemize}
+\item \gras[input file!gas\_reactions.in]{gas\_reactions.in}
+\item \gras[input file!grain\_reactions.in]{grain\_reactions.in}
+\end{itemize}
+and 2 parameter files for species present in a given phase (gas or grain) reactions:
+\begin{itemize}
+\item \gras[input file!gas\_species.in]{gas\_species.in}
+\item \gras[input file!grain\_species.in]{grain\_species.in}
+\end{itemize}
+
+\begin{remarque}
+Species in \gras[input file!gas\_species.in]{gas\_species.in}, \gras[input file!grain\_species.in]{grain\_species.in} are not necessarily species from one phase. These are species \emph{involved} in a given phase reaction. But adsorption or desorption transform grain species into gas species, and vice versa. 
+\end{remarque}
+
+\gras[input file!activation\_energies.in]{activation\_energies.in} provide activation energies for some endothermic reactions. 
+
+\gras[input file!surface\_parameters.in]{surface\_parameters.in} provide information about various energies and parameters for diffusion and movements on the grain surface.
 
 \subsection{Usefull tools}
-\subsection{Cleaning a simulation folder}
+\subsubsection{Cleaning a simulation folder}
 The script \gras{nautilus-clean.sh} helps you delete all output files to have a clean simulation folder, with input only
 
 To clean the current working directory, launch:
@@ -206,34 +254,6 @@ PS1="\h.\u:\[\033[35m\]\W\[\033[0m\]\[\$(git_branch_colour_prompt)\]\$
 (git_branch_name_prompt)\[\033[0m\]\$ "
 \end{verbatim}
 
-\subsection{Input files}
-All input files have the same \textbf{*.in} extension. An example simulation, containing all necessary input files is provided in the sub-folder \textbf{example\_simulation}.
-
-The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
-
-\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species (not necessarily all of them). Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
-
-\gras[input file!element.in]{element.in} gives informations about prime elements (base elements used to construct molecules) existing in the simulation (name and mass in Atomic mass unit).
-
-There are 2 parameter files listing all reactions in a given phase (gas or grain): 
-\begin{itemize}
-\item \gras[input file!gas\_reactions.in]{gas\_reactions.in}
-\item \gras[input file!grain\_reactions.in]{grain\_reactions.in}
-\end{itemize}
-and 2 parameter files for species present in a given phase (gas or grain) reactions:
-\begin{itemize}
-\item \gras[input file!gas\_species.in]{gas\_species.in}
-\item \gras[input file!grain\_species.in]{grain\_species.in}
-\end{itemize}
-
-\begin{remarque}
-Species in \gras[input file!gas\_species.in]{gas\_species.in}, \gras[input file!grain\_species.in]{grain\_species.in} are not necessarily species from one phase. These are species \emph{involved} in a given phase reaction. But adsorption or desorption transform grain species into gas species, and vice versa. 
-\end{remarque}
-
-\gras[input file!activation\_energies.in]{activation\_energies.in} provide activation energies for some endothermic reactions. 
-
-\gras[input file!surface\_parameters.in]{surface\_parameters.in} provide information about various energies and parameters for diffusion and movements on the grain surface.
-
 \section{Parameter file : parameters.in}\label{sec:parameters_in}\index{input file!parameters.in}
 For generic informations, see \refsec{sec:files_generic_info}.
 
@@ -259,7 +279,7 @@ The tests currently made are:
 \begin{itemize}
 \item Check that grain species judging from their indexes are indeed grain species
 \item Check that all species have production AND destruction reactions (error if none, warning if only one)
-\item Check that each reaction is equilibrated in prime element and in electric charge
+\item Check that each reaction is balanced in prime element and in electric charge
 \item Display a warning for each reaction having alpha=0 (first parameter for reaction rate formula)
 \item Check that $T_\text{min} < T_\text{max}$ for each reaction
 \item For reaction with the same ID:
@@ -438,7 +458,7 @@ initial dust temperature in $\unit{K}$, used when \gras[parameter!grain\_tempera
 \begin{verbatim}
 initial_dtg_mass_ratio =  1.000E-02
 \end{verbatim}\index{parameter!initial\_dtg\_mass\_ratio}
-Total mass of dust divided by total mass of gas (adimensioned).
+Total mass of dust divided by total mass of gas (dimensionless).
 
 \begin{verbatim}
 sticking_coeff_neutral =  1.000E+00
@@ -503,9 +523,9 @@ Fe_ionisation_rate =  3.000E-14
 \begin{verbatim}
 vib_to_dissip_freq_ratio =  1.000E-02
 \end{verbatim}\index{parameter!vib\_to\_dissip\_freq\_ratio}
-(adimensioned) For the RRK (Rice Ramsperger-Kessel) desorption mechanism. Ratio of the vibration frequency (proper energy of a species when it is created on a grain) to the dissipation frequency (energy needed by the molecule to be evaporated from the grain surface). This ratio help to determine if a species evaporate after its formation on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1\%.
+(dimensionless) For the RRK (Rice Ramsperger-Kessel) desorption mechanism. Ratio of the vibration frequency (proper energy of a species when it is created on a grain) to the dissipation frequency (energy needed by the molecule to be evaporated from the grain surface). This ratio help to determine if a species evaporate after its formation on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1\%.
 
-\section{Chemical network}\index{chemical network}
+\section{Chemical network}\index{chemical network}\label{sec:chemical-network}
 \subsection{Reaction files}
 The files concerned are : \gras[input file!gas\_reactions.in]{gas\_reactions.in}, \gras[input file!grain\_reactions.in]{grain\_reactions.in} and \gras[input file!activation\_energies.in]{activation\_energies.in}
 
@@ -534,7 +554,7 @@ MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maximum number of compound
 \end{lstlisting}
 
 \begin{attention}
-Pay attention to the fact that some things might need manual modifications in the code. If this number change, \verb|get_jacobian(N, T, Y, J, IAN, JAN, PDJ)| must be actualised, since each reactant and product has its own variable, a new one must be created for the new column possible. 
+Pay attention to the fact that some things might need manual modifications in the code. If this number change, \verb|get_jacobian(N, T, Y, J, IAN, JAN, PDJ)| must be actualized, since each reactant and product has its own variable, a new one must be created for the new column possible. 
 \end{attention}
 
 \subsection{Reaction types}\index{reaction types}
@@ -563,7 +583,7 @@ Only one reaction for each of the two types (10 and 11).
 \item[\textbf{99}] Adsorption on grains
 \end{itemize}
 
-\section{Outputs}
+\section{Outputs}\label{sec:output-files}
 \begin{attention}
 All output files have the same \textbf{*.out} extension.
 \end{attention}
@@ -579,7 +599,7 @@ Output files are:
 \end{itemize}
 
 \subsection{Informations : info.out}\label{sec:info-out}
-In the file \gras[output file!info.out]{info.out}, the ID reference of the current version of nautilus, used to run the simulation is printed, as well as other usefull information about the state of Nautilus and how the simulation was executed.
+In the file \gras[output file!info.out]{info.out}, the ID reference of the current version of nautilus, used to run the simulation is printed, as well as other useful information about the state of Nautilus and how the simulation was executed.
 
 \subsection{Abundances}\label{sec:abundances}
 Files are named \gras[output file!abundances.*.out]{abundances.000001.out} and so on, for each output time. Outputs are stored in binary format. Format is as follow : 
@@ -602,8 +622,8 @@ nautilus_outputs
 \end{verbatim}\index{binary!nautilus\_outputs}
 (this assume you have an alias, but absolute path also work)
 
-\section{Graphic display}
-Python script were created to help the user display useful informations about their simulations. 
+\section{Graphic display}\label{sec:graphic-display}
+Python script were created to help the user display useful information about their simulations. 
 
 \subsection{Plot abundances}
 The script \gras{nautilus-plot-abundances.py} allow you to display the time evolution of the abundances of one or more species:
@@ -643,8 +663,8 @@ Check the other options and detailed examples via:
 nautilus-compare-abundances.py help
 \end{verbatim}
 
-\section{For developpers}
-Generic informations to start with:
+\section{For developpers}\label{sec:advanced}
+Generic information to start with:
 \begin{itemize}
 \item indentation is made by 2 spaces (no tabulation)
 \item Constants are in capital letters (even if \textbf{fortran} is not case sensitive)
@@ -678,14 +698,14 @@ The three main programs are:
 One last program exist to do some unitary tests on \textbf{Nautilus} (see \refsec{sec:unitary_tests} for more details).
 
 \subsection{Unitary tests}\label{sec:unitary_tests}\index{unitary tests}
-A fortran program \gras[binary!unitary\_tests]{unitary\_tests} (\textbf{unitary\_tests.f90}) was specifically designed to test some routines of the code separately. This is the main reason why a \textbf{nautilus\_main.f90} file was created, because we need to access these routines separately from the \gras[binary!nautilus]{nautilus} program.
+A \textbf{fortran} program \gras[binary!unitary\_tests]{unitary\_tests} (\textbf{unitary\_tests.f90}) was specifically designed to test some routines of the code separately. This is the main reason why a \textbf{nautilus\_main.f90} file was created, because we need to access these routines separately from the \gras[binary!nautilus]{nautilus} program.
 
 To run the unitary tests, use the Python script designed for that (he will compile the source code too): 
 \begin{verbatim}
 unitary_tests.py
 \end{verbatim}
 
-The code will display some infos and ask you what test you want to display graphically (and generate the corresponding \textbf{.pdf}:
+The code will display some information and ask you what test you want to display graphically (and generate the corresponding \textbf{.pdf}:
 \begin{verbatim}
 0 : av_interpolation
 1 : density_interpolation
@@ -731,9 +751,9 @@ compare_simulation.py rev=HEAD
 \end{verbatim}
 \textbf{rev} can accept any commit reference, \textbf{HEAD}, \textbf{HEAD\^} and a hashtag will work.
 
-\subsection{How to write documentation with Doxygen}
+\subsection{How to write documentation with Doxygen}\index{Doxygen}
 \subsubsection{General informations}
-Doxygen comments generally have a marker and the description. The character to declare the marker is \verb|@|, but one need to start the commented line by \verb|>| to declare there is something here. 
+\gras{Doxygen} comments generally have a marker and the description. The character to declare the marker is \verb|@|, but one need to start the commented line by \verb|>| to declare there is something here. 
 
 If this is an inline comment, with the code on the left, comments are like this:
 \begin{verbatim}
@@ -810,10 +830,10 @@ To generate \textbf{Doxygen} documentation, type the following command in the ro
 doxygen doxygen.conf 2>doxygen.log
 \end{verbatim}
 
-\textbf{doxygen.conf} is the parameter file of Doxygen. Errors will be redirected in the file \textbf{doxygen.log}.
+\textbf{doxygen.conf} is the parameter file of \gras{Doxygen}. Errors will be redirected in the file \textbf{doxygen.log}.
 
 \begin{attention}
-The documentation (in the folder \textbf{html/}) is synchronized with the server repository. Thus, you may generate documentation only after major changes in the Doxygen documentation, to avoid too many changes for too few improvements.
+The documentation (in the folder \textbf{html/}) is synchronized with the server repository. Thus, you may generate documentation only after major changes in the \gras{Doxygen} documentation, to avoid too many changes for too few improvements.
 \end{attention}
 
 \bibliographystyle{plainnat}
