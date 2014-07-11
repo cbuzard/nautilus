@@ -642,7 +642,6 @@ use git_infos
   write(10,'(a)') '!----------------------------'
   write(10,'(a,a)') 'branch = ', branch
   write(10,'(a,a)') 'commit = ', commit
-  write(10,'(a,a)') 'tags = ', tags
   write(10,'(a,a)') '!', modifs
   write(10,'(a)') ""
   write(10,'(a)') '!----------------------------'
