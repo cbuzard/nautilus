@@ -2,9 +2,6 @@
 # -*- coding: utf-8 -*-
 # Script that is a Makefile-like, but in python, and for fortran90
 
-#~ from make import *
-
-#~ import git_infos
 import glob
 import sys
 import os
@@ -45,14 +42,6 @@ class sourceFile(object):
   
   Methods :
   .compile() : Compile the current program and all the required dependencies
-  .writeArchitecture(filename,excluded=[], direction="leftright") : To write a .svg file showing the tree of dependencies of the current sourceFile.
-    filename : The filename of the .svg file, without the extension
-    excluded : a list of names of the modules you don't want to print in the diagram
-    direction="leftright" : How the diagram will be constructed
-      leftright -> The main program will be on the left, and the dependencies will appear on the right, row by row for each 
-        'generation' of children dependencies
-      topbottom -> The main program will be on the top, and the dependencies will appear on the bottom, line by line for each 
-        'generation' of children dependencies
 
   """
   
@@ -103,7 +92,60 @@ class sourceFile(object):
     
     # Adding manually the modules that fuck everything up, namely ODEPACK !
     if (filename == 'nautilus.f90'):
-      self.extra = "opk*.f90"
+      self.extra = "opk*.o"
+      
+      Extrafiles = ["opkda1", "opkda2", "opkdmain"]
+      # If the source file is newer than the object file, we need to compile it
+      for name in Extrafiles:
+        object_file = "%s.o" % name
+        source_file = "%s.f90" % name
+        if (os.path.isfile(object_file)):
+          # If source file is newer, we compile
+          isCompilation = os.path.getmtime(source_file) > os.path.getmtime(object_file)
+            
+        else:
+          # If the object file do not exist
+          isCompilation = True
+        
+        if isCompilation:
+          options = sourceFile.OPTIONS
+          if (sourceFile.isDebug):
+            options += " "+sourceFile.DEBUG
+          
+          if (sourceFile.isGDB or sourceFile.isProfiling):
+            options += " "+sourceFile.GDB
+          
+          if (sourceFile.isProfiling):
+            # We deactivate all other options except GDB => not True anymore
+            options += " "+" -pg"
+          
+          commande = sourceFile.COMPILATOR+" "+options+" -c "+source_file
+        
+          process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
+
+          (process_stdout, process_stderr) = process.communicate()
+          
+          print("Compiling "+source_file+"...")
+          returnCode = process.poll()
+        
+        
+          # if returnCode is not 0, then there was a problem
+          if (returnCode != 0):
+            # We write compilation errors in the following file.
+            f = open(LOG_NAME,'w')
+            f.write(process_stderr)
+            f.close()
+            
+            print("Compilation error, see '%s'" % LOG_NAME)
+            LogPostProcessing()
+            sys.exit(1)
+          else:
+            if (len(process_stderr) != 0):
+              # We write compilation errors in the following file.
+              f = open(LOG_NAME,'a')
+              f.write(process_stderr)
+              f.close()
+      
     else:
       self.extra = ""
     
@@ -527,7 +569,23 @@ def LogPostProcessing():
         objectFile.write(line)
       objectFile.close()
 
+def clean(exts):
+  """supprime les fichiers correspondant à l'expression donnée. La fonction renvoit la sortie si ça c'est bien 
+  déroulée, sinon ne renvoit rien."""
+  for ext in exts:
+    
+    commande = "rm *."+ext
+    
+    process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
+    (process_stdout, process_stderr) = process.communicate()
+    returnCode = process.poll()
+  
+  # If returnCode is not 0, then there was a problem (in fact, will only do something for the last one
+  if (returnCode==0):
+    return process_stdout
+  else:
+    return returnCode
 
 
 
