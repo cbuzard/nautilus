@@ -642,7 +642,6 @@ use git_infos
   write(10,'(a)') '!----------------------------'
   write(10,'(a,a)') 'branch = ', branch
   write(10,'(a,a)') 'commit = ', commit
-  write(10,'(a,a)') 'tags = ', tags
   write(10,'(a,a)') '!', modifs
   write(10,'(a)') ""
   write(10,'(a)') '!----------------------------'
@@ -1032,10 +1031,7 @@ write(filename_output, '(a,i0.6,a)') 'rates.',index,'.out'
 
 open(45, file=filename_output, form='unformatted')
 
-write(45) species_name
-write(45) REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, 1:nb_reactions)
 write(45) reaction_rates
-write(45) REACTION_ID
 
 close(45)
 
