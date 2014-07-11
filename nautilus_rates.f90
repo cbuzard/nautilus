@@ -10,7 +10,6 @@ implicit none
 ! Locals
 character(len=80) :: filename_output
 integer :: species, output, reaction, i ! index for loops
-integer :: error ! to store the state of a read instruction
 logical :: isDefined
 real(double_precision) :: tmp !< temporary variable
 
