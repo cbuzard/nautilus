@@ -13,8 +13,6 @@ integer :: species, output, reaction, i ! index for loops
 logical :: isDefined
 real(double_precision) :: tmp !< temporary variable
 
-integer :: nb_sample_1D = 1
-
 character(len=80) :: rate_format, time_format !< string to store specific format used to output datas
 
 ! /!\ Variable names with _out are variable that already exist in the nautilus code, but here they are arrays, one value per output.

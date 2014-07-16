@@ -64,6 +64,7 @@ integer :: INDCO !< Index corresponding to CO in nb_species length arrays
 integer :: INDH2 !< Index corresponding to H2 in nb_species length arrays
 integer :: INDHE !< Index corresponding to He in nb_species length arrays
 integer :: INDEL !< Index corresponding to e- in nb_species length arrays
+integer :: INDGRAIN !< Index corresponding to GRAIN0 in nb_species length arrays
 
 
 ! Arrays about prime elements
@@ -76,7 +77,7 @@ integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENT
 ! Arrays about species
 character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
 integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
-real(double_precision), allocatable, dimension(:) :: abundances !< dim(nb_species) Species abundances (relative to H) [number ratio]
+real(double_precision), allocatable, dimension(:,:) :: abundances !< dim(nb_species,nb_sample_1D) Species abundances (relative to H) [number ratio]
 real(double_precision), allocatable, dimension(:) :: SPECIES_MASS !< dim(nb_species) Species mass [a.m.u]
 real(double_precision), allocatable, dimension(:) :: THERMAL_HOPING_RATE !< dim(nb_species) Diffusion rate by thermal hopping [s-1]:
 !! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface 
@@ -226,9 +227,10 @@ procedure(get_structure_properties_interface), pointer :: get_structure_properti
 
 abstract interface 
   subroutine get_structure_properties_interface(time, Av, density, gas_temperature, grain_temperature)
-    import 
-    
-    implicit none
+  import 
+  
+  implicit none
+  
   ! Inputs
   real(double_precision), intent(in) :: time !<[in] Current time of the simulation [s]
   
@@ -239,6 +241,46 @@ abstract interface
   real(double_precision), intent(out) :: density !<[out] gas density [part/cm^3]
   
   end subroutine get_structure_properties_interface
+end interface
+
+procedure(get_timestep_interface), pointer :: get_timestep !< Pointer that compute the next integration sub-step 
+!! (withing an output step) depending on the situation (1D or not, and the type of 1D)
+
+abstract interface 
+  subroutine get_timestep_interface(current_time, final_time, next_timestep)
+  import 
+  
+  implicit none
+  
+  ! Inputs
+  real(double_precision), intent(in) :: current_time !<[in] current time [s]
+  real(double_precision), intent(in) :: final_time !<[in] Final output time of the current 
+  !! loop occurence. The last sub-step must lead exactly to this time [s]
+  
+  ! Outputs
+  real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
+  
+  end subroutine get_timestep_interface
+end interface
+
+character(len=80) :: STRUCTURE_TYPE = '0D' !< (0D, 1D_sphere, 1D_disk_r, 1D_disk_z)
+procedure(structure_diffusion_interface), pointer :: structure_diffusion !< Pointer that diffuse the structure 
+!! (mainly abundances) for a given timestep
+
+abstract interface 
+  subroutine structure_diffusion_interface(timestep, temp_abundances)
+  import 
+  
+  implicit none
+    
+  ! Inputs
+  real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
+  
+  ! Inputs/Outputs
+  real(double_precision), intent(inout), dimension(:,:) :: temp_abundances !<[in,out] The abundances for all species, and 
+  !! all 1D mesh points (relative to H) [number ratio]
+  
+  end subroutine structure_diffusion_interface
 end interface
 
 ! About the optimization so that, for each species, we only check the reactions we know the species is involved.
@@ -328,7 +370,7 @@ subroutine initialize_global_arrays()
 implicit none
 
 allocate(species_name(nb_species))
-allocate(abundances(nb_species))
+allocate(abundances(nb_species, nb_sample_1D))
 allocate(SPECIES_MASS(nb_species))
 allocate(THERMAL_HOPING_RATE(nb_species))
 allocate(CR_HOPING_RATE(nb_species))
@@ -374,7 +416,7 @@ allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
 
 species_name(1:nb_species) = ''
-abundances(1:nb_species) = 0.d0
+abundances(1:nb_species, 1:nb_sample_1D) = 0.d0
 SPECIES_MASS(1:nb_species) = 0.d0
 THERMAL_HOPING_RATE(1:nb_species) = 0.d0
 ACCRETION_RATES(1:nb_species) = 0.d0

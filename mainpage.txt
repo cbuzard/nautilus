@@ -174,7 +174,14 @@ Error 19: One gas species has no adsorption reaction (ITYPE=99)
 
 Error 20: One surface species has no desorption reaction (either ITYPE=15,16,66,67)
 
+Error 21: STRUCTURE_TYPE has a value that is not defined in the code
+
+Error 22: In 0D, we can't have 1D_sample>1
+
+Error 23: You can't have 1D structure and time evolution (read from a data file) of that structure at the same time.
+
 Error 24: Problem occured while inside the sorting array procedure 'get_sorted_index'
+
 
 @section section_itype Reactions Types
 

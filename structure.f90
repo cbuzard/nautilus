@@ -361,4 +361,229 @@ subroutine get_grain_temperature_table(time, gas_temperature, grain_temperature)
   end if  
   return
 end subroutine get_grain_temperature_table
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the diffusion routine for 0D structure. Thus, 
+!! nothing is done here, just to point toward a "do nothing" procedure
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine structure_diffusion_0D(timestep, temp_abundances)
+  
+  implicit none
+  ! Inputs
+  real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
+  
+  ! Inputs/Outputs
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  !! all 1D mesh points (relative to H) [number ratio]
+  
+  ! Abundances stay equal here
+  
+end subroutine structure_diffusion_0D
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the diffusion routine for 1D structure of a spherical object. 
+!! The diffusion is done radially, assuming a spherical symetry. The first point is on the outside 
+!! TODO (check that once the procedure is written)
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine structure_diffusion_1D_sphere(timestep, temp_abundances)
+  
+  implicit none
+  ! Inputs
+  real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
+  
+  ! Inputs/Outputs
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  !! all 1D mesh points (relative to H) [number ratio]
+  
+  ! TODO write spherical diffusion here assuming diffusion on radial dimension only
+  
+end subroutine structure_diffusion_1D_sphere
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the diffusion routine for 1D structure of a disk object (meaning we neglect the 'z' dimension). 
+!! The diffusion is done radially, assuming a cylindrical symetry. The first point is on the outside 
+!! TODO (check that once the procedure is written)
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine structure_diffusion_1D_disk_r(timestep, temp_abundances)
+  
+  implicit none
+  ! Inputs
+  real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
+  
+  ! Inputs/Outputs
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  !! all 1D mesh points (relative to H) [number ratio]
+  
+  ! TODO write disk diffusion here assuming diffusion on radial dimension only (but now in cylindrical coordinates
+  
+end subroutine structure_diffusion_1D_disk_r
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the diffusion routine for 1D structure of a disk object. 
+!! The diffusion is done vertically, on the 'z' dimension. The first point is on the outside 
+!! TODO (check that once the procedure is written)
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine structure_diffusion_1D_disk_z(timestep, temp_abundances)
+  
+  implicit none
+  ! Inputs
+  real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
+  
+  ! Inputs/Outputs
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  !! all 1D mesh points (relative to H) [number ratio]
+  
+  ! TODO write cylindrical diffusion here assuming diffusion on vertical dimension only
+  
+end subroutine structure_diffusion_1D_disk_z
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the timestep routine for 0D structure.
+!! Nothing is done here, there will be only one timestep, equal to the output one. 
+!! Indeed, subtimestep are defined by the diffusion process, and there's none in 0D
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_timestep_0D(current_time, final_time, next_timestep)
+
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: current_time !<[in] current time [s]
+  real(double_precision), intent(in) :: final_time !<[in] Final output time of the current 
+  !! loop occurence. The last sub-step must lead exactly to this time [s]
+
+  ! Outputs
+  real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
+
+  next_timestep = final_time - current_time
+
+end subroutine get_timestep_0D
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the diffusion routine for 1D structure of a spherical object. 
+!! The diffusion is done radially, assuming a spherical symetry. The first point is on the outside 
+!! TODO (check that once the procedure is written)
+!! This routine provide a sub-timestep that allow accurate computation of the diffusion.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_timestep_1D_sphere(current_time, final_time, next_timestep)
+
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: current_time !<[in] current time [s]
+  real(double_precision), intent(in) :: final_time !<[in] Final output time of the current 
+  !! loop occurence. The last sub-step must lead exactly to this time [s]
+
+  ! Outputs
+  real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
+
+  ! TODO write the calculation of the diffusion timestep before that test
+  if (current_time+next_timestep.gt.final_time) then
+    next_timestep = final_time - current_time
+  endif
+
+end subroutine get_timestep_1D_sphere
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the timestep routine for 1D structure of a disk object 
+!! whose 1D diffusion is on the radial dimension. 
+!! This routine provide a sub-timestep that allow accurate computation of the diffusion.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_timestep_1D_disk_r(current_time, final_time, next_timestep)
+
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: current_time !<[in] current time [s]
+  real(double_precision), intent(in) :: final_time !<[in] Final output time of the current 
+  !! loop occurence. The last sub-step must lead exactly to this time [s]
+
+  ! Outputs
+  real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
+
+  ! TODO write the calculation of the diffusion timestep before that test
+  if (current_time+next_timestep.gt.final_time) then
+    next_timestep = final_time - current_time
+  endif
+
+end subroutine get_timestep_1D_disk_r
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Version of the timestep routine for 1D structure of a disk object 
+!! whose 1D diffusion is on the vertical dimension. 
+!! This routine provide a sub-timestep that allow accurate computation of the diffusion.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine get_timestep_1D_disk_z(current_time, final_time, next_timestep)
+
+  implicit none
+
+  ! Inputs
+  real(double_precision), intent(in) :: current_time !<[in] current time [s]
+  real(double_precision), intent(in) :: final_time !<[in] Final output time of the current 
+  !! loop occurence. The last sub-step must lead exactly to this time [s]
+
+  ! Outputs
+  real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
+  
+  ! TODO write the calculation of the diffusion timestep before that test
+  if (current_time+next_timestep.gt.final_time) then
+    next_timestep = final_time - current_time
+  endif
+
+end subroutine get_timestep_1D_disk_z
 end module structure

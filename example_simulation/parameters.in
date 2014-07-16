@@ -24,6 +24,8 @@ is_absorption = 1 ! H2 AND CO SELF-SHIELDING
 grain_tunneling_diffusion = 0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
 modify_rate_flag =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 conservation_type =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
+structure_type = 0D ! 0D, 1D_sphere, 1D_disk_r, 1D_disk_z
+1D_sample = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
 
 !*****************************
 !*    Gas phase parameters   *

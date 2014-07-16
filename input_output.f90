@@ -399,6 +399,9 @@ if (isDefined) then
       
       case('conservation_type', 'ICONS') ! The old name is kept for compatibility reasons
         read(value, '(i2)') CONSERVATION_TYPE
+        
+      case('structure_type')
+        read(value, *) STRUCTURE_TYPE
       
       ! Gas phase
       case('1D_sample')
@@ -512,6 +515,18 @@ if ((GRAIN_TEMPERATURE_TYPE.eq.'table').and.(IS_STRUCTURE_EVOLUTION.eq.0)) then
   call exit(8)
 endif
 
+if ((STRUCTURE_TYPE.eq.'0D').and.(nb_sample_1D.ne.1)) then
+  write(Error_unit,*) 'Error: In 0D, we must have one point (1D_sample=1)'
+  call exit(22)
+endif
+
+if ((STRUCTURE_TYPE.ne.'0D').and.(IS_STRUCTURE_EVOLUTION.ne.0)) then
+  write(Error_unit,*) 'Error: In 1D, structure evolution is currently not supported. If is_structure_evolution=1, you must have'
+  write(Error_unit,*) '       structure_type="0D"'
+  
+  call exit(23)
+endif
+
 return
 end subroutine read_parameters_in
 
@@ -562,12 +577,13 @@ use global_variables
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
+  write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_sphere, 1D_disk_r, 1D_disk_z'
+  write(10,'(a,i0,a)') '1D_sample = ', nb_sample_1D, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*    Gas phase parameters   *"
   write(10,'(a)') "!*****************************"
   write(10,'(a)') ""
-  write(10,'(a,i0,a)') '1D_sample = ', nb_sample_1D, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
   write(10,'(a,es10.3e2,a)') 'initial_gas_density = ', initial_gas_density, ' ! initial gas density [part/cm-3]'
   write(10,'(a,es10.3e2,a)') 'initial_gas_temperature = ', initial_gas_temperature, ' ! initial gas temperature [K]'
   write(10,'(a,es10.3e2,a)') 'initial_visual_extinction = ', INITIAL_VISUAL_EXTINCTION, ' ! initial visual extinction'
@@ -862,11 +878,13 @@ do j=1,nb_lines
 enddo
 
 ! Set initial abundances================================================
-do I=1,nb_species
-  abundances(I) = MINIMUM_INITIAL_ABUNDANCE
+abundances(1:nb_species, 1:nb_sample_1D) = MINIMUM_INITIAL_ABUNDANCE
+
+! Initial abundance for one species is assumed to be the same throughout the 1D structure initially
+do i=1,nb_species
   do j=1,nb_lines
-    if (species_name(I).EQ.temp_names(j)) then
-      abundances(I)=temp_abundances(j)
+    if (species_name(i).EQ.temp_names(j)) then
+      abundances(i,1:nb_sample_1D)=temp_abundances(j)
     endif
   enddo
 enddo
@@ -1000,7 +1018,7 @@ open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) current_time
 write(35) gas_temperature, dust_temperature, 0.5d0 * H_number_density, visual_extinction, X_IONISATION_RATE
-write(35) abundances(1:nb_species)
+write(35) abundances(1:nb_species, 1:nb_sample_1D)
 close(35)
 
 return
@@ -1065,6 +1083,7 @@ character(len=*), intent(in) :: filename !<[in] the name of the output file
 
 ! Locals
 integer :: i
+character(len=80) :: line_format
 
 open(13, file=filename)
 write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
@@ -1072,8 +1091,11 @@ write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
 &", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,current_time,H_number_density,&
 gas_temperature,visual_extinction,CR_IONISATION_RATE
 
+! To count the number of real to write in one line.
+write(line_format,'(a,i0,a)') '(a," = ",',nb_sample_1D,'(1PE12.5))'
+
 do i=1,nb_species
-  write(13,'(a," = ",1PE12.5)') species_name(I),abundances(I)
+  write(13,line_format) species_name(i),abundances(i,1:nb_sample_1D)
 enddo
 
 write(13,*)

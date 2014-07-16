@@ -581,6 +581,7 @@ implicit none
 
 ! Locals
 integer :: i ! For loops
+real(double_precision), dimension(:), allocatable :: temp_abundances !< Temporary variable to store abundances summed over all 1D points
 
 ! Initializing global time
 current_time = 0.d0
@@ -635,6 +636,32 @@ select case(GRAIN_TEMPERATURE_TYPE)
     call exit(10)
 end select
 
+!0D, 1D_sphere, 1D_disk_r, 1D_disk_z
+! Initialize structure pointers
+select case(STRUCTURE_TYPE)
+  case('0D') ! No structure at all. Point towards routines that do almost nothing.
+    get_timestep => get_timestep_0D
+    structure_diffusion => structure_diffusion_0D
+
+  case('1D_sphere') ! TODO comments
+    get_timestep => get_timestep_1D_sphere
+    structure_diffusion => structure_diffusion_1D_sphere
+
+  case('1D_disk_r') ! TODO comments
+    get_timestep => get_timestep_1D_disk_r
+    structure_diffusion => structure_diffusion_1D_disk_r
+
+  case('1D_disk_z') ! TODO comments
+    get_timestep => get_timestep_1D_disk_z
+    structure_diffusion => structure_diffusion_1D_disk_z
+    
+  case default
+    write(error_unit,*) 'The STRUCTURE_TYPE="', STRUCTURE_TYPE,'" cannot be found.'
+    write(error_unit,*) 'Values possible : 0D, 1D_sphere, 1D_disk_r, 1D_disk_z'
+    write(error_unit, '(a)') 'Error in subroutine initialisation.' 
+    call exit(21)
+end select
+
 ! Read list of species, either for gas or grain reactions
 call read_species()
 
@@ -656,7 +683,9 @@ call get_gas_surface_species()
 call index_datas()
 
 ! Calculate the initial abundances for all elements that compose 
-call get_elemental_abundance(all_abundances=abundances, el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
+allocate(temp_abundances(nb_species))
+temp_abundances(1:nb_species) = sum(abundances(1:nb_species,1:nb_sample_1D), dim=2)
+call get_elemental_abundance(all_abundances=temp_abundances(1:nb_species), el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
 
 ! Store initial elemental abundances
 call write_elemental_abundances(filename='elemental_abundances.out', el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
@@ -670,14 +699,17 @@ do i=1,NB_PRIME_ELEMENTS
 enddo
 
 ! Compute the grain abundance
-GTODN=(4.d0*PI*GRAIN_DENSITY*grain_radius*grain_radius*grain_radius)/(3.d0*initial_dtg_mass_ratio*AMU)
+GTODN = (4.d0 * PI * GRAIN_DENSITY * grain_radius * grain_radius * grain_radius) / (3.d0 * initial_dtg_mass_ratio * AMU)
 
-where(species_name.EQ.YGRAIN) abundances=1.0/GTODN
+abundances(INDGRAIN,1:nb_sample_1D) = 1.0 / GTODN ! TODO do we must divide by nb_sample_1D in the 1D case???
 
 ! Set the electron abundance via conservation===========
 ! And check at the same time that nls_init has the same elemental abundance
 ! as nls_control
-call check_conservation(abundances(1:nb_species))
+! Make comparison for the sum of abundances over 1D dimension
+if (nb_sample_1D.eq.1) then
+  call check_conservation(abundances(1:nb_species, 1))
+endif
 
 ! 1D physical structure (nls_phys_1D)
 call get_structure_properties(time=current_time, & ! Inputs
@@ -820,6 +852,7 @@ do i=1,nb_species
   if (species_name(i).eq.YH2) INDH2=i
   if (species_name(i).eq.YCO) INDCO=i
   if (species_name(i).eq.YHE) INDHE=i
+  if (species_name(i).eq.YGRAIN) INDGRAIN=i
 enddo
 
 ! Compute nb_sites_per_grain = number of sites per grain

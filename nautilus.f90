@@ -119,14 +119,15 @@ real(double_precision) :: atol = 1.d-99 !< absolute tolerance parameter (scalar 
 !!\n          use ATOL = 0.0 (or ATOL(i) = 0.0) for pure relative error
 !!\n          control.  Caution: actual (global) errors may exceed these
 !!\n          local tolerances, so choose them conservatively.
-real(double_precision) :: integration_timestep !< Timestep of the present step, starting from current_time [s]
+real(double_precision) :: output_timestep !< Timestep to reach the next output time, starting from old output time [s]
+real(double_precision) :: integration_timestep !< Timestep [s] to have an accurate integration. 
+!! This is smalled than output_timestep in case of diffusion, or equal to output_timestep
 
 real(double_precision), dimension(:), allocatable :: output_times !< [s] dim(NB_OUTPUTS or nb_times in data file) 
-!! will store the list of times at which we want outputs
 real(double_precision) :: output_step !< [s] used to compute the list of output time, depending if its linear or log spaced
 integer :: output_idx !< integer for the output time loop
 
-integer :: i !< For loops
+integer :: i, x_i !< For loops
 
 call initialisation()
 
@@ -174,25 +175,52 @@ select case(OUTPUT_TYPE)
     call exit(12)
 end select
 
-! The real time loop
+current_time = 0.d0 ! In seconds
+
+! loop on output times (sub-step can exists, especially for diffusion process occuring on shorted timescales)
 do output_idx=1, NB_OUTPUTS
 
-  integration_timestep = output_times(output_idx) - current_time
+  output_timestep = output_times(output_idx) - current_time
   
-  call get_structure_properties(time=current_time, & ! Inputs
+  call get_timestep(current_time=current_time, final_time=output_times(output_idx), next_timestep=integration_timestep)
+  
+  ! Loop on sub-timesteps. If diffusion (1D) then sub-timesteps are constrained by diffusion timescale.
+  !! Else, only one step is done equal to the output_timestep
+  do while (current_time.lt.output_times(output_idx))
+    
+    ! So far, structure read from ASCII file is not compatible with 1D. 
+    !! If this changes, this call must be included in the loop on 1D sample
+    call get_structure_properties(time=current_time, & ! Inputs
                               Av=visual_extinction, density=H_number_density, & ! Outputs
                               gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
-                                
-  current_time = output_times(output_idx) ! New current time at which abundances are valid
+    
+    
+    do x_i=1,nb_sample_1D
 
+      call integrate_chemical_scheme(delta_t=output_timestep, temp_abundances=abundances(1:nb_species, x_i),& ! Inputs
+      itol=itol, atol=atol, itask=itask, iopt=iopt, mf=mf, & ! Inputs
+      istate=istate) ! Output
+      
+      if (istate.eq.-3) stop
+    enddo
+    
+    if (nb_sample_1D.eq.1) then
+      call check_conservation(abundances(1:nb_species, 1))
+    endif
+    
+    ! We did one timestep. We update the diffusion for this timestep (mainly species diffusion)
+    call structure_diffusion(timestep=integration_timestep, temp_abundances=abundances(1:nb_species, 1:nb_sample_1D))
+
+    current_time = current_time + integration_timestep ! New current time at which abundances are valid
+    
+    ! We compute the next integration timestep
+    call get_timestep(current_time=current_time, final_time=output_times(output_idx), next_timestep=integration_timestep)
+
+  enddo
   write(Output_Unit,'(a,i5,a,1pd10.3,a)') 'step ',output_idx,', time =',current_time/YEAR,' years'
-
-  call integrate_chemical_scheme(integration_timestep,itol,atol,itask,istate,iopt,mf)
 
   ! Output of the rates
   call write_current_rates(index=output_idx)
-
-  if (istate.eq.-3) stop
   
   ! Output of the abundances
   call write_current_output(index=output_idx)
@@ -216,7 +244,7 @@ contains
 !> @brief Chemically evolve for a given time delta_t
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
+subroutine integrate_chemical_scheme(delta_t,temp_abundances,itol,atol,itask,iopt,mf,istate)
 
   use global_variables
   
@@ -251,20 +279,21 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
 !!\n          DLSODES again with ISTATE = 3 to force the structure to be
 !!\n          reevaluated. 
  
+  ! Input/Output
+  real(double_precision), dimension(nb_species), intent(inout) :: temp_abundances !<[in,out] Temporary array that contain the 
+  !! abundances for the duration of the timestep, a sort of buffer.
+
   ! Locals
   integer :: i
   real(double_precision) :: t !< The local time, starting from 0 to delta_t
   real(double_precision), dimension(nb_species) :: satol !< Array that contain the absolute tolerance, 
   !! one value per species, either a minimum value or a value related to its abundance.
-  real(double_precision), dimension(nb_species) :: temp_abundances !< Temporary array that contain the 
-  !! abundances for the duration of the timestep, a sort of buffer.
+
 
   real(double_precision) :: t_stop_step
 
   t_stop_step = delta_t
   t = 0.d0
-
-  temp_abundances(1:nb_species) = abundances(1:nb_species)
 
   do while (t.lt.t_stop_step)
 
@@ -291,11 +320,7 @@ subroutine integrate_chemical_scheme(delta_t,itol,atol,itask,istate,iopt,mf)
       write(*,*)  'ISTATE = ', ISTATE
     endif
 
-    call check_conservation(temp_abundances)
-
   enddo
-
-  abundances(1:nb_species) = temp_abundances(1:nb_species)
 
   return 
   end subroutine integrate_chemical_scheme
