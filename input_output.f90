@@ -1086,19 +1086,19 @@ integer :: i
 character(len=80) :: line_format
 
 open(13, file=filename)
-write(13,'("!DEPTH POINT=",I2,"/",I2,", TIME =",1PD10.3," s",&
-&", XNT=",1PD10.3," cm-3",", TEMP=",1PD10.3," K",&
-&", TAU=",0PF8.3,", ZETA=",1PD10.3," s-1")') 00,00,current_time,H_number_density,&
-gas_temperature,visual_extinction,CR_IONISATION_RATE
 
-! To count the number of real to write in one line.
-write(line_format,'(a,i0,a)') '(a," = ",',nb_sample_1D,'(1PE12.5))'
+! Header
+write(13,'(5(a,es10.3e2),a)') '!time =', current_time, ' s ; density = ', H_number_density, &
+' part/cm-3 ; temperature=', gas_temperature,' K ; visual extinction = ', visual_extinction, &
+' [mag] ; CR ionisation rate = ',CR_IONISATION_RATE,' s-1'
+
+! To adapt the format in function of the 1D number of points
+write(line_format,'(a,i0,a)') '(a," = ",', nb_sample_1D, '(es12.5e2))'
 
 do i=1,nb_species
-  write(13,line_format) species_name(i),abundances(i,1:nb_sample_1D)
+  write(13,line_format) trim(species_name(i)), abundances(i,1:nb_sample_1D)
 enddo
 
-write(13,*)
 close(13)
 
 return
