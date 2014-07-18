@@ -92,7 +92,7 @@ contains
     endif
     if (species_name(PRIME_ELEMENT_IDX(K)).eq.YH) then
       if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-temp_abundances(INDH2)*2.D0)/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then
-        write(Error_unit,'(2(a,a,a,es10.2e2))') 'H is too depleted on the grains: initial Y(',trim(species_name(K)),') =',&
+        write(Error_unit,'(2(a,a,a,es10.2e2))') 'H2 is too depleted on the grains: initial Y(',trim(species_name(K)),') =',&
                              INITIAL_ELEMENTAL_ABUNDANCE(K), ' ; Y(',trim(species_name(INDH2)),')*2 =',temp_abundances(INDH2)*2.d0
       endif
     endif
