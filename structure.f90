@@ -380,7 +380,8 @@ subroutine structure_diffusion_0D(timestep, temp_abundances)
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
   ! Abundances stay equal here
@@ -406,10 +407,18 @@ subroutine structure_diffusion_1D_sphere(timestep, temp_abundances)
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
-  ! TODO write spherical diffusion here assuming diffusion on radial dimension only
+  ! Locals
+  integer :: x_i !< For loops
+  
+  do x_i=1,nb_sample_1D
+    ! TODO write spherical diffusion here assuming diffusion on radial dimension only
+  enddo
+  
+
   
 end subroutine structure_diffusion_1D_sphere
 
@@ -432,10 +441,16 @@ subroutine structure_diffusion_1D_disk_r(timestep, temp_abundances)
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
-  ! TODO write disk diffusion here assuming diffusion on radial dimension only (but now in cylindrical coordinates
+  ! Locals
+  integer :: x_i !< For loops
+  
+  do x_i=1,nb_sample_1D
+    ! TODO write disk diffusion here assuming diffusion on radial dimension only (but now in cylindrical coordinates
+  enddo  
   
 end subroutine structure_diffusion_1D_disk_r
 
@@ -458,10 +473,17 @@ subroutine structure_diffusion_1D_disk_z(timestep, temp_abundances)
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] The abundances for all species, and 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
-  ! TODO write cylindrical diffusion here assuming diffusion on vertical dimension only
+  ! Locals
+  integer :: x_i !< For loops
+  
+  do x_i=1,nb_sample_1D
+    ! TODO write cylindrical diffusion here assuming diffusion on vertical dimension only
+  enddo  
+  
   
 end subroutine structure_diffusion_1D_disk_z
 

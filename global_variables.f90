@@ -277,7 +277,8 @@ abstract interface
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), intent(inout), dimension(:,:) :: temp_abundances !<[in,out] The abundances for all species, and 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
   end subroutine structure_diffusion_interface
