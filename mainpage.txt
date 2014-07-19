@@ -164,6 +164,8 @@ Error 14: One species have no production or destruction reaction.
 
 Error 15: One reaction is not well defined (either prime elements or electric charge, or temperature range).
 
+Error 16: At least one reaction has alpha = 0, please change alpha or comment the reaction.
+
 Error 17: Two reactions with the same ID have different reactants or product, or incompatible temperature ranges
 
 Error 18: One gas species has no grain equivalent

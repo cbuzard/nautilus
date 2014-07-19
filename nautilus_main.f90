@@ -182,6 +182,9 @@ integer reaction2 !< Index for the reaction second loop
 integer :: ref_id !< reference ID to find twin reactions
 real(double_precision) :: range1_max, range2_min !< To test overlap between temperature ranges of reactions
 
+! To check reactions with alpha = 0
+logical :: alpha_equal_zero !< If any (at least one) reaction has alpha = 0, then display a warning.
+
 ! To check gas and grain species
 logical :: no_grain_equivalent !< true if a gas species has no grain equivalent.
 
@@ -340,14 +343,22 @@ if (IS_TEST.eq.1) then
 
   ! Check reactions with alpha equal 0
   open(12, file=information_file, position='append')
-
+  alpha_equal_zero = .false.
   write(12, *) ' ### CHECK ### reactions with alpha = 0'
   do reaction=1,nb_reactions
     if (RATE_A(reaction).eq.0.d0) then
+      alpha_equal_zero = .true.
       write(12,'(a,i0,a,a)') 'Warning: The reaction ',REACTION_ID(reaction), ' has an alpha = 0'
     endif
   enddo
   close(12)
+  
+  if (alpha_equal_zero) then
+    write(Error_Unit,'(a,i0,a,2(es10.3e2,a))') 'Error: Some reactions have alpha = 0. Please change alpha or comment the '
+    write(Error_Unit,'(a,i0,a,2(es10.3e2,a))') 'reaction with "!" because this can cause errors in '
+    write(Error_Unit,'(a,i0,a,2(es10.3e2,a))') 'branching ratio. Refers to "info.out" for the list of reactions.'
+  call exit(16)
+  endif
   
   ! Check if tmin < tmax for all reactions (else, trange is not correctly defined)
   do reaction=1,nb_reactions
