@@ -240,8 +240,11 @@ os.chdir(NEW_TEST)
 clean()
 os.chdir("..")
 
+# We create folder and force old simulation generation if this is the first time we run the script
 if not(os.path.isdir(PREVIOUS_TEST)):
-  force = True
+  os.mkdir(PREVIOUS_TEST)
+  force_source = True
+  force_simulation = True
 
 # We delete old files, get the desired revision of the code, and the corresponding simulation files, compile it and so on.
 if force_source:
