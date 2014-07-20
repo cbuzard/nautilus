@@ -174,6 +174,8 @@ Error 19: One gas species has no adsorption reaction (ITYPE=99)
 
 Error 20: One surface species has no desorption reaction (either ITYPE=15,16,66,67)
 
+Error 21: Problem occured while inside the sorting array procedure 'get_sorted_index'
+
 @section section_itype Reactions Types
 
 ITYPE 0: Gas phase reactions with GRAINS

@@ -696,7 +696,7 @@ if gdb:
 if profiling:
   OPTIONS = PROFILING_OPTIONS
 
-PROGRAMS = ["nautilus.f90", "nautilus_rates.f90", "nautilus_outputs.f90"]
+PROGRAMS = ["nautilus.f90", "nautilus_rates.f90", "nautilus_outputs.f90", "nautilus_major_reactions.f90"]
 
 if (isNautilus):
   PROGRAMS = ["nautilus.f90"]
