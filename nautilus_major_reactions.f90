@@ -17,8 +17,6 @@ logical :: isDefined
 real(double_precision) :: tmp !< temporary variable
 character(len=80) :: output_format
 
-integer :: nb_sample_1D = 1
-
 ! /!\ Variable names with _out are variable that already exist in the nautilus code, but here they are arrays, one value per output.
 
 real(double_precision), dimension(:,:,:), allocatable :: abundances_out !< abundances_out over time for each species. (nb_outputs, nb_species)
