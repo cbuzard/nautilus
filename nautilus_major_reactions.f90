@@ -206,7 +206,7 @@ do reaction=1, nb_reactions
     do i=1, MAX_REACTANTS
       ! Skip if blanck species
       if (REACTION_COMPOUNDS_ID(i, reaction).ne.nb_species+1) then
-        tmp = tmp * abundances_out(output_id, REACTION_COMPOUNDS_ID(i, reaction), 1)
+        tmp = tmp * abundances_out(output_id, REACTION_COMPOUNDS_ID(i, reaction), 1) * density(user_1D_id, output_ID)
       endif
     enddo
     destructions(reaction) = reaction_rates_out(output_id, reaction) * tmp
@@ -217,7 +217,7 @@ do reaction=1, nb_reactions
     do i=1, MAX_REACTANTS
       ! Skip if blanck species
       if (REACTION_COMPOUNDS_ID(i, reaction).ne.nb_species+1) then
-        tmp = tmp * abundances_out(output_id, REACTION_COMPOUNDS_ID(i, reaction), 1)
+        tmp = tmp * abundances_out(output_id, REACTION_COMPOUNDS_ID(i, reaction), 1) * density(user_1D_id, output_ID)
       endif
     enddo
     productions(reaction) = reaction_rates_out(output_id, reaction) * tmp
