@@ -643,7 +643,6 @@ for arg in sys.argv[1:]:
       print(value_message % (key, key, value))
   elif (key == 'nautilus'):
     isNautilus = True
-    isNautilus = False
     isOutputs = False
     isRates = False
     isMajor = False
@@ -740,7 +739,7 @@ if (isRates):
   compile_source(filename="nautilus_rates.f90")
 
 if (isMajor):
-  compile_source(filename="nautilus_major_reactions.f90", extra=["getkey.c"])
+  compile_source(filename="nautilus_major_reactions.f90")
 
 if (isModifs):
   print("Warning: There is non committed modifs!")
