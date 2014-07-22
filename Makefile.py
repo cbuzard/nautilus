@@ -122,14 +122,12 @@ class sourceFile(object):
             options += " "+" -pg"
           
           if (ext == '.f90'):
-            compilator = sourceFile.COMPILATOR
+            commande = sourceFile.COMPILATOR+" "+options+" -c "+source_file
           elif (ext == '.c'):
-            compilator = 'gcc'
+            commande = "gcc -c "+source_file
           else:
             raise ValueError('Unkown extension for source file: %s' % ext)
           
-          commande = compilator+" "+options+" -c "+source_file
-        
           process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
           (process_stdout, process_stderr) = process.communicate()
