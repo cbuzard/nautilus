@@ -38,12 +38,16 @@ logical :: change_time = .true. !< If true, ask the user for a value
 logical :: change_species = .true. !< If true, ask the user for a value
 logical :: change_space = .true. !< If true, ask the user for a value
 logical :: print_types = .true. !< print different reaction types the first time
-logical :: wrong_species, wrong_output, wrong_1D, wrong_action !< Flags for while loops when asking the user something
-integer :: user_action !< Ask the user what he wants to do after the first run
+logical :: wrong_species, wrong_output, wrong_1D !< Flags for while loops when asking the user something
 character(len=11) :: user_species !< The species designed by the user
 integer :: user_species_id !< corresponding id of the desired species of the user
 integer :: output_id !< designed output id by the user
 integer :: user_1D_id !< designed spatial id by the user
+
+! User interface
+integer :: ierr
+character(len=1) :: user_action !< Ask the user what he wants to do after the first run
+
 
 ! For outputs
 real(double_precision), allocatable, dimension(:) :: destructions !< production rates for one given species. Reactions where this species is not involved have 0 value
@@ -295,46 +299,47 @@ enddo
 
 ! Ask user if he want another run
 10 wrong_action = .true.
-do while (wrong_action)
-  write(*,*) "What do you want to do?"
-  write(*,*) "0:quit ; 1: change all ; 2:change time ; 3: change species ; 4: change spatial point"
-  write(*,*) "5:Show/Hide Itype legend"
-  read(*,*) user_action
-  if ((user_action.ge.0).and.(user_action.le.5)) then
-    wrong_action = .false.
-  else
-    write(*,*) "Error: Action must be between 0 and 5"
-  endif
-  
-  if ((user_action.eq.4).and.(nb_sample_1D.eq.1)) then
-    wrong_action = .true.
-    write(*,*) "/!\ You are in 0D !"
-  endif
-enddo
+write(*,*) ''
+write(*,*) 'change: t(ime), s(pecies), p(oint 1D), a(ll)'
+write(*,*) 'l(egend) ; h(elp) ; q(uit)'
+write(*,"(a)", advance='no') 'Please enter your selection now:'
+
+! Use a C function, in getkey.c, whose object file is included.
+! we use gcc -c getkey.c
+! then add getkey.o when compiling the fortran main program
+user_action = getkey()
+
+write(*,*) ''
+
+if ((user_action.eq.'p').and.(nb_sample_1D.eq.1)) then
+  write(*,*) "/!\ You are in 0D !"
+  goto 10
+endif
+
 
 select case(user_action)
-  case(0)
+  case('q')
     call exit(0) ! Exiting normally
 
-  case(1) ! change all
+  case('a') ! change all
     change_time = .true.
     change_species = .true.
     change_space = .true.
     goto 20
 
-  case(2) ! change time
+  case('t') ! change time
     change_time = .true.
     goto 20
 
-  case(3) ! change species
+  case('s') ! change species
     change_species = .true.
     goto 30
 
-  case(4) ! change spatial point
+  case('p') ! change spatial point
     change_space = .true.
     goto 40
     
-  case(5) ! Switch legend boolean
+  case('l') ! Switch legend boolean
     if (print_types) then
       print_types = .false.
       write(*,*) 'Info: Reaction types legend will now be hidden'
@@ -342,6 +347,16 @@ select case(user_action)
       print_types = .true.
       write(*,*) 'Info: Reaction types legend will now be shown everytime'
     endif
+    goto 10
+  
+  case('h') ! Show help
+    write(*,*) 't: change output time'
+    write(*,*) 's: change species'
+    write(*,*) 'p: change spatial point (only in 1D)'
+    write(*,*) 'a: change all (time, species and spatial point)'
+    write(*,*) 'l: permanently show/hide the reaction types legend'
+    write(*,*) 'h: help. Show the present message'
+    write(*,*) 'q: quit the application'
     goto 10
   
 end select
@@ -519,5 +534,13 @@ if (arr(j) < arr(i)) then
   j=swp
 end if
 end subroutine icomp_xchg
+
+
+character function getkey()
+! call the C routine and convert the integer to a character
+    integer getkey4F
+    getkey=char(getkey4F())
+    !flush(6) ! usually not required, extension
+end function getkey
 
 end program nautilus_major_reactions
