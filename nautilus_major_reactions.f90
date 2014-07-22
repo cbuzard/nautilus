@@ -247,10 +247,13 @@ if (print_types) then
   write(*,*) '67   : Photodesorption by CR generated UV'
   write(*,*) '98   : storage of H2S under a refractory form'
   write(*,*) '99   : Adsorption on grains'
-  print_types = .false.
 endif
 
 write(output_format,*)'(i2,4x,a,2x,es13.7,4x,f5.1,"%")'
+
+write(*,*) ''
+write(*,'(a,a,a,i0,a,es8.2,a,i0)') 'For ', trim(user_species), ' at output n°', output_ID, &
+' (', time(output_ID), ' years) and spatial point n°',user_1D_id
 
 write(*,*) "--------------- PRODUCTION (cm-3 s-1) -----------------    ------"
 percentage = 100.d0
@@ -291,21 +294,22 @@ do while(percentage.gt.PERCENTAGE_THRESHOLD)
 enddo
 
 ! Ask user if he want another run
-wrong_action = .true.
+10 wrong_action = .true.
 do while (wrong_action)
-	write(*,*) "What do you want to do?"
-	write(*,*) "0:quit ; 1: change all ; 2:change time ; 3: change species ; 4: change spatial point"
-	read(*,*) user_action
-	if ((user_action.ge.0).and.(user_action.le.4)) then
-	  wrong_action = .false.
-	else
-	  write(*,*) "Error: Action must be between 0 and 4"
-	endif
-	
-	if ((user_action.eq.4).and.(nb_sample_1D.eq.1)) then
-	  wrong_action = .true.
-	  write(*,*) "/!\ You are in 0D !"
-	endif
+  write(*,*) "What do you want to do?"
+  write(*,*) "0:quit ; 1: change all ; 2:change time ; 3: change species ; 4: change spatial point"
+  write(*,*) "5:Show/Hide Itype legend"
+  read(*,*) user_action
+  if ((user_action.ge.0).and.(user_action.le.5)) then
+    wrong_action = .false.
+  else
+    write(*,*) "Error: Action must be between 0 and 5"
+  endif
+  
+  if ((user_action.eq.4).and.(nb_sample_1D.eq.1)) then
+    wrong_action = .true.
+    write(*,*) "/!\ You are in 0D !"
+  endif
 enddo
 
 select case(user_action)
@@ -329,6 +333,16 @@ select case(user_action)
   case(4) ! change spatial point
     change_space = .true.
     goto 40
+    
+  case(5) ! Switch legend boolean
+    if (print_types) then
+      print_types = .false.
+      write(*,*) 'Info: Reaction types legend will now be hidden'
+    else
+      print_types = .true.
+      write(*,*) 'Info: Reaction types legend will now be shown everytime'
+    endif
+    goto 10
   
 end select
 
