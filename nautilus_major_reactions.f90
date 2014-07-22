@@ -38,16 +38,12 @@ logical :: change_time = .true. !< If true, ask the user for a value
 logical :: change_species = .true. !< If true, ask the user for a value
 logical :: change_space = .true. !< If true, ask the user for a value
 logical :: print_types = .true. !< print different reaction types the first time
-logical :: wrong_species, wrong_output, wrong_1D !< Flags for while loops when asking the user something
+logical :: wrong_species, wrong_output, wrong_1D, wrong_action !< Flags for while loops when asking the user something
+integer :: user_action !< Ask the user what he wants to do after the first run
 character(len=11) :: user_species !< The species designed by the user
 integer :: user_species_id !< corresponding id of the desired species of the user
 integer :: output_id !< designed output id by the user
 integer :: user_1D_id !< designed spatial id by the user
-
-! User interface
-integer :: ierr
-character(len=1) :: user_action !< Ask the user what he wants to do after the first run
-
 
 ! For outputs
 real(double_precision), allocatable, dimension(:) :: destructions !< production rates for one given species. Reactions where this species is not involved have 0 value
@@ -306,7 +302,7 @@ write(*,"(a)", advance='no') 'Please enter your selection now:'
 ! Use a C function, in getkey.c, whose object file is included.
 ! we use gcc -c getkey.c
 ! then add getkey.o when compiling the fortran main program
-user_action = getkey()
+read(*,*) user_action
 
 write(*,*) ''
 
@@ -314,7 +310,6 @@ if ((user_action.eq.'p').and.(nb_sample_1D.eq.1)) then
   write(*,*) "/!\ You are in 0D !"
   goto 10
 endif
-
 
 select case(user_action)
   case('q')
@@ -533,13 +528,5 @@ if (arr(j) < arr(i)) then
   j=swp
 end if
 end subroutine icomp_xchg
-
-
-character function getkey()
-! call the C routine and convert the integer to a character
-    integer getkey4F
-    getkey=char(getkey4F())
-    !flush(6) ! usually not required, extension
-end function getkey
 
 end program nautilus_major_reactions
