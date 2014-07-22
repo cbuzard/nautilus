@@ -45,7 +45,7 @@ class sourceFile(object):
 
   """
   
-  ## We define a dictionnary where we store, for each name of a module,
+  ## We define a dictionary where we store, for each name of a module,
   # the link toward the object file where it is defined
   findModule = {}
   
@@ -80,25 +80,26 @@ class sourceFile(object):
   isGDB = False
   isProfiling = False
   
-  def __init__(self, filename, name='default', isProgram=False):
+  def __init__(self, filename, name=None, isProgram=False, extra_files=None):
     """Will check everything that is included in the source code
     and initialize the object"""
     self.filename = filename
     
-    if (name == 'default'):
+    if (name == None):
       self.name = self.filename.rstrip(".f90")
     else:
       self.name = str(name)
     
+    # For extra modules that can't be retrieved manually. This can be C modules or weird files
     # Adding manually the modules that fuck everything up, namely ODEPACK !
-    if (filename == 'nautilus.f90'):
-      self.extra = "opk*.o"
-      
-      Extrafiles = ["opkda1", "opkda2", "opkdmain"]
+    if (extra_files != None):
       # If the source file is newer than the object file, we need to compile it
-      for name in Extrafiles:
-        object_file = "%s.o" % name
-        source_file = "%s.f90" % name
+      object_files = ["%s.o" % os.path.splitext(filename)[0] for filename in extra_files]
+      self.extra = " ".join(object_files)
+      
+      for (source_file, object_file) in zip(extra_files, object_files):
+        (name, ext) = os.path.splitext(source_file)
+
         if (os.path.isfile(object_file)):
           # If source file is newer, we compile
           isCompilation = os.path.getmtime(source_file) > os.path.getmtime(object_file)
@@ -108,6 +109,7 @@ class sourceFile(object):
           isCompilation = True
         
         if isCompilation:
+          
           options = sourceFile.OPTIONS
           if (sourceFile.isDebug):
             options += " "+sourceFile.DEBUG
@@ -119,7 +121,14 @@ class sourceFile(object):
             # We deactivate all other options except GDB => not True anymore
             options += " "+" -pg"
           
-          commande = sourceFile.COMPILATOR+" "+options+" -c "+source_file
+          if (ext == '.f90'):
+            compilator = sourceFile.COMPILATOR
+          elif (ext == '.c'):
+            compilator = 'gcc'
+          else:
+            raise ValueError('Unkown extension for source file: %s' % ext)
+          
+          commande = compilator+" "+options+" -c "+source_file
         
           process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
 
@@ -396,7 +405,7 @@ class sourceFile(object):
 
     return texte
 
-def make_binaries(sources_filename, mains, debug=False, gdb=False, profiling=False):
+def prepare_compilation(debug=False, gdb=False, profiling=False):
   """function that will compile every needed sourceFile and get a 
   binary for the defined source files
   
@@ -418,39 +427,24 @@ def make_binaries(sources_filename, mains, debug=False, gdb=False, profiling=Fal
   
   """
   
-  # if the mains are defined as a list, that means the default name will be the default one, controlled by the class. 
-  if (type(mains) == list):
-    main_list = list(mains)
-    mains = {}
-    for main in main_list:
-      mains[main] = 'default'
-  elif (type(mains) == dict):
-    main_list = mains.keys()
-  else:
-    raise TypeError("'mains' must be a dict or a list")
-  
-  for filename in main_list:
-    if (filename not in sources_filename):
-      raise NameError("Error: The file %s doesn't exist" % filename)
+  sources_filename = glob.glob("*.f90")
   
   # We define the objects for each source file.
   sources = []
-  main_source = []
   for filename in sources_filename:
-    if (filename in main_list):
-      source = sourceFile(filename, name=mains[filename], isProgram=True)
-    else:
-      source = sourceFile(filename)
+    source = sourceFile(filename)
     sources.append(source)
   
   sourceFile.setDebug(debug)
   sourceFile.setGDB(gdb)
   sourceFile.setProfiling(profiling)
+
+def compile_source(filename, name=None, extra=None):
+  """
+  """
   
-  # We compile the programs (dependencies are automatically compiled if needed.
-  for source in sources:
-    if (not(source.isCompiled) and source.isProgram):
-      source.compile()
+  source = sourceFile(filename, name=name, isProgram=True, extra_files=extra)
+  source.compile()
 
 def run_command(commande):
   """lance une commande qui sera typiquement soit une liste, soit une 
@@ -597,9 +591,10 @@ def clean(exts):
 # Parameters
 debug = False
 isTest = False
-isNautilus = False
-isRates = False
-isOutputs = False
+isNautilus = True
+isOutputs = True
+isRates = True
+isMajor = True
 gdb = False
 profiling = False
 force = False # To force the compilation of every module
@@ -615,6 +610,7 @@ The script can take various arguments:
  * nautilus : To compile Nautilus only
  * output : To compile binary abundances (nautilus_outputs) only
  * rates : To compile binary rates (nautilus_rates) only
+ * major : To compile binary rates (nautilus_major_reactions) only
  * opkd : To include warnings of opkd
  * test : [%s] activate test options. Theses options are to be used when we want
   to compare the original and actual version of the code, by 
@@ -649,14 +645,31 @@ for arg in sys.argv[1:]:
       print(value_message % (key, key, value))
   elif (key == 'nautilus'):
     isNautilus = True
+    isNautilus = False
+    isOutputs = False
+    isRates = False
+    isMajor = False
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'output'):
+    isNautilus = False
     isOutputs = True
+    isRates = False
+    isMajor = False
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'rates'):
+    isNautilus = False
+    isOutputs = False
     isRates = True
+    isMajor = False
+    if (value != None):
+      print(value_message % (key, key, value))
+  elif (key == 'major'):
+    isNautilus = False
+    isOutputs = False
+    isRates = False
+    isMajor = True
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'opkd'):
@@ -696,17 +709,6 @@ if gdb:
 if profiling:
   OPTIONS = PROFILING_OPTIONS
 
-PROGRAMS = ["nautilus.f90", "nautilus_rates.f90", "nautilus_outputs.f90", "nautilus_major_reactions.f90"]
-
-if (isNautilus):
-  PROGRAMS = ["nautilus.f90"]
-
-if (isOutputs):
-  PROGRAMS = ["nautilus_outputs.f90"]
-  
-if (isRates):
-  PROGRAMS = ["nautilus_rates.f90"]
-
 write_infos_in_f90_file(main_branch='master')
 
 isModifs = is_non_committed_modifs()
@@ -720,7 +722,6 @@ sourceFile.setCompilingOptions(OPTIONS)
 
 # pour tester les bornes des tableaux : -fbounds-check (il faut ensuite faire tourner le programme, des tests sont effectués au cours de l'exécution)
 
-sources_filename = glob.glob("*.f90")
 
 # Before compiling, we delete the previous compilation log. Indeed, we need to append the several warnings in the same file
 # But we do not want to have infos of the previous compilation in it.
@@ -728,7 +729,20 @@ if os.path.isfile(LOG_NAME):
   os.remove(LOG_NAME)
 
 # We create the binaries
-make_binaries(sources_filename, PROGRAMS, debug=debug, gdb=gdb, profiling=profiling)
+
+prepare_compilation(debug=debug, gdb=gdb, profiling=profiling)
+
+if (isNautilus):
+  compile_source(filename="nautilus.f90", extra=["opkda1.f90", "opkda2.f90", "opkdmain.f90"])
+
+if (isOutputs):
+  compile_source(filename="nautilus_outputs.f90")
+  
+if (isRates):
+  compile_source(filename="nautilus_rates.f90")
+
+if (isMajor):
+  compile_source(filename="nautilus_major_reactions.f90", extra=["getkey.c"])
 
 if (isModifs):
   print("Warning: There is non committed modifs!")
@@ -738,3 +752,4 @@ LogPostProcessing()
 if os.path.isfile(LOG_NAME):
   if 'Warning' in open(LOG_NAME).read():
     print("Warnings: see '%s'" % LOG_NAME)
+

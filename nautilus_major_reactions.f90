@@ -298,8 +298,7 @@ do while(percentage.gt.PERCENTAGE_THRESHOLD)
 enddo
 
 ! Ask user if he want another run
-10 wrong_action = .true.
-write(*,*) ''
+10 write(*,*) ''
 write(*,*) 'change: t(ime), s(pecies), p(oint 1D), a(ll)'
 write(*,*) 'l(egend) ; h(elp) ; q(uit)'
 write(*,"(a)", advance='no') 'Please enter your selection now:'
