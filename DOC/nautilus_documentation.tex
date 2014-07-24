@@ -631,38 +631,19 @@ nautilus-compare-abundances.py help
 \end{verbatim}
 
 \section{For developpers}\label{sec:advanced}
-Generic information to start with:
-\begin{itemize}
-\item indentation is made by 2 spaces (no tabulation)
-\item Constants are in capital letters (even if \textbf{fortran} is not case sensitive)
-\item Variable need to be explicit about what they refer to. Use underscore "\_" to separate words if need. Avoid word shortcuts as much as possible since you'd be the only one to understand your rules for the shortcuts definitions.
-\item Add comments for aim of each routine, description of each variable (do not forget input and output flags). 
-\item Add comments about specific portion of the code that are less obvious
-\item use space before and after mathematical operator (=, +, -, *, /). 
-For instance : 
-\begin{verbatim}
-a=(b+c)/(d+2) ! WRONG
-a = (b + c) / (d + 2) ! GOOD
-\end{verbatim}
-\item use space after (but not before) parenthesis and commas
-For instance:
-\begin{verbatim}
-call r(a,e,c,d) ! WRONG
-call get_radius(a, e, c, d) ! GOOD
-call get_radius(arg1=a, radius=e, optional=c, distribution=d) ! BETTER
-\end{verbatim}
-\end{itemize}
+Constants and global variables are defined in the module \textbf{global\_variable.f90}. \textbf{nautilus\_main.f90} contains all the main routines. 
 
-Constants and global variables are defined in the module global\_variable.f90. nautilus\_main.f90 contains all the main routines. 
-
-The three main programs are:
+The four main programs are:
 \begin{itemize}
 \item \gras[binary!nautilus]{nautilus} in the source file \textbf{nautilus.f90} (compilation:  \verb|Makefile.py|)
 \item \gras[binary!nautilus\_outputs]{nautilus\_outputs} in the source file \textbf{nautilus\_outputs.f90} (compilation: \verb|Makefile.py output|)
 \item \gras[binary!nautilus\_rates]{nautilus\_rates} in the source file \textbf{nautilus\_rates.f90} (compilation: \verb|Makefile.py rates|).
+\item \gras[binary!nautilus\_major\_reactions]{nautilus\_major\_reactions} in the source file \textbf{nautilus\_major\_reactions.f90} (compilation: \verb|Makefile.py major|).
 \end{itemize}
 
 One last program exist to do some unitary tests on \textbf{Nautilus} (see \refsec{sec:unitary_tests} for more details).
+
+A lot of routines are handled by pointers. This allow us to change easily from one routine to another in function of the parameters. Thus, some routine names (in \textbf{call}) might not exists \emph{as is}. They are defined in \textbf{global\_variable.f90}. For each pointer, an interface is defined that constrains the architecture of each subroutine he can point to. 
 
 \subsection{Unitary tests}\label{sec:unitary_tests}\index{unitary tests}
 A \textbf{fortran} program \gras[binary!unitary\_tests]{unitary\_tests} (\textbf{unitary\_tests.f90}) was specifically designed to test some routines of the code separately. This is the main reason why a \textbf{nautilus\_main.f90} file was created, because we need to access these routines separately from the \gras[binary!nautilus]{nautilus} program.
