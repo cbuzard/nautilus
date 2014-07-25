@@ -577,7 +577,7 @@ use global_variables
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
-  write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_sphere, 1D_disk_r, 1D_disk_z'
+  write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_disk_z'
   write(10,'(a,i0,a)') '1D_sample = ', nb_sample_1D, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"

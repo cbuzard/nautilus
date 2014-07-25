@@ -633,20 +633,12 @@ select case(GRAIN_TEMPERATURE_TYPE)
     call exit(10)
 end select
 
-!0D, 1D_sphere, 1D_disk_r, 1D_disk_z
+!0D, 1D_disk_z
 ! Initialize structure pointers
 select case(STRUCTURE_TYPE)
   case('0D') ! No structure at all. Point towards routines that do almost nothing.
     get_timestep => get_timestep_0D
     structure_diffusion => structure_diffusion_0D
-
-  case('1D_sphere') ! TODO comments
-    get_timestep => get_timestep_1D_sphere
-    structure_diffusion => structure_diffusion_1D_sphere
-
-  case('1D_disk_r') ! TODO comments
-    get_timestep => get_timestep_1D_disk_r
-    structure_diffusion => structure_diffusion_1D_disk_r
 
   case('1D_disk_z') ! TODO comments
     get_timestep => get_timestep_1D_disk_z
@@ -654,7 +646,7 @@ select case(STRUCTURE_TYPE)
     
   case default
     write(error_unit,*) 'The STRUCTURE_TYPE="', STRUCTURE_TYPE,'" cannot be found.'
-    write(error_unit,*) 'Values possible : 0D, 1D_sphere, 1D_disk_r, 1D_disk_z'
+    write(error_unit,*) 'Values possible : 0D, 1D_disk_z'
     write(error_unit, '(a)') 'Error in subroutine initialisation.' 
     call exit(21)
 end select
