@@ -13,9 +13,9 @@ LOG_NAME = 'compilation.log'
 COMPILATOR = "gfortran"
 
 DEBUG_OPTIONS = "-pedantic-errors -Wall -Wconversion -Wextra -Wunreachable-code -fbacktrace" + \
-  " -ffpe-trap=invalid -g3 -fbounds-check -O0" + \
+  " -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic -fimplicit-none"
-# commented options : -ffpe-trap=zero,overflow,underflow because most of the time, this is not a bug.
+# commented options : -ffpe-trap=invalid,zero,overflow,underflow because most of the time, this is not a bug.
 OPTIMIZATIONS = "-O3 -ffast-math -pipe -finit-real=nan"
 TEST_OPTIONS = "-O3 -pipe -finit-real=nan"
 GDB_OPTIONS = "-g3"

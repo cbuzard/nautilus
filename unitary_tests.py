@@ -82,7 +82,7 @@ class sourceFile(object):
   # Even with theses compilation options, it misses some warning. I had a weird behavior where some warnings only showed when I 
   # had more serious issues.
   DEBUG = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunreachable-code -fbacktrace" + \
-  " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
+  " -g3 -fbounds-check -O0" + \
   " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic"
   GDB = "-g3"
   
