@@ -12,7 +12,7 @@ real(double_precision), parameter :: PERCENTAGE_THRESHOLD = 1.d0 !< Percentage b
 
 ! Locals
 character(len=80) :: filename_output
-integer :: species, output, reaction, i ! index for loops
+integer :: output, reaction, i ! index for loops
 logical :: isDefined
 real(double_precision) :: tmp !< temporary variable
 character(len=80) :: output_format
@@ -36,7 +36,7 @@ logical :: change_time = .true. !< If true, ask the user for a value
 logical :: change_species = .true. !< If true, ask the user for a value
 logical :: change_space = .true. !< If true, ask the user for a value
 logical :: print_types = .true. !< print different reaction types the first time
-logical :: wrong_species, wrong_output, wrong_1D, wrong_action !< Flags for while loops when asking the user something
+logical :: wrong_species, wrong_output, wrong_1D !< Flags for while loops when asking the user something
 character(len=1) :: user_action !< Ask the user what he wants to do after the first run
 character(len=11) :: user_species !< The species designed by the user
 integer :: user_species_id !< corresponding id of the desired species of the user
