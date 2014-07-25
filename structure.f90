@@ -424,6 +424,96 @@ end subroutine structure_diffusion_1D_sphere
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
+!> Franck Hersant & Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief 1D diffusion using a Crank Nicholson Scheme. Routine inspired by
+!! Numerical Recipes. In particular the tridiag routine to solve tridiagonal
+!! matrices
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine crank_nicholson_1D(f,ny,dt,dy,nu,rho, ibc)
+! A Crank-Nicholson scheme
+! ibc is a flag for boundary conditions
+! ibc = 0 -> no flux boundaries (bc is not used then)
+! ibc = 1 -> user supplied boundary conditions (bc)
+! ibc > 1 -> stops the code, insulting the user
+! Computes the evolution for a single timestep of the equation
+! df/dt=a d/dy b d/dy c f + S
+! On an homogeneous mesh, for user specified a,b,c
+! The discretized equation takes the form
+! xf(i+1)+yf(i)+zf(i-1)=W
+!
+! Tu ne dois pas avoir de a, b et c dans ta version. Si je te dis pas de
+! betise, avec les notations de ce header :
+! a = 1/rho
+! b = nu * rho
+! c = 1.
+! S = 0.
+implicit none
+
+! Inputs
+integer, intent(in) :: ny
+real(double_precision), intent(in), dimension(0:ny) :: rho
+real(double_precision), intent(in), dimension(0:ny) :: nu
+real(double_precision), intent(in) :: dt
+real(double_precision), intent(in) :: dy
+integer, intent(in) :: ibc
+
+! Outputs
+real(double_precision), intent(out), dimension(0:ny) :: f
+
+! Locals
+integer :: ind
+real(double_precision), dimension(0:ny) :: s,Q,W,x,y,z,u,v, dd1d
+real(double_precision) :: d !, nu
+
+
+dd1d(:)=nu(:)*rho(:)
+
+d=dt/(dy**2)
+Q(:)=rho(:)
+
+s(:)=0.d0
+
+do ind = 1, ny-1
+  W(ind) = s(ind)*dt + d/4*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/4*(dd1d(ind+1)+2*dd1d(ind) &
+  +dd1d(ind-1)))*f(ind)/rho(ind)+d/4*(dd1d(ind)+dd1d(ind-1))*f(ind-1)/rho(ind)
+enddo
+
+do ind = 1,ny-1
+  x(ind) = -d/4*(dd1d(ind+1)+dd1d(ind))/rho(ind)
+  y(ind) = Q(ind)/rho(ind) + d/4*(dd1d(ind+1)+2*dd1d(ind)+dd1d(ind-1))/rho(ind)
+  z(ind) = -d/4*(dd1d(ind)+dd1d(ind-1))/rho(ind)
+enddo
+
+! Test
+u(ny)=1.d0
+v(ny)=0.d0
+x(ny) = -d/2*dd1d(ny)/rho(ny)
+y(ny) = Q(ny)/rho(ny) + d/4*(3*dd1d(ny)+dd1d(ny-1))/rho(ny)
+z(ny) = -d/4*(dd1d(ny)+dd1d(ny-1))/rho(ny)
+W(ny) = d/2*dd1d(ny)*f(ny)/rho(ny) + (Q(ny)-d/4*(3*dd1d(ny) &
++dd1d(ny-1)))*f(ny)/rho(ny)+d/4*(dd1d(ny)+dd1d(ny-1))*f(ny-1)/rho(ny)
+
+do ind = ny, 1, -1
+  u(ind-1) = -z(ind)/ (x(ind)*u(ind) + y(ind))
+  v(ind-1) = ( W(ind) - x(ind)*v(ind) )/( x(ind)*u(ind) + y(ind) )
+enddo
+
+if (ibc.eq.0) f(0) =  v(0)/( 1. - u(0) )
+
+do ind = 0, ny-1
+  f(ind+1) = u(ind)*f(ind) + v(ind)
+enddo
+
+return
+end subroutine crank_nicholson_1D
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
 !> Christophe Cossou
 !
 !> @date 2014
@@ -445,11 +535,24 @@ subroutine structure_diffusion_1D_disk_r(timestep, temp_abundances)
   !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
+  ! Local (for tests only. Some must be suppressed or 
+  real(double_precision), dimension(nb_species) :: viscosity ! viscosity in cm^2/s
+  real(double_precision), dimension(nb_species) :: density2D !< surface density in part/cm^2
+  real(double_precision) :: grid_cell_size
+  
   ! Locals
   integer :: x_i !< For loops
   
+  grid_cell_size = 1e13 !< Constant size of the box, in cm
   do x_i=1,nb_sample_1D
-    ! TODO write disk diffusion here assuming diffusion on radial dimension only (but now in cylindrical coordinates
+    grid_sample(x_i) = (x_i - 1.d0) * grid_cell_size
+  enddo
+  density2D(1:nb_sample_1D) = H_number_density * grid_cell_size ! Convert bulk density into surface density
+  viscosity(1:nb_sample_1D) = 1e15 ! cm^2/s
+  
+  do x_i=1,nb_sample_1D
+    call crank_nicholson_1D(f=temp_abundances(x_i, 1:nb_sample_1D), ny=nb_sample_1D-1, dt=timestep, dy=grid_cell_size, &
+    nu=viscosity(1:nb_sample_1D), rho=density2D(1:nb_sample_1D), ibc=0)
   enddo  
   
 end subroutine structure_diffusion_1D_disk_r
@@ -570,6 +673,14 @@ subroutine get_timestep_1D_disk_r(current_time, final_time, next_timestep)
 
   ! Outputs
   real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
+
+  ! Locals
+  real(double_precision) :: viscosity ! viscosity in cm^2/s
+  real(double_precision) :: grid_cell_size
+
+  grid_cell_size = 1e13 !< Constant size of the box, in cm
+  viscosity = 1e15 ! cm^2/s
+  next_timestep = grid_cell_size**2 / viscosity
 
   ! TODO write the calculation of the diffusion timestep before that test
   if (current_time+next_timestep.gt.final_time) then

@@ -25,12 +25,11 @@ program unitary_tests
     
   implicit none
   
-  logical :: isDefined !< true or false, to test if some files exists or not, for instance
-  
   call initialisation()
   
   call test_read_time_evolution()
   call test_time_interpolation()
+  call test_diffusion()
   
   contains
 
@@ -174,14 +173,6 @@ program unitary_tests
   
     implicit none
     
-    integer, parameter :: nb_sample = 100
-    real(double_precision), parameter :: t_min = 0.1d0 ! in AU
-    real(double_precision), parameter :: t_max = 100.d0! in AU
-    real(double_precision), parameter :: step = (t_max / t_min)**(1.d0 / (dfloat(nb_sample)))
-    
-    real(double_precision) :: time ! Time in Myr
-    real(double_precision) :: av, density, gas_temperature, grain_temperature
-
     logical :: isDefined !< true or false, to test if some files exists or not, for instance
     
     integer :: j ! for loops
@@ -303,5 +294,140 @@ program unitary_tests
     
   
   end subroutine test_read_time_evolution
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 24 july 2014
+!
+! DESCRIPTION: 
+!> @brief Uses the diffusion type defined in the code (constrained in
+!! parameters.in).This routine must be run at the end of your tests, because you override 
+!! abundances\n
+!! Files are generated in a sub folder "dissipation" of the test folder. 
+!! Gnuplot file is also here.
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+  subroutine test_diffusion()
+  
+  implicit none
+    
+    
+    ! time sample
+    real(double_precision), parameter :: t_max = 1.d6 ! time in years
+    real(double_precision), dimension(:), allocatable :: time, time_temp ! time in days
+    integer :: time_size ! the size of the array 'time'. 
+    
+    character(len=80) :: filename_density
+    character(len=80) :: output_density, output_time, time_format, purcent_format
+    integer :: time_length ! the length of the displayed time, usefull for a nice display
+    real(double_precision) :: timestep
+    
+    integer :: i,k ! for loops
+    integer :: nb_time ! The total number of 't' values. 
+    integer :: error ! to retrieve error, especially during allocations
+    logical :: isDefined
+
+    real(double_precision), dimension(nb_species, nb_sample_1D) :: fake_abundances ! Fill an array where the first species is 
+    !! the one we want to test. All the others are put to equal values. 
+    !------------------------------------------------------------------------------
+    write(*,*) 'Test of the diffusion processes'
+    
+    fake_abundances(1:nb_species, 1:nb_sample_1D) = 0.d0
+    fake_abundances(1, nb_sample_1D/2) = 1.d0 ! Dirac function for the first species    
+    
+    if (structure_type.eq.'0D') then
+      write (error_unit,*) 'Error: There is currently no dissipation (structure_type=0) which is a problem to test it.'
+      write (error_unit,*) 'Please set a dissipation_type in "disk.in" before testing it'
+      call exit(3)
+    end if
+    
+    inquire(file='dissipation', exist=isDefined)
+    
+    ! We create the folder 'dissipation' if he doesn't exists.
+    if (.not.isDefined) then
+      call system("mkdir dissipation")
+    end if
+    
+    call system("rm dissipation/*")
+    
+    ! We want to know the max size of the time display in order to have a nice display, with filled spaces in the final plots
+    write(output_time, '(i0)') int(t_max / 1e6)
+    time_length = len(trim(output_time))
+    write(time_format, '(a,i1,a,i1,a)') '(f',time_length+2,'.',1,')'
+    write(purcent_format, *) '(', trim(time_format), ',"/",',trim(time_format),'," Myr ; k = ",i5)'
+    
+    !------------------------------------------------------------------------------
+    k = 1
+    time_size = 512 ! the size of the array. 
+    allocate(time(time_size), stat=error)
+    
+    current_time = 0.d0 ! s
+    
+    do while (current_time.lt.(t_max*YEAR))
+      time(k) = current_time
+    
+      ! We open the file where we want to write the outputs
+      write(filename_density, '(a,i0.5,a)') 'dissipation/abundance.',k,'.dat'    
+      
+      ! We take on purpose an extra large final time to ensure we get the pure diffusive timestep, without any problems with output times.
+      call get_timestep(current_time=current_time, final_time=t_max*YEAR, next_timestep=timestep)
+      
+      current_time = time(k) + timestep
+      ! We generate cartesian coordinate for the given Semi-major axis
+      
+      call structure_diffusion(timestep=timestep, temp_abundances=fake_abundances(1:nb_species, 1:nb_sample_1D))
+      
+      open(10, file=filename_density)
+      do i=1, nb_sample_1D
+        write(10,*) grid_sample(i)/AU, fake_abundances(1, i)
+      enddo
+      close(10)
+      
+      ! we expand the 'time' array if the limit is reached
+      if (k.eq.time_size) then
+        ! If the limit of the 'time' array is reach, we copy the values in a temporary array, allocate with a double size, et paste the 
+        ! old values in the new bigger array
+        allocate(time_temp(time_size), stat=error)
+        time_temp(1:time_size) = time(1:time_size)
+        deallocate(time, stat=error)
+        time_size = time_size * 2
+        allocate(time(time_size), stat=error)
+        time(1:time_size/2) = time_temp(1:time_size/2)
+        deallocate(time_temp, stat=error)
+      end if
+      
+      write(*,purcent_format) time(k)/(YEAR * 1e6), t_max / 1e6, k
+      
+      
+      k = k + 1 ! We increment the integer that point the time in the array (since it's a 'while' and not a 'do' loop)
+    end do
+
+    nb_time = k - 1 ! since for the last step with incremented 'k' by one step that is beyond the limit.
+    
+    !------------------------------------------------------------------------------
+    ! Gnuplot script to output the frames of the density
+    open(13, file="dissipation/dissipation.gnuplot")
+    write(13,*) "set terminal pngcairo crop enhanced size 1200, 1000 font ',20'"
+    write(13,*) 'set xlabel "Distance (AU)"'
+    write(13,*) 'set ylabel "Quantity"'
+    write(13,*) 'set grid'
+    write(13,*) 'set xrange [', grid_sample(1)/AU, ':', grid_sample(nb_sample_1D)/AU, ']'
+    write(13,*) 'set yrange [', 0, ':', 1, ']'
+    
+    do k=1, nb_time
+      write(filename_density, '(a,i0.5,a)') 'abundance.',k,'.dat'
+      write(output_density, '(a,i0.5,a)') 'abundance.',k,'.png'
+      write(output_time, time_format) (time(k)/(YEAR * 1e6))
+      
+      write(13,*) "set output '",trim(output_density),"'"
+      write(13,*) 'set title "T=', trim(output_time),' Myr"'
+      write(13,*) "plot '",trim(filename_density),"' using 1:2 with lines linetype -1 notitle"
+      write(13,*) ""
+    end do
+    close(13)
+  
+  end subroutine test_diffusion
 
 end program unitary_tests
