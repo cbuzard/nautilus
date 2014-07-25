@@ -592,10 +592,7 @@ call read_element_in()
 ! Get various size needed for allocatable arrays
 call get_array_sizes()
 
-! Init global allocatable arrays. From now on, we can read data files
-call initialize_global_arrays()
-
-! Read simulation parameters
+! Read simulation parameters. Need to reed it before initializing arrays because some of the arrays sizes are carved into it.
 call read_parameters_in()
 
 ! Initialize structure evolution
@@ -661,6 +658,9 @@ select case(STRUCTURE_TYPE)
     write(error_unit, '(a)') 'Error in subroutine initialisation.' 
     call exit(21)
 end select
+
+! Init global allocatable arrays. From now on, we can read data files
+call initialize_global_arrays()
 
 ! Read list of species, either for gas or grain reactions
 call read_species()

@@ -187,6 +187,9 @@ real(double_precision) :: VIB_TO_DISSIP_FREQ_RATIO !< [no unit] For the RRK (Ric
 !! molecule to be evaporated from the grain surface). This ratio help to determine if a species evaporate after its formation 
 !! on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1%.
 
+! 1D variables
+real(double_precision), dimension(:), allocatable :: grid_sample !< dim(nb_sample_1D) 1D sampling [cm] Can either be linear, or log, or whatever, depending on the structure
+
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
 integer, dimension(0:MAX_NUMBER_REACTION_TYPE-1) :: type_id_start !< list of id start for each reaction type given their type number
@@ -412,6 +415,8 @@ allocate(REACTION_ID(nb_reactions))
 allocate(REACTION_COMPOUNDS_ID(MAX_COMPOUNDS,nb_reactions))
 allocate(REACTION_COMPOUNDS_NAMES(MAX_COMPOUNDS,nb_reactions))
 
+allocate(grid_sample(nb_sample_1D))
+
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
@@ -453,6 +458,7 @@ RATE_FORMULA(1:nb_reactions) = 0
 REACTION_ID(1:nb_reactions) = 0
 REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,1:nb_reactions) = 0
 REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS,1:nb_reactions) = ''
+grid_sample(1:nb_sample_1D) = 0.d0
 INITIAL_ELEMENTAL_ABUNDANCE(1:NB_PRIME_ELEMENTS) = 0.d0
 PRIME_ELEMENT_IDX(1:NB_PRIME_ELEMENTS) = 0
 species_composition(1:NB_PRIME_ELEMENTS,nb_species) = 0
