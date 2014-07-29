@@ -633,24 +633,6 @@ select case(GRAIN_TEMPERATURE_TYPE)
     call exit(10)
 end select
 
-!0D, 1D_disk_z
-! Initialize structure pointers
-select case(STRUCTURE_TYPE)
-  case('0D') ! No structure at all. Point towards routines that do almost nothing.
-    get_timestep => get_timestep_0D
-    structure_diffusion => structure_diffusion_0D
-
-  case('1D_disk_z') ! TODO comments
-    get_timestep => get_timestep_1D_disk_z
-    structure_diffusion => structure_diffusion_1D_disk_z
-    
-  case default
-    write(error_unit,*) 'The STRUCTURE_TYPE="', STRUCTURE_TYPE,'" cannot be found.'
-    write(error_unit,*) 'Values possible : 0D, 1D_disk_z'
-    write(error_unit, '(a)') 'Error in subroutine initialisation.' 
-    call exit(21)
-end select
-
 ! Init global allocatable arrays. From now on, we can read data files
 call initialize_global_arrays()
 
@@ -662,6 +644,25 @@ if (nb_sample_1D.gt.1) then
     grid_sample(i) = grid_sample(i-1) + grid_cell_size
   enddo
 endif
+
+!0D, 1D_disk_z
+! Initialize structure pointers
+select case(STRUCTURE_TYPE)
+  case('0D') ! No structure at all. Point towards routines that do almost nothing.
+    get_timestep => get_timestep_0D
+    structure_diffusion => structure_diffusion_0D
+
+  case('1D_disk_z') ! TODO comments
+    call init_1D_evolution()
+    get_timestep => get_timestep_1D_disk_z
+    structure_diffusion => structure_diffusion_1D_disk_z
+    
+  case default
+    write(error_unit,*) 'The STRUCTURE_TYPE="', STRUCTURE_TYPE,'" cannot be found.'
+    write(error_unit,*) 'Values possible : 0D, 1D_disk_z'
+    write(error_unit, '(a)') 'Error in subroutine initialisation.' 
+    call exit(21)
+end select
 
 ! Read list of species, either for gas or grain reactions
 call read_species()
@@ -710,12 +711,22 @@ abundances(INDGRAIN,1:nb_sample_1D) = 1.0 / GTODN ! TODO do we must divide by nb
 ! Make comparison for the sum of abundances over 1D dimension
 if (nb_sample_1D.eq.1) then
   call check_conservation(abundances(1:nb_species, 1))
-endif ! Make a check only routine for 1D case were it is very complicated to modify any abundances since its spread throughout 1D points
+  ! Make a check only routine for 1D case were it is very complicated to modify any abundances since its spread throughout 1D points
 
-! 1D physical structure (nls_phys_1D)
-call get_structure_properties(time=current_time, & ! Inputs
+  ! 1D physical structure (nls_phys_1D)
+  call get_structure_properties(time=current_time, & ! Inputs
                               Av=visual_extinction(1), density=H_number_density(1), & ! Outputs
-                              gas_temperature=gas_temperature(1), grain_temperature=dust_temperature(1)) ! Outputs
+                              gas_temperature=gas_temperature(1)) ! Outputs
+endif
+
+call get_grain_temperature(time=current_time, gas_temperature=gas_temperature(1), Av=visual_extinction(1), & ! Inputs
+      grain_temperature=dust_temperature(1)) ! Outputs
+
+! We can't add input variables in dlsodes called routines, so we must store the values as global variables
+actual_gas_temp = gas_temperature(1)
+actual_dust_temp = dust_temperature(1)
+actual_av = visual_extinction(1)
+actual_gas_density = H_number_density(1)
 
 ! Write species name/index correspondance
 call write_species()

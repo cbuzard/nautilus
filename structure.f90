@@ -164,7 +164,7 @@ end subroutine init_structure_evolution
 !! beforehand to initialize arrays
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_structure_properties_table(time, Av, density, gas_temperature, grain_temperature)
+subroutine get_structure_properties_table(time, Av, density, gas_temperature)
 
   implicit none
 
@@ -174,7 +174,6 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature, gr
   ! Outputs
   real(double_precision), intent(out) :: Av !<[out] Visual extinction [mag]
   real(double_precision), intent(out) :: gas_temperature !<[out] gas temperature [K]
-  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
   real(double_precision), intent(out) :: density !<[out] gas density [part/cm^3]
   
   ! Local
@@ -215,8 +214,6 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature, gr
     gas_temperature = 10.0d0**(structure_log_gas_temperature(structure_sample))
   end if
   
-  call get_grain_temperature(time=time, gas_temperature=gas_temperature, Av=av, grain_temperature=grain_temperature)
-
   return
 end subroutine get_structure_properties_table
 
@@ -231,7 +228,7 @@ end subroutine get_structure_properties_table
 !! In this routine, everything is constant.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_structure_properties_fixed(time, Av, density, gas_temperature, grain_temperature)
+subroutine get_structure_properties_fixed(time, Av, density, gas_temperature)
 
   implicit none
 
@@ -241,7 +238,6 @@ subroutine get_structure_properties_fixed(time, Av, density, gas_temperature, gr
   ! Outputs
   real(double_precision), intent(out) :: Av !<[out] Visual extinction [mag]
   real(double_precision), intent(out) :: gas_temperature !<[out] gas temperature [K]
-  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
   real(double_precision), intent(out) :: density !<[out] gas density [part/cm^3]
 
   !------------------------------------------------------------------------------
@@ -250,8 +246,6 @@ subroutine get_structure_properties_fixed(time, Av, density, gas_temperature, gr
   Av = INITIAL_VISUAL_EXTINCTION
   gas_temperature = initial_gas_temperature
   
-  call get_grain_temperature(time=time, gas_temperature=gas_temperature, av=Av, grain_temperature=grain_temperature)
-
   return
 end subroutine get_structure_properties_fixed
 
@@ -599,15 +593,17 @@ implicit none
 
 
 character(len=80) :: filename = '1D_evolution.dat' !< name of the file in which time evolution is stored
-character(len=80) :: line
+character(len=200) :: line
 character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
-integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
 integer :: error !< to store the state of a read instruction
-integer :: nb_columns
 
-real(double_precision), dimension(:), allocatable :: tmp_grid, tmp_density, tmp_gas_temperature, tmp_av, tmp_kappa
+real(double_precision), dimension(:), allocatable :: tmp_grid !< Distance [cm] /!\ But read column is in AU
+real(double_precision), dimension(:), allocatable :: tmp_density !< Gas density [g/cm^3]
+real(double_precision), dimension(:), allocatable :: tmp_gas_temperature !< Gas temperature [K]
+real(double_precision), dimension(:), allocatable :: tmp_av !< Visual extinction [mag]
+real(double_precision), dimension(:), allocatable :: tmp_kappa !< Diffusion coefficient [cm^2/s]
 integer :: closest_low_id, nb_values
-integer :: x1, x2, y1, y2
+real(double_precision) :: x1, x2, y1, y2
 
 integer :: i !< loop index
 logical :: isDefined
@@ -620,7 +616,7 @@ if (isDefined) then
   open(10, file=filename, status='old')
   i = 0
   do
-    read(10, '(a80)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
     
     if (line(1:1).ne.comment_character) then
@@ -648,7 +644,7 @@ if (isDefined) then
   open(10, file=filename, status='old')
   i = 0
   do
-    read(10, '(a80)', iostat=error) line
+    read(10, '(a)', iostat=error) line
     if (error /= 0) exit
     
     if(line(1:1).ne.comment_character) then
@@ -656,6 +652,9 @@ if (isDefined) then
       read(line, *, iostat=error) tmp_grid(i), tmp_density(i), tmp_gas_temperature(i), tmp_av(i), tmp_kappa(i)
     end if
   end do
+  
+  ! Convert distances from AU to cm
+  tmp_grid(1:nb_values) = tmp_grid(1:nb_values) * AU
   
   ! We now want to interpolate the values from the input sampling to the desired 1D sampling that is 
   !! defined solely by z_max and nb_sample_1D

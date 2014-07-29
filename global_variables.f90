@@ -233,7 +233,7 @@ integer :: IS_STRUCTURE_EVOLUTION = 0 !< if 1, physical structure properties evo
 procedure(get_structure_properties_interface), pointer :: get_structure_properties
 
 abstract interface 
-  subroutine get_structure_properties_interface(time, Av, density, gas_temperature, grain_temperature)
+  subroutine get_structure_properties_interface(time, Av, density, gas_temperature)
   import 
   
   implicit none
@@ -244,7 +244,6 @@ abstract interface
   ! Outputs
   real(double_precision), intent(out) :: Av !<[out] Visual extinction [mag]
   real(double_precision), intent(out) :: gas_temperature !<[out] gas temperature [K]
-  real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
   real(double_precision), intent(out) :: density !<[out] gas density [part/cm^3]
   
   end subroutine get_structure_properties_interface

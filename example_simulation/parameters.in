@@ -14,7 +14,7 @@
 
 preliminary_test = 1 ! Will or will not do comprehensive tests before the simulation. Switch it off when lauching thousands or simulations
 is_structure_evolution = 0 ! If 1, physical structure properties evolve with time, values come from structure_evolution.dat file that must exists
-grain_temperature_type = computed ! fixed, gas, table or computed
+grain_temperature_type = fixed ! fixed, gas, table or computed
 ! fixed: Tgrain = initial_dust_temperature. ;
 ! gas: Tgrain = Tgas ; 
 ! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; 
@@ -29,9 +29,9 @@ conservation_type =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #
 !*      1D and diffusion     *
 !*****************************
 
-structure_type = 0D ! 0D, 1D_disk_z
-1D_sample = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
-z_max =  0.000E+00 ! Maximum Z value for the 1D grid [AU]
+structure_type = 1D_disk_z ! 0D, 1D_disk_z
+1D_sample = 10 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
+z_max =  1.000E+01 ! Maximum Z value for the 1D grid [AU]
 
 !*****************************
 !*    Gas phase parameters   *
