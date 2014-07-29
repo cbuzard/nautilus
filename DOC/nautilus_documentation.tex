@@ -296,7 +296,7 @@ minimum_initial_abundance =  1.000E-40
 \end{verbatim}\index{parameter!minimum\_initial\_abundance}
 default minimum initial fraction abundance applied to species whose abundance is not specified in \gras[input file!abundances.in]{abundances.in}.
 
-\subsection{Time evolution of the physical structure}\index{parameter!is\_structure\_evolution}
+\subsection{Time evolution of the physical structure}\index{parameter!is\_structure\_evolution}\label{sec:time_structure}
 \begin{verbatim}
 is_structure_evolution = 1
 \end{verbatim}\index{parameter!is\_structure\_evolution}
@@ -324,7 +324,46 @@ If so, the parameter \gras[parameter!grain\_temperature\_type]{grain\_temperatur
 grain_temperature_type = table
 \end{verbatim}\index{parameter!grain\_temperature\_table}
 
-\subsection{Grain temperature}
+\begin{attention}
+See \refsec{sec:1D} for incompatibilities
+\end{attention}
+
+\subsection{1D simulations}\label{sec:1D}
+You can make simulation in 1D:
+\begin{verbatim}
+structure_type = 1D_disk_z
+\end{verbatim}
+
+Then you must define the total number of spatial points:
+\begin{verbatim}
+1D_sample = 10
+\end{verbatim}
+and the altitude of the farthest point (in AU):
+\begin{verbatim}
+z_max =  1.000E+01
+\end{verbatim}
+
+Spatial points will then be linearly and equally spaced. 
+
+You have to define the structure in a data file \gras[input file!1D\_evolution.dat]{1D\_evolution.dat} where you define gas density, gas temperature, visual extinction and diffusion coefficient. For instance:
+\begin{verbatim}
+! Distance [AU] ; Gas density [part/cm^3] ; Gas Temperature [K] ; 
+! Visual Extinction [mag] ; Diffusion coefficient [cm^2/s]
+0.        150.           10.        15.         1e14
+2.        150.           10.        15.         1e14
+4.        300.           15.        20.         1e14
+6.        150.           10.        15.         1e14
+\end{verbatim}
+
+The exact spatial points are of no importance because we will interpolate linearly to reconstruct the values at the spatial points defined in the code. 
+
+The dust temperature is ruled by the type you define in \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} (see \refsec{sec:dust_temp} for more details).
+
+\begin{attention}
+1D simulations are not compatible with time evolution read from a data file (see \refsec{sec:time_structure}). You must choose one or the other.
+\end{attention}
+
+\subsection{Grain temperature}\label{sec:dust_temp}
 You have four ways of defining grain temperature in the code. The parameter \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} can have the following values:
 \begin{itemize}
 \item[\textbf{fixed}] The grain temperature is fixed throughout the simulation. \gras[parameter!initial\_dust\_temperature]{initial\_dust\_temperature} defines this fixed value ;
@@ -638,7 +677,7 @@ The four main programs are:
 \item \gras[binary!nautilus]{nautilus} in the source file \textbf{nautilus.f90} (compilation:  \verb|Makefile.py|)
 \item \gras[binary!nautilus\_outputs]{nautilus\_outputs} in the source file \textbf{nautilus\_outputs.f90} (compilation: \verb|Makefile.py output|)
 \item \gras[binary!nautilus\_rates]{nautilus\_rates} in the source file \textbf{nautilus\_rates.f90} (compilation: \verb|Makefile.py rates|).
-\item \gras[binary!nautilus\_major\_reactions]{nautilus\_major\_reactions} in the source file \textbf{nautilus\_major\_reactions.f90} (compilation: \verb|Makefile.py major|).
+\item \gras[binary!nautilus\_major\_reactions]{nautilus\_major\_reactions} in the source file \textbf{nautilus\_major\_reactions.f90} (compilation: \\ \verb|Makefile.py major|).
 \end{itemize}
 
 One last program exist to do some unitary tests on \textbf{Nautilus} (see \refsec{sec:unitary_tests} for more details).
