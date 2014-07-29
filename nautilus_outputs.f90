@@ -3,6 +3,7 @@ program nautilus_outputs
 use numerical_types
 use iso_fortran_env
 use utilities
+use nautilus_main
 
 implicit none
 
@@ -18,26 +19,21 @@ character(len=200) :: line
 character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
 integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
 
-real(double_precision), parameter :: YEAR = 3.15576d7 !< one year in seconds
+real(double_precision), dimension(:,:,:), allocatable :: abundances_out !< abundances over time for each species. (nb_outputs, nb_species)
 
-integer :: nb_sample_1D = 1 !< 1D resolution of the structure
-integer :: nb_outputs !< The total number of outputs
-integer :: nb_species !< the total number of species
-
-character(len=11), dimension(:), allocatable :: species_name !< species name as a string
-real(double_precision), dimension(:,:,:), allocatable :: abundances !< abundances over time for each species. (nb_outputs, nb_species)
-
-integer :: nb_species_for_gas, nb_species_for_grain !< temporary values to store the total number of species
 
 character(len=11), dimension(:), allocatable :: gas_species_label 
 character(len=11), dimension(:), allocatable :: surface_species_label 
 
 real(double_precision), dimension(:), allocatable :: time !< Simulation time [s]
-real(double_precision), dimension(:,:), allocatable :: gas_temperature !< [K]
-real(double_precision), dimension(:,:), allocatable :: dust_temperature !< [K]
+real(double_precision), dimension(:,:), allocatable :: gas_temperature_out !< [K]
+real(double_precision), dimension(:,:), allocatable :: dust_temperature_out !< [K]
 real(double_precision), dimension(:,:), allocatable :: density !< [part/cm^3] 
-real(double_precision), dimension(:,:), allocatable :: visual_extinction !< visual extinction [mag]
-real(double_precision), dimension(:,:), allocatable :: x_rate !< X ionisation rate [s-1]
+real(double_precision), dimension(:,:), allocatable :: visual_extinction_out !< visual extinction [mag]
+real(double_precision), dimension(:), allocatable :: x_rate !< X ionisation rate [s-1]
+
+! Initialise all variables from the global_variables module. Only some of them are used here.
+call initialisation()
 
 ! We calculate the total number of outputs by checking for each file if it exist or not.
 nb_outputs = 0
@@ -50,112 +46,20 @@ do while(isDefined)
 enddo
 nb_outputs = nb_outputs - 1
 
-! We get the number of reactions and species
-call get_linenumber(filename='gas_species.in', nb_lines=nb_species_for_gas)
-call get_linenumber(filename='grain_species.in', nb_lines=nb_species_for_grain)
-allocate(gas_species_label(nb_species_for_gas))
-allocate(surface_species_label(nb_species_for_grain))
-
-nb_species = nb_species_for_gas + nb_species_for_grain ! The total number of species, sum of species in gas and grain
-
-write(*,'(a, i5)') 'Spatial resolution: ', nb_sample_1D
-write(*,'(a, i5)') 'Number of time outputs: ', nb_outputs
-write(*,'(a, i5)') 'Number of species: ', nb_species
+write(*,'(a,i0)') 'Spatial resolution: ', nb_sample_1D
+write(*,'(a,i0)') 'Number of time outputs: ', nb_outputs
+write(*,'(a,i0)') 'Number of species: ', nb_species
 
 ! We allocate the output arrays
-allocate(species_name(nb_species))
-
 allocate(time(nb_outputs))
-allocate(gas_temperature(nb_sample_1D, nb_outputs))
-allocate(dust_temperature(nb_sample_1D, nb_outputs))
+allocate(gas_temperature_out(nb_sample_1D, nb_outputs))
+allocate(dust_temperature_out(nb_sample_1D, nb_outputs))
 allocate(density(nb_sample_1D, nb_outputs))
-allocate(visual_extinction(nb_sample_1D, nb_outputs))
-allocate(x_rate(nb_sample_1D, nb_outputs))
+allocate(visual_extinction_out(nb_sample_1D, nb_outputs))
+allocate(x_rate(nb_outputs))
 
-allocate(abundances(nb_outputs, nb_species, nb_sample_1D))
+allocate(abundances_out(nb_outputs, nb_species, nb_sample_1D))
 
-! The next write will be written in the same line
-write(*,'(a)', advance='no') 'Reading species name...'
-
-
-! Reading list of species for gas phase
-filename = 'gas_species.in'
-inquire(file=filename, exist=isDefined)
-if (isDefined) then
-
-  open(10, file=filename, status='old')
-  
-  i = 0
-  do
-    read(10, '(a)', iostat=error) line
-    if (error /= 0) exit
-      
-    ! We get only what is on the left of an eventual comment parameter
-      comment_position = index(line, comment_character)
-    
-    ! if there are comments on the current line, we get rid of them
-    if (comment_position.ne.0) then
-      line = line(1:comment_position - 1)
-    end if
-    
-    if (line.ne.'') then
-      i = i + 1
-      read(line, '(a11,i3,13(I3))')  gas_species_label(I)
-    
-    end if
-  end do
-  close(10)
-  
-else
-  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
-  call exit(1)
-end if
-
-
-! Reading list of species for grain surface
-filename = 'grain_species.in'
-inquire(file=filename, exist=isDefined)
-if (isDefined) then
-
-  open(10, file=filename, status='old')
-  
-  i = 0
-  do
-    read(10, '(a)', iostat=error) line
-    if (error /= 0) exit
-      
-    ! We get only what is on the left of an eventual comment parameter
-      comment_position = index(line, comment_character)
-    
-    ! if there are comments on the current line, we get rid of them
-    if (comment_position.ne.0) then
-      line = line(1:comment_position - 1)
-    end if
-    
-    if (line.ne.'') then
-      i = i + 1
-      read(line, '(a11)')  surface_species_label(I)
-    
-    end if
-  end do
-  close(10)
-  
-else
-  write(Error_unit,*) 'Error: The file ', trim(filename),' does not exist.'
-  call exit(1)
-end if
-
-
-! putting everything back into the big tables
-do I=1,nb_species_for_gas 
-  species_name(I) = gas_species_label(I)
-enddo
-do I=1,nb_species_for_grain 
-  species_name(nb_species_for_gas+I) = surface_species_label(I)
-enddo
-
-! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
-write(*,'(a,a)') achar(13), 'Reading species name... Done'
 
 ! The next write will be written in the same line
 write(*,'(a)', advance='no') 'Reading unformatted outputs...'
@@ -165,9 +69,10 @@ do output=1,nb_outputs
 
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) time(output)
-  read(10) gas_temperature(1:nb_sample_1D, output), dust_temperature(1:nb_sample_1D, output), density(1:nb_sample_1D, output), &
-           visual_extinction(1:nb_sample_1D, output), x_rate(1:nb_sample_1D, output)
-  read(10) abundances(output,1:nb_species, 1:nb_sample_1D)
+  read(10) gas_temperature_out(1:nb_sample_1D, output), dust_temperature_out(1:nb_sample_1D, output), &
+           density(1:nb_sample_1D, output), &
+           visual_extinction_out(1:nb_sample_1D, output), x_rate(output)
+  read(10) abundances_out(output,1:nb_species, 1:nb_sample_1D)
   close(10)
 enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
@@ -188,8 +93,20 @@ call system("rm ab/*.ab")
 ! This part is to write one file per species, each line being one output time
 !####################################################@@
 
+if (nb_sample_1D.gt.1) then
+  write(filename_output, '(a,a,a)') 'ab/space.ab'
+  open(10, file=filename_output)
+  write(10,'(a)') '! Spatial points [AU]'
+  
+  do idx_1D=1, nb_sample_1D
+    write(10,'(es13.6e2)') grid_sample(idx_1D) / AU
+  enddo
+  
+  close(10)
+endif
+
 ! The next write will be written in the same line
-write(*,'(a)', advance='no') 'Writing *.ab ASCII files...'
+write(*,'(a)', advance='no') 'Writing *.ab ASCII files in ab/...'
 ! We write ASCII output file, one file per species
 do species=1, nb_species
   write(filename_output, '(a,a,a)') 'ab/', trim(species_name(species)), '.ab'
@@ -198,12 +115,12 @@ do species=1, nb_species
   
   write(output_format, *) '(es10.3e2,',nb_sample_1D,'(es13.6e2," "))'
   do output=1, nb_outputs
-    write(10,output_format) time(output)/YEAR, abundances(output, species, 1:nb_sample_1D)
+    write(10,output_format) time(output)/YEAR, abundances_out(output, species, 1:nb_sample_1D)
   enddo
   close(10)
 enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
-write(*,'(a,a)') achar(13), 'Writing output files... Done'
+write(*,'(a,a)') achar(13), 'Writing output files in ab/... Done'
 
 !####################################################@@
 ! This part is to write one file per output time, each line being one species
@@ -218,7 +135,7 @@ write(*,'(a,a)') achar(13), 'Writing output files... Done'
 !~   write(10,'(a,es10.2e2, a)') '! time =', time(output) / YEAR, ' years'
 !~   write(10,'(a)') '! species name ; Abundance'
 !~   do species=1, nb_species
-!~     write(10,*) species_name(species), abundances(output, species, 1:nb_sample_1D)
+!~     write(10,*) species_name(species), abundances_out(output, species, 1:nb_sample_1D)
 !~   enddo
 !~   close(10)
 !~ enddo
@@ -237,7 +154,7 @@ end if
 call system("rm struct/*.struct")
 
 ! The next write will be written in the same line
-write(*,'(a)', advance='no') 'Writing *.struct ASCII files...'
+write(*,'(a)', advance='no') 'Writing *.struct ASCII files in struct/...'
 ! We write ASCII output file, one file per species
 do idx_1D=1, nb_sample_1D
   write(filename_output, '(a,i0.5,a)') 'struct/output.', idx_1D, '.struct'
@@ -248,12 +165,12 @@ do idx_1D=1, nb_sample_1D
                    & ; [log10(part/cm^3)] ;           [mag]   ;       [s-1] '
   
   do output=1, nb_outputs
-    write(10,'(6(es10.3e2," "))') time(output)/YEAR, gas_temperature(idx_1D, output), dust_temperature(idx_1D, output), &
-           density(idx_1D, output), visual_extinction(idx_1D, output), x_rate(idx_1D, output)
+    write(10,'(6(es10.3e2," "))') time(output)/YEAR, gas_temperature_out(idx_1D, output), dust_temperature_out(idx_1D, output), &
+           density(idx_1D, output), visual_extinction_out(idx_1D, output), x_rate(output)
   enddo
   close(10)
 enddo
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
-write(*,'(a,a)') achar(13), 'Writing structure output files... Done'
+write(*,'(a,a)') achar(13), 'Writing structure output files in struct/... Done'
 
 end program nautilus_outputs

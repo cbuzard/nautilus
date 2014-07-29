@@ -26,7 +26,7 @@ real(double_precision), dimension(:,:), allocatable :: gas_temperature_out
 real(double_precision), dimension(:,:), allocatable :: dust_temperature_out
 real(double_precision), dimension(:,:), allocatable :: density
 real(double_precision), dimension(:,:), allocatable :: visual_extinction_out !< visual extinction
-real(double_precision), dimension(:,:), allocatable :: zeta
+real(double_precision), dimension(:), allocatable :: zeta
 
 ! For rates
 real(double_precision), allocatable, dimension(:,:) :: reaction_rates_out ! (nb_outputs, nb_reactions)
@@ -80,7 +80,7 @@ allocate(gas_temperature_out(nb_sample_1D, nb_outputs))
 allocate(dust_temperature_out(nb_sample_1D, nb_outputs))
 allocate(density(nb_sample_1D, nb_outputs))
 allocate(visual_extinction_out(nb_sample_1D, nb_outputs))
-allocate(zeta(nb_sample_1D, nb_outputs))
+allocate(zeta(nb_outputs))
 
 allocate(abundances_out(nb_outputs, nb_species+1, nb_sample_1D)) ! We create an extra species that will always have an abundance of 1
 
@@ -101,7 +101,7 @@ do output=1,nb_outputs
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) time(output)
   read(10) gas_temperature_out(1:nb_sample_1D, output), dust_temperature_out(1:nb_sample_1D, output), &
-           density(1:nb_sample_1D, output), visual_extinction_out(1:nb_sample_1D, output), zeta(1:nb_sample_1D, output)
+           density(1:nb_sample_1D, output), visual_extinction_out(1:nb_sample_1D, output), zeta(output)
   read(10) abundances_out(output,1:nb_species, 1:nb_sample_1D)
   close(10)
   
