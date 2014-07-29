@@ -654,6 +654,15 @@ end select
 ! Init global allocatable arrays. From now on, we can read data files
 call initialize_global_arrays()
 
+! Initialize grid sample if needed. Values are in cm
+if (nb_sample_1D.gt.1) then
+  grid_cell_size = grid_max_edge * AU / (dfloat(nb_sample_1D - 1))
+  grid_sample(1) = 0.d0
+  do i=2,nb_sample_1D
+    grid_sample(i) = grid_sample(i-1) + grid_cell_size
+  enddo
+endif
+
 ! Read list of species, either for gas or grain reactions
 call read_species()
 
@@ -701,12 +710,12 @@ abundances(INDGRAIN,1:nb_sample_1D) = 1.0 / GTODN ! TODO do we must divide by nb
 ! Make comparison for the sum of abundances over 1D dimension
 if (nb_sample_1D.eq.1) then
   call check_conservation(abundances(1:nb_species, 1))
-endif
+endif ! Make a check only routine for 1D case were it is very complicated to modify any abundances since its spread throughout 1D points
 
 ! 1D physical structure (nls_phys_1D)
 call get_structure_properties(time=current_time, & ! Inputs
-                              Av=visual_extinction, density=H_number_density, & ! Outputs
-                              gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
+                              Av=visual_extinction(1), density=H_number_density(1), & ! Outputs
+                              gas_temperature=gas_temperature(1), grain_temperature=dust_temperature(1)) ! Outputs
 
 ! Write species name/index correspondance
 call write_species()

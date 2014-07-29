@@ -183,13 +183,14 @@ contains
 !! Visual_extinction.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_grain_temperature_computed(time, gas_temperature, grain_temperature)
+subroutine get_grain_temperature_computed(time, gas_temperature, av, grain_temperature)
 
 implicit none
 
 ! Inputs
 real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
 real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+real(double_precision), intent(in) :: av !<[in] visual extinction [mag]
 
 ! Outputs
 real(double_precision), intent(out) :: grain_temperature !<[out] Steady state dust temperature [K]
@@ -204,7 +205,7 @@ integer :: etat ! flag
 ! Compute the incident radiation filed in term of specific
 ! intensity (erg cm-2 s-1 Angstrom-1 sr-1) after screening 
 ! by dust
-call compute_Iinc(wavelength, Iinc)
+call compute_Iinc(wavelength, av, Iinc)
 
 !----
 ! Compute the absorption rate by dust
@@ -234,12 +235,13 @@ end subroutine get_grain_temperature_computed
 !! by dust
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-subroutine compute_Iinc(x, Iout)
+subroutine compute_Iinc(x, av, Iout)
 
 implicit none
 
 ! Inputs
 real(double_precision), dimension(nb_wavelengths), intent(in) :: x !<[in] Wavelength [Angstrom]
+real(double_precision), intent(in) :: av !< Visual extinction [mag]
 
 ! Outputs
 real(double_precision), dimension(nb_wavelengths), intent(out) :: Iout !<[out] Incident flux after dust screening [erg cm-2 s-1 Angstrom-1 sr-1]
@@ -251,7 +253,7 @@ real(double_precision) :: Iin
 Iout = 0.d0
 do i=1, nb_wavelengths
    Iin = max(get_local_UV_flux(x(i)), get_starlight_flux(x(i)), get_CMB_flux(x(i)), incident_dust_flux(i))
-   Iout(i) = Iin * 10.d0**(-ext(x(i)) * visual_extinction / 2.5d0)
+   Iout(i) = Iin * 10.d0**(-ext(x(i)) * av / 2.5d0)
 enddo
 
 

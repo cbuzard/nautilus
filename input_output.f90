@@ -403,10 +403,14 @@ if (isDefined) then
       case('structure_type')
         read(value, *) STRUCTURE_TYPE
       
-      ! Gas phase
+      ! 1D definitions
       case('1D_sample')
         read(value, '(i4)') nb_sample_1D
+        
+      case('z_max')
+        read(value, '(e12.6)') grid_max_edge
       
+      ! Gas phase
       case('initial_gas_density', 'XNT0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_gas_density
       
@@ -516,7 +520,12 @@ if ((GRAIN_TEMPERATURE_TYPE.eq.'table').and.(IS_STRUCTURE_EVOLUTION.eq.0)) then
 endif
 
 if ((STRUCTURE_TYPE.eq.'0D').and.(nb_sample_1D.ne.1)) then
-  write(Error_unit,*) 'Error: In 0D, we must have one point (1D_sample=1)'
+  write(Error_unit,'(a,i0,a)') 'Error: In 0D, we must have one point (1D_sample=',nb_sample_1D,')'
+  call exit(22)
+endif
+
+if ((STRUCTURE_TYPE.ne.'0D').and.(nb_sample_1D.eq.1)) then
+  write(Error_unit,'(a,i0,a)') 'Error: In 1D, we must have more than one point (1D_sample=',nb_sample_1D, ')'
   call exit(22)
 endif
 
@@ -577,8 +586,14 @@ use global_variables
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i2,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
   write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
+  write(10,'(a)') ""
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') "!*      1D and diffusion     *"
+  write(10,'(a)') "!*****************************"
+  write(10,'(a)') ""
   write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_disk_z'
   write(10,'(a,i0,a)') '1D_sample = ', nb_sample_1D, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
+  write(10,'(a,es10.3e2,a)') 'z_max = ', grid_max_edge, ' ! Maximum Z value for the 1D grid [AU]'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*    Gas phase parameters   *"

@@ -188,7 +188,7 @@ real(double_precision) :: tmp_value ! To optimize speed, temporary variable is c
 
 no_species=nb_species+1 ! Index corresponding to no species (meaning that there is no 3rd reactant for instance
 
-H_number_density_squared = H_number_density * H_number_density
+H_number_density_squared = actual_gas_density * actual_gas_density
 
 PDJ2(1:nb_species+1) = 0.d0
 
@@ -224,7 +224,7 @@ do i=1,nb_reactions_using_species(j)
   ! Two bodies reaction
   else if (reactant3_idx.eq.no_species) then
     if (reactant1_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant2_idx) * H_number_density
+      tmp_value = reaction_rates(reaction_idx) * Y(reactant2_idx) * actual_gas_density
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -235,7 +235,7 @@ do i=1,nb_reactions_using_species(j)
     endif
 
     if (reactant2_idx.eq.J) then 
-      tmp_value = reaction_rates(reaction_idx) * Y(reactant1_idx) * H_number_density
+      tmp_value = reaction_rates(reaction_idx) * Y(reactant1_idx) * actual_gas_density
       PDJ2(product1_idx) = PDJ2(product1_idx) + tmp_value
       PDJ2(product2_idx) = PDJ2(product2_idx) + tmp_value
       PDJ2(product3_idx) = PDJ2(product3_idx) + tmp_value
@@ -518,10 +518,10 @@ do I=1,nb_reactions
   else
     if (reactant3_idx.eq.no_species) then
       ! Two bodies reactions
-      RATE = reaction_rates(I) * Y(reactant1_idx) * Y(reactant2_idx) * H_number_density
+      RATE = reaction_rates(I) * Y(reactant1_idx) * Y(reactant2_idx) * actual_gas_density
     else 
       ! Three bodies reactions
-      RATE = reaction_rates(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * H_number_density * H_number_density
+      RATE = reaction_rates(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * actual_gas_density * actual_gas_density
     endif
   endif
 
@@ -567,14 +567,14 @@ end subroutine get_temporal_derivatives
   integer, dimension(10) :: indice
   real(double_precision), dimension(10) :: distmin, distmax
 
-  T300=gas_temperature/300.d0
-  TI=1.0d00/gas_temperature
-  TSQ=SQRT(gas_temperature)
+  T300 = actual_gas_temp / 300.d0
+  TI = 1.0d00 / actual_gas_temp
+  TSQ = SQRT(actual_gas_temp)
 
   ! ====== Rxn ITYPE 0
   ! ITYPE 0: Gas phase reactions with GRAINS =) 
   do J=type_id_start(0),type_id_stop(0)
-    reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))
+    reaction_rates(J) = RATE_A(J) * (T300**RATE_B(J))
   enddo
 
   ! In the case IS_GRAIN_REACTIONS eq 0, we still need the formation of H on the grains
@@ -584,10 +584,10 @@ end subroutine get_temporal_derivatives
   ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
   if (IS_GRAIN_REACTIONS.eq.0) then
     do J=type_id_start(10),type_id_stop(10)
-      reaction_rates(J)=RATE_A(J)*1.186D7*exp(225.D0/gas_temperature)**(-1)*GTODN/H_number_density
+      reaction_rates(J) = RATE_A(J) * 1.186D7 * exp(225.D0 / actual_gas_temp)**(-1) * GTODN / actual_gas_density
     enddo
     do J=type_id_start(11),type_id_stop(11)       
-      reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))*H_number_density/GTODN
+      reaction_rates(J) = RATE_A(J) * (T300**RATE_B(J)) * actual_gas_density / GTODN
     enddo       
   endif
 
@@ -596,12 +596,12 @@ end subroutine get_temporal_derivatives
   ! ITYPE 1: Photodissoc/ionisation with cosmic rays
   ! Add X-rays in case X_IONISATION_RATE is not 0
   do J=type_id_start(1),type_id_stop(1)
-    reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
+    reaction_rates(J) = RATE_A(J) * (CR_IONISATION_RATE + X_IONISATION_RATE)
   enddo
   
   ! ITYPE 2: Photodissoc/ionisation with UV induced by cosmic rays
   do J=type_id_start(2),type_id_stop(2)
-    reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
+    reaction_rates(J) = RATE_A(J) * (CR_IONISATION_RATE + X_IONISATION_RATE)
   enddo
 
   ! ====== Rxns ITYPE 4 - 8
@@ -620,36 +620,36 @@ end subroutine get_temporal_derivatives
     !---------------  KOOIJ FORMULA
     if (RATE_FORMULA(J).eq.3) then
 
-      reaction_rates(J)=RATE_A(J)*(T300**RATE_B(J))*EXP(-RATE_C(J)/gas_temperature)
+      reaction_rates(J) = RATE_A(J) * (T300**RATE_B(J)) * EXP(-RATE_C(J) / actual_gas_temp)
 
       ! Check for temperature bounderies
-      if (gas_temperature.LT.REACTION_TMIN(J)) then
-        reaction_rates(J)=RATE_A(J)*((REACTION_TMIN(J)/300.D0)**RATE_B(J))*EXP(-RATE_C(J)/REACTION_TMIN(J))
+      if (actual_gas_temp.LT.REACTION_TMIN(J)) then
+        reaction_rates(J) = RATE_A(J) * ((REACTION_TMIN(J) / 300.D0)**RATE_B(J)) * EXP(-RATE_C(J) / REACTION_TMIN(J))
       endif
-      if (gas_temperature.GT.REACTION_TMAX(J)) then
-        reaction_rates(J)=RATE_A(J)*((REACTION_TMAX(J)/300.D0)**RATE_B(J))*EXP(-RATE_C(J)/REACTION_TMAX(J))
+      if (actual_gas_temp.GT.REACTION_TMAX(J)) then
+        reaction_rates(J) = RATE_A(J) * ((REACTION_TMAX(J) / 300.D0)**RATE_B(J)) * EXP(-RATE_C(J) / REACTION_TMAX(J))
       endif
 
       ! Check for the presence of several rate coefficients present in the network for the
       ! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
-        INDICE(W)=J
-        distmin(w)=REACTION_TMIN(j)-gas_temperature
-        distmax(w)=gas_temperature-REACTION_TMAX(j)
+        INDICE(W) = J
+        distmin(w) = REACTION_TMIN(j) - actual_gas_temp
+        distmax(w) = actual_gas_temp - REACTION_TMAX(j)
         W = W + 1
       endif
 
       if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
-        INDICE(W)=J
-        distmin(w)=REACTION_TMIN(j)-gas_temperature
-        distmax(w)=gas_temperature-REACTION_TMAX(j)
+        INDICE(W) = J
+        distmin(w) = REACTION_TMIN(j) - actual_gas_temp
+        distmax(w) = actual_gas_temp - REACTION_TMAX(j)
 
         do M=1,W
-          N=INDICE(M)
+          N = INDICE(M)
           !if(IT==1) write(*,*) N,M, REACTION_COMPOUNDS_NAMES(:,N), REACTION_TMIN(N), REACTION_TMAX(N),distmin(M),distmax(M)
-          if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)=0.d0
-          if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)=0.d0
+          if (actual_gas_temp.LT.REACTION_TMIN(N)) reaction_rates(N) = 0.d0
+          if (actual_gas_temp.GT.REACTION_TMAX(N)) reaction_rates(N) = 0.d0
         enddo
 
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
@@ -672,13 +672,13 @@ end subroutine get_temporal_derivatives
 
     !---------------  IONPOL1 FORMULA
     if (RATE_FORMULA(J).EQ.4) then
-      reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/gas_temperature)**0.5))
+      reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/actual_gas_temp)**0.5))
 
       ! Check for temperature bounderies
-      if (gas_temperature.LT.REACTION_TMIN(J)) then
+      if (actual_gas_temp.LT.REACTION_TMIN(J)) then
         reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/REACTION_TMIN(J))**0.5))
       endif
-      if (gas_temperature.GT.REACTION_TMAX(J))  then
+      if (actual_gas_temp.GT.REACTION_TMAX(J))  then
         reaction_rates(J)=RATE_A(J)*RATE_B(J)*(0.62d0+0.4767d0*RATE_C(J)*((300.D0/REACTION_TMAX(J))**0.5))
       endif
 
@@ -686,21 +686,21 @@ end subroutine get_temporal_derivatives
       ! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
-        distmin(w)=REACTION_TMIN(j)-gas_temperature
-        distmax(w)=gas_temperature-REACTION_TMAX(j)
+        distmin(w) = REACTION_TMIN(j) - actual_gas_temp
+        distmax(w) = actual_gas_temp - REACTION_TMAX(j)
         W = W + 1
       endif
 
       if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=REACTION_TMIN(j)-gas_temperature
-        distmax(w)=gas_temperature-REACTION_TMAX(j)
+        distmin(w) = REACTION_TMIN(j) - actual_gas_temp
+        distmax(w) = actual_gas_temp - REACTION_TMAX(j)
 
         do M=1,W
           N=INDICE(M)
-          if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)= 0.d0
-          if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)= 0.d0
+          if (actual_gas_temp.LT.REACTION_TMIN(N)) reaction_rates(N) = 0.d0
+          if (actual_gas_temp.GT.REACTION_TMAX(N)) reaction_rates(N) = 0.d0
         enddo
 
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
@@ -724,36 +724,36 @@ end subroutine get_temporal_derivatives
     if (RATE_FORMULA(J).EQ.5) then
       
       ! Check for temperature boundaries and apply the formula in consequence
-      if (gas_temperature.LT.REACTION_TMIN(J)) then
+      if (actual_gas_temp.LT.REACTION_TMIN(J)) then
         reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/REACTION_TMIN(J))**0.5)+&
                            (RATE_C(J)**2*300.d0/(10.526*REACTION_TMIN(J))))
-      else if (gas_temperature.GT.REACTION_TMAX(J)) then
+      else if (actual_gas_temp.GT.REACTION_TMAX(J)) then
         reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/REACTION_TMAX(J))**0.5)+&
                            (RATE_C(J)**2*300.d0/(10.526*REACTION_TMAX(J))))
       else
-        reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/gas_temperature)**0.5)+&
-                           (RATE_C(J)**2*300.d0/(10.526*gas_temperature)))
+        reaction_rates(J) = RATE_A(J)*RATE_B(J)*((1.d0+0.0967*RATE_C(J)*(300.D0/actual_gas_temp)**0.5)+&
+                           (RATE_C(J)**2*300.d0/(10.526*actual_gas_temp)))
       endif
 
       ! Check for the presence of several rate coefficients present in the network for the
       !! the same reaction
       if (REACTION_ID(J+1).EQ.REACTION_ID(J)) then
         INDICE(W)=J
-        distmin(w)=REACTION_TMIN(j)-gas_temperature
-        distmax(w)=gas_temperature-REACTION_TMAX(j)
+        distmin(w)=REACTION_TMIN(j)-actual_gas_temp
+        distmax(w)=actual_gas_temp-REACTION_TMAX(j)
         W = W + 1
       endif
 
       if ((REACTION_ID(J+1).NE.REACTION_ID(J)).AND.(W.NE.1)) then
 
         INDICE(W)=J
-        distmin(w)=REACTION_TMIN(j)-gas_temperature
-        distmax(w)=gas_temperature-REACTION_TMAX(j)
+        distmin(w)=REACTION_TMIN(j)-actual_gas_temp
+        distmax(w)=actual_gas_temp-REACTION_TMAX(j)
 
         do M=1,W
           N=INDICE(M)
-          if (gas_temperature.LT.REACTION_TMIN(N)) reaction_rates(N)= 0.d0
-          if (gas_temperature.GT.REACTION_TMAX(N)) reaction_rates(N)= 0.d0
+          if (actual_gas_temp.LT.REACTION_TMIN(N)) reaction_rates(N)= 0.d0
+          if (actual_gas_temp.GT.REACTION_TMAX(N)) reaction_rates(N)= 0.d0
         enddo
 
         if (maxval(reaction_rates(indice(1:w))).lt.1.d-99) then
@@ -781,9 +781,9 @@ end subroutine get_temporal_derivatives
 
     ! ========= Set diffusion and evaporation rates (s-1)
     do K=1,nb_species
-      THERMAL_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/dust_temperature)/nb_sites_per_grain
+      THERMAL_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/actual_dust_temp)/nb_sites_per_grain
       CR_HOPING_RATE(K)=VIBRATION_FREQUENCY(K)*EXP(-DIFFUSION_BARRIER(K)/CR_PEAK_GRAIN_TEMP)/nb_sites_per_grain
-      EVAPORATION_RATES(K)=VIBRATION_FREQUENCY(K)*EXP(-BINDING_ENERGY(K)/dust_temperature)
+      EVAPORATION_RATES(K)=VIBRATION_FREQUENCY(K)*EXP(-BINDING_ENERGY(K)/actual_dust_temp)
       EVAPORATION_RATESCR(K)=VIBRATION_FREQUENCY(K)*EXP(-BINDING_ENERGY(K)/CR_PEAK_GRAIN_TEMP)
     enddo
 
@@ -881,9 +881,9 @@ end subroutine get_temporal_derivatives
                                    !! The reference used is 1.3x10^-17 s-1
 
 
-  T300=gas_temperature/300.d0
-  TI=1.0d00/gas_temperature
-  TSQ=SQRT(gas_temperature)
+  T300=actual_gas_temp/300.d0
+  TI=1.0d00/actual_gas_temp
+  TSQ=SQRT(actual_gas_temp)
 
   XNH2=Y(indH2)
   XNCO=Y(indCO)
@@ -907,7 +907,7 @@ end subroutine get_temporal_derivatives
   ! ====== Rxn ITYPE 3
   ! ITYPE 3: Gas phase photodissociations/ionisations by UV
   do J=type_id_start(3),type_id_stop(3)
-    reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*visual_extinction)*UV_FLUX
+    reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*actual_av)*UV_FLUX
 
     ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
     if (IS_ABSORPTION.EQ.1) then 
@@ -916,7 +916,7 @@ end subroutine get_temporal_derivatives
       if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YH2) then
         TETABIS=1.D0
 
-        NH2 = visual_extinction/AV_NH_ratio * XNH2
+        NH2 = actual_av/AV_NH_ratio * XNH2
 
         ! ======= Linear extrapolation of the shielding factors
         do L=1,NL1-1
@@ -938,8 +938,8 @@ end subroutine get_temporal_derivatives
         TETABIS2=1.D0
         TETABIS3=1.D0
 
-        NH2 = visual_extinction/AV_NH_ratio * XNH2
-        NCO = visual_extinction/AV_NH_ratio * XNCO
+        NH2 = actual_av/AV_NH_ratio * XNH2
+        NCO = actual_av/AV_NH_ratio * XNCO
 
         ! ======= Linear extrapolation of the three shileding factors
         do L=1,NL2-1
@@ -949,12 +949,12 @@ end subroutine get_temporal_derivatives
         enddo
 
         do L=1,NL3-1
-          if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) &
-          TETABIS1=T2H2(L)+(NH2-N2H2(L))*(T2H2(L+1)-T2H2(L))&
-          /(N2H2(L+1)-N2H2(L))
-          if ((AV2(L).LE.visual_extinction).AND.(AV2(L+1).GE.visual_extinction)) &
-          TETABIS3=T2AV(L)+(visual_extinction-AV2(L))*(T2AV(L+1)-T2AV(L))&
-          /(AV2(L+1)-AV2(L))
+          if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) then
+            TETABIS1 = T2H2(L) + (NH2 - N2H2(L)) * (T2H2(L+1) - T2H2(L)) / (N2H2(L+1) - N2H2(L))
+          endif
+          if ((AV2(L).LE.actual_av).AND.(AV2(L+1).GE.actual_av)) then
+            TETABIS3 = T2AV(L) + (actual_av - AV2(L)) * (T2AV(L+1) - T2AV(L)) / (AV2(L+1) - AV2(L))
+          endif
         enddo
 
         ! Saturate the rate coefficient if necessary (when density or Av are out of 
@@ -962,7 +962,7 @@ end subroutine get_temporal_derivatives
 
         if (NCO.GT.N2CO(NL2)) TETABIS2 = T2CO(NL2)
         if (NH2.GT.N2H2(NL3)) TETABIS1 = T2H2(NL3)
-        if (visual_extinction.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
+        if (actual_av.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
 
         reaction_rates(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
         reaction_rates(J)=reaction_rates(J)*UV_FLUX
@@ -980,9 +980,9 @@ end subroutine get_temporal_derivatives
     ! ITYPE 99: Adsorption on grains
     do J=type_id_start(99),type_id_stop(99)
       ! ========= Set accretion rates
-      ACCRETION_RATES(reactant_1_idx(J))=ACC_RATES_PREFACTOR(reactant_1_idx(J))*TSQ*Y(reactant_1_idx(J))*H_number_density
-      ACCRETION_RATES(reactant_2_idx(J))=ACCRETION_RATES(reactant_1_idx(J))
-      reaction_rates(J)=RATE_A(J)*branching_ratio(J)*ACCRETION_RATES(reactant_1_idx(J))/Y(reactant_1_idx(J))/GTODN
+      ACCRETION_RATES(reactant_1_idx(J)) = ACC_RATES_PREFACTOR(reactant_1_idx(J)) * TSQ * Y(reactant_1_idx(J)) * actual_gas_density
+      ACCRETION_RATES(reactant_2_idx(J)) = ACCRETION_RATES(reactant_1_idx(J))
+      reaction_rates(J) = RATE_A(J) * branching_ratio(J) * ACCRETION_RATES(reactant_1_idx(J)) / Y(reactant_1_idx(J)) / GTODN
     enddo
 
     ! ====== Rxn ITYPE 14
@@ -993,9 +993,11 @@ end subroutine get_temporal_derivatives
       BARR=1.0d0
       ! --------- Calculate activation energy barrier multiplier
       if (ACTIVATION_ENERGY(J).GE.1.0D-40) then
-        ACTIV=ACTIVATION_ENERGY(J)/dust_temperature
+        ACTIV = ACTIVATION_ENERGY(J) / actual_dust_temp
         ! ------------ Choose fastest of classical or tunnelling
-        if (ACTIV.GT.SURF_REACT_PROBA(J)) ACTIV=SURF_REACT_PROBA(J)
+        if (ACTIV.GT.SURF_REACT_PROBA(J)) then
+          ACTIV = SURF_REACT_PROBA(J)
+        endif
         BARR=EXP(-ACTIV)
       endif
 
@@ -1096,9 +1098,9 @@ end subroutine get_temporal_derivatives
         call modify_specific_rates(J,IMOD1,IMOD2,BARR,YMOD1,YMOD2)
       endif
 
-      DIFF=DIFFUSION_RATE_1(J)+DIFFUSION_RATE_2(J)
+      DIFF = DIFFUSION_RATE_1(J) + DIFFUSION_RATE_2(J)
 
-      reaction_rates(J)=RATE_A(J)*branching_ratio(J)*BARR*DIFF*GTODN/H_number_density
+      reaction_rates(J) = RATE_A(J) * branching_ratio(J) * BARR * DIFF * GTODN / actual_gas_density
       ! reaction_rates(J)=0.D0
     enddo
 
@@ -1219,8 +1221,8 @@ end subroutine get_temporal_derivatives
 
             DIFFCR=CR_DIFFUSION_RATE_1(J)+CR_DIFFUSION_RATE_2(J)
 
-            reaction_rates(J)=(CR_IONISATION_RATE/1.3D-17)*FE_IONISATION_RATE*CR_PEAK_DURATION*RATE_A(J)*branching_ratio(J)* &
-                               BARRCR*DIFFCR*GTODN/H_number_density
+            reaction_rates(J) = (CR_IONISATION_RATE / 1.3D-17) * FE_IONISATION_RATE * CR_PEAK_DURATION * RATE_A(J) * &
+                                branching_ratio(J) * BARRCR * DIFFCR * GTODN / actual_gas_density
 
        enddo
     endif
@@ -1229,7 +1231,7 @@ end subroutine get_temporal_derivatives
     ! ITYPE 19: Photodissociations by UV photons on grain surfaces
     ! ITYPE 20: Photodissociations by UV photons on grain surfaces
     do J=type_id_start(19),type_id_stop(20)
-      reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*visual_extinction)*UV_FLUX
+      reaction_rates(J) = RATE_A(J) * EXP(-RATE_C(J) * actual_av) * UV_FLUX
     enddo
 
 ! ============================================================
@@ -1241,7 +1243,7 @@ end subroutine get_temporal_derivatives
     if (type_id_start(66).NE.0) then
         do J = type_id_start(66),type_id_stop(66)
 !---- Used for all species
-           reaction_rates(J)=RATE_A(J)/SURFACE_SITE_DENSITY*UV_FLUX*1.d8*EXP(-2.*visual_extinction)
+           reaction_rates(J) = RATE_A(J) / SURFACE_SITE_DENSITY * UV_FLUX * 1.d8 * EXP(-2. * actual_av)
 !---- Specific cases
            call photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
@@ -1255,7 +1257,7 @@ end subroutine get_temporal_derivatives
     if (type_id_start(67).NE.0) then
         do J = type_id_start(67),type_id_stop(67)
 !---- Used for all species
-           reaction_rates(J)=RATE_A(J)/SURFACE_SITE_DENSITY*1.d4*UVCR
+           reaction_rates(J) = RATE_A(J) / SURFACE_SITE_DENSITY * 1.d4 * UVCR
            call photodesorption_special_cases(J,SUMLAY)
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
@@ -1281,12 +1283,12 @@ end subroutine get_temporal_derivatives
   ! VW Fev 2012 - this process has been removed
   !      do j=type_id_start(0),type_id_stop(0)
   !      if ((REACTION_COMPOUNDS_NAMES(1,J).eq.YH).and.(REACTION_COMPOUNDS_NAMES(2,j).eq.YH)) then
-  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/H_number_density/Y(reactant_1_idx(j))
+  !      reaction_rates(j)=branching_ratio(j)*A(j)*(T300**B(j))*GTODN/actual_gas_density/Y(reactant_1_idx(j))
   !      endif
   !      enddo
 
   ! if rate acoefficients are too small, put them to 0
-  where (reaction_rates.lt.MINIMUM_RATE_COEFFICIENT) reaction_rates=0.d0
+  where (reaction_rates.lt.MINIMUM_RATE_COEFFICIENT) reaction_rates = 0.d0
 
     return
     end subroutine set_dependant_rates
@@ -1543,7 +1545,7 @@ product2 = REACTION_COMPOUNDS_NAMES(MAX_REACTANTS+2,J)
 
 ! TODO are extra spaces in names really necessary? Test that.
 !------ Photodesorption of CO2: photodesorbs as either CO2 or CO
-if (dust_temperature.LE.3.5E+01) then
+if (actual_dust_temp.LE.3.5E+01) then
     if (product1 == 'CO2        ') then
         reaction_rates(J) = reaction_rates(J) * 1.2E-03 * (1.d0 - EXP(-SUMLAY/2.9E+00) ) / RATE_A(J)
     endif
@@ -1551,7 +1553,7 @@ if (dust_temperature.LE.3.5E+01) then
        (product1 == 'O          ' .AND. product2 == 'CO         ')) then
         reaction_rates(J) = reaction_rates(J) * 1.1E-03 * (1.d0 - EXP(-SUMLAY/4.6E+00) ) / RATE_A(J)
     endif
-elseif(dust_temperature.GT.3.5E+01) then
+elseif(actual_dust_temp.GT.3.5E+01) then
     if (product1 == 'CO2        ') then
         reaction_rates(J) = reaction_rates(J) * 2.2E-03 * (1.d0 - EXP(-SUMLAY/5.8E+00) ) / RATE_A(J)
     endif
@@ -1562,7 +1564,7 @@ elseif(dust_temperature.GT.3.5E+01) then
 endif
 !------ Photodesorption of CO
 if(reactant1 == 'JCO        ' .AND. product1 == 'CO         ') then
-   reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (dust_temperature - 15E+00)) / RATE_A(J)
+   reaction_rates(J) = reaction_rates(J) * ( 2.7E-03 - 1.7E-04 * (actual_dust_temp - 15E+00)) / RATE_A(J)
 endif
 !------ Photodesorption of N2
 if(reactant1 == 'JN2        ' .AND. product1 == 'N2         ') then
@@ -1574,9 +1576,9 @@ if(reactant1 == 'JCH3OH     ' .AND. product1 == 'CH3OH      ') then
 endif
 !------ Photodesorption of H2O
 if(reactant1 == 'JH2O       ') then
-   LTD = 6.0E-01 + 2.4E-02 * dust_temperature
-   fH2O = 4.2E-01 + 2.0E-03 * dust_temperature
-   reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02*dust_temperature) &
+   LTD = 6.0E-01 + 2.4E-02 * actual_dust_temp
+   fH2O = 4.2E-01 + 2.0E-03 * actual_dust_temp
+   reaction_rates(J) = reaction_rates(J) * 1.0E-03 * (1.3E+00 + 3.2E-02 * actual_dust_temp) &
            & * (1.d0 - EXP(-SUMLAY/LTD) ) * fH2O / RATE_A(J)
    if((product1 == 'OH         ' .AND. product2 == 'H          ') .OR. &
       (product1 == 'H          ' .AND. product2 == 'OH         ')) then

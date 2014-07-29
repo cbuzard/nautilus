@@ -215,7 +215,7 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature, gr
     gas_temperature = 10.0d0**(structure_log_gas_temperature(structure_sample))
   end if
   
-  call get_grain_temperature(time=time, gas_temperature=gas_temperature, grain_temperature=grain_temperature)
+  call get_grain_temperature(time=time, gas_temperature=gas_temperature, Av=av, grain_temperature=grain_temperature)
 
   return
 end subroutine get_structure_properties_table
@@ -250,7 +250,7 @@ subroutine get_structure_properties_fixed(time, Av, density, gas_temperature, gr
   Av = INITIAL_VISUAL_EXTINCTION
   gas_temperature = initial_gas_temperature
   
-  call get_grain_temperature(time=time, gas_temperature=gas_temperature, grain_temperature=grain_temperature)
+  call get_grain_temperature(time=time, gas_temperature=gas_temperature, av=Av, grain_temperature=grain_temperature)
 
   return
 end subroutine get_structure_properties_fixed
@@ -266,13 +266,14 @@ end subroutine get_structure_properties_fixed
 !! the gas temperature
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_grain_temperature_gas(time, gas_temperature, grain_temperature)
+subroutine get_grain_temperature_gas(time, gas_temperature, av, grain_temperature)
 
   implicit none
 
   ! Inputs
   real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
   real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  real(double_precision), intent(in) :: av !<[in] visual extinction [mag]
   
   ! Outputs
   real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
@@ -294,13 +295,14 @@ end subroutine get_grain_temperature_gas
 !! dust temperature
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_grain_temperature_fixed(time, gas_temperature, grain_temperature)
+subroutine get_grain_temperature_fixed(time, gas_temperature, av, grain_temperature)
 
   implicit none
 
   ! Inputs
   real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
   real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  real(double_precision), intent(in) :: av !<[in] visual extinction [mag]
   
   ! Outputs
   real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
@@ -322,13 +324,14 @@ end subroutine get_grain_temperature_fixed
 !! the data read in structure_evolution.dat
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_grain_temperature_table(time, gas_temperature, grain_temperature)
+subroutine get_grain_temperature_table(time, gas_temperature, av, grain_temperature)
 
   implicit none
 
   ! Inputs
   real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
   real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  real(double_precision), intent(in) :: av !<[in] visual extinction [mag]
   
   ! Outputs
   real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
@@ -501,24 +504,12 @@ subroutine structure_diffusion_1D_disk_z(timestep, temp_abundances)
   !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
-  ! Local (for tests only. Some must be suppressed or 
-  real(double_precision), dimension(nb_species) :: viscosity ! viscosity in cm^2/s
-  real(double_precision), dimension(nb_species) :: density2D !< surface density in part/cm^2
-  real(double_precision) :: grid_cell_size
-  
   ! Locals
-  integer :: x_i !< For loops
+  integer :: reaction !< For loops
   
-  grid_cell_size = 1e13 !< Constant size of the box, in cm
-  do x_i=1,nb_sample_1D
-    grid_sample(x_i) = (x_i - 1.d0) * grid_cell_size
-  enddo
-  density2D(1:nb_sample_1D) = H_number_density * grid_cell_size ! Convert bulk density into surface density
-  viscosity(1:nb_sample_1D) = 1e15 ! cm^2/s
-  
-  do x_i=1,nb_sample_1D
-    call crank_nicholson_1D(f=temp_abundances(x_i, 1:nb_sample_1D), ny=nb_sample_1D-1, dt=timestep, dy=grid_cell_size, &
-    nu=viscosity(1:nb_sample_1D), rho=density2D(1:nb_sample_1D), ibc=0)
+  do reaction=1,nb_species
+    call crank_nicholson_1D(f=temp_abundances(reaction, 1:nb_sample_1D), ny=nb_sample_1D-1, dt=timestep, dy=grid_cell_size, &
+    nu=diffusion_coefficient(1:nb_sample_1D), rho=H_number_density(1:nb_sample_1D), ibc=0)
   enddo  
   
 end subroutine structure_diffusion_1D_disk_z
@@ -575,17 +566,151 @@ subroutine get_timestep_1D_disk_z(current_time, final_time, next_timestep)
   ! Outputs
   real(double_precision), intent(out) :: next_timestep !<[out] The next integration sub timestep withing an output integration step [s]
 
-  ! Locals
-  real(double_precision) :: viscosity ! viscosity in cm^2/s
-  real(double_precision) :: grid_cell_size
-
-  grid_cell_size = 1e13 !< Constant size of the box, in cm
-  viscosity = 1e15 ! cm^2/s
-  next_timestep = grid_cell_size**2 / viscosity
+  next_timestep = grid_cell_size**2 / maxval(diffusion_coefficient)
 
   ! TODO write the calculation of the diffusion timestep before that test
   if (current_time+next_timestep.gt.final_time) then
     next_timestep = final_time - current_time
   endif
 end subroutine get_timestep_1D_disk_z
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author 
+!> Christophe Cossou
+!
+!> @date 2014
+!
+! DESCRIPTION: 
+!> @brief Read 1D evolution in 1D_evolution.dat
+!! to initialize arrays. Thus, interpolation of physical structure properties
+!! throughout the simulation be possible.
+!! \n
+!! structure_evolution.dat will have a two lines header. Then columns will be as follow :
+!! \n Z position (AU) ; Number density (part/cm3) ; Temperature (K) ; diffusion coeff (cm^2/s) ; Av (mag)
+!
+!> @warning Time sample MUST be linearly and equally spaced
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
+subroutine init_1D_evolution()
+
+use utilities
+
+implicit none
+
+
+character(len=80) :: filename = '1D_evolution.dat' !< name of the file in which time evolution is stored
+character(len=80) :: line
+character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
+integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
+integer :: error !< to store the state of a read instruction
+integer :: nb_columns
+
+real(double_precision), dimension(:), allocatable :: tmp_grid, tmp_density, tmp_gas_temperature, tmp_av, tmp_kappa
+integer :: closest_low_id, nb_values
+integer :: x1, x2, y1, y2
+
+integer :: i !< loop index
+logical :: isDefined
+!------------------------------------------------------------------------------
+
+inquire(file=filename, exist=isDefined)
+if (isDefined) then
+  
+  ! We get the total lines of the file
+  open(10, file=filename, status='old')
+  i = 0
+  do
+    read(10, '(a80)', iostat=error) line
+    if (error /= 0) exit
+    
+    if (line(1:1).ne.comment_character) then
+      i = i + 1
+    end if
+  end do
+  close(10)
+  
+  ! We define the sizes of the arrays
+  nb_values = i
+  if (allocated(tmp_grid)) then
+    deallocate(tmp_grid)
+    deallocate(tmp_density)
+    deallocate(tmp_gas_temperature)
+    deallocate(tmp_av)
+    deallocate(tmp_kappa)
+  end if
+  allocate(tmp_grid(nb_values))
+  allocate(tmp_density(nb_values))
+  allocate(tmp_gas_temperature(nb_values))
+  allocate(tmp_av(nb_values))
+  allocate(tmp_kappa(nb_values))
+  
+  ! We get the values of the torque profile in the file
+  open(10, file=filename, status='old')
+  i = 0
+  do
+    read(10, '(a80)', iostat=error) line
+    if (error /= 0) exit
+    
+    if(line(1:1).ne.comment_character) then
+      i = i + 1
+      read(line, *, iostat=error) tmp_grid(i), tmp_density(i), tmp_gas_temperature(i), tmp_av(i), tmp_kappa(i)
+    end if
+  end do
+  
+  ! We now want to interpolate the values from the input sampling to the desired 1D sampling that is 
+  !! defined solely by z_max and nb_sample_1D
+  closest_low_id = 1
+  do i=1,nb_sample_1D
+    
+    if ((grid_sample(i) .ge. tmp_grid(1)) .and. (grid_sample(i) .lt. tmp_grid(nb_values))) then
+      ! we do not initialize closest_low_id at each step, because the sample is sorted, 
+      ! so we know that the id will at least be the one of the previous timestep
+      do while (grid_sample(i).gt.tmp_grid(closest_low_id+1))
+        closest_low_id = closest_low_id + 1
+      end do
+      
+      x1 = tmp_grid(closest_low_id)
+      x2 = tmp_grid(closest_low_id + 1)
+      
+      ! density
+      y1 = tmp_density(closest_low_id)
+      y2 = tmp_density(closest_low_id + 1)
+      H_number_density(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
+      
+      ! Gas temperature
+      y1 = tmp_gas_temperature(closest_low_id)
+      y2 = tmp_gas_temperature(closest_low_id + 1)
+      gas_temperature(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
+      
+      ! Visual Extinction
+      y1 = tmp_av(closest_low_id)
+      y2 = tmp_av(closest_low_id + 1)
+      visual_extinction(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
+      
+      ! Diffusion coefficient
+      y1 = tmp_kappa(closest_low_id)
+      y2 = tmp_kappa(closest_low_id + 1)
+      diffusion_coefficient(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
+      
+    else if (grid_sample(i) .lt. tmp_grid(1)) then
+      H_number_density(i) = tmp_density(1)
+      gas_temperature(i) = tmp_gas_temperature(1)
+      visual_extinction(i) = tmp_av(1)
+      diffusion_coefficient(i) = tmp_kappa(1)
+    else if (grid_sample(i) .ge. tmp_grid(nb_values)) then
+      H_number_density(i) = tmp_density(nb_values)
+      gas_temperature(i) = tmp_gas_temperature(nb_values)
+      visual_extinction(i) = tmp_av(nb_values)
+      diffusion_coefficient(i) = tmp_kappa(nb_values)
+    end if
+  end do
+  
+else
+  write (Error_Unit,*) 'Error: The file "',trim(filename),'" does not exist.'
+  call exit(25)
+end if
+
+return
+end subroutine init_1D_evolution
+
 end module structure

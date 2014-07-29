@@ -182,6 +182,7 @@ Error 23: You can't have 1D structure and time evolution (read from a data file)
 
 Error 24: Problem occured while inside the sorting array procedure 'get_sorted_index'
 
+Error 25: The file where 1D data are expected doesn't exist.
 
 @section section_itype Reactions Types
 

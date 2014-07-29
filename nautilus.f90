@@ -194,13 +194,19 @@ do output_idx=1, NB_OUTPUTS
     
     ! So far, structure read from ASCII file is not compatible with 1D. 
     !! If this changes, this call must be included in the loop on 1D sample
+    !! We thus assume that everything is stored in the first element of the array, since this can't be valid for nb > 1
     call get_structure_properties(time=current_time, & ! Inputs
-                              Av=visual_extinction, density=H_number_density, & ! Outputs
-                              gas_temperature=gas_temperature, grain_temperature=dust_temperature) ! Outputs
+                              Av=visual_extinction(1), density=H_number_density(1), & ! Outputs
+                              gas_temperature=gas_temperature(1), grain_temperature=dust_temperature(1)) ! Outputs
     
     
     do x_i=1,nb_sample_1D
-
+      ! We can't add input variables in dlsodes called routines, so we must store the values as global variables
+      actual_gas_temp = gas_temperature(x_i)
+      actual_dust_temp = dust_temperature(x_i)
+      actual_av = visual_extinction(x_i)
+      actual_gas_density = H_number_density(x_i)
+      
       call integrate_chemical_scheme(delta_t=output_timestep, temp_abundances=abundances(1:nb_species, x_i),& ! Inputs
       itol=itol, atol=atol, itask=itask, iopt=iopt, mf=mf, & ! Inputs
       istate=istate) ! Output

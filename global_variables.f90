@@ -25,7 +25,6 @@ integer, parameter :: MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maxi
 !! Warning: If this number change, get_jacobian(N, T, Y, J, IAN, JAN, PDJ) must be actualised, since each reactant and product has
 !! its own variable, a new one must be created for the new column possible. 
 
-integer :: nb_sample_1D = 1 !< sample in 1D dimension for the physical structure. If 1, then we are in 0D, else, we are in 1D
 integer :: nb_reactions !< total number of reactions
 integer :: nb_species !< total number of species. Species are ordered. First, there are the nb_gaseous_species ones, and after, the nb_surface_species ones.
 integer :: nb_gaseous_species !< number of species that are gaseous
@@ -155,14 +154,9 @@ real(double_precision) :: sticking_coeff_neutral  !< sticking coefficient for ne
 real(double_precision) :: sticking_coeff_positive !< sticking coefficient for positive species on grain surface [no unit]
 real(double_precision) :: sticking_coeff_negative !< sticking coefficient for negative species on grain surface [no unit]
 real(double_precision) :: MINIMUM_INITIAL_ABUNDANCE !< minimum value of the abundance (relative to H) [number ratio]
-real(double_precision) :: H_number_density !< [part/cm^3] Total H number density (both H and H2), representing the total gas density
 real(double_precision) :: initial_gas_density !< [part/cm^3] initial gas density of the structure
-real(double_precision) :: gas_temperature !< current gas temperature [K]
 real(double_precision) :: initial_gas_temperature !< initial gas temperature [K], simulation parameter
-real(double_precision) :: dust_temperature !< current dust temperature [K]
 real(double_precision) :: initial_dust_temperature !< initial dust temperature [K], simulation parameter
-real(double_precision) :: visual_extinction !< visual extinction [mag] of the molecular cloud (or other astronomical object). 
-!! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
 real(double_precision) :: INITIAL_VISUAL_EXTINCTION !< initial visual extinction [mag] 
 real(double_precision) :: CR_IONISATION_RATE !< cosmic ray ionisation rate [s-1]
 real(double_precision) :: UV_FLUX !< Scale factor for the UV flux, in unit of the reference flux (1.=nominal)
@@ -188,7 +182,16 @@ real(double_precision) :: VIB_TO_DISSIP_FREQ_RATIO !< [no unit] For the RRK (Ric
 !! on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1%.
 
 ! 1D variables
-real(double_precision), dimension(:), allocatable :: grid_sample !< dim(nb_sample_1D) 1D sampling [cm] Can either be linear, or log, or whatever, depending on the structure
+integer :: nb_sample_1D = 1 !< sample in 1D dimension for the physical structure. If 1, then we are in 0D, else, we are in 1D
+real(double_precision) :: grid_max_edge !< [AU] Maximum distance in 1D. We assume the minimum distance is always 0 AU
+real(double_precision) :: grid_cell_size !< [cm] Grid cell size, or separation between two consecutive 1D points
+real(double_precision), dimension(:), allocatable :: grid_sample !< dim(nb_sample_1D) 1D sampling [cm] Must be linearly and equally spaced because of how the diffusion is treated.
+real(double_precision), dimension(:), allocatable :: gas_temperature !< dim(nb_sample_1D) current gas temperature [K]
+real(double_precision), dimension(:), allocatable :: visual_extinction !< dim(nb_sample_1D) visual extinction [mag] of the molecular cloud (or other astronomical object). 
+!! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
+real(double_precision), dimension(:), allocatable :: dust_temperature !< dim(nb_sample_1D) current dust temperature [K]
+real(double_precision), dimension(:), allocatable :: H_number_density !< dim(nb_sample_1D) [part/cm^3] Total H number density (both H and H2), representing the total gas density
+real(double_precision), dimension(:), allocatable :: diffusion_coefficient !< dim(nb_sample_1D) [cm^2/s] Diffusion coefficient for a 1D case
 
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
@@ -199,7 +202,7 @@ character(len=80) :: GRAIN_TEMPERATURE_TYPE = 'fixed' !< ('gas', 'computed', 'ta
 procedure(get_grain_temperature_interface), pointer :: get_grain_temperature !< Pointer toward the routine that will calculate grain temperature
 
 abstract interface 
-  subroutine get_grain_temperature_interface(time, gas_temperature, grain_temperature)
+  subroutine get_grain_temperature_interface(time, gas_temperature, av, grain_temperature)
   import
   
   implicit none
@@ -207,6 +210,7 @@ abstract interface
   ! Inputs
   real(double_precision), intent(in) :: time !<[in] current time of the simulation [s]
   real(double_precision), intent(in) :: gas_temperature !<[in] gas temperature [K]
+  real(double_precision), intent(in) :: av !<[in] visual extinction [mag]
   
   ! Outputs
   real(double_precision), intent(out) :: grain_temperature !<[out] grain temperature [K]
@@ -326,6 +330,18 @@ character(len=80) :: OUTPUT_TYPE !< Type of output times sampling. linear, log, 
 !! log   : Outputs times are log-spaced 
 !! table : Outputs times are read from time_evolution.dat'
 
+
+! Variables to be used by routines to access 'actual' values of differents physical properties. 
+!! This might be not very clear but the thing is : get_temporal_derivatives and get_jacobian have fixed input/output because they are
+!! joined as external routines in dlsodes. We can't modify and add inputs in these routines unless we change routines in the ODEPACK
+!! module (which is obviously not possible). Thus, we must access these values as global variable, even if this imply changing theses
+!! values inside a loop, which is not a proper thing to do in normal, correctly written code. 
+real(double_precision) :: actual_gas_temp !< Gas temperature [K]
+real(double_precision) :: actual_dust_temp !< Dust temperature [K]
+real(double_precision) :: actual_av !< Visual extinction [mag]
+real(double_precision) :: actual_gas_density !< Gas density [part/cm^3]
+
+
 contains 
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -373,94 +389,150 @@ subroutine initialize_global_arrays()
 
 implicit none
 
+! Arrays associated with species
 allocate(species_name(nb_species))
-allocate(abundances(nb_species, nb_sample_1D))
-allocate(SPECIES_MASS(nb_species))
-allocate(THERMAL_HOPING_RATE(nb_species))
-allocate(CR_HOPING_RATE(nb_species))
-allocate(ACCRETION_RATES(nb_species))
-allocate(EVAPORATION_RATES(nb_species))
-allocate(EVAPORATION_RATEScr(nb_species))
-allocate(BINDING_ENERGY(nb_species))
-allocate(DIFFUSION_BARRIER(nb_species))
-allocate(GAP_ENERGY_BANDS(nb_species))
-allocate(FORMATION_ENTHALPY(nb_species))
-allocate(VIBRATION_FREQUENCY(nb_species))
-allocate(ACC_RATES_PREFACTOR(nb_species))
-allocate(TUNNELING_RATE_TYPE_1(nb_species))
-allocate(TUNNELING_RATE_TYPE_2(nb_species))
-allocate(SPECIES_CHARGE(nb_species))
-allocate(nb_reactions_using_species(nb_species))
-
-allocate(branching_ratio(nb_reactions))
-allocate(RATE_A(nb_reactions))
-allocate(RATE_B(nb_reactions))
-allocate(RATE_C(nb_reactions))
-allocate(reaction_rates(nb_reactions))
-allocate(DIFFUSION_RATE_1(nb_reactions))
-allocate(CR_DIFFUSION_RATE_1(nb_reactions))
-allocate(DIFFUSION_RATE_2(nb_reactions))
-allocate(CR_DIFFUSION_RATE_2(nb_reactions))
-allocate(EVAP_OVER_ACC_RATIO_1(nb_reactions))
-allocate(EVAP_OVER_ACC_RATIO_2(nb_reactions))
-allocate(ACTIVATION_ENERGY(nb_reactions))
-allocate(REACTION_TMIN(nb_reactions))
-allocate(REACTION_TMAX(nb_reactions))
-allocate(SURF_REACT_PROBA(nb_reactions))
-allocate(REACTION_TYPE(nb_reactions))
-allocate(reactant_1_idx(nb_reactions))
-allocate(reactant_2_idx(nb_reactions))
-allocate(RATE_FORMULA(nb_reactions))
-allocate(REACTION_ID(nb_reactions))
-allocate(REACTION_COMPOUNDS_ID(MAX_COMPOUNDS,nb_reactions))
-allocate(REACTION_COMPOUNDS_NAMES(MAX_COMPOUNDS,nb_reactions))
-
-allocate(grid_sample(nb_sample_1D))
-
-allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
-allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
-allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
-
 species_name(1:nb_species) = ''
+
+allocate(abundances(nb_species, nb_sample_1D))
 abundances(1:nb_species, 1:nb_sample_1D) = 0.d0
+
+allocate(SPECIES_MASS(nb_species))
 SPECIES_MASS(1:nb_species) = 0.d0
+
+allocate(THERMAL_HOPING_RATE(nb_species))
 THERMAL_HOPING_RATE(1:nb_species) = 0.d0
+
+allocate(CR_HOPING_RATE(nb_species))
+
+allocate(ACCRETION_RATES(nb_species))
 ACCRETION_RATES(1:nb_species) = 0.d0
+
+allocate(EVAPORATION_RATES(nb_species))
 EVAPORATION_RATES(1:nb_species) = 0.d0
+
+allocate(EVAPORATION_RATEScr(nb_species))
+EVAPORATION_RATEScr(1:nb_species) = 0.d0
+
+allocate(BINDING_ENERGY(nb_species))
 BINDING_ENERGY(1:nb_species) = 0.d0
+
+allocate(DIFFUSION_BARRIER(nb_species))
 DIFFUSION_BARRIER(1:nb_species) = 0.d0
+
+allocate(GAP_ENERGY_BANDS(nb_species))
 GAP_ENERGY_BANDS(1:nb_species) = 0.d0
+
+allocate(FORMATION_ENTHALPY(nb_species))
 FORMATION_ENTHALPY(1:nb_species) = 0.d0
+
+allocate(VIBRATION_FREQUENCY(nb_species))
 VIBRATION_FREQUENCY(1:nb_species) = 0.d0
+
+allocate(ACC_RATES_PREFACTOR(nb_species))
 ACC_RATES_PREFACTOR(1:nb_species) = 0.d0
+
+allocate(TUNNELING_RATE_TYPE_1(nb_species))
 TUNNELING_RATE_TYPE_1(1:nb_species) = 0.d0
+
+allocate(TUNNELING_RATE_TYPE_2(nb_species))
 TUNNELING_RATE_TYPE_2(1:nb_species) = 0.d0
+
+allocate(SPECIES_CHARGE(nb_species))
 SPECIES_CHARGE(1:nb_species) = 0
+
+allocate(nb_reactions_using_species(nb_species))
 nb_reactions_using_species(1:nb_species) = 0
 
+! Variables associated with reactions
+allocate(branching_ratio(nb_reactions))
 branching_ratio(1:nb_reactions) = 0.d0
+
+allocate(RATE_A(nb_reactions))
 RATE_A(1:nb_reactions) = 0.d0
+
+allocate(RATE_B(nb_reactions))
 RATE_B(1:nb_reactions) = 0.d0
+
+allocate(RATE_C(nb_reactions))
 RATE_C(1:nb_reactions) = 0.d0
+
+allocate(reaction_rates(nb_reactions))
 reaction_rates(1:nb_reactions) = 0.d0
+
+allocate(DIFFUSION_RATE_1(nb_reactions))
 DIFFUSION_RATE_1(1:nb_reactions) = 0.d0
+
+allocate(CR_DIFFUSION_RATE_1(nb_reactions))
+allocate(DIFFUSION_RATE_2(nb_reactions))
 DIFFUSION_RATE_2(1:nb_reactions) = 0.d0
+
+allocate(CR_DIFFUSION_RATE_2(nb_reactions))
+allocate(EVAP_OVER_ACC_RATIO_1(nb_reactions))
 EVAP_OVER_ACC_RATIO_1(1:nb_reactions) = 0.d0
+
+allocate(EVAP_OVER_ACC_RATIO_2(nb_reactions))
 EVAP_OVER_ACC_RATIO_2(1:nb_reactions) = 0.d0
+
+allocate(ACTIVATION_ENERGY(nb_reactions))
 ACTIVATION_ENERGY(1:nb_reactions) = 0.d0
+
+allocate(REACTION_TMIN(nb_reactions))
 REACTION_TMIN(1:nb_reactions) = 0.d0
+
+allocate(REACTION_TMAX(nb_reactions))
 REACTION_TMAX(1:nb_reactions) = 0.d0
+
+allocate(SURF_REACT_PROBA(nb_reactions))
 SURF_REACT_PROBA(1:nb_reactions) = 0.d0
+
+allocate(REACTION_TYPE(nb_reactions))
 REACTION_TYPE(1:nb_reactions) = 0
+
+allocate(reactant_1_idx(nb_reactions))
 reactant_1_idx(1:nb_reactions) = 0
+
+allocate(reactant_2_idx(nb_reactions))
 reactant_2_idx(1:nb_reactions) = 0
+
+allocate(RATE_FORMULA(nb_reactions))
 RATE_FORMULA(1:nb_reactions) = 0
+
+allocate(REACTION_ID(nb_reactions))
 REACTION_ID(1:nb_reactions) = 0
+
+allocate(REACTION_COMPOUNDS_ID(MAX_COMPOUNDS,nb_reactions))
 REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,1:nb_reactions) = 0
+
+allocate(REACTION_COMPOUNDS_NAMES(MAX_COMPOUNDS,nb_reactions))
 REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS,1:nb_reactions) = ''
+
+! 1D arrays
+allocate(grid_sample(nb_sample_1D))
 grid_sample(1:nb_sample_1D) = 0.d0
+
+allocate(gas_temperature(nb_sample_1D))
+gas_temperature(1:nb_sample_1D) = 0.d0
+
+allocate(visual_extinction(nb_sample_1D))
+visual_extinction(1:nb_sample_1D) = 0.d0
+
+allocate(dust_temperature(nb_sample_1D))
+dust_temperature(1:nb_sample_1D) = 0.d0
+
+allocate(H_number_density(nb_sample_1D))
+H_number_density(1:nb_sample_1D) = 0.d0
+
+allocate(diffusion_coefficient(nb_sample_1D))
+diffusion_coefficient(1:nb_sample_1D) = 0.d0
+
+! Prime elements
+allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))
 INITIAL_ELEMENTAL_ABUNDANCE(1:NB_PRIME_ELEMENTS) = 0.d0
+
+allocate(PRIME_ELEMENT_IDX(NB_PRIME_ELEMENTS))
 PRIME_ELEMENT_IDX(1:NB_PRIME_ELEMENTS) = 0
+
+allocate(species_composition(NB_PRIME_ELEMENTS,nb_species))
 species_composition(1:NB_PRIME_ELEMENTS,nb_species) = 0
 
 end subroutine initialize_global_arrays
