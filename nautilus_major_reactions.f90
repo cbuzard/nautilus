@@ -122,9 +122,6 @@ abundances_out(1:nb_outputs, nb_species+1, 1:nb_sample_1D) = 1.d0
 ! User asked section
 !######################################################
 
-write(*,*) "Warning by Christophe Cossou:"
-write(*,*) "Please check gas density. There can be a factor of 2 and I never know which one is to be used"
-
 ! What time ?
 20 if (change_time) then
   wrong_output = .true.
@@ -250,8 +247,12 @@ endif
 write(output_format,*)'(i2,4x,a,2x,es13.7,4x,f5.1,"%")'
 
 write(*,*) ''
-write(*,'(a,a,a,i0,a,es8.2,a,i0)') 'For ', trim(user_species), ' at output n°', output_ID, &
-' (', time(output_ID), ' years) and spatial point n°',user_1D_id
+write(*,'(a,a,a,i0,a,es8.2,a,i0,a,es8.2,a)') 'For ', trim(user_species), ' at output n°', output_ID, &
+' (', time(output_ID)/YEAR, ' years) and spatial point n°',user_1D_id,' (',grid_sample(user_1D_id)/AU,' AU)'
+write(*,'(2(a,es8.2),a,es9.1e3,a)') 'Gas density = ', density(user_1D_id, output_ID), ' [part/cm^3] ; Av = ', &
+visual_extinction_out(user_1D_id, output_ID), ' [mag] ; X rate = ', zeta(output), ' [s-1]'
+write(*,'(2(a,es8.2),a)') 'Gas temp = ', gas_temperature_out(user_1D_id, output_ID), ' [K] ; Dust temp = ', &
+dust_temperature_out(user_1D_id, output_ID), ' [K]'
 
 write(*,*) "--------------- PRODUCTION (cm-3 s-1) -----------------    ------"
 percentage = 100.d0

@@ -1003,7 +1003,7 @@ end subroutine read_element_in
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
-!> Franck Hersant
+!> Franck Hersant & Christophe Cossou
 !
 !> @date 2000
 !
@@ -1032,8 +1032,8 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',index,'.out'
 open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) current_time
-write(35) gas_temperature(1:nb_sample_1D), dust_temperature(1:nb_sample_1D), 0.5d0 * H_number_density(1:nb_sample_1D), &
-visual_extinction(1:nb_sample_1D), X_IONISATION_RATE
+write(35) gas_temperature(1:nb_sample_1D), dust_temperature(1:nb_sample_1D), &
+          0.5d0 * H_number_density(1:nb_sample_1D), visual_extinction(1:nb_sample_1D), X_IONISATION_RATE
 write(35) abundances(1:nb_species, 1:nb_sample_1D)
 close(35)
 
