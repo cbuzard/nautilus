@@ -419,57 +419,59 @@ implicit none
 
 ! Inputs
 integer, intent(in) :: ny
-real(double_precision), intent(in), dimension(0:ny) :: rho
-real(double_precision), intent(in), dimension(0:ny) :: nu
+real(double_precision), intent(in), dimension(ny+1) :: rho
+real(double_precision), intent(in), dimension(ny+1) :: nu
 real(double_precision), intent(in) :: dt
 real(double_precision), intent(in) :: dy
 integer, intent(in) :: ibc
 
 ! Outputs
-real(double_precision), intent(out), dimension(0:ny) :: f
+real(double_precision), intent(out), dimension(ny+1) :: f
 
 ! Locals
 integer :: ind
-real(double_precision), dimension(0:ny) :: s,Q,W,x,y,z,u,v, dd1d
+real(double_precision), dimension(ny+1) :: s,Q,W,x,y,z,u,v, dd1d
 real(double_precision) :: d !, nu
 
 
-dd1d(:)=nu(:)*rho(:)
+dd1d(1:ny+1) = nu(1:ny+1) * rho(1:ny+1)
 
-d=dt/(dy**2)
-Q(:)=rho(:)
+d = dt / dy**2
+Q(1:ny+1) = rho(1:ny+1)
 
-s(:)=0.d0
+s(1:ny+1) = 0.d0
 
-do ind = 1, ny-1
-  W(ind) = s(ind)*dt + d/4*(dd1d(ind+1)+dd1d(ind))*f(ind+1)/rho(ind) + (Q(ind)-d/4*(dd1d(ind+1)+2*dd1d(ind) &
-  +dd1d(ind-1)))*f(ind)/rho(ind)+d/4*(dd1d(ind)+dd1d(ind-1))*f(ind-1)/rho(ind)
+do ind = 2, ny
+  W(ind) = s(ind) * dt + d / 4 * (dd1d(ind+1) + dd1d(ind)) * f(ind+1) / rho(ind) + (Q(ind) - d / 4 * (dd1d(ind+1) + 2 * dd1d(ind) &
+  + dd1d(ind-1))) * f(ind) / rho(ind) + d / 4 * (dd1d(ind) + dd1d(ind-1)) * f(ind-1) / rho(ind)
 enddo
 
-do ind = 1,ny-1
-  x(ind) = -d/4*(dd1d(ind+1)+dd1d(ind))/rho(ind)
-  y(ind) = Q(ind)/rho(ind) + d/4*(dd1d(ind+1)+2*dd1d(ind)+dd1d(ind-1))/rho(ind)
-  z(ind) = -d/4*(dd1d(ind)+dd1d(ind-1))/rho(ind)
+do ind = 2,ny
+  x(ind) = - d / 4 * (dd1d(ind+1) + dd1d(ind)) / rho(ind)
+  y(ind) = Q(ind) / rho(ind) + d / 4 * (dd1d(ind+1) + 2 * dd1d(ind) + dd1d(ind-1)) / rho(ind)
+  z(ind) = - d / 4 * (dd1d(ind) + dd1d(ind-1)) / rho(ind)
 enddo
 
 ! Test
-u(ny)=1.d0
-v(ny)=0.d0
-x(ny) = -d/2*dd1d(ny)/rho(ny)
-y(ny) = Q(ny)/rho(ny) + d/4*(3*dd1d(ny)+dd1d(ny-1))/rho(ny)
-z(ny) = -d/4*(dd1d(ny)+dd1d(ny-1))/rho(ny)
-W(ny) = d/2*dd1d(ny)*f(ny)/rho(ny) + (Q(ny)-d/4*(3*dd1d(ny) &
-+dd1d(ny-1)))*f(ny)/rho(ny)+d/4*(dd1d(ny)+dd1d(ny-1))*f(ny-1)/rho(ny)
+u(ny+1) = 1.d0
+v(ny+1) = 0.d0
+x(ny+1) = -d / 2 * dd1d(ny+1) / rho(ny+1)
+y(ny+1) = Q(ny+1) / rho(ny+1) + d / 4 * (3 * dd1d(ny+1) + dd1d(ny)) / rho(ny+1)
+z(ny+1) = -d / 4 * (dd1d(ny+1) + dd1d(ny)) / rho(ny+1)
+W(ny+1) = d / 2 * dd1d(ny+1) * f(ny+1) / rho(ny+1) + (Q(ny+1) - d / 4 * (3 * dd1d(ny+1) &
++ dd1d(ny))) * f(ny+1) / rho(ny+1) + d / 4 * (dd1d(ny+1) + dd1d(ny)) * f(ny) / rho(ny+1)
 
-do ind = ny, 1, -1
-  u(ind-1) = -z(ind)/ (x(ind)*u(ind) + y(ind))
-  v(ind-1) = ( W(ind) - x(ind)*v(ind) )/( x(ind)*u(ind) + y(ind) )
+do ind = ny+1, 2, -1
+  u(ind-1) = -z(ind) / (x(ind) * u(ind) + y(ind))
+  v(ind-1) = (W(ind) - x(ind) * v(ind)) / (x(ind) * u(ind) + y(ind))
 enddo
 
-if (ibc.eq.0) f(0) =  v(0)/( 1. - u(0) )
+if (ibc.eq.0) then
+  f(1) =  v(1) / (1. - u(1))
+endif
 
-do ind = 0, ny-1
-  f(ind+1) = u(ind)*f(ind) + v(ind)
+do ind = 1, ny
+  f(ind+1) = u(ind) * f(ind) + v(ind)
 enddo
 
 return

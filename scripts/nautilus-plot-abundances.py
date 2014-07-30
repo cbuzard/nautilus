@@ -19,18 +19,24 @@ OUTPUT_EXTENSION = 'pdf' # default value in bitmap, because vectoriel can take t
 ## If one, this is either the first 1D point, or the only one, if this is not a 1D simulation
 index_1D = 1
 
+species_name = None
+
 isProblem = False
-problem_message = "AIM : Display in log-log the evolution of abundances for a set of species" + "\n" + \
-"The script can take various arguments :" + "\n" + \
-"(no spaces between the key and the values, only separated by '=')" + "\n" + \
-" * tmax=1.e6 : the end of the output [year]" + "\n" + \
-" * tmin=5e5 : the beginning of the output [year]" + "\n" + \
-" * species=CO,H20 : the list of species we want to display /!\ no space !" + "\n" + \
-" * ext=%s : The extension for the output files" % OUTPUT_EXTENSION + "\n" + \
-" * help : display a little help message on HOW to use various options.\n\n" + \
-"EXAMPLE:\n" + \
-" > nautilus-plot-abundances.py species=CO,H20,C2H6" + \
-" > nautilus-plot-abundances.py species=CO,H20 tmin=1. tmax=1e6"
+problem_message = """AIM : Display in log-log the evolution of abundances for a set of species.
+The script must be launched in a folder that contain a simulation.
+
+The script can take various arguments :
+(no spaces between the key and the values, only separated by '=')
+ * tmax=1.e6 : the end of the output [year]
+ * tmin=5e5 : the beginning of the output [year]
+ * x=%d : index of the desired spatial point
+ * species=CO,H20 : the list of species we want to display /!\ no space !
+ * ext=%s : The extension for the output files
+ * help : display a little help message on HOW to use various options.
+
+EXAMPLE:
+ > nautilus-plot-abundances.py species=CO,H20,C2H6
+ > nautilus-plot-abundances.py species=CO,H20 tmin=1. tmax=1e6""" % (index_1D, OUTPUT_EXTENSION)
 
 
 value_message = "/!\ Warning: %s does not need any value, but you defined '%s=%s' ; value ignored."
@@ -46,6 +52,8 @@ for arg in sys.argv[1:]:
     t_min = float(value)
   elif (key == 'tmax'):
     t_max = float(value)
+  elif (key == 'x'):
+    index_1D = int(value)
   elif (key == 'ext'):
     OUTPUT_EXTENSION = value
   elif (key == 'species'):
@@ -57,6 +65,9 @@ for arg in sys.argv[1:]:
   else:
     print("the key '%s' does not match" % key)
     isProblem = True
+
+if (species_name == None):
+  isProblem = True
 
 if isProblem:
   print(problem_message)
@@ -75,7 +86,11 @@ for name in species_name:
   if (not(os.path.isfile(filePath))):
     raise NameError("The file %s doesn't exists in %s/" % (filename, AB_FOLDER))
   
-  (ref_time, tmp_abundance) = np.loadtxt(filePath, skiprows=1, usecols=(0,index_1D), dtype=float, unpack=True)
+  try:
+    (ref_time, tmp_abundance) = np.loadtxt(filePath, skiprows=1, usecols=(0,index_1D), dtype=float, unpack=True)
+  except IndexError:
+    print("Spatial point out of bounds. Please lower your value of 'x'.")
+    exit()
   
   abundances[name] = tmp_abundance
 

@@ -65,7 +65,7 @@ integer, dimension(nb_reactions) :: itypeUO,TminUO,TmaxUO,FORMULAUO,NUMUO
 character(len=80) :: line_format !< format of one line of gas_reaction.in or grain_reaction.in
 
 ! Definition of the line format, common to gas_reaction.in and grain_reaction.in
-write(line_format, '(a,i1,a,i1,a)') '(', MAX_REACTANTS, 'A11,4x,', MAX_PRODUCTS, 'A11,3D11.3,23x,I3,2i7,i3,i6)'
+write(line_format, '(a,i0,a,i0,a)') '(', MAX_REACTANTS, 'A11,4x,', MAX_PRODUCTS, 'A11,3D11.3,23x,I3,2i7,i3,i6)'
 
 ! Reading list of reaction for gas phase
 filename = 'gas_reactions.in'
@@ -555,6 +555,11 @@ use global_variables
   implicit none
   
   character(len=80) :: filename = 'parameters.in'
+  character(len=80) :: cp_command
+  
+  ! Copy the old file into a *.bak version just in case
+  write(cp_command, '(5a)') 'cp ', trim(filename), ' ', trim(filename), '.bak'
+  call system(cp_command)
   
   open(10, file=filename)
   write(10,'(a)') "!# ------------------------------------------------"
@@ -584,8 +589,8 @@ use global_variables
   write(10,'(a,i0,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i0,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
-  write(10,'(a,i2,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
-  write(10,'(a,i2,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
+  write(10,'(a,i0,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'
+  write(10,'(a,i0,a)') 'conservation_type = ', CONSERVATION_TYPE, ' ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*      1D and diffusion     *"
@@ -639,7 +644,7 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,es10.3e2,a)') 'start_time = ', START_TIME/YEAR, ' ! [yrs] first output time'
   write(10,'(a,es10.3e2,a)') 'stop_time = ', STOP_TIME/YEAR, ' ! [yrs] last output time'
-  write(10,'(a,i4,a)') 'nb_outputs = ', NB_OUTPUTS, ' ! Total number of outputs (used for linear or log spaced outputs)'
+  write(10,'(a,i0,a)') 'nb_outputs = ', NB_OUTPUTS, ' ! Total number of outputs (used for linear or log spaced outputs)'
   write(10,'(a,a,a)') 'output_type = ', trim(OUTPUT_TYPE), ' ! linear, log, table'
   write(10, '(a)') '! linear: Output times are linearly spaced'
   write(10, '(a)') '! log   : Outputs times are log-spaced'
@@ -675,14 +680,14 @@ use git_infos
   write(10,'(a)') '!----------------------------'
   write(10,'(a)') '!     Nautilus Version      |'
   write(10,'(a)') '!----------------------------'
-  write(10,'(a,a)') 'branch = ', branch
-  write(10,'(a,a)') 'commit = ', commit
-  write(10,'(a,a)') '!', modifs
+  write(10,'(a,a)') 'branch = ', trim(branch)
+  write(10,'(a,a)') 'commit = ', trim(commit)
+  write(10,'(a,a)') '!', trim(modifs)
   write(10,'(a)') ""
   write(10,'(a)') '!----------------------------'
   write(10,'(a)') '!      General infos        |'
   write(10,'(a)') '!----------------------------'
-  write(10,'(a,i5)') 'Maximum number of non-zeros values in jacobian = ', nb_nonzeros_values
+  write(10,'(a,i0)') 'Maximum number of non-zeros values in jacobian = ', nb_nonzeros_values
   close(10)
   
 end subroutine write_general_infos
@@ -952,7 +957,7 @@ call get_linenumber(filename, NB_PRIME_ELEMENTS)
 nb_columns_gas = get_nb_columns(filename_gas)
 
 if ((nb_columns_gas - 2).ne.NB_PRIME_ELEMENTS) then
-  write (Error_unit,'(a,i2,a,a,a,i2,a)') 'The number of prime elements is different in "element.in" (', NB_PRIME_ELEMENTS, &
+  write (Error_unit,'(a,i0,a,a,a,i0,a)') 'The number of prime elements is different in "element.in" (', NB_PRIME_ELEMENTS, &
   ') and "', trim(filename_gas), '" (', nb_columns_gas-2, ') .'
   call exit(6)
 endif
@@ -960,7 +965,7 @@ endif
 nb_columns_grain = get_nb_columns(filename_grain)
 
 if ((nb_columns_grain - 2).ne.NB_PRIME_ELEMENTS) then
-  write (Error_unit,'(a,i2,a,a,a,i2,a)') 'The number of prime elements is different in "element.in" (', NB_PRIME_ELEMENTS, &
+  write (Error_unit,'(a,i0,a,a,a,i0,a)') 'The number of prime elements is different in "element.in" (', NB_PRIME_ELEMENTS, &
   ') and "', trim(filename_grain), '" (', nb_columns_grain-2, ') .'
   call exit(6)
 endif
@@ -1033,7 +1038,7 @@ open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) current_time
 write(35) gas_temperature(1:nb_sample_1D), dust_temperature(1:nb_sample_1D), &
-          0.5d0 * H_number_density(1:nb_sample_1D), visual_extinction(1:nb_sample_1D), X_IONISATION_RATE
+          H_number_density(1:nb_sample_1D), visual_extinction(1:nb_sample_1D), X_IONISATION_RATE
 write(35) abundances(1:nb_species, 1:nb_sample_1D)
 close(35)
 
@@ -1105,7 +1110,7 @@ open(13, file=filename)
 
 ! Header
 write(13,'(5(a,es10.3e2),a)') '!time =', current_time, ' s ; density = ', H_number_density, &
-' part/cm-3 ; temperature=', gas_temperature,' K ; visual extinction = ', visual_extinction, &
+' part/cm^3 ; temperature=', gas_temperature,' K ; visual extinction = ', visual_extinction, &
 ' [mag] ; CR ionisation rate = ',CR_IONISATION_RATE,' s-1'
 
 ! To adapt the format in function of the 1D number of points

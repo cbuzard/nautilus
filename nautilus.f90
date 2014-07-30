@@ -195,7 +195,7 @@ do output_idx=1, NB_OUTPUTS
     ! So far, structure read from ASCII file is not compatible with 1D. 
     !! If this changes, this call must be included in the loop on 1D sample
     !! We thus assume that everything is stored in the first element of the array, since this can't be valid for nb > 1
-    if (nb_sample_1D.gt.1) then
+    if (nb_sample_1D.eq.1) then
       call get_structure_properties(time=current_time, & ! Inputs
                               Av=visual_extinction(1), density=H_number_density(1), & ! Outputs
                               gas_temperature=gas_temperature(1)) ! Outputs

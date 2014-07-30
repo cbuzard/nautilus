@@ -1,6 +1,5 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-# Script that is a Makefile-like, but in python, and for fortran90
 
 import subprocess
 import git_infos
@@ -24,16 +23,22 @@ indice_script = None # to allow default actions if nothing is given in parameter
 generate_all = False
 
 isProblem = False
-problem_message = "The script can take various arguments :" + "\n" + \
-"(no spaces between the key and the values, only separated by '=')" + "\n" + \
-" * help : display a little help message on HOW to use various options" + "\n" + \
-" * force : To force the compilation of every module even those not modified" + "\n" + \
-" * debug : [%s] activate debug options" % debug + "\n" + \
-" * script=1 to avoid be asked what test we want. (index refer to a test, 'all' if we want to execute them all)" + "\n" + \
-" * gdb : [%s] activate options for gdb" % gdb + "\n" + \
-" * profiling : [%s] activate options for profiling" % profiling + "\n" + \
-" Example : " + "\n" + \
-" unitary_tests.py gdb"
+problem_message = """This script will compile then execute the fortran program for 
+unitary tests. Theses tests are divided into routines that generate a data file and a corresponding gnuplot file. 
+Gnuplot generate *.pdf (usually) that are automatically displayed by this script. But everything is available 
+in the sub-folder 'tests' of the Git repository (that is automatically created)
+
+The script can take various arguments:
+(no spaces between the key and the values, only separated by '=')
+ * help : display a little help message on HOW to use various options
+ * force : To force the compilation of every module even those not modified
+ * debug : [%s] activate debug options
+ * script=1 to avoid be asked what test we want. (index refer to a test, 'all' if we want to execute them all)
+ * gdb : [%s] activate options for gdb
+ * profiling : [%s] activate options for profiling
+ 
+ Example : 
+ unitary_tests.py gdb""" % (debug, gdb, profiling)
 
 class sourceFile(object):
   """Define an object linked to a fortran 90 source code that will
