@@ -555,6 +555,11 @@ use global_variables
   implicit none
   
   character(len=80) :: filename = 'parameters.in'
+  character(len=80) :: cp_command
+  
+  ! Copy the old file into a *.bak version just in case
+  write(cp_command, '(5a)') 'cp ', trim(filename), ' ', trim(filename), '.bak'
+  call system(cp_command)
   
   open(10, file=filename)
   write(10,'(a)') "!# ------------------------------------------------"
