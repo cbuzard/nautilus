@@ -9,21 +9,12 @@ implicit none
 
 ! Locals
 character(len=80) :: filename_output
-integer :: species, output, i, idx_1D ! index for loops
-integer :: error ! to store the state of a read instruction
+integer :: species, output, idx_1D ! index for loops
 logical :: isDefined
 
-character(len=80) :: filename !< name of the file to be read
 character(len=80) :: output_format !< format used to output data
-character(len=200) :: line
-character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
-integer :: comment_position !< the index of the comment character on the line. if zero, there is none on the current string
 
 real(double_precision), dimension(:,:,:), allocatable :: abundances_out !< abundances over time for each species. (nb_outputs, nb_species)
-
-
-character(len=11), dimension(:), allocatable :: gas_species_label 
-character(len=11), dimension(:), allocatable :: surface_species_label 
 
 real(double_precision), dimension(:), allocatable :: time !< Simulation time [s]
 real(double_precision), dimension(:,:), allocatable :: gas_temperature_out !< [K]
