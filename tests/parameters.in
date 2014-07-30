@@ -22,10 +22,16 @@ grain_temperature_type = computed ! fixed, gas, table or computed
 is_grain_reactions = 1 ! Accretion, grain surface reactions
 is_absorption = 1 ! H2 AND CO SELF-SHIELDING
 grain_tunneling_diffusion = 0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
-modify_rate_flag =  1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
-conservation_type =  0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
-structure_type = 1D_disk_z ! 0D, 1D_disk_z
-1D_sample = 100 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
+modify_rate_flag = 1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
+conservation_type = 0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
+
+!*****************************
+!*      1D and diffusion     *
+!*****************************
+
+structure_type = 0D ! 0D, 1D_disk_z
+1D_sample = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
+z_max =  1.000E+01 ! Maximum Z value for the 1D grid [AU]
 
 !*****************************
 !*    Gas phase parameters   *
@@ -66,8 +72,8 @@ vib_to_dissip_freq_ratio =  1.000E-02 ! [no unit] The ratio of the surface-molec
 !*****************************
 
 start_time =  1.000E+00 ! [yrs] first output time
-stop_time =  1.000E+01 ! [yrs] last output time
-nb_outputs =    3 ! Total number of outputs (used for linear or log spaced outputs)
+stop_time =  1.000E+03 ! [yrs] last output time
+nb_outputs = 3 ! Total number of outputs (used for linear or log spaced outputs)
 output_type = log ! linear, log, table
 ! linear: Output times are linearly spaced
 ! log   : Outputs times are log-spaced
