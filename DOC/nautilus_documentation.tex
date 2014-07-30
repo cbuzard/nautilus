@@ -79,7 +79,7 @@ script_name.py help
 \end{verbatim}
 
 \subsubsection{Comments in input files}\label{sec:files_generic_info}
-For all input files, the comment character is " !" and can be either at the beginning of a line, or anywhere else. Meaningful character must be comprised inside the 80th first characters of a given line.
+For all input files, the comment character is " !" and can be either at the beginning of a line, or anywhere else. Meaningful character must be comprised inside the 80 first characters of a given line.
 
 \subsubsection{Main parameter file}
 \gras[input file!parameters.in]{parameters.in} is the main parameter file, and is rewritten by the code itself each and every time you run the code. 
@@ -128,8 +128,9 @@ cd $nautilus
 nautilus_code
 nautilus_outputs
 nautilus_rates
+nautilus_major_reactions
 \end{verbatim}
-\item You have now usefull informations about Git repositories directly into the Bash prompt.
+\item You have now useful information about Git repositories directly into the Bash prompt.
 \item all scripts in the folder \textbf{scripts/} can be run from any folder. This include:
 \begin{verbatim}
 nautilus-clean.sh # Cleaning a simulation folder
@@ -147,7 +148,7 @@ You can also check the options of this script. Especially, you can undo the inst
 \subsection{Compilation}
 The script \gras{Makefile.py} allow you to compile the code (see \refsec{sec:python-help} for infos about Python scripts). The default compiler is \gras{gfortran}. 
 
-If you want to just compile the code, type:
+If you want to just compile the code\footnote{By default, all the binaries are compiled}, type:
 \begin{verbatim}
 Makefile.py
 \end{verbatim}
@@ -160,14 +161,12 @@ Errors are in \textbf{*.log} files associated with the module incriminated. Warn
 By default, all warnings issued by \gras{ODEPACK} routines are masked (to increase readability, since nobody can modify this thing from scratch). An option \textbf{opkd} can force their display.
 \end{attention}
 
-If you want to compile the binary \gras[binary!nautilus\_outputs]{nautilus\_outputs} that generate ASCII from the binary outputs:
+If you want to compile \emph{only} one binary, use respectively those command:
 \begin{verbatim}
+Makefile.py nautilus
 Makefile.py output
-\end{verbatim}
-
-If you want to compile the binary \gras[binary!nautilus\_rates]{nautilus\_rates} that generate analysis of reaction rates:
-\begin{verbatim}
 Makefile.py rates
+Makefile.py major
 \end{verbatim}
 
 \bigskip
@@ -179,17 +178,19 @@ Makefile.py test
 This option \textbf{test} use compilation options that allow comparison of the code between different versions and is to be used for \gras{compare\_simulations.py} (see \refsec{sec:compare_simulation}). 
 
 \begin{remarque}
-Mainly, these option avoid too hard optimization that can result in slightly different results when the code evolve (not because the maths changes but because of optimization only).
-
-If you change compilation options, pay attention to use the option \textbf{force} to ensure all the modules we be compiled using these options.
+Mainly, this option avoid too hard optimization that can result in slightly different results when the code evolve (not because the maths changes but because of optimization only).
 \end{remarque}
+
+\begin{attention}
+If you change compilation options, pay attention to use the option \textbf{force} to ensure all the modules will be compiled using these options.
+\end{attention}
 
 \subsection{Input files}\label{sec:input-files}
 All input files have the same \textbf{*.in} extension. An example simulation, containing all necessary input files is provided in the sub-folder \textbf{example\_simulation}.
 
 The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
 
-\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species (not necessarily all of them). Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
+\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species. Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
 
 \gras[input file!element.in]{element.in} gives information about prime elements (base elements used to construct molecules) existing in the simulation (name and mass in Atomic mass unit).
 
@@ -228,6 +229,7 @@ For generic informations, see \refsec{sec:files_generic_info}.
 \begin{itemize}
 \item Parameters can be input in random ways, the code will sort them by categories
 \item New parameters, with default values will be added, to ensure retro-compatibility.
+\item A \textbf{*.bak} file is created before overwriting \textbf{parameters.in}, just in case it erases something important (in comments for instance).
 \end{itemize}
 
 \subsection{Automatic test before computation}
@@ -355,9 +357,9 @@ You have to define the structure in a data file \gras[input file!1D\_evolution.d
 6.        150.           10.        15.         1e14
 \end{verbatim}
 
-The exact spatial points are of no importance because we will interpolate linearly to reconstruct the values at the spatial points defined in the code. 
+The spatial points in the data file doesn't necessarily need to match the one in the code. We will interpolate linearly to reconstruct the values at the spatial points defined in the code. One can simply put extremal values and the code will create the one in-between. 
 
-The dust temperature is ruled by the type you define in \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} (see \refsec{sec:dust_temp} for more details).
+The dust temperature is ruled by \gras[parameter!grain\_temperature\_type]{grain\_temperature\_type} (see \refsec{sec:dust_temp} for more details), even if \textbf{table} is not allowed here since 1D and time evolution of the structure are incompatible.
 
 \begin{attention}
 1D simulations are not compatible with time evolution read from a data file (see \refsec{sec:time_structure}). You must choose one or the other.
@@ -383,7 +385,7 @@ To activate (or not) the self-shielding of $\molecule{H_2}$ and $\molecule{CO}$,
 is_absorption = 1
 \end{verbatim}\index{parameter!is\_absorption}
 
-To activate (or not) grain tunneling diffusion (and choose the type of grain tunneling diffusion: 
+To activate (or not) grain tunneling diffusion and choose the type of grain tunneling diffusion: 
 \begin{verbatim}
 grain_tunneling_diffusion = 0
 \end{verbatim}\index{parameter!grain\_tunneling\_diffusion}
@@ -409,7 +411,7 @@ Different types are:
 \item[3] : modify all
 \end{itemize}
 
-To choose whether or not we can modify some abundances:
+To choose whether or not we can modify some abundances (this doesn't work in 1D, because of diffusion !):
 \begin{verbatim}
 conservation_type = 0
 \end{verbatim}\index{parameter!conservation\_type}
@@ -428,7 +430,7 @@ Different types are:
 \begin{verbatim}
 initial_gas_density =  2.000E+04
 \end{verbatim}\index{parameter!initial\_gas\_density}
-initial gas density in $\unit{particule/cm^{-3}}$
+initial gas density in $\unit{particule/cm^{3}}$
 
 \begin{verbatim}
 initial_gas_temperature =  1.000E+01
@@ -443,7 +445,7 @@ initial visual extinction in magnitude
 \begin{verbatim}
 cr_ionisation_rate =  1.300E-17
 \end{verbatim}\index{parameter!cr\_ionisation\_rate}
-cosmic ray ionization rate in $\unit{s^{-1}}$. A standard value is $1.3\cdot 10^{-17}$.
+cosmic ray ionization rate in $\unit{s^{-1}}$. A standard value is $1.3\cdot 10^{-17}$ (TODO ref ?).
 
 \begin{verbatim}
 x_ionisation_rate =  0.000E+00
@@ -552,12 +554,12 @@ Each species name is encoded with 11 characters.
 
 All reaction files have the same format. Depending on the evolution of the code, the number of reactants (\verb|MAX_REACTANTS|) or products (\verb|MAX_PRODUCTS|) may vary (increase), so theses files must be modified to take that into account. 
 
-The following global variables are here to tell to the code that theses number have changed. 
+The following global variables (in the source code) are here to tell to the code that theses number have changed. 
 \begin{lstlisting}[language=Fortran]
 MAX_REACTANTS = 3 !< The maximum number of reactants for one reaction.
 MAX_PRODUCTS = 5 !< The maximum number of products for one reaction.
 MAX_COMPOUNDS = MAX_REACTANTS + MAX_PRODUCTS !< Total maximum number of compounds for one reaction (reactants + products)
-\end{lstlisting}
+\end{lstlisting}\index{MAX\_REACTANTS}\index{MAX\_PRODUCTS}
 
 \begin{attention}
 Pay attention to the fact that some things might need manual modifications in the code. If this number change, \verb|get_jacobian(N, T, Y, J, IAN, JAN, PDJ)| must be actualized, since each reactant and product has its own variable, a new one must be created for the new column possible. 
@@ -600,24 +602,19 @@ Output files are:
 \item \gras[output file!species.out]{species.out}: The list of species and their corresponding index
 \item \gras[output file!elemental\_abundances.out]{elemental\_abundances.out}: The prime elements abundances and mass at the beginning of the simulation. A \textbf{*.tmp} version display the same infos, but at the last output.
 \item \gras[output file!abundances.*.out]{abundances.*.out}: In binary format (unformatted), abundances of all species, each file for a different output time. \gras[binary!nautilus\_outputs]{nautilus\_outputs} read theses files to generate ASCII files (see \refsec{sec:abundances} for more details).
-\item \gras[output file!rates.*.out]{rates.*.out}: In binary format (unformatted), rates of all reactions, each file for a different output time. \gras[binary!nautilus\_rates]{nautilus\_rates} read theses files to generate ASCII files.
+\item \gras[output file!rates.*.out]{rates.*.out}: In binary format (unformatted), rates of all reactions, each file for a different output time. \gras[binary!nautilus\_rates]{nautilus\_rates} and \gras[binary!nautilus\_major\_reactions]{nautilus\_major\_reactions} analyse theses files.
 \item \gras[output file!abundances.tmp]{abundances.tmp}: The abundances of all species at the last output in ASCII.
 \end{itemize}
 
 \subsection{Informations : info.out}\label{sec:info-out}
 In the file \gras[output file!info.out]{info.out}, the ID reference of the current version of nautilus, used to run the simulation is printed, as well as other useful information about the state of Nautilus and how the simulation was executed.
 
+Information and warnings about coherence of the chemical network are also printed here.
+
 \subsection{Abundances}\label{sec:abundances}
-Files are named \gras[output file!abundances.*.out]{abundances.000001.out} and so on, for each output time. Outputs are stored in binary format. Format is as follow : 
-On a first line: time in seconds
+Files are named \gras[output file!abundances.*.out]{abundances.000001.out} and so on, for each output time. Outputs are stored in binary format. Binary format is not detailed here. If you want details about variables in there, please refer to the Fortran routine \textbf{write\_current\_output} in the file \textbf{input\_output.f90}
 
-On a second line, information about the physical structure properties: \\
-gas temperature [\unit{K}], dust temperature [\unit{K}], \molecule{H_2} gas density [\unit{part/cm^3}] (assuming \molecule{H_2} is the main reservoir for H), visual extinction [\unit{mag}], x ionization rate [\unit{s^{-1}}]
-
-And finally a line containing the abundances relative to H for all species [number ratio]
-
-\subsubsection{Generating ASCII}
-First you need to compile the output binary. In the source directory, type:
+To get ASCII files from the binaries, one must compile the designed program (in the Git repository):
 \begin{verbatim}
 Makefile.py output
 \end{verbatim}
@@ -627,6 +624,10 @@ Then, in your simulation folder, type:
 nautilus_outputs
 \end{verbatim}\index{binary!nautilus\_outputs}
 (this assume you have an alias, but absolute path also work)
+
+This program will generate \gras{*.ab} files in a sub-folder \textbf{ab} of the simulation folder. If in 1D, a file space.ab will store the spatial points. Indeed, each species file will now have one column for time, and one column per spatial point.
+
+The program will also generate \gras{*.struct} files in a sub-folder \textbf{struct} of the simulation folder, one file per spatial point. 
 
 \section{Graphic display}\label{sec:graphic-display}
 Python script were created to help the user display useful information about their simulations. 
@@ -825,7 +826,7 @@ The documentation (in the folder \textbf{html/}) is synchronized with the server
 
 
 \subsection{Bash profile}
-The file \gras{.nautilus\_profile} in the Git repository contains Bash commands to give user friendly tools to use \gras{Nautilus} in command line. By running \gras{configure\_nautilus.py}, a call to this file will be done in the \gras{.bash\_profile}.
+The file \gras{.nautilus\_profile} in the Git repository contains Bash commands to give user friendly tools to use \gras{Nautilus} in command line. By running \gras{configure\_nautilus.py}, a call to this file will be done in the \gras{.bash\_profile}. See \refsec{sec:installation} for more details.
 
 \bibliographystyle{plainnat}
 \bibliography{nautilus}%.bib
