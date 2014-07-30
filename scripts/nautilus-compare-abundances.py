@@ -43,19 +43,22 @@ directories.sort()
 index_1D = 1
 
 isProblem = False
-problem_message = "AIM : Display in log-log the evolution of abundances for a set of species" + "\n" + \
-"The script can take various arguments :" + "\n" + \
-"(no spaces between the key and the values, only separated by '=')" + "\n" + \
-" * tmax=1.e6 : the end of the output [year]" + "\n" + \
-" * tmin=5e5 : the beginning of the output [year]" + "\n" + \
-" * species=CO,H20 : the list of species we want to display /!\ no space !" + "\n" + \
-" * dir=simu0001,simu0002 : the list of sub-folder we want to display /!\ no space !" + "\n" + \
-" * ext=%s : The extension for the output files" % OUTPUT_EXTENSION + "\n" + \
-" * help : display a little help message on HOW to use various options.\n\n" + \
-"EXAMPLE:\n" + \
-" > nautilus-compare-abundances.py species=CO,H20,C2H6" + \
-" > nautilus-compare-abundances.py species=CO,H20,C2H6 dir=simu1,simu2" + \
-" > nautilus-compare-abundances.py species=CO,H20 tmin=1. tmax=1e6"
+problem_message = """AIM : Display in log-log the evolution of abundances for a set of species
+The script can take various arguments :
+(no spaces between the key and the values, only separated by '=')
+ * tmax=1.e6 : the end of the output [year]
+ * tmin=5e5 : the beginning of the output [year]
+ * x=%d : index of the desired spatial point
+ * species=CO,H20 : the list of species we want to display /!\ no space !
+ * dir=simu0001,simu0002 : the list of sub-folder we want to display /!\ no space !
+ * ext=%s : The extension for the output files
+ * help : display a little help message on HOW to use various options.
+
+EXAMPLE:
+ > nautilus-compare-abundances.py species=CO,H20,C2H6
+ > nautilus-compare-abundances.py species=CO,H20,C2H6 dir=simu1,simu2
+ > nautilus-compare-abundances.py species=CO,H20,C2H6 x=2
+ > nautilus-compare-abundances.py species=CO,H20 tmin=1. tmax=1e6""" % (index_1D, OUTPUT_EXTENSION)
 
 
 value_message = "/!\ Warning: %s does not need any value, but you defined '%s=%s' ; value ignored."
@@ -71,6 +74,8 @@ for arg in sys.argv[1:]:
     t_min = float(value)
   elif (key == 'tmax'):
     t_max = float(value)
+  elif (key == 'x'):
+    index_1D = int(value)
   elif (key == 'ext'):
     OUTPUT_EXTENSION = value
   elif (key == 'species'):
@@ -117,7 +122,11 @@ for (index, folder_name) in enumerate(directories):
     if (not(os.path.isfile(filePath))):
       raise NameError("The file %s doesn't exists in %s/" % (filename, AB_FOLDER))
     
-    (tmp_time, tmp_abundance) = np.loadtxt(filePath, skiprows=1, usecols=(0,index_1D), dtype=float, unpack=True)
+    try:
+      (tmp_time, tmp_abundance) = np.loadtxt(filePath, skiprows=1, usecols=(0,index_1D), dtype=float, unpack=True)
+    except IndexError:
+      print("Spatial point out of bounds. Please lower your value of 'x'.")
+      exit()
 
     abundances[-1][name] = tmp_abundance
   ref_time.append(tmp_time) # only one array per simulation, regardless of the number of species
