@@ -599,7 +599,12 @@ force = False # To force the compilation of every module
 ignoreOpkdWarnings = True
 
 isProblem = False
-problem_message = """AIM: Compile Nautilus, Nautilus_rates and Nautilus_outputs
+problem_message = """AIM: Compilation of nautilus programs. 
+By default, all of them, but one can specify one specific code to compile
+and avoid the others (nautilus, output, rates or major). The compilation of dependances is automatic. 
+The compilation options are packed into 3 meta-options : test, debug and gdb.
+The modules that haven't changed since last compilation are not compiled again. 
+If you want to force compilation of all modules, use the "force" option.
 
 The script can take various arguments:
 (no spaces between the key and the values, only separated by '=')

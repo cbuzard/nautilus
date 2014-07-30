@@ -43,8 +43,10 @@ directories.sort()
 index_1D = 1
 
 isProblem = False
-problem_message = """AIM : Display in log-log the evolution of abundances for a set of species
-The script can take various arguments :
+problem_message = """AIM : Display in log-log the evolution of abundances for a set of species. 
+Must be launched in a folder that contains sub-folders, each one containing a simulation.
+
+The script can take various arguments:
 (no spaces between the key and the values, only separated by '=')
  * tmax=1.e6 : the end of the output [year]
  * tmin=5e5 : the beginning of the output [year]

@@ -22,7 +22,9 @@ index_1D = 1
 species_name = None
 
 isProblem = False
-problem_message = """AIM : Display in log-log the evolution of abundances for a set of species
+problem_message = """AIM : Display in log-log the evolution of abundances for a set of species.
+The script must be launched in a folder that contain a simulation.
+
 The script can take various arguments :
 (no spaces between the key and the values, only separated by '=')
  * tmax=1.e6 : the end of the output [year]
