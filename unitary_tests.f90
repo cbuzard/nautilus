@@ -355,8 +355,8 @@ program unitary_tests
     ! We want to know the max size of the time display in order to have a nice display, with filled spaces in the final plots
     write(output_time, '(i0)') int(t_max / 1e6)
     time_length = len(trim(output_time))
-    write(time_format, '(a,i1,a,i1,a)') '(f',time_length+2,'.',1,')'
-    write(purcent_format, *) '(', trim(time_format), ',"/",',trim(time_format),'," Myr ; k = ",i5)'
+    write(time_format, '(a,i0,a,i0,a)') '(f',time_length+2,'.',1,')'
+    write(purcent_format, *) '(', trim(time_format), ',"/",',trim(time_format),'," Myr ; k = ",i0)'
     
     !------------------------------------------------------------------------------
     k = 1

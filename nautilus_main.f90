@@ -990,7 +990,7 @@ end subroutine index_datas
       call get_linenumber(filename=filename, nb_lines=NEA)
       
       ! Definition of the line format, common to gas_reaction.in and grain_reaction.in
-      write(line_format, '(a,i1,a,i1,a)') '(', MAX_REACTANTS, 'A11,4x,', MAX_PRODUCTS, 'A11,D9.2)'
+      write(line_format, '(a,i0,a,i0,a)') '(', MAX_REACTANTS, 'A11,4x,', MAX_PRODUCTS, 'A11,D9.2)'
 
       open(10, file=filename, status='old')
       
