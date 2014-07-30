@@ -8,6 +8,8 @@
 \newcommand{\raccourci}[1]{{\bfseries #1}}
 \newcommand{\molecule}[1]{\ensuremath{\mathrm{#1}}}
 
+\lstset{commentstyle=\ttfamily\color{gray}}
+
 \makeindex
 \begin{document}
 
@@ -222,6 +224,9 @@ To clean the current working directory, launch:
 nautilus-clean.sh
 \end{verbatim}
 
+\subsubsection{Installation script}
+The script \gras{configure\_nautilus.py} will configure the bash profile to add several shortcuts (You only have to run the command once). More details are available in \refsec{sec:installation}.
+
 \section{Parameter file : parameters.in}\label{sec:parameters_in}\index{input file!parameters.in}
 For generic informations, see \refsec{sec:files_generic_info}.
 
@@ -430,7 +435,18 @@ Different types are:
 \begin{verbatim}
 initial_gas_density =  2.000E+04
 \end{verbatim}\index{parameter!initial\_gas\_density}
-initial gas density in $\unit{particule/cm^{3}}$
+initial gas density in $\unit{particule/cm^{3}}$. Sometimes, there can be a confusion between two things. First, the gas density in particule per volume, and second, the proton density. We have:
+\begin{align*}
+n_\text{proton} &= n(\mathrm{H}) + 2\times n(\mathrm{H_2}) \sim 2\times n(\mathrm{H_2})\\
+n_\text{particule} &= n(\mathrm{H}) + \times n(\mathrm{H_2}) \sim n(\mathrm{H_2})
+\end{align*}
+
+We then have, assuming that the major reservoir for H is $\mathrm{H_2}$:
+\begin{align}
+n_\text{proton} &\simeq 2\times n_\text{particule}
+\end{align}
+
+Here, the gas density is $n_\text{particule}$.
 
 \begin{verbatim}
 initial_gas_temperature =  1.000E+01
