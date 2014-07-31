@@ -257,9 +257,13 @@ dust_temperature_out(user_1D_id, output_ID), ' [K]'
 write(*,*) "--------------- PRODUCTION (cm-3 s-1) -----------------    ------"
 percentage = 100.d0
 i = nb_reactions
+
+! For first element
+reaction = productions_id(i)
+percentage = productions(reaction) / productions_sum * 100.d0
+
 do while(percentage.gt.PERCENTAGE_THRESHOLD)
-  reaction = productions_id(i)
-  percentage = productions(reaction) / productions_sum * 100.d0
+
   call display_reaction(REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, reaction), reaction_line)
   
   write(*, output_format) REACTION_TYPE(reaction), reaction_line, productions(reaction), percentage
@@ -270,15 +274,23 @@ do while(percentage.gt.PERCENTAGE_THRESHOLD)
   ! Just in case, to avoid negative index for arrays
   if (i.lt.0) then
     percentage = 0.d0
+  else
+    ! Done at the end of the loop to avoid printing one extra reaction below the threshold
+    reaction = productions_id(i)
+    percentage = productions(reaction) / productions_sum * 100.d0
   endif
 enddo
 
 write(*,*) "--------------- DESTRUCTION (cm-3 s-1) ----------------    ------"
 percentage = 100.d0
 i = nb_reactions
+
+! For first element
+reaction = destructions_id(i)
+percentage = destructions(reaction) / destructions_sum * 100.d0
+
 do while(percentage.gt.PERCENTAGE_THRESHOLD)
-  reaction = destructions_id(i)
-  percentage = destructions(reaction) / destructions_sum * 100.d0
+
   call display_reaction(REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, reaction), reaction_line)
   
   write(*,output_format) REACTION_TYPE(reaction), reaction_line, destructions(reaction), percentage
@@ -289,6 +301,10 @@ do while(percentage.gt.PERCENTAGE_THRESHOLD)
   ! Just in case, to avoid negative index for arrays
   if (i.lt.0) then
     percentage = 0.d0
+  else
+      ! Done at the end of the loop to avoid printing one extra reaction below the threshold
+      reaction = destructions_id(i)
+      percentage = destructions(reaction) / destructions_sum * 100.d0
   endif
 enddo
 
