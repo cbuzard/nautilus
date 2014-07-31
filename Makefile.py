@@ -57,29 +57,6 @@ class sourceFile(object):
   COMPILATOR = "gfortran"
   OPTIONS = "-O3 -march=native"
   
-  # Even with theses compilation options, it misses some warning. I had a weird behavior where some warnings only showed when I 
-  # had more serious issues.
-  DEBUG = "-pedantic-errors -Wall -Wconversion -Wunderflow -Wextra -Wunreachable-code -fbacktrace" + \
-  " -ffpe-trap=invalid,zero,overflow,underflow -g3 -fbounds-check -O0" + \
-  " -fstack-protector-all -fno-automatic -Wuninitialized -ftrapv -fno-automatic"
-  GDB = "-g3"
-  
-  
-  
-  #-Wextra : batterie supplémentaire de vérifications
-  #-ffast-math : je l'ai enlevé car les résultats ne sont pas identiques, les derniers chiffres significatifs sont différents.
-  #-march=native : permet d'optimiser pour le processeur de la machine sur laquelle on compile. 'native' permet d'aller chercher 
-  #   cette information sur la machine au lieu de la spécifier à la main. Si l'option ne fonctionne pas, typiquement si 'native' ou 
-  #   le type de processeur spécifié n'existe pas, une erreur est retournée.
-  #-fimplicit-none : empêche les déclarations implicites à moins que le mot clé "implicit" ne soit explicitement utilisé.
-  #-finit-real=zero : initialise tous les réels à 0
-  # farfadet spatial m'a conseillé -O2 au lieu de -O3 mais je ne comprends pas encore pourquoi.
-
-  # Boolean that say if we want to activate debug or not
-  isDebug = False
-  isGDB = False
-  isProfiling = False
-  
   def __init__(self, filename, name=None, isProgram=False, extra_files=None):
     """Will check everything that is included in the source code
     and initialize the object"""
@@ -111,18 +88,9 @@ class sourceFile(object):
         if isCompilation:
           
           options = sourceFile.OPTIONS
-          if (sourceFile.isDebug):
-            options += " "+sourceFile.DEBUG
-          
-          if (sourceFile.isGDB or sourceFile.isProfiling):
-            options += " "+sourceFile.GDB
-          
-          if (sourceFile.isProfiling):
-            # We deactivate all other options except GDB => not True anymore
-            options += " "+" -pg"
           
           if (ext == '.f90'):
-            commande = sourceFile.COMPILATOR+" "+options+" -c "+source_file
+            commande = sourceFile.COMPILATOR+" "+sourceFile.OPTIONS+" -c "+source_file
           elif (ext == '.c'):
             commande = "gcc -c "+source_file
           else:
@@ -179,33 +147,6 @@ class sourceFile(object):
       sourceFile.findModule[module] = self
     
     sourceFile.findSource[self.filename] = self
-  
-  @classmethod
-  def setDebug(cls, isDebug):
-    """method that define cls.isDebug parameter to True or False.
-    
-    Parameter: isDebug (boolean)
-    """
-    
-    cls.isDebug = isDebug
-
-  @classmethod
-  def setGDB(cls, isGDB):
-    """method that define cls.isGDB parameter to True or False.
-    
-    Parameter: isGDB (boolean)
-    """
-    
-    cls.isGDB = isGDB
-  
-  @classmethod
-  def setProfiling(cls, isProfiling):
-    """method that define cls.isProfiling parameter to True or False.
-    
-    Parameter: isProfiling (boolean)
-    """
-    
-    cls.isProfiling = isProfiling
   
   @classmethod
   def setCompilingOptions(cls, options):
@@ -344,21 +285,11 @@ class sourceFile(object):
       if self.toBeCompiled:
         # Now that all the dependencies have been compiled, we compile 
         # the current source file.
-        options = sourceFile.OPTIONS
-        if (sourceFile.isDebug):
-          options += " "+sourceFile.DEBUG
-        
-        if (sourceFile.isGDB or sourceFile.isProfiling):
-          options += " "+sourceFile.GDB
-        
-        if (sourceFile.isProfiling):
-          # We deactivate all other options except GDB => not True anymore
-          options += " "+" -pg"
-          
+         
         if not(self.isProgram):
-          commande = sourceFile.COMPILATOR+" "+options+" -c "+self.filename
+          commande = sourceFile.COMPILATOR+" "+sourceFile.OPTIONS+" -c "+self.filename
         else:
-          commande = sourceFile.COMPILATOR+" "+options+" -o "+self.name+" "+self.filename+" "+self.extra+" "+" ".join(self.dependencies)
+          commande = sourceFile.COMPILATOR+" "+sourceFile.OPTIONS+" -o "+self.name+" "+self.filename+" "+self.extra+" "+" ".join(self.dependencies)
           print(commande)
         
         process = subprocess.Popen(commande, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)
@@ -403,25 +334,9 @@ class sourceFile(object):
 
     return texte
 
-def prepare_compilation(debug=False, gdb=False, profiling=False):
-  """function that will compile every needed sourceFile and get a 
-  binary for the defined source files
-  
-  Parameters : 
-  sources_filename : a list of source filenames that must be present in the current working directory for which we will define an object 'sourceFile'
-  mains : either a list of filename or a dictionnary for which keys are filename and values are the name of the binary file we want.
-   i.e we define a list of filename if we want that the binary has the same name (without extension) as the source file, 
-   or a dictionnary to make the correspondance between the two.
-  debug=False : (boolean) Whether we want or not debug options for compilation. There is no debug by default
-  gdb=False : If set to True, will add a compilation option to run the program under the GNU debugger gdb. 
-  profiling=False : If set to True, will change compilation options to profile the binary files (using gprof). 
-                    As a consequence, this will deactivate all optimization options. 
-  
-  Examples : 
-  make_binaries(sources_filename, {"mercury6_2.for":"mercury", "element6.for":"element", "close6.for":"close"})
-  or
-  make_binaries(sources_filename, ["mercury.f90", "element.f90", "close.f90"])
-  where 'sources_filename' is a list of all the sources file with the extension '*.for' and '*.f90' respectively.
+def prepare_compilation():
+  """function that will prepare the compilation by defining options and listing 
+  all the source files to create the corresponding objects.
   
   """
   
@@ -433,9 +348,6 @@ def prepare_compilation(debug=False, gdb=False, profiling=False):
     source = sourceFile(filename)
     sources.append(source)
   
-  sourceFile.setDebug(debug)
-  sourceFile.setGDB(gdb)
-  sourceFile.setProfiling(profiling)
 
 def compile_source(filename, name=None, extra=None):
   """
@@ -589,6 +501,7 @@ def clean(exts):
 # Parameters
 debug = False
 isTest = False
+isManual = False # If true, we specifie a source file name to be compiled
 isNautilus = True
 isOutputs = True
 isRates = True
@@ -610,6 +523,7 @@ The script can take various arguments:
 (no spaces between the key and the values, only separated by '=')
  * help : display a little help message on HOW to use various options
  * force : To force the compilation of every module even those not modified
+ * name=source.f90 : To compile a specific code
  * nautilus : To compile Nautilus only
  * output : To compile binary abundances (nautilus_outputs) only
  * rates : To compile binary rates (nautilus_rates) only
@@ -638,6 +552,13 @@ for arg in sys.argv[1:]:
     debug = True
     if (value != None):
       print(value_message % (key, key, value))
+  elif (key == 'name'):
+    isManual = True
+    isNautilus = False
+    isOutputs = False
+    isRates = False
+    isMajor = False
+    source_name = value
   elif (key == 'force'):
     force = True
     if (value != None):
@@ -698,6 +619,24 @@ if isProblem:
   print(problem_message)
   exit()
 
+
+
+write_infos_in_f90_file(main_branch='master')
+
+isModifs = is_non_committed_modifs()
+
+# We clean undesirable files. Indeed, we will compile everything everytime.
+if force:
+  clean(["o", "mod"])
+
+
+
+# Before compiling, we delete the previous compilation log. Indeed, we need to append the several warnings in the same file
+# But we do not want to have infos of the previous compilation in it.
+if os.path.isfile(LOG_NAME):
+  os.remove(LOG_NAME)
+
+# We create the binaries
 if debug:
   OPTIONS = DEBUG_OPTIONS
 elif isTest:
@@ -711,28 +650,13 @@ if gdb:
 if profiling:
   OPTIONS = PROFILING_OPTIONS
 
-write_infos_in_f90_file(main_branch='master')
-
-isModifs = is_non_committed_modifs()
-
-# We clean undesirable files. Indeed, we will compile everything everytime.
-if force:
-  clean(["o", "mod"])
-
 sourceFile.setCompilator(COMPILATOR)
 sourceFile.setCompilingOptions(OPTIONS)
 
-# pour tester les bornes des tableaux : -fbounds-check (il faut ensuite faire tourner le programme, des tests sont effectués au cours de l'exécution)
+prepare_compilation()
 
-
-# Before compiling, we delete the previous compilation log. Indeed, we need to append the several warnings in the same file
-# But we do not want to have infos of the previous compilation in it.
-if os.path.isfile(LOG_NAME):
-  os.remove(LOG_NAME)
-
-# We create the binaries
-
-prepare_compilation(debug=debug, gdb=gdb, profiling=profiling)
+if (isManual):
+  compile_source(filename=source_name)
 
 if (isNautilus):
   compile_source(filename="nautilus.f90", extra=["opkda1.f90", "opkda2.f90", "opkdmain.f90"])
