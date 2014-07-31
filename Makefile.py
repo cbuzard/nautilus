@@ -506,6 +506,7 @@ isNautilus = True
 isOutputs = True
 isRates = True
 isMajor = True
+isTrace = True
 gdb = False
 profiling = False
 force = False # To force the compilation of every module
@@ -558,6 +559,7 @@ for arg in sys.argv[1:]:
     isOutputs = False
     isRates = False
     isMajor = False
+    isTrace = False
     source_name = value
   elif (key == 'force'):
     force = True
@@ -572,6 +574,7 @@ for arg in sys.argv[1:]:
     isOutputs = False
     isRates = False
     isMajor = False
+    isTrace = False
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'output'):
@@ -579,6 +582,7 @@ for arg in sys.argv[1:]:
     isOutputs = True
     isRates = False
     isMajor = False
+    isTrace = False
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'rates'):
@@ -586,6 +590,7 @@ for arg in sys.argv[1:]:
     isOutputs = False
     isRates = True
     isMajor = False
+    isTrace = False
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'major'):
@@ -593,6 +598,7 @@ for arg in sys.argv[1:]:
     isOutputs = False
     isRates = False
     isMajor = True
+    isTrace = False
     if (value != None):
       print(value_message % (key, key, value))
   elif (key == 'opkd'):
@@ -669,6 +675,9 @@ if (isRates):
 
 if (isMajor):
   compile_source(filename="nautilus_major_reactions.f90")
+  
+if (isTrace):
+  compile_source(filename="nautilus_trace_major.f90")
 
 if (isModifs):
   print("Warning: There is non committed modifs!")
