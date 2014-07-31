@@ -20,8 +20,9 @@ OUTPUT_EXTENSION = 'pdf' # default value in bitmap, because vectoriel can take t
 species_name = None
 
 isProblem = False
-problem_message = """AIM : Display in log-log the evolution of abundances for a set of species.
-The script must be launched in a folder that contain a simulation.
+problem_message = """AIM : For a given species, display the most important reaction
+both for production and destruction. Display the evolution of theses importances
+with time.
 
 The script can take various arguments :
 (no spaces between the key and the values, only separated by '=')
@@ -42,13 +43,7 @@ for arg in sys.argv[1:]:
   except:
     key = arg
     value = None
-  if (key == 'tmin'):
-    t_min = float(value)
-  elif (key == 'tmax'):
-    t_max = float(value)
-  elif (key == 'x'):
-    index_1D = int(value)
-  elif (key == 'ext'):
+  if (key == 'ext'):
     OUTPUT_EXTENSION = value
   elif (key == 'species'):
     species_name = value
