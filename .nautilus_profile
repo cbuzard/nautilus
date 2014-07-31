@@ -10,6 +10,7 @@ alias nautilus_code="$nautilus/nautilus"
 alias nautilus_outputs="$nautilus/nautilus_outputs"
 alias nautilus_rates="$nautilus/nautilus_rates"
 alias nautilus_major_reactions="$nautilus/nautilus_major_reactions"
+alias nautilus_trace_major="$nautilus/nautilus_trace_major"
 
 # Python scripts will be available in any folder
 export PATH=$PATH:$nautilus/scripts:.
