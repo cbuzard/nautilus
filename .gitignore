@@ -31,3 +31,7 @@ DOC/nautilus_documentation.tex.bak
 DOC/nautilus_documentation.toc
 nautilus_major_reactions
 *.bak
+nautilus_trace_major
+example_simulation/*.pdf
+example_simulation/*.reaction
+example_simulation/*.percentage
