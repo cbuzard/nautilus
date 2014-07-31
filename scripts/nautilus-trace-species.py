@@ -86,8 +86,8 @@ dummy = object_file.readline()
 line = object_file.readline()
 reaction_prod_IDs = [word for word in line.split()]
 
-nb_reactions = len(reaction_prod_IDs)
-for i in range(nb_reactions):
+nb_prod_reactions = len(reaction_prod_IDs)
+for i in range(nb_prod_reactions):
   production_fraction.append([])
 # 2nd header
 dummy = object_file.readline()
@@ -99,7 +99,7 @@ for line in lines:
   words = line.split()
   
   time.append(float(words[0]))
-  for i in range(nb_reactions):
+  for i in range(nb_prod_reactions):
     production_fraction[i].append(float(words[i+1]))
 
 object_file.close()
@@ -116,8 +116,8 @@ dummy = object_file.readline()
 line = object_file.readline()
 reaction_dest_IDs = [word for word in line.split()]
 
-nb_reactions = len(reaction_dest_IDs)
-for i in range(nb_reactions):
+nb_dest_reactions = len(reaction_dest_IDs)
+for i in range(nb_dest_reactions):
   destruction_fraction.append([])
 # 2nd header
 dummy = object_file.readline()
@@ -129,7 +129,7 @@ for line in lines:
   words = line.split()
   
   time.append(float(words[0]))
-  for i in range(nb_reactions):
+  for i in range(nb_dest_reactions):
     destruction_fraction[i].append(float(words[i+1]))
 
 object_file.close()
@@ -149,7 +149,7 @@ plot_prod = fig.add_subplot(2, 1, 1)
 
 plot = plot_prod.plot
 
-for reaction in range(nb_reactions):
+for reaction in range(nb_prod_reactions):
   plot(time, production_fraction[reaction], label="ID=%s" % reaction_prod_IDs[reaction])
 
 plot_prod.set_xlabel("Time [years]")
@@ -166,7 +166,7 @@ plot_dest = fig.add_subplot(2, 1, 2)
 
 plot = plot_dest.plot
 
-for reaction in range(nb_reactions):
+for reaction in range(nb_dest_reactions):
   plot(time, destruction_fraction[reaction], label="ID=%s" % reaction_dest_IDs[reaction])
 
 plot_dest.set_xlabel("Time [years]")
