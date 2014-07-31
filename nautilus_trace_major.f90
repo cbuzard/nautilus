@@ -416,7 +416,8 @@ do i=1,nb_major_dest
 enddo
 close(11)
 
-
+write(*,*) 'ASCII Files have been generated. '
+write(*,*) 'Please run nautilus-trace-species.py for the same species you asked here.'
 
 contains
 
