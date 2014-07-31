@@ -183,6 +183,12 @@ This option \textbf{test} use compilation options that allow comparison of the c
 Mainly, this option avoid too hard optimization that can result in slightly different results when the code evolve (not because the maths changes but because of optimization only).
 \end{remarque}
 
+Finally, one option exist so that you can compile one particular source file of the current working directory:
+\begin{verbatim}
+Makefile.py name=source_code.f90
+\end{verbatim}
+The Binary name will be \verb|source_code|
+
 \begin{attention}
 If you change compilation options, pay attention to use the option \textbf{force} to ensure all the modules will be compiled using these options.
 \end{attention}
@@ -684,6 +690,31 @@ Even if you can modify and store the result in the graphic windows displayed, a 
 Check the other options and detailed examples via:
 \begin{verbatim}
 nautilus-compare-abundances.py help
+\end{verbatim}
+
+\subsection{Evolution of main reactions for a given species}
+The script \gras{nautilus-trace-species.py} allow you to display the time evolution of the main production and destruction reactions for a given species:
+\begin{verbatim}
+nautilus-trace-species.py species=CO2
+\end{verbatim}
+
+You need to run in the same simulation folder the program:
+\begin{verbatim}
+nautilus_trace_major
+\end{verbatim}
+That will generate 4 files:
+\begin{itemize}
+\item \textbf{trace\_prod\_CO2.percentage} data file for the python script (production reactions)
+\item \textbf{trace\_prod\_CO2.reaction} Tells the exact reaction corresponding to the ID displayed in the python script (production reactions)
+\item \textbf{trace\_dest\_CO2.percentage} data file for the python script (destruction reactions)
+\item \textbf{trace\_dest\_CO2.reaction} (destruction reactions)
+\end{itemize}
+
+Even if you can modify and store the result in the graphic windows displayed, a default version is automatically written in \textbf{major\_reactions\_CO2.pdf} 
+
+Check the other options and detailed examples via:
+\begin{verbatim}
+nautilus-trace-species.py help
 \end{verbatim}
 
 \section{For developpers}\label{sec:advanced}
