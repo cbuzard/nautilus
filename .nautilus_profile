@@ -84,6 +84,3 @@ git_branch_colour_prompt() {
 }
 
 PS1="\h.\u:\[\033[35m\]\W\[\033[0m\]\[\$(git_branch_colour_prompt)\]\$(git_branch_name_prompt)\[\033[0m\]\$ "
-
-#########################################
-# @nautilus_end DO NOT EDIT !"""
