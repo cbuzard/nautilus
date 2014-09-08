@@ -115,7 +115,7 @@ real(double_precision), dimension(nb_wavelengths) :: incident_dust_flux = [& !< 
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, &
 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00, 0.000d+00]
 
-real(double_precision), dimension(nb_wavelengths) :: Qabs_si = [&
+real(double_precision), dimension(nb_wavelengths) :: Qabs_si = [& !< Absorption coefficient for silicate grains from Draine]
 1.164E+00, 1.176E+00, 1.190E+00, 1.204E+00, 1.220E+00, 1.238E+00, 1.259E+00, 1.272E+00, 1.286E+00, 1.304E+00, 1.320E+00, &
 1.333E+00, 1.340E+00, 1.345E+00, 1.344E+00, 1.359E+00, 1.395E+00, 1.411E+00, 1.418E+00, 1.366E+00, 1.295E+00, 1.189E+00, &
 1.016E+00, 8.034E-01, 7.517E-01, 6.763E-01, 5.258E-01, 4.228E-01, 3.560E-01, 3.702E-01, 3.934E-01, 4.082E-01, 3.981E-01, &
@@ -163,7 +163,7 @@ real(double_precision), dimension(nb_wavelengths) :: Qabs_si = [&
 7.606E-12, 7.103E-12, 6.633E-12, 6.194E-12, 5.785E-12, 5.402E-12, 5.045E-12, 4.711E-12, 4.399E-12, 4.108E-12, 3.837E-12, &
 3.583E-12, 3.346E-12, 3.125E-12, 2.918E-12, 2.725E-12]
 
-real(double_precision), dimension(nb_wavelengths) :: Qabs_gr = [&
+real(double_precision), dimension(nb_wavelengths) :: Qabs_gr = [& !< Absorption coefficient for graphite grains from Draine]
 1.070E+00, 1.078E+00, 1.095E+00, 1.113E+00, 1.129E+00, 1.159E+00, 1.198E+00, 1.247E+00, 1.295E+00, 1.333E+00, 1.359E+00, &
 1.373E+00, 1.362E+00, 1.344E+00, 1.328E+00, 1.312E+00, 1.297E+00, 1.288E+00, 1.282E+00, 1.270E+00, 1.261E+00, 1.257E+00, &
 1.266E+00, 1.282E+00, 1.308E+00, 1.330E+00, 1.337E+00, 1.333E+00, 1.320E+00, 1.312E+00, 1.305E+00, 1.304E+00, 1.314E+00, &
@@ -251,7 +251,12 @@ real(double_precision) :: fss ! Rq: fss should be equal to zero
 integer :: etat ! flag
 
 
+!----
+! Grain mixing: 
+!  - 70% of graphite
+!  - 30% of silicate
 Qabs = 0.7*Qabs_gr + 0.3*Qabs_si
+
 !----
 ! Compute the incident radiation filed in term of specific
 ! intensity (erg cm-2 s-1 Angstrom-1 sr-1) after screening 
@@ -524,11 +529,9 @@ end function get_black_body_flux
 !> @date may 2014
 !
 ! DESCRIPTION: 
-!> @brief Fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)
-!! -- The x range is optimized to have a smooth transition between each
-!!    components of the extinction curve
+!> @brief Extinction curve fit parameter from Cardelli et al. 1989 (1989ApJ...345..245C)
 !
-!> @return TODO
+!> @return Extinction curve as a function of the wavelength (in Angstrom)
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 real(double_precision) function  ext(wl)
@@ -547,27 +550,27 @@ x = 1.0e4/wl
 
 a = 0.d0
 b = 0.d0
-! --- Infrared: 0.0 to 1.4 micrometer-1
-if(x .lt. 1.4) then
+! --- Infrared: 0.0 to 1.1 micrometer-1
+if(x .lt. 1.1) then
    a =  0.574 * x**1.61
    b = -0.527 * x**1.61
-! Optical/NIR: 1.4 to 2.7 micrometer-1
-elseif(x .ge. 1.4 .and. x .le. 2.7) then
+! Optical/NIR: 1.1 to 3.3 micrometer-1
+elseif(x .ge. 1.1 .and. x .le. 3.3) then
   y = x - 1.82
   a = 1.00 + 0.17699*y - 0.50447*y**2 - 0.02427*y**3 + 0.72085*y**4 + &
       0.01979*y**5 - 0.77530*y**6 + 0.32999*y**7
   b = 1.41338*y + 2.28305*y**2 + 1.07233*y**3 - 5.38434*y**4 - &
-      0.62251*y**5 + 5.30260*y**5 - 2.09002*y**7
-! UV: 2.7 to 8.0 micrometer-1
-elseif(x .ge. 2.7 .and. x .le. 8.0) then
-  if(x .ge. 5.9 .and. x .le. 8.0) then
+      0.62251*y**5 + 5.30260*y**5 + 5.30260*y**6 - 2.09002*y**7
+! UV: 3.3 to 8.0 micrometer-1
+elseif(x .gt. 3.3 .and. x .le. 8.0) then
+  if(x .gt. 5.9 .and. x .le. 8.0) then
      fa = -0.04473*(x-5.9)**2 - 0.009779*(x-5.9)**3
      fb =  0.2130*(x-5.9)**2 + 0.1207*(x-5.9)**3
   elseif(x .le. 5.9) then
      fa = 0.d0
      fb = 0.d0
   endif
-  a = 1.752 - 0.316*x - 0.104/((x-4.47)**2 + 0.341) + fa
+  a = 1.752 - 0.316*x - 0.104/((x-4.67)**2 + 0.341) + fa
   b = -3.090 + 1.825*x + 1.206/((x-4.62)**2 + 0.263) + fb
 ! Far-UV: 8.0 to ...  micrometer-1
 elseif(x .ge. 8.0) then
