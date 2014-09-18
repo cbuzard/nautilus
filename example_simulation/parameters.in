@@ -29,8 +29,8 @@ conservation_type = 0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2
 !*      1D and diffusion     *
 !*****************************
 
-structure_type = 1D_disk_z ! 0D, 1D_disk_z
-1D_sample = 10 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
+structure_type = 0D ! 0D, 1D_disk_z
+1D_sample = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
 z_max =  1.000E+01 ! Maximum Z value for the 1D grid [AU]
 
 !*****************************
