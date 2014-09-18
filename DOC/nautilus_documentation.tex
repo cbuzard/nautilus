@@ -358,6 +358,14 @@ z_max =  1.000E+01
 
 Spatial points will then be linearly and equally spaced. 
 
+Diffusion of the structure is not done in the code. Only diffusion of the species abundances is done. Diffusion is expected to 
+be in the z direction, assuming the structure is a disk. Other structures are possible but need to be implemented as other 
+values for the parameter \gras[parameter!structure\_type]{structure\_type} This allow you to use any sort of model or diffusion 
+process. You only have to provide a data sample of the spatial points and evolution of the different values. To fix one 
+parameter, you only have to put the same value in the corresponding column.
+
+To disable diffusion in 1D
+
 You have to define the structure in a data file \gras[input file!1D\_evolution.dat]{1D\_evolution.dat} where you define gas density, gas temperature, visual extinction and diffusion coefficient. For instance:
 \begin{verbatim}
 ! Distance [AU] ; Gas density [part/cm^3] ; Gas Temperature [K] ; 
