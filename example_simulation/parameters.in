@@ -28,8 +28,9 @@ conservation_type = 0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2
 !*****************************
 !*      1D and diffusion     *
 !*****************************
+!(diffusion is for species, not the structure)
 
-structure_type = 0D ! 0D, 1D_disk_z
+structure_type = 0D ! 0D, 1D_disk_z, 1D_no_diff
 1D_sample = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
 z_max =  1.000E+01 ! Maximum Z value for the 1D grid [AU]
 
@@ -62,7 +63,7 @@ chemical_barrier_thickness =  1.000E-08 ! grain reaction activation energy barri
 cr_peak_grain_temp =  7.000E+01 ! peak grain temperature [K] (CR heating)
 cr_peak_duration =  1.000E-05 ! duration [s] of peak grain temperature
 Fe_ionisation_rate =  3.000E-14 ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] 
-(for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
+!! (for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. 
 vib_to_dissip_freq_ratio =  1.000E-02 ! [no unit] The ratio of the surface-molecule bond frequency to the frequency at
 !! which energy is lost to the grain surface. Used for the RRK (Rice Ramsperger-Kessel) desorption mechanism
 !! (see Garrod el al. 2007 for more). Assumed to be 1% by default.

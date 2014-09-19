@@ -632,8 +632,8 @@ use global_variables
                              ' ! grain reaction activation energy barrier width. [cm]'
   write(10,'(a,es10.3e2,a)') 'cr_peak_grain_temp = ', CR_PEAK_GRAIN_TEMP, ' ! peak grain temperature [K] (CR heating)'
   write(10,'(a,es10.3e2,a)') 'cr_peak_duration = ', CR_PEAK_DURATION, ' ! duration [s] of peak grain temperature'
-  write(10,'(a,es10.3e2,a)') 'Fe_ionisation_rate = ', FE_IONISATION_RATE, ' ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] ', &
-                            '(for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. '
+  write(10,'(a,es10.3e2,a)') 'Fe_ionisation_rate = ', FE_IONISATION_RATE, ' ! (cosmic) Fe-ion--grain encounter [s-1 grain-1] '
+  write(10,'(a,es10.3e2,a)') '!! (for 0.1 micron grain) For cosmic photo desorptions, only Fe-ions are efficient to heat grains. '
   write(10,'(a,es10.3e2,a)') 'vib_to_dissip_freq_ratio = ', VIB_TO_DISSIP_FREQ_RATIO, &
                              ' ! [no unit] The ratio of the surface-molecule bond frequency to the frequency at'
   write(10,'(a)') '!! which energy is lost to the grain surface. Used for the RRK (Rice Ramsperger-Kessel) desorption mechanism'
