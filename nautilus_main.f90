@@ -652,14 +652,19 @@ select case(STRUCTURE_TYPE)
     get_timestep => get_timestep_0D
     structure_diffusion => structure_diffusion_0D
 
-  case('1D_disk_z') ! TODO comments
+  case('1D_disk_z') ! 1D structure with species diffusion
     call init_1D_evolution()
     get_timestep => get_timestep_1D_disk_z
     structure_diffusion => structure_diffusion_1D_disk_z
+  
+  case('1D_no_diff') ! 1D structure but without species diffusion
+    call init_1D_evolution()
+    get_timestep => get_timestep_0D
+    structure_diffusion => structure_diffusion_0D
     
   case default
     write(error_unit,*) 'The STRUCTURE_TYPE="', STRUCTURE_TYPE,'" cannot be found.'
-    write(error_unit,*) 'Values possible : 0D, 1D_disk_z'
+    write(error_unit,*) 'Values possible : 0D, 1D_disk_z, 1D_no_diff'
     write(error_unit, '(a)') 'Error in subroutine initialisation.' 
     call exit(21)
 end select
