@@ -193,6 +193,34 @@ The Binary name will be \verb|source_code|
 If you change compilation options, pay attention to use the option \textbf{force} to ensure all the modules will be compiled using these options.
 \end{attention}
 
+\subsection{Binaries}
+The various binaries available are:
+\begin{itemize}
+\item \gras[binary!nautilus\_code]{nautilus\_code}
+\item \gras[binary!nautilus\_outputs]{nautilus\_outputs}
+\item \gras[binary!nautilus\_rates]{nautilus\_rates}
+\item \gras[binary!nautilus\_major\_reactions]{nautilus\_major\_reactions}
+\end{itemize}
+
+\verb|nautilus_code| is the main program, the one computing the evolution of the chemical scheme. He need several input files 
+detailled in \refsec{sec:input-files}. This program will generate binary outputs that are not readable by default.
+
+\verb|nautilus_outputs| will read the binary outputs of \verb|nautilus_code| to generate the corresponding ASCII outputs. More 
+details on \refsec{sec:abundances}.
+
+Using the ASCII outputs of \verb|nautilus_outputs|, \verb|nautilus_rates| generates a data file containing the reaction rates, 
+allowing the user to find what reactions are important in the code. This output is fitted to be read by chemist.
+
+To have a user friendly interface to find the most crucial reactions depending on some parameters and a given species, use the 
+program \verb|nautilus_major_reactions|. More details on \refsec{sec:trace-species}.
+
+\begin{remarque}
+All the programs must be run in the directory of the nautilus simulation. First \gras[binary!nautilus\_code]{nautilus\_code}. 
+Then \gras[binary!nautilus\_outputs]{nautilus\_outputs}. And then the other two if you want.
+\end{remarque}
+
+
+
 \subsection{Input files}\label{sec:input-files}
 All input files have the same \textbf{*.in} extension. An example simulation, containing all necessary input files is provided in the sub-folder \textbf{example\_simulation}.
 
@@ -702,7 +730,7 @@ Check the other options and detailed examples via:
 nautilus-compare-abundances.py help
 \end{verbatim}
 
-\subsection{Evolution of main reactions for a given species}
+\subsection{Evolution of main reactions for a given species}\label{sec:trace-species}
 The script \gras{nautilus-trace-species.py} allow you to display the time evolution of the main production and destruction reactions for a given species:
 \begin{verbatim}
 nautilus-trace-species.py species=CO2
@@ -889,4 +917,5 @@ The file \gras{.nautilus\_profile} in the Git repository contains Bash commands 
 \bibliography{nautilus}%.bib
 
 \printindex
+
 \end{document}
