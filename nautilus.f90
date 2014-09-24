@@ -131,7 +131,7 @@ real(double_precision), dimension(:), allocatable :: output_times !< [s] dim(NB_
 real(double_precision) :: output_step !< [s] used to compute the list of output time, depending if its linear or log spaced
 integer :: output_idx !< integer for the output time loop
 
-real(double_precision) :: code_start_time, code_current_time !< cpu time in seconds, allowing to predict the expected ending time of the simulation
+real(double_precision) :: code_start_time, code_current_time, code_elapsed_time !< cpu time in seconds, allowing to predict the expected ending time of the simulation
 real(double_precision) :: remaining_time !< estimated remaining time [s]
 
 integer :: i, x_i !< For loops
@@ -237,18 +237,18 @@ do output_idx=1, NB_OUTPUTS
   enddo
   
   call cpu_time(code_current_time)
-  
-  remaining_time = (code_current_time - code_start_time) / current_time * (STOP_TIME - current_time)
+  code_elapsed_time =  code_current_time - code_start_time
+  remaining_time = code_elapsed_time*NB_OUTPUTS/output_idx-code_elapsed_time
   
   if (remaining_time.lt.60.d0) then
     write(Output_Unit,'(a,en11.2e2,a,f5.1,a,f5.1,a)') 'T =',current_time/YEAR,&
-    ' years [', 100.d0 * current_time/STOP_TIME, ' %] ; Estimated time remaining: ', remaining_time, ' s'
+    ' years [', 100.d0 * output_idx/NB_OUTPUTS, ' %] ; Estimated time remaining: ', remaining_time, ' s'
   else if (remaining_time.lt.3600.d0) then
     write(Output_Unit,'(a,en11.2e2,a,f5.1,a,f5.1,a)') 'T =',current_time/YEAR,&
-    ' years [', 100.d0 * current_time/STOP_TIME, ' %] ; Estimated time remaining: ', remaining_time / 60.d0, ' min.'
+    ' years [', 100.d0 * output_idx/NB_OUTPUTS, ' %] ; Estimated time remaining: ', remaining_time / 60.d0, ' min.'
   else
     write(Output_Unit,'(a,en11.2e2,a,f5.1,a,f5.1,a)') 'T =',current_time/YEAR,&
-    ' years [', 100.d0 * current_time/STOP_TIME, ' %] ; Estimated time remaining: ', remaining_time / 3600.d0, ' h'
+    ' years [', 100.d0 * output_idx/NB_OUTPUTS, ' %] ; Estimated time remaining: ', remaining_time / 3600.d0, ' h'
   endif
   
   ! Output of the rates
