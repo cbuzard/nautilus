@@ -649,10 +649,10 @@ end select
 call initialize_global_arrays()
 
 ! Initialize grid sample if needed. Values are in cm
-if (nb_sample_1D.gt.1) then
-  grid_cell_size = grid_max_edge * AU / (dfloat(nb_sample_1D - 1))
+if (spatial_resolution.gt.1) then
+  grid_cell_size = grid_max_edge * AU / (dfloat(spatial_resolution - 1))
   grid_sample(1) = 0.d0
-  do i=2,nb_sample_1D
+  do i=2,spatial_resolution
     grid_sample(i) = grid_sample(i-1) + grid_cell_size
   enddo
 endif
@@ -703,7 +703,7 @@ call index_datas()
 
 ! Calculate the initial abundances for all elements that compose 
 allocate(temp_abundances(nb_species))
-temp_abundances(1:nb_species) = sum(abundances(1:nb_species,1:nb_sample_1D), dim=2)
+temp_abundances(1:nb_species) = sum(abundances(1:nb_species,1:spatial_resolution), dim=2)
 call get_elemental_abundance(all_abundances=temp_abundances(1:nb_species), el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
 
 ! Store initial elemental abundances
@@ -720,13 +720,13 @@ enddo
 ! Compute the grain abundance
 GTODN = (4.d0 * PI * GRAIN_DENSITY * grain_radius * grain_radius * grain_radius) / (3.d0 * initial_dtg_mass_ratio * AMU)
 
-abundances(INDGRAIN,1:nb_sample_1D) = 1.0 / GTODN ! TODO do we must divide by nb_sample_1D in the 1D case???
+abundances(INDGRAIN,1:spatial_resolution) = 1.0 / GTODN ! TODO do we must divide by spatial_resolution in the 1D case???
 
 ! Set the electron abundance via conservation===========
 ! And check at the same time that nls_init has the same elemental abundance
 ! as nls_control
 ! Make comparison for the sum of abundances over 1D dimension
-if (nb_sample_1D.eq.1) then
+if (spatial_resolution.eq.1) then
   call check_conservation(abundances(1:nb_species, 1))
   ! Make a check only routine for 1D case were it is very complicated to modify any abundances since its spread throughout 1D points
 

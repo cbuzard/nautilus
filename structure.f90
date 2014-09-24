@@ -377,7 +377,7 @@ subroutine structure_no_diffusion(timestep, temp_abundances)
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, spatial_resolution) 
   !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
@@ -496,7 +496,7 @@ subroutine structure_diffusion_1D (timestep, temp_abundances)
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, spatial_resolution) 
   !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
@@ -504,8 +504,8 @@ subroutine structure_diffusion_1D (timestep, temp_abundances)
   integer :: reaction !< For loops
   
   do reaction=1,nb_species
-    call crank_nicholson_1D(f=temp_abundances(reaction, 1:nb_sample_1D), ny=nb_sample_1D-1, dt=timestep, dy=grid_cell_size, &
-    nu=diffusion_coefficient(1:nb_sample_1D), rho=H_number_density(1:nb_sample_1D), ibc=0)
+    call crank_nicholson_1D(f=temp_abundances(reaction, 1:spatial_resolution), ny=spatial_resolution-1, dt=timestep, dy=grid_cell_size, &
+    nu=diffusion_coefficient(1:spatial_resolution), rho=H_number_density(1:spatial_resolution), ibc=0)
   enddo  
   
 end subroutine structure_diffusion_1D
@@ -658,9 +658,9 @@ if (isDefined) then
   tmp_grid(1:nb_values) = tmp_grid(1:nb_values) * AU
   
   ! We now want to interpolate the values from the input sampling to the desired 1D sampling that is 
-  !! defined solely by z_max and nb_sample_1D
+  !! defined solely by z_max and spatial_resolution
   closest_low_id = 1
-  do i=1,nb_sample_1D
+  do i=1,spatial_resolution
     
     if ((grid_sample(i) .ge. tmp_grid(1)) .and. (grid_sample(i) .lt. tmp_grid(nb_values))) then
       ! we do not initialize closest_low_id at each step, because the sample is sorted, 

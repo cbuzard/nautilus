@@ -76,7 +76,7 @@ integer, allocatable, dimension(:) :: PRIME_ELEMENT_IDX ! < dim(NB_PRIME_ELEMENT
 ! Arrays about species
 character(len=11), allocatable, dimension(:) :: species_name !< dim(nb_species)
 integer, allocatable, dimension(:,:) :: species_composition !< dim(NB_PRIME_ELEMENTS,nb_species) number of atom of each element composition the given species.
-real(double_precision), allocatable, dimension(:,:) :: abundances !< dim(nb_species,nb_sample_1D) Species abundances (relative to H) [number ratio]
+real(double_precision), allocatable, dimension(:,:) :: abundances !< dim(nb_species,spatial_resolution) Species abundances (relative to H) [number ratio]
 real(double_precision), allocatable, dimension(:) :: SPECIES_MASS !< dim(nb_species) Species mass [a.m.u]
 real(double_precision), allocatable, dimension(:) :: THERMAL_HOPING_RATE !< dim(nb_species) Diffusion rate by thermal hopping [s-1]:
 !! 1/time required for an adsorbed particle to sweep over a number of sites equivalent to the whole grain surface 
@@ -182,16 +182,16 @@ real(double_precision) :: VIB_TO_DISSIP_FREQ_RATIO !< [no unit] For the RRK (Ric
 !! on the grain surface. Since the dissipation frequency is usually unknown, this ratio is a free parameter. A common value is 1%.
 
 ! 1D variables
-integer :: nb_sample_1D = 1 !< sample in 1D dimension for the physical structure. If 1, then we are in 0D, else, we are in 1D
+integer :: spatial_resolution = 1 !< sample in 1D dimension for the physical structure. If 1, then we are in 0D, else, we are in 1D
 real(double_precision) :: grid_max_edge !< [AU] Maximum distance in 1D. We assume the minimum distance is always 0 AU
 real(double_precision) :: grid_cell_size !< [cm] Grid cell size, or separation between two consecutive 1D points
-real(double_precision), dimension(:), allocatable :: grid_sample !< dim(nb_sample_1D) 1D sampling [cm] Must be linearly and equally spaced because of how the diffusion is treated.
-real(double_precision), dimension(:), allocatable :: gas_temperature !< dim(nb_sample_1D) current gas temperature [K]
-real(double_precision), dimension(:), allocatable :: visual_extinction !< dim(nb_sample_1D) visual extinction [mag] of the molecular cloud (or other astronomical object). 
+real(double_precision), dimension(:), allocatable :: grid_sample !< dim(spatial_resolution) 1D sampling [cm] Must be linearly and equally spaced because of how the diffusion is treated.
+real(double_precision), dimension(:), allocatable :: gas_temperature !< dim(spatial_resolution) current gas temperature [K]
+real(double_precision), dimension(:), allocatable :: visual_extinction !< dim(spatial_resolution) visual extinction [mag] of the molecular cloud (or other astronomical object). 
 !! It's the magnitude attenuation, difference from the absolute magnitude of the object and its apparent magnitude
-real(double_precision), dimension(:), allocatable :: dust_temperature !< dim(nb_sample_1D) current dust temperature [K]
-real(double_precision), dimension(:), allocatable :: H_number_density !< dim(nb_sample_1D) [part/cm^3] Total H number density (both H and H2), representing the total gas density
-real(double_precision), dimension(:), allocatable :: diffusion_coefficient !< dim(nb_sample_1D) [cm^2/s] Diffusion coefficient for a 1D case
+real(double_precision), dimension(:), allocatable :: dust_temperature !< dim(spatial_resolution) current dust temperature [K]
+real(double_precision), dimension(:), allocatable :: H_number_density !< dim(spatial_resolution) [part/cm^3] Total H number density (both H and H2), representing the total gas density
+real(double_precision), dimension(:), allocatable :: diffusion_coefficient !< dim(spatial_resolution) [cm^2/s] Diffusion coefficient for a 1D case
 
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
@@ -283,7 +283,7 @@ abstract interface
   real(double_precision), intent(in) :: timestep !<[in] timestep for the diffusion process [s]
   
   ! Inputs/Outputs
-  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, nb_sample_1D) 
+  real(double_precision), dimension(:,:), intent(inout) :: temp_abundances !<[in,out] dim(nb_species, spatial_resolution) 
   !! The abundances for all species, and 
   !! all 1D mesh points (relative to H) [number ratio]
   
@@ -392,8 +392,8 @@ implicit none
 allocate(species_name(nb_species))
 species_name(1:nb_species) = ''
 
-allocate(abundances(nb_species, nb_sample_1D))
-abundances(1:nb_species, 1:nb_sample_1D) = 0.d0
+allocate(abundances(nb_species, spatial_resolution))
+abundances(1:nb_species, 1:spatial_resolution) = 0.d0
 
 allocate(SPECIES_MASS(nb_species))
 SPECIES_MASS(1:nb_species) = 0.d0
@@ -506,23 +506,23 @@ allocate(REACTION_COMPOUNDS_NAMES(MAX_COMPOUNDS,nb_reactions))
 REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS,1:nb_reactions) = ''
 
 ! 1D arrays
-allocate(grid_sample(nb_sample_1D))
-grid_sample(1:nb_sample_1D) = 0.d0
+allocate(grid_sample(spatial_resolution))
+grid_sample(1:spatial_resolution) = 0.d0
 
-allocate(gas_temperature(nb_sample_1D))
-gas_temperature(1:nb_sample_1D) = 0.d0
+allocate(gas_temperature(spatial_resolution))
+gas_temperature(1:spatial_resolution) = 0.d0
 
-allocate(visual_extinction(nb_sample_1D))
-visual_extinction(1:nb_sample_1D) = 0.d0
+allocate(visual_extinction(spatial_resolution))
+visual_extinction(1:spatial_resolution) = 0.d0
 
-allocate(dust_temperature(nb_sample_1D))
-dust_temperature(1:nb_sample_1D) = 0.d0
+allocate(dust_temperature(spatial_resolution))
+dust_temperature(1:spatial_resolution) = 0.d0
 
-allocate(H_number_density(nb_sample_1D))
-H_number_density(1:nb_sample_1D) = 0.d0
+allocate(H_number_density(spatial_resolution))
+H_number_density(1:spatial_resolution) = 0.d0
 
-allocate(diffusion_coefficient(nb_sample_1D))
-diffusion_coefficient(1:nb_sample_1D) = 0.d0
+allocate(diffusion_coefficient(spatial_resolution))
+diffusion_coefficient(1:spatial_resolution) = 0.d0
 
 ! Prime elements
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))

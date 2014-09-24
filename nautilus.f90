@@ -199,13 +199,13 @@ do output_idx=1, NB_OUTPUTS
     ! So far, structure read from ASCII file is not compatible with 1D. 
     !! If this changes, this call must be included in the loop on 1D sample
     !! We thus assume that everything is stored in the first element of the array, since this can't be valid for nb > 1
-    if (nb_sample_1D.eq.1) then
+    if (spatial_resolution.eq.1) then
       call get_structure_properties(time=current_time, & ! Inputs
                               av=visual_extinction(1), density=H_number_density(1), & ! Outputs
                               gas_temperature=gas_temperature(1)) ! Outputs
     endif
     
-    do x_i=1,nb_sample_1D
+    do x_i=1,spatial_resolution
       call get_grain_temperature(time=current_time, gas_temperature=gas_temperature(x_i), av=visual_extinction(x_i), & ! inputs
       grain_temperature=dust_temperature(x_i)) ! Outputs
       
@@ -222,12 +222,12 @@ do output_idx=1, NB_OUTPUTS
       if (istate.eq.-3) stop
     enddo
     
-    if (nb_sample_1D.eq.1) then
+    if (spatial_resolution.eq.1) then
       call check_conservation(abundances(1:nb_species, 1))
     endif
     
     ! We did one timestep. We update the diffusion for this timestep (mainly species diffusion)
-    call structure_diffusion(timestep=integration_timestep, temp_abundances=abundances(1:nb_species, 1:nb_sample_1D))
+    call structure_diffusion(timestep=integration_timestep, temp_abundances=abundances(1:nb_species, 1:spatial_resolution))
 
     current_time = current_time + integration_timestep ! New current time at which abundances are valid
     

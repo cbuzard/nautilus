@@ -405,8 +405,8 @@ if (isDefined) then
         read(value, *) STRUCTURE_TYPE
       
       ! 1D definitions
-      case('1D_sample')
-        read(value, '(i4)') nb_sample_1D
+      case('spatial_resolution')
+        read(value, '(i4)') spatial_resolution
         
       case('z_max')
         read(value, '(e12.6)') grid_max_edge
@@ -520,13 +520,13 @@ if ((GRAIN_TEMPERATURE_TYPE.eq.'table').and.(IS_STRUCTURE_EVOLUTION.eq.0)) then
   call exit(8)
 endif
 
-if ((STRUCTURE_TYPE.eq.'0D').and.(nb_sample_1D.ne.1)) then
-  write(Error_unit,'(a,i0,a)') 'Error: In 0D, we must have one point (1D_sample=',nb_sample_1D,')'
+if ((STRUCTURE_TYPE.eq.'0D').and.(spatial_resolution.ne.1)) then
+  write(Error_unit,'(a,i0,a)') 'Error: In 0D, we must have one point (spatial_resolution=',spatial_resolution,')'
   call exit(22)
 endif
 
-if ((STRUCTURE_TYPE.ne.'0D').and.(nb_sample_1D.eq.1)) then
-  write(Error_unit,'(a,i0,a)') 'Error: In 1D, we must have more than one point (1D_sample=',nb_sample_1D, ')'
+if ((STRUCTURE_TYPE.ne.'0D').and.(spatial_resolution.eq.1)) then
+  write(Error_unit,'(a,i0,a)') 'Error: In 1D, we must have more than one point (spatial_resolution=',spatial_resolution, ')'
   call exit(22)
 endif
 
@@ -599,7 +599,7 @@ use global_variables
   write(10,'(a)') "!(diffusion is for species, not the structure)"
   write(10,'(a)') ""
   write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_diff, 1D_no_diff'
-  write(10,'(a,i0,a)') '1D_sample = ', nb_sample_1D, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
+  write(10,'(a,i0,a)') 'spatial_resolution = ', spatial_resolution, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
   write(10,'(a,es10.3e2,a)') 'z_max = ', grid_max_edge, ' ! Maximum Z value for the 1D grid [AU]'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
@@ -900,13 +900,13 @@ do j=1,nb_lines
 enddo
 
 ! Set initial abundances================================================
-abundances(1:nb_species, 1:nb_sample_1D) = MINIMUM_INITIAL_ABUNDANCE
+abundances(1:nb_species, 1:spatial_resolution) = MINIMUM_INITIAL_ABUNDANCE
 
 ! Initial abundance for one species is assumed to be the same throughout the 1D structure initially
 do i=1,nb_species
   do j=1,nb_lines
     if (species_name(i).EQ.temp_names(j)) then
-      abundances(i,1:nb_sample_1D)=temp_abundances(j)
+      abundances(i,1:spatial_resolution)=temp_abundances(j)
     endif
   enddo
 enddo
@@ -1039,9 +1039,9 @@ write(filename_output, '(a,i0.6,a)') 'abundances.',index,'.out'
 open(UNIT=35, file=filename_output, form='unformatted')
 
 write(35) current_time
-write(35) gas_temperature(1:nb_sample_1D), dust_temperature(1:nb_sample_1D), &
-          H_number_density(1:nb_sample_1D), visual_extinction(1:nb_sample_1D), X_IONISATION_RATE
-write(35) abundances(1:nb_species, 1:nb_sample_1D)
+write(35) gas_temperature(1:spatial_resolution), dust_temperature(1:spatial_resolution), &
+          H_number_density(1:spatial_resolution), visual_extinction(1:spatial_resolution), X_IONISATION_RATE
+write(35) abundances(1:nb_species, 1:spatial_resolution)
 close(35)
 
 return
@@ -1116,10 +1116,10 @@ write(13,'(5(a,es10.3e2),a)') '!time =', current_time, ' s ; density = ', H_numb
 ' [mag] ; CR ionisation rate = ',CR_IONISATION_RATE,' s-1'
 
 ! To adapt the format in function of the 1D number of points
-write(line_format,'(a,i0,a)') '(a," = ",', nb_sample_1D, '(es12.5e2))'
+write(line_format,'(a,i0,a)') '(a," = ",', spatial_resolution, '(es12.5e2))'
 
 do i=1,nb_species
-  write(13,line_format) trim(species_name(i)), abundances(i,1:nb_sample_1D)
+  write(13,line_format) trim(species_name(i)), abundances(i,1:spatial_resolution)
 enddo
 
 close(13)
