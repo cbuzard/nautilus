@@ -599,7 +599,8 @@ use global_variables
   write(10,'(a)') "!(diffusion is for species, not the structure)"
   write(10,'(a)') ""
   write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_diff, 1D_no_diff'
-  write(10,'(a,i0,a)') 'spatial_resolution = ', spatial_resolution, ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
+  write(10,'(a,i0,a)') 'spatial_resolution = ', spatial_resolution, &
+    ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
   write(10,'(a,es10.3e2,a)') 'z_max = ', grid_max_edge, ' ! Maximum Z value for the 1D grid [AU]'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"

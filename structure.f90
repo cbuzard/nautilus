@@ -504,8 +504,9 @@ subroutine structure_diffusion_1D (timestep, temp_abundances)
   integer :: reaction !< For loops
   
   do reaction=1,nb_species
-    call crank_nicholson_1D(f=temp_abundances(reaction, 1:spatial_resolution), ny=spatial_resolution-1, dt=timestep, dy=grid_cell_size, &
-    nu=diffusion_coefficient(1:spatial_resolution), rho=H_number_density(1:spatial_resolution), ibc=0)
+    call crank_nicholson_1D(f=temp_abundances(reaction, 1:spatial_resolution), &
+    ny=spatial_resolution-1, dt=timestep, dy=grid_cell_size, nu=diffusion_coefficient(1:spatial_resolution),&
+    rho=H_number_density(1:spatial_resolution), ibc=0)
   enddo  
   
 end subroutine structure_diffusion_1D

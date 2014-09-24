@@ -80,7 +80,7 @@ do while(isDefined)
 enddo
 nb_outputs = nb_outputs - 1
 
-write(*,'(a, i0)') 'Spatial resolution: ', nb_sample_1D
+write(*,'(a, i0)') 'Spatial resolution: ', spatial_resolution
 write(*,'(a, i0)') 'Number of time outputs: ', nb_outputs
 write(*,'(a, i0)') 'Number of species: ', nb_species
 write(*,'(a, i0)') 'Number of reactions: ', nb_reactions
@@ -88,13 +88,13 @@ write(*,'(a, i0)') 'Number of reactions: ', nb_reactions
 ! We allocate the output arrays
 
 allocate(time(nb_outputs))
-allocate(gas_temperature_out(nb_sample_1D, nb_outputs))
-allocate(dust_temperature_out(nb_sample_1D, nb_outputs))
-allocate(density(nb_sample_1D, nb_outputs))
-allocate(visual_extinction_out(nb_sample_1D, nb_outputs))
+allocate(gas_temperature_out(spatial_resolution, nb_outputs))
+allocate(dust_temperature_out(spatial_resolution, nb_outputs))
+allocate(density(spatial_resolution, nb_outputs))
+allocate(visual_extinction_out(spatial_resolution, nb_outputs))
 allocate(zeta(nb_outputs))
 
-allocate(abundances_out(nb_outputs, nb_species+1, nb_sample_1D)) ! We create an extra species that will always have an abundance of 1
+allocate(abundances_out(nb_outputs, nb_species+1, spatial_resolution)) ! We create an extra species that will always have an abundance of 1
 
 allocate(reaction_rates_out(nb_outputs, nb_reactions))
 
@@ -112,9 +112,9 @@ do output=1,nb_outputs
 
   open(10, file=filename_output, status='old', form='unformatted')
   read(10) time(output)
-  read(10) gas_temperature_out(1:nb_sample_1D, output), dust_temperature_out(1:nb_sample_1D, output), &
-           density(1:nb_sample_1D, output), visual_extinction_out(1:nb_sample_1D, output), zeta(output)
-  read(10) abundances_out(output,1:nb_species, 1:nb_sample_1D)
+  read(10) gas_temperature_out(1:spatial_resolution, output), dust_temperature_out(1:spatial_resolution, output), &
+           density(1:spatial_resolution, output), visual_extinction_out(1:spatial_resolution, output), zeta(output)
+  read(10) abundances_out(output,1:nb_species, 1:spatial_resolution)
   close(10)
   
   write(filename_output, '(a,i0.6,a)') 'rates.',output,'.out'
@@ -128,7 +128,7 @@ write(*,'(a,a)') achar(13), 'Reading unformatted outputs... Done'
 
 ! For non existing reactants (whose index is 'nb_species+1') in reactions, we create a new species whose abundance is always 1, so that we can calculate the fluxes 
 !! more easily.
-abundances_out(1:nb_outputs, nb_species+1, 1:nb_sample_1D) = 1.d0
+abundances_out(1:nb_outputs, nb_species+1, 1:spatial_resolution) = 1.d0
 
 !######################################################
 ! User asked section
@@ -157,15 +157,15 @@ enddo
 
 ! What spatial point ?
 
-if (nb_sample_1D.ne.1) then
+if (spatial_resolution.ne.1) then
   wrong_1D = .true.
   do while (wrong_1D)
-    write(*,'(a,i0,a)') 'Select the spatial point (from 1 to ', nb_sample_1D, '):'
+    write(*,'(a,i0,a)') 'Select the spatial point (from 1 to ', spatial_resolution, '):'
     read(*,*) user_1D_id
     
     
-    if ((user_1D_id.gt.nb_sample_1D).or.(user_1D_id.lt.0)) then
-    write(*,'(a,i0)') "Choose spatial point between 1 and ", nb_sample_1D
+    if ((user_1D_id.gt.spatial_resolution).or.(user_1D_id.lt.0)) then
+    write(*,'(a,i0)') "Choose spatial point between 1 and ", spatial_resolution
     else
     wrong_1D = .false.
     endif
