@@ -69,7 +69,7 @@
 ! 
 ! surface_parameters.in : various energies and parameters for diffusion and movements on the grain surface
 ! structure_evolution.dat : providing the structure of the source evolving with time in the case the model is used this way.
-! 1D_evolution.dat : providing the 1D static physical structure of a source when the model is used this way.
+! 1D_static.dat : providing the 1D static physical structure of a source when the model is used this way.
 !
 ! OUTPUT FILES
 ! *.out files are output files. *.tmp files are file that are generated at each timestep, either to continue a 

@@ -370,7 +370,7 @@ end subroutine get_grain_temperature_table
 !! nothing is done here, just to point toward a "do nothing" procedure
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine structure_diffusion_0D(timestep, temp_abundances)
+subroutine structure_no_diffusion(timestep, temp_abundances)
   
   implicit none
   ! Inputs
@@ -383,7 +383,7 @@ subroutine structure_diffusion_0D(timestep, temp_abundances)
   
   ! Abundances stay equal here
   
-end subroutine structure_diffusion_0D
+end subroutine structure_no_diffusion
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -489,7 +489,7 @@ end subroutine crank_nicholson_1D
 !! TODO (check that once the procedure is written)
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine structure_diffusion_1D_disk_z(timestep, temp_abundances)
+subroutine structure_diffusion_1D (timestep, temp_abundances)
   
   implicit none
   ! Inputs
@@ -508,7 +508,7 @@ subroutine structure_diffusion_1D_disk_z(timestep, temp_abundances)
     nu=diffusion_coefficient(1:nb_sample_1D), rho=H_number_density(1:nb_sample_1D), ibc=0)
   enddo  
   
-end subroutine structure_diffusion_1D_disk_z
+end subroutine structure_diffusion_1D
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -550,7 +550,7 @@ end subroutine get_timestep_0D
 !! This routine provide a sub-timestep that allow accurate computation of the diffusion.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine get_timestep_1D_disk_z(current_time, final_time, next_timestep)
+subroutine get_timestep_1D_diff(current_time, final_time, next_timestep)
 
   implicit none
 
@@ -568,7 +568,7 @@ subroutine get_timestep_1D_disk_z(current_time, final_time, next_timestep)
   if (current_time+next_timestep.gt.final_time) then
     next_timestep = final_time - current_time
   endif
-end subroutine get_timestep_1D_disk_z
+end subroutine get_timestep_1D_diff
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
@@ -577,24 +577,23 @@ end subroutine get_timestep_1D_disk_z
 !> @date 2014
 !
 ! DESCRIPTION: 
-!> @brief Read 1D evolution in 1D_evolution.dat
+!> @brief Read 1D structure in 1D_static.dat
 !! to initialize arrays. Thus, interpolation of physical structure properties
 !! throughout the simulation be possible.
 !! \n
-!! structure_evolution.dat will have a two lines header. Then columns will be as follow :
+!! 1D_static.dat will have a two lines header. Then columns will be as follow :
 !! \n Z position (AU) ; Number density (part/cm3) ; Temperature (K) ; diffusion coeff (cm^2/s) ; Av (mag)
 !
-!> @warning Time sample MUST be linearly and equally spaced
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
-subroutine init_1D_evolution()
+subroutine init_1D_static()
 
 use utilities
 
 implicit none
 
 
-character(len=80) :: filename = '1D_evolution.dat' !< name of the file in which time evolution is stored
+character(len=80) :: filename = '1D_static.dat' !< name of the file in which time evolution is stored
 character(len=200) :: line
 character(len=1), parameter :: comment_character = '!' !< character that will indicate that the rest of the line is a comment
 integer :: error !< to store the state of a read instruction
@@ -712,6 +711,6 @@ else
 end if
 
 return
-end subroutine init_1D_evolution
+end subroutine init_1D_static
 
 end module structure

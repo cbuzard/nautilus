@@ -269,7 +269,7 @@ abstract interface
   end subroutine get_timestep_interface
 end interface
 
-character(len=80) :: STRUCTURE_TYPE = '0D' !< (0D, 1D_disk_z)
+character(len=80) :: STRUCTURE_TYPE = '0D' !< (0D, 1D_diff, 1D_no_diff)
 procedure(structure_diffusion_interface), pointer :: structure_diffusion !< Pointer that diffuse the structure 
 !! (mainly abundances) for a given timestep
 
