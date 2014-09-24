@@ -243,7 +243,7 @@ subroutine get_structure_properties_fixed(time, Av, density, gas_temperature)
   !------------------------------------------------------------------------------
 
   density = initial_gas_density
-  Av = INITIAL_VISUAL_EXTINCTION
+  av = initial_visual_extinction 
   gas_temperature = initial_gas_temperature
   
   return

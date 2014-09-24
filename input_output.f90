@@ -30,6 +30,7 @@ contains
 ! DESCRIPTION: 
 !> @brief Read all reactions both for gas phase and grain surface and order them
 ! by ITYPE
+! TODO: explain the reordering process
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine read_reactions()

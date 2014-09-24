@@ -5,6 +5,8 @@
 ! DESCRIPTION: 
 !> @brief Module that contain everything about shielding of H2 and CO molecules
 !! H2 is only shielded by himself. CO is shielded both by H2 and himself. 
+!! Self shielding is computed in the ode_solver module in the subroutine 
+!! set_dependant_rates
 !! 
 !
 !******************************************************************************

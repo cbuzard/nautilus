@@ -41,7 +41,9 @@
 ! Turbulent mixing implemented through first order operator splitting
 ! 
 ! April 2011 VW  An appoximative calculation of the X-ray ionization rate 
-! have been added according to Glasgold at al. (1999)
+! have been added according to Glasgold at al. (1999) -> DOES NOT WORK YET
+!
+! Strong modifications of the code by C. Cossou from Jan. to July 2014
 !
 ! INPUT FILES
 ! 
@@ -66,12 +68,14 @@
 ! grain_species.in : Species that are involved in grain surface reactions
 ! 
 ! surface_parameters.in : various energies and parameters for diffusion and movements on the grain surface
+! structure_evolution.dat : providing the structure of the source evolving with time in the case the model is used this way.
+! 1D_evolution.dat : providing the 1D static physical structure of a source when the model is used this way.
 !
 ! OUTPUT FILES
 ! *.out files are output files. *.tmp files are file that are generated at each timestep, either to continue a 
 ! simulation or check if there is a problem
 !
-! abundances.*.out : writing in binary format the abundances of all species at each timestep (one file per timestep-output
+! abundances.*.out : writing in binary format the abundances of all species at each timestep (one file per timestep-output)
 !
 ! abundances.tmp : writing in ASCII format the abundances of all species at the current timestep-output
 !
@@ -197,12 +201,12 @@ do output_idx=1, NB_OUTPUTS
     !! We thus assume that everything is stored in the first element of the array, since this can't be valid for nb > 1
     if (nb_sample_1D.eq.1) then
       call get_structure_properties(time=current_time, & ! Inputs
-                              Av=visual_extinction(1), density=H_number_density(1), & ! Outputs
+                              av=visual_extinction(1), density=H_number_density(1), & ! Outputs
                               gas_temperature=gas_temperature(1)) ! Outputs
     endif
     
     do x_i=1,nb_sample_1D
-      call get_grain_temperature(time=current_time, gas_temperature=gas_temperature(x_i), Av=visual_extinction(x_i), & ! inputs
+      call get_grain_temperature(time=current_time, gas_temperature=gas_temperature(x_i), av=visual_extinction(x_i), & ! inputs
       grain_temperature=dust_temperature(x_i)) ! Outputs
       
       ! We can't add input variables in dlsodes called routines, so we must store the values as global variables

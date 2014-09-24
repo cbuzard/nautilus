@@ -154,6 +154,18 @@ end subroutine get_elemental_abundance
 ! DESCRIPTION: 
 !> @brief To check coherence of the parameter files, reactions and so on.
 !! Writing information in 'info.out', appending to the file created by 'write_general_infos'
+! There is a switch in the parameters.in file
+! The following tests are done :
+!   - check that all species are both produced and destroyed
+!   - Check the balance of the reactions for elements and charges
+!   - check for reactions with alpha = 0
+!   - Check that Tmin < Tmax for all reactions
+!   - check for reactions with the same ID (must have the same reactants and products and 
+!       have complementary T range)
+!   - check that each gas species as a grain equivalent
+!   - check that each gas neutral has a depletion reaction
+!   - check that each grain species has a desorption reaction for each type
+!   - check that each surface species has a binding energy
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine preliminary_tests()
@@ -645,7 +657,7 @@ if (nb_sample_1D.gt.1) then
   enddo
 endif
 
-!0D, 1D_disk_z
+!0D, 1D_disk_z, 1D_no_diff
 ! Initialize structure pointers
 select case(STRUCTURE_TYPE)
   case('0D') ! No structure at all. Point towards routines that do almost nothing.

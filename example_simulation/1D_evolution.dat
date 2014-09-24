@@ -1,5 +1,0 @@
-! Distance [AU] ; Gas density [part/cm^3] ; Gas Temperature [K] ; Visual Extinction [mag] ; Diffusion coefficient [cm^2/s]
-0.                150.                      10.                   15.                       1e14
-2.                150.                      10.                   15.                       1e14
-4.                300.                      15.                   20.                       1e14
-6.                150.                      10.                   15.                       1e14

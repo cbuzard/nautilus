@@ -902,7 +902,8 @@ end subroutine get_temporal_derivatives
   !
   ! VW 02/07 the treatment for the H2 and CO photodissociation was corrected
   ! for larger and smaller values of H2, CO column densities and Av not in the 
-  ! data tables. I also added the choice of using this approximation in gg_control.d
+  ! data tables. I also added the choice of using this approximation in parameters.in
+  ! option is_absorption = 1
   !
   ! ====== Rxn ITYPE 3
   ! ITYPE 3: Gas phase photodissociations/ionisations by UV
