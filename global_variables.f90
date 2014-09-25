@@ -61,6 +61,7 @@ character(len=11) :: YCO    = 'CO         ' !< Gas phase CO
 
 integer :: INDCO !< Index corresponding to CO in nb_species length arrays
 integer :: INDH2 !< Index corresponding to H2 in nb_species length arrays
+integer :: INDH  !< Index corresponding to H in nb_species length arrays
 integer :: INDHE !< Index corresponding to He in nb_species length arrays
 integer :: INDEL !< Index corresponding to e- in nb_species length arrays
 integer :: INDGRAIN !< Index corresponding to GRAIN0 in nb_species length arrays

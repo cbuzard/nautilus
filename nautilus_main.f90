@@ -84,6 +84,9 @@ contains
   
   call write_elemental_abundances(filename='elemental_abundances.tmp', el_abundances=elemental_abundance)
 
+! VW fev 2012 add a test for the helium and H2 abundance in the gas phase
+! warn for excessive depletion
+
   do k=1,NB_PRIME_ELEMENTS
     if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-elemental_abundance(K))/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then 
       write(Error_unit,*) 'Caution: Element ', trim(species_name(PRIME_ELEMENT_IDX(K))), 'is not conserved'
@@ -91,9 +94,12 @@ contains
                            INITIAL_ELEMENTAL_ABUNDANCE(K)
     endif
     if (species_name(PRIME_ELEMENT_IDX(K)).eq.YH) then
-      if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-temp_abundances(INDH2)*2.D0)/INITIAL_ELEMENTAL_ABUNDANCE(K).ge.0.01d0) then
-        write(Error_unit,'(2(a,a,a,es10.2e2))') 'H2 is too depleted on the grains: initial Y(',trim(species_name(K)),') =',&
-                             INITIAL_ELEMENTAL_ABUNDANCE(K), ' ; Y(',trim(species_name(INDH2)),')*2 =',temp_abundances(INDH2)*2.d0
+      if (abs(INITIAL_ELEMENTAL_ABUNDANCE(K)-(temp_abundances(INDH2)*2.D0+temp_abundances(INDH))/ &
+            INITIAL_ELEMENTAL_ABUNDANCE(K)).ge.0.01d0) then
+        write(Error_unit,'(a,a,a,es10.2e2,a,a,a,a,a,es10.2e2)') 'H is too depleted on the grains: initial &
+                            Y(',trim(species_name(K)),') =',INITIAL_ELEMENTAL_ABUNDANCE(K), ' ; Y(',&
+                            trim(species_name(INDH2)),')*2 + Y(',trim(species_name(INDH)),') =',&
+                                temp_abundances(INDH2)*2.d0+temp_abundances(INDH)
       endif
     endif
     if (species_name(PRIME_ELEMENT_IDX(K)).eq.YHE) then
@@ -103,9 +109,6 @@ contains
       endif
     endif       
   enddo
-
-  ! VW fev 2012 add a test for the helium and H2 abundance in the gas phase
-  ! prevent excessive depletion
 
 
   return
@@ -876,9 +879,10 @@ do I=0,MAX_NUMBER_REACTION_TYPE-1
   enddo
 enddo
 
-! Find the index of CO and H2 and He
+! Find the index of CO, H2, H, He and grain0
 do i=1,nb_species
   if (species_name(i).eq.YH2) INDH2=i
+  if (species_name(i).eq.YH) INDH=i
   if (species_name(i).eq.YCO) INDCO=i
   if (species_name(i).eq.YHE) INDHE=i
   if (species_name(i).eq.YGRAIN) INDGRAIN=i
