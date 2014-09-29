@@ -32,7 +32,6 @@ conservation_type = 0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2
 
 structure_type = 0D ! 0D, 1D_diff, 1D_no_diff
 spatial_resolution = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
-z_max =  1.000E+01 ! Maximum Z value for the 1D grid [AU]
 
 !*****************************
 !*    Gas phase parameters   *

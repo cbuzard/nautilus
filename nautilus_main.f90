@@ -651,15 +651,6 @@ end select
 ! Init global allocatable arrays. From now on, we can read data files
 call initialize_global_arrays()
 
-! Initialize grid sample if needed. Values are in cm
-if (spatial_resolution.gt.1) then
-  grid_cell_size = grid_max_edge * AU / (dfloat(spatial_resolution - 1))
-  grid_sample(1) = 0.d0
-  do i=2,spatial_resolution
-    grid_sample(i) = grid_sample(i-1) + grid_cell_size
-  enddo
-endif
-
 !0D, 1D_diff, 1D_no_diff
 ! Initialize structure pointers
 select case(STRUCTURE_TYPE)
@@ -683,6 +674,7 @@ select case(STRUCTURE_TYPE)
     write(error_unit, '(a)') 'Error in subroutine initialisation.' 
     call exit(21)
 end select
+
 
 ! Read list of species, either for gas or grain reactions
 call read_species()

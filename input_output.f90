@@ -407,10 +407,7 @@ if (isDefined) then
       ! 1D definitions
       case('spatial_resolution')
         read(value, '(i4)') spatial_resolution
-        
-      case('z_max')
-        read(value, '(e12.6)') grid_max_edge
-      
+              
       ! Gas phase
       case('initial_gas_density', 'XNT0') ! The old name is kept for compatibility reasons
         read(value, '(e12.6)') initial_gas_density
@@ -600,8 +597,7 @@ use global_variables
   write(10,'(a)') ""
   write(10,'(a,a,a)') 'structure_type = ', trim(STRUCTURE_TYPE), ' ! 0D, 1D_diff, 1D_no_diff'
   write(10,'(a,i0,a)') 'spatial_resolution = ', spatial_resolution, &
-    ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes'
-  write(10,'(a,es10.3e2,a)') 'z_max = ', grid_max_edge, ' ! Maximum Z value for the 1D grid [AU]'
+    ' ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes. Number of lines in 1D.'
   write(10,'(a)') ""
   write(10,'(a)') "!*****************************"
   write(10,'(a)') "!*    Gas phase parameters   *"
@@ -1083,6 +1079,47 @@ close(45)
 
 return 
 end subroutine write_current_rates
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author
+!> Valentine Wakelam
+!
+!> @date 2014
+!
+! DESCRIPTION:
+!> @brief Write the H2 and CO column density computed by the model - used 
+!   for the self-shielding of H2 and CO from the UV photons
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subroutine write_H2_CO_col_dens(index)
+
+use global_variables
+
+implicit none
+
+! Input
+integer, intent(in) :: index !<[in] The reference index of the current output
+
+! Locals
+character(len=80) :: filename_output
+integer :: i
+
+write(filename_output, '(a,i0.6,a)') 'col_dens.',index,'.out'
+
+open(55, file=filename_output)
+
+! Header
+write(55,'(50a)') 'H2 column density (cm-2)  CO column density (cm-2)'
+
+do i=1,spatial_resolution
+    write(55,*) NH2_z(i),NCO_z(i)
+enddo
+
+close(55)
+
+return
+end subroutine write_H2_CO_col_dens
+
 
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 

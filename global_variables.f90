@@ -193,6 +193,8 @@ real(double_precision), dimension(:), allocatable :: visual_extinction !< dim(sp
 real(double_precision), dimension(:), allocatable :: dust_temperature !< dim(spatial_resolution) current dust temperature [K]
 real(double_precision), dimension(:), allocatable :: H_number_density !< dim(spatial_resolution) [part/cm^3] Total H number density (both H and H2), representing the total gas density
 real(double_precision), dimension(:), allocatable :: diffusion_coefficient !< dim(spatial_resolution) [cm^2/s] Diffusion coefficient for a 1D case
+real(double_precision), dimension(:), allocatable :: NH2_z !< dim(spatial_resolution) [cm^-2] H2 column density for a 1D case
+real(double_precision), dimension(:), allocatable :: NCO_z !< dim(spatial_resolution) [cm^-2] CO column density for a 1D case
 
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
@@ -524,6 +526,12 @@ H_number_density(1:spatial_resolution) = 0.d0
 
 allocate(diffusion_coefficient(spatial_resolution))
 diffusion_coefficient(1:spatial_resolution) = 0.d0
+
+allocate(NH2_z(spatial_resolution))
+NH2_z(1:spatial_resolution) = 0.d0
+
+allocate(NCO_z(spatial_resolution))
+NCO_z(1:spatial_resolution) = 0.d0
 
 ! Prime elements
 allocate(INITIAL_ELEMENTAL_ABUNDANCE(NB_PRIME_ELEMENTS))

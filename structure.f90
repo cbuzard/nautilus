@@ -657,7 +657,18 @@ if (isDefined) then
   
   ! Convert distances from AU to cm
   tmp_grid(1:nb_values) = tmp_grid(1:nb_values) * AU
-  
+
+  grid_max_edge = tmp_grid(nb_values)
+
+    ! Initialize grid sample if needed. Values are in cm
+    if (spatial_resolution.gt.1) then
+        grid_cell_size = grid_max_edge / (dfloat(spatial_resolution - 1))
+        grid_sample(1) = 0.d0
+    do i=2,spatial_resolution
+        grid_sample(i) = grid_sample(i-1) + grid_cell_size
+    enddo
+    endif
+
   ! We now want to interpolate the values from the input sampling to the desired 1D sampling that is 
   !! defined solely by z_max and spatial_resolution
   closest_low_id = 1

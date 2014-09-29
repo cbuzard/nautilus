@@ -182,6 +182,7 @@ select case(OUTPUT_TYPE)
     call exit(12)
 end select
 
+
 current_time = 0.d0 ! In seconds
 call cpu_time(code_start_time)
 
@@ -204,8 +205,16 @@ do output_idx=1, NB_OUTPUTS
                               av=visual_extinction(1), density=H_number_density(1), & ! Outputs
                               gas_temperature=gas_temperature(1)) ! Outputs
     endif
-    
+
+    ! Column densities of H2 and CO are set to zero before each time evolution computation.
+
+!    do i0 = 1,spatial_resolution
+    NH2_z(1:spatial_resolution) = 0.d0
+    NCO_z(1:spatial_resolution) = 0.d0
+!    enddo
+
     do x_i=1,spatial_resolution
+
       call get_grain_temperature(time=current_time, gas_temperature=gas_temperature(x_i), av=visual_extinction(x_i), & ! inputs
       grain_temperature=dust_temperature(x_i)) ! Outputs
       
@@ -214,14 +223,36 @@ do output_idx=1, NB_OUTPUTS
       actual_dust_temp = dust_temperature(x_i)
       actual_av = visual_extinction(x_i)
       actual_gas_density = H_number_density(x_i)
-      
+
+!    write(*,*) x_i,actual_gas_temp
+
+!write(*,*) grid_cell_size
+
+    if ((x_i.eq.1)) then
+
+            NH2_z(x_i)= actual_av/AV_NH_ratio * abundances(indH2, x_i)
+            NCO_z(x_i)= actual_av/AV_NH_ratio * abundances(indCO, x_i)
+
+        else
+
+            NH2_z(x_i) = NH2_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indH2, x_i)
+            NCO_z(x_i) = NCO_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indCO, x_i)
+
+        endif
+
+        NH2 = NH2_z(x_i)
+        NCO = NCO_z(x_i)
+
       call integrate_chemical_scheme(delta_t=output_timestep, temp_abundances=abundances(1:nb_species, x_i),& ! Inputs
       itol=itol, atol=atol, itask=itask, iopt=iopt, mf=mf, & ! Inputs
       istate=istate) ! Output
-      
+
+
       if (istate.eq.-3) stop
     enddo
-    
+
+    call write_H2_CO_col_dens(index=output_idx)
+
     if (spatial_resolution.eq.1) then
       call check_conservation(abundances(1:nb_species, 1))
     endif
@@ -260,7 +291,7 @@ do output_idx=1, NB_OUTPUTS
   first_step_done = .true.
 enddo
 
-call write_abundances('abundances.tmp')
+if (spatial_resolution.eq.1) call write_abundances('abundances.tmp')
 
 contains
 

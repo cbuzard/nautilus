@@ -865,7 +865,6 @@ end subroutine get_temporal_derivatives
   real(double_precision) :: ACTIVCR !< [no unit] ratio between the energy barrier (in K) and the peak temperature of the grain when hit by a cosmic ray
   real(double_precision) :: BARRCR !< TODO description/units ???
   real(double_precision) :: DIFFCR !< TODO description/units ???
-  real(double_precision) :: XNH2,XNCO
   real(double_precision) :: TETABIS,TETABIS1,TETABIS2,TETABIS3
   real(double_precision) :: T300, TI, TSQ
   real(double_precision) :: YMOD1, YMOD2
@@ -885,9 +884,6 @@ end subroutine get_temporal_derivatives
   TI=1.0d00/actual_gas_temp
   TSQ=SQRT(actual_gas_temp)
 
-  XNH2=Y(indH2)
-  XNCO=Y(indCO)
-  
   ! Sum of all abundances on grain surfaces
   XNDTOT = sum(Y(nb_gaseous_species+1:nb_species))
 
@@ -917,7 +913,6 @@ end subroutine get_temporal_derivatives
       if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YH2) then
         TETABIS=1.D0
 
-        NH2 = actual_av/AV_NH_ratio * XNH2
 
         ! ======= Linear extrapolation of the shielding factors
         do L=1,NL1-1
@@ -938,9 +933,6 @@ end subroutine get_temporal_derivatives
         TETABIS1=1.D0
         TETABIS2=1.D0
         TETABIS3=1.D0
-
-        NH2 = actual_av/AV_NH_ratio * XNH2
-        NCO = actual_av/AV_NH_ratio * XNCO
 
         ! ======= Linear extrapolation of the three shileding factors
         do L=1,NL2-1
