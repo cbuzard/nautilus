@@ -1094,6 +1094,13 @@ end subroutine get_temporal_derivatives
       DIFF = DIFFUSION_RATE_1(J) + DIFFUSION_RATE_2(J)
 
       reaction_rates(J) = RATE_A(J) * branching_ratio(J) * BARR * DIFF * GTODN / actual_gas_density
+      
+      ! "Encounter desorption" process for JH2 (Hincelin et al. 2014,A&A)
+      ! The reaction JH2+JH2->JH2+H2 must be in the grain_reactions.in file to be accounted
+      if ((reaction_compounds_names(1,J).EQ.'JH2        ').AND.(reaction_compounds_names(2,J).EQ.'JH2        ')) then
+         reaction_rates(J)=reaction_rates(J)/(1.D0+(EXP((2.3D+01-diff_binding_ratio*2.3D+01)/actual_dust_temp)))
+      endif
+
       ! reaction_rates(J)=0.D0
     enddo
 
