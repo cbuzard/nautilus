@@ -582,9 +582,12 @@ end subroutine get_temporal_derivatives
 
   ! ====== Rxn ITYPE 10 and 11
   ! ITYPE 10 and 11: H2 formation on the grains when IS_GRAIN_REACTIONS eq 0
-  if (IS_GRAIN_REACTIONS.eq.0) then
+  if ((IS_GRAIN_REACTIONS.eq.0).OR.(IS_H2_ADHOC_FORM.eq.1)) then
     do J=type_id_start(10),type_id_stop(10)
       reaction_rates(J) = RATE_A(J) * 1.186D7 * exp(225.D0 / actual_gas_temp)**(-1) * GTODN / actual_gas_density
+      ! when the adhoc h2 formation is activated 1/2 of the adsorbed H are availables for grain reactions (other than h2 formation) and
+      ! 1/2 for the formation of h2
+      IF(IS_H2_ADHOC_FORM.eq.1) reaction_rates(J) = 0.5D+00 * reaction_rates(J)
     enddo
     do J=type_id_start(11),type_id_stop(11)       
       reaction_rates(J) = RATE_A(J) * (T300**RATE_B(J)) * actual_gas_density / GTODN
@@ -974,6 +977,11 @@ end subroutine get_temporal_derivatives
     do J=type_id_start(99),type_id_stop(99)
       ! ========= Set accretion rates
       ACCRETION_RATES(reactant_1_idx(J)) = ACC_RATES_PREFACTOR(reactant_1_idx(J)) * TSQ * Y(reactant_1_idx(J)) * actual_gas_density
+      ! when the adhoc h2 formation is activated 1/2 of the adsorbed H are availables for grain reactions (other than h2 formation) and
+      ! 1/2 for the formation of h2
+      IF((IS_H2_ADHOC_FORM.eq.1).AND.(species_name(reactant_1_idx(J)).eq.YJH)) THEN
+         ACCRETION_RATES(reactant_1_idx(J)) = 0.5D+00 * ACCRETION_RATES(reactant_1_idx(J))
+      ENDIF
       ACCRETION_RATES(reactant_2_idx(J)) = ACCRETION_RATES(reactant_1_idx(J))
       reaction_rates(J) = RATE_A(J) * branching_ratio(J) * ACCRETION_RATES(reactant_1_idx(J)) / Y(reactant_1_idx(J)) / GTODN
     enddo
@@ -1094,7 +1102,12 @@ end subroutine get_temporal_derivatives
       DIFF = DIFFUSION_RATE_1(J) + DIFFUSION_RATE_2(J)
 
       reaction_rates(J) = RATE_A(J) * branching_ratio(J) * BARR * DIFF * GTODN / actual_gas_density
-      
+
+      ! H2 formation by LH mechanism is turned off when the ad hoc formation of H2 is activated
+      IF ((reaction_compounds_names(1,J).EQ.'JH         ').AND.(reaction_compounds_names(2,J).EQ.'JH         ')) then
+         IF(IS_H2_ADHOC_FORM.eq.1) reaction_rates(J) = 0.0D+00
+      ENDIF
+
       ! "Encounter desorption" process for JH2 (Hincelin et al. 2014,A&A)
       ! The reaction JH2+JH2->JH2+H2 must be in the grain_reactions.in file to be accounted
       if ((reaction_compounds_names(1,J).EQ.'JH2        ').AND.(reaction_compounds_names(2,J).EQ.'JH2        ')) then

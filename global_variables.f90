@@ -225,6 +225,7 @@ end interface
 integer :: IS_TEST = 1!< 1:True, 0:False. To thoroughly test reactions and stuff before running the code. This can take a few seconds
 !! so you might switch it off when running several simulations with the exact same chemical network.
 integer :: IS_GRAIN_REACTIONS !< Accretion, grain surface reactions
+integer :: IS_H2_ADHOC_FORM !< Ad hoc formation of H2 on grain surfaces (1=activated)
 integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
 integer :: CONSERVATION_TYPE !< 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 integer :: MODIFY_RATE_FLAG !< Modify rates flag ; 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only

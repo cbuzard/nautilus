@@ -385,6 +385,9 @@ if (isDefined) then
       !Switches
       case('is_grain_reactions', 'IDUST') ! The old name is kept for compatibility reasons
         read(value, '(i2)') IS_GRAIN_REACTIONS
+
+      case('is_h2_adhoc_form')
+        read(value, '(i2)') IS_H2_ADHOC_FORM
       
       case('preliminary_test')
         read(value, '(i2)') IS_TEST
@@ -584,6 +587,7 @@ use global_variables
   write(10,'(a)') '! table: Tgrain is interpolated from structure_evolution.dat data file (5th optional column) ; '
   write(10,'(a)') '! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
   write(10,'(a,i0,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
+  write(10,'(a,i0,a)') 'is_h2_adhoc_form = ', IS_H2_ADHOC_FORM, ' ! Ad hoc formation of H2 on grain surfaces (1=activated)'
   write(10,'(a,i0,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i0,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
