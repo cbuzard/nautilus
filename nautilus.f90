@@ -43,7 +43,7 @@
 ! April 2011 VW  An appoximative calculation of the X-ray ionization rate 
 ! have been added according to Glasgold at al. (1999) -> DOES NOT WORK YET
 !
-! !!!Strong modifications of the code by C. Cossou from Jan. to July 2014
+! Strong modifications of the code by C. Cossou from Jan. to July 2014
 !
 ! INPUT FILES
 ! 
