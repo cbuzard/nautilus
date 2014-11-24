@@ -881,6 +881,7 @@ end subroutine get_temporal_derivatives
   REAL(double_precision) :: SUMLAY !< Total number of layers on the grain surface
   REAL(double_precision) :: UVCR   !< Scaling factor for CR generated UV
                                    !! The reference used is 1.3x10^-17 s-1
+  REAL(double_precision) :: cond,stick
 
 
   T300=actual_gas_temp/300.d0
@@ -893,9 +894,6 @@ end subroutine get_temporal_derivatives
   MLAY = 5.d0
   SUMLAY = XNDTOT*GTODN/nb_sites_per_grain
   UVCR = 1.300d-17 / CR_IONISATION_RATE
-
-  !PRINT*, MLAY, SUMLAY
-
 
   ! Density/Av-dependent==================================================
   !
@@ -975,11 +973,13 @@ end subroutine get_temporal_derivatives
     ! ====== Rxn ITYPE 99
     ! ITYPE 99: Adsorption on grains
     do J=type_id_start(99),type_id_stop(99)
+      IF((species_name(reactant_1_idx(J)).eq.YH).or.(species_name(reactant_1_idx(J)).eq.YH2)) &
+         call sticking_special_cases(j,sumlay)
       ! ========= Set accretion rates
       ACCRETION_RATES(reactant_1_idx(J)) = ACC_RATES_PREFACTOR(reactant_1_idx(J)) * TSQ * Y(reactant_1_idx(J)) * actual_gas_density
       ! when the adhoc h2 formation is activated 1/2 of the adsorbed H are availables for grain reactions (other than h2 formation) and
       ! 1/2 for the formation of h2
-      IF((IS_H2_ADHOC_FORM.eq.1).AND.(species_name(reactant_1_idx(J)).eq.YJH)) THEN
+      IF((IS_H2_ADHOC_FORM.eq.1).AND.(species_name(reactant_1_idx(J)).eq.YH)) THEN
          ACCRETION_RATES(reactant_1_idx(J)) = 0.5D+00 * ACCRETION_RATES(reactant_1_idx(J))
       ENDIF
       ACCRETION_RATES(reactant_2_idx(J)) = ACCRETION_RATES(reactant_1_idx(J))
@@ -1600,6 +1600,56 @@ if(reactant1 == 'JH2O       ') then
 endif
 
 end subroutine photodesorption_special_cases
+
+! ======================================================================
+
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+!> @author
+!> Maxime Ruaud
+!
+!> @date 2014
+!
+! DESCRIPTION:
+!> @brief Treat H and H2 sticking coefficient from Chaabouni et al. 2012
+!
+!%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+subroutine sticking_special_cases(J,SUMLAY)
+
+use global_variables
+
+implicit none
+
+! Inputs
+integer, intent(in) :: J !<[in] index of a given reaction
+real(double_precision), intent(in) :: SUMLAY
+
+! Local
+real(double_precision) :: cond
+real(double_precision) :: stick
+
+
+cond=PI*grain_radius*grain_radius*SQRT(8.0d0*K_B/PI/AMU)
+
+! When the grain coverage is less than 1 ML we use the "silicates" expression
+IF(sumlay.le.1) then
+   if (species_name(reactant_1_idx(J)).eq.YH)  stick =  (1.0d+00 + 2.5d+00*actual_gas_temp/25.0d+00)/&
+                                                        (1.0d+00 + actual_gas_temp/25.0d+00)**2.5d+00
+
+   if (species_name(reactant_1_idx(J)).eq.YH2) stick = 0.95d+00 * (1.0d+00 + 2.5d+00*actual_gas_temp/56.0d+00)/&
+                                                                  (1.0d+00 + actual_gas_temp/56.0d+00)**2.5d+00
+! When the grain coverage is more than 1 ML we use the "ASW ice" expression
+elseif(sumlay.gt.1) then
+   if (species_name(reactant_1_idx(J)).eq.YH)  stick =  (1.0d+00 + 2.5d+00*actual_gas_temp/52.0d+00)/&
+                                                        (1.0d+00 + actual_gas_temp/52.0d+00)**2.5d+00
+
+   if (species_name(reactant_1_idx(J)).eq.YH2) stick = 0.76d+00 * (1.0d+00 + 2.5d+00*actual_gas_temp/87.0d+00)/&
+                                                                  (1.0d+00 + actual_gas_temp/87.0d+00)**2.5d+00
+
+endif
+
+ACCRETION_RATES(reactant_1_idx(J)) = COND*STICK/SQRT(SPECIES_MASS(reactant_1_idx(J)))
+
+end subroutine sticking_special_cases
 
 ! ======================================================================
 
