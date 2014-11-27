@@ -129,7 +129,7 @@ plot_ab.grid(True)
 timeFormat = FormatStrFormatter("%.3g")
 plot_ab.xaxis.set_major_formatter(timeFormat)
 
-plot_ab.legend()
+plot_ab.legend(loc="best")
 
 
 nom_fichier_plot = "abundances"
