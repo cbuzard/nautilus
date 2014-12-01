@@ -52,7 +52,7 @@
 ! 
 ! parameters.in : parameter file of the code, with various flags
 ! 
-! abundances.in : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
+! !!! abundances.in : Give initial abundances for a set of species (a reduced number or all. Default minimum values are applied for those
 ! that do not exist in this file.
 ! 
 ! activation_energies.in : Activation energy for endothermic reactions
