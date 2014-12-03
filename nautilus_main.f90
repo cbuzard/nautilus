@@ -396,7 +396,7 @@ if (IS_TEST.eq.1) then
       if (REACTION_ID(reaction2).eq.ref_id) then
         ! Check that they have the same reactants and products.
         if (any(REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,reaction).ne.REACTION_COMPOUNDS_ID(1:MAX_COMPOUNDS,reaction2))) then
-          write(Error_Unit,'(a,i0,a)') 'Error: The reactions with ID=',REACTION_ID(reaction), ' have different compounds.'
+          write(Error_Unit,'(a,i0,a)') 'Error: The reaction with ID=',REACTION_ID(reaction), ' is not balanced.'
           call exit(17)
         endif
         
