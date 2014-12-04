@@ -1651,8 +1651,6 @@ else
   stick = stick_ice
 endif
 
-if(species_name(reactant_1_idx(J)).eq.YH2) print*, actual_gas_temp, SUMLAY,stick
-
 ACCRETION_RATES(reactant_1_idx(J)) = COND*STICK/SQRT(SPECIES_MASS(reactant_1_idx(J)))
 
 end subroutine sticking_special_cases
