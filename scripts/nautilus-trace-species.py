@@ -147,6 +147,7 @@ fig.suptitle("Main production and destruction reactions for %s" % species_name)
 # Plot production
 plot_prod = fig.add_subplot(2, 1, 1)
 
+plot_prod.set_xscale("log")
 plot = plot_prod.plot
 
 for reaction in range(nb_prod_reactions):
@@ -164,6 +165,7 @@ plot_prod.legend()
 # Plot destruction
 plot_dest = fig.add_subplot(2, 1, 2)
 
+plot_dest.set_xscale("log")
 plot = plot_dest.plot
 
 for reaction in range(nb_dest_reactions):

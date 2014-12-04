@@ -189,7 +189,7 @@ plot_ab.grid(True)
 timeFormat = FormatStrFormatter("%.3g")
 plot_ab.xaxis.set_major_formatter(timeFormat)
 
-plot_ab.legend(handles, labels)
+plot_ab.legend(handles, labels, loc="best")
 
 
 fig.savefig('%s.%s' % (nom_fichier_plot, OUTPUT_EXTENSION), format=OUTPUT_EXTENSION)
