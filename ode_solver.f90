@@ -1601,8 +1601,6 @@ endif
 
 end subroutine photodesorption_special_cases
 
-! ======================================================================
-
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author
 !> Maxime Ruaud
@@ -1611,7 +1609,8 @@ end subroutine photodesorption_special_cases
 !
 ! DESCRIPTION:
 !> @brief Treat H and H2 sticking coefficient from Chaabouni et al. 2012
-!
+!!\n url: http://cdsads.u-strasbg.fr/abs/2012A%26A...538A.128C
+!!\n A smooth transition between bare grains and ices is computed
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 subroutine sticking_special_cases(J,SUMLAY)
 
@@ -1625,27 +1624,34 @@ real(double_precision), intent(in) :: SUMLAY
 
 ! Local
 real(double_precision) :: cond
-real(double_precision) :: stick
+real(double_precision) :: stick, stick_ice, stick_bare
 
 
 cond=PI*grain_radius*grain_radius*SQRT(8.0d0*K_B/PI/AMU)
 
-! When the grain coverage is less than 1 ML we use the "silicates" expression
-IF(sumlay.le.1) then
-   if (species_name(reactant_1_idx(J)).eq.YH)  stick =  (1.0d+00 + 2.5d+00*actual_gas_temp/25.0d+00)/&
-                                                        (1.0d+00 + actual_gas_temp/25.0d+00)**2.5d+00
-
-   if (species_name(reactant_1_idx(J)).eq.YH2) stick = 0.95d+00 * (1.0d+00 + 2.5d+00*actual_gas_temp/56.0d+00)/&
-                                                                  (1.0d+00 + actual_gas_temp/56.0d+00)**2.5d+00
-! When the grain coverage is more than 1 ML we use the "ASW ice" expression
-elseif(sumlay.gt.1) then
-   if (species_name(reactant_1_idx(J)).eq.YH)  stick =  (1.0d+00 + 2.5d+00*actual_gas_temp/52.0d+00)/&
-                                                        (1.0d+00 + actual_gas_temp/52.0d+00)**2.5d+00
-
-   if (species_name(reactant_1_idx(J)).eq.YH2) stick = 0.76d+00 * (1.0d+00 + 2.5d+00*actual_gas_temp/87.0d+00)/&
-                                                                  (1.0d+00 + actual_gas_temp/87.0d+00)**2.5d+00
-
+if (species_name(reactant_1_idx(J)).eq.YH)  then
+   stick_bare = (1.0d+00 + 2.5d+00*actual_gas_temp/25.0d+00)/&
+                (1.0d+00 + actual_gas_temp/25.0d+00)**2.5d+00
+   stick_ice  = (1.0d+00 + 2.5d+00*actual_gas_temp/52.0d+00)/&
+                (1.0d+00 + actual_gas_temp/52.0d+00)**2.5d+00
 endif
+
+if (species_name(reactant_1_idx(J)).eq.YH2) then
+   stick_bare = 0.95d+00 * (1.0d+00 + 2.5d+00*actual_gas_temp/56.0d+00)/&
+                           (1.0d+00 + actual_gas_temp/56.0d+00)**2.5d+00
+   stick_ice  = 0.76d+00 * (1.0d+00 + 2.5d+00*actual_gas_temp/87.0d+00)/&
+                           (1.0d+00 + actual_gas_temp/87.0d+00)**2.5d+00
+endif
+
+! When the grain coverage is less than 1 ML we use the "silicates" expression and slowely tends to the "ASW ice" expression
+if(sumlay.le.1.0d+00) then
+  stick = (1.0d+00-sumlay)*stick_bare + sumlay*stick_ice
+else
+! When the grain coverage is more than 1 ML we use the "ASW ice" expression
+  stick = stick_ice
+endif
+
+if(species_name(reactant_1_idx(J)).eq.YH2) print*, actual_gas_temp, SUMLAY,stick
 
 ACCRETION_RATES(reactant_1_idx(J)) = COND*STICK/SQRT(SPECIES_MASS(reactant_1_idx(J)))
 
