@@ -5,7 +5,10 @@
 function clean {
     rm *.out
     rm *.tmp
-    
+    rm ab/*
+    rmdir ab
+    rm struct/*
+    rmdir struct
     # To delete the stderr and stdout of a bash scheduler of the server. 
     # The last "." is very important, in order to avoid suppression of the submission script itself.
     rm *.sh.* 

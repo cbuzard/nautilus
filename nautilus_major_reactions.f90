@@ -8,7 +8,7 @@ use nautilus_main
 implicit none
 
 ! Parameters
-real(double_precision), parameter :: PERCENTAGE_THRESHOLD = 1.d0 !< Percentage below which the reaction will not be displayed
+real(double_precision) :: PERCENTAGE_THRESHOLD !< Percentage below which the reaction will not be displayed
 
 ! Locals
 character(len=80) :: filename_output
@@ -42,6 +42,7 @@ character(len=11) :: user_species !< The species designed by the user
 integer :: user_species_id !< corresponding id of the desired species of the user
 integer :: output_id !< designed output id by the user
 integer :: user_1D_id !< designed spatial id by the user
+integer :: change_threshold !< change threshold (1 by default)
 
 ! For outputs
 real(double_precision), allocatable, dimension(:) :: destructions !< production rates for one given species. Reactions where this species is not involved have 0 value
@@ -121,6 +122,14 @@ abundances_out(1:nb_outputs, nb_species+1, 1:spatial_resolution) = 1.d0
 !######################################################
 ! User asked section
 !######################################################
+
+! Read the threshold
+PERCENTAGE_THRESHOLD = 1.0
+write(*,*) 'Choose the percentage threshold?'
+write(*,*) '   Yes = 1 : All reactions'
+write(*,*) '   No  = 0 : Default'
+read(*,*) change_threshold
+if(change_threshold==1) PERCENTAGE_THRESHOLD = 0.0
 
 ! What time ?
 20 if (change_time) then
