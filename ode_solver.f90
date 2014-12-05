@@ -973,9 +973,9 @@ end subroutine get_temporal_derivatives
     ! ====== Rxn ITYPE 99
     ! ITYPE 99: Adsorption on grains
     do J=type_id_start(99),type_id_stop(99)
-      IF((species_name(reactant_1_idx(J)).eq.YH).or.(species_name(reactant_1_idx(J)).eq.YH2)) &
-         call sticking_special_cases(j,sumlay)
       ! ========= Set accretion rates
+      if((species_name(reactant_1_idx(J)).eq.YH).or.(species_name(reactant_1_idx(J)).eq.YH2)) &
+         call sticking_special_cases(j,sumlay)
       ACCRETION_RATES(reactant_1_idx(J)) = ACC_RATES_PREFACTOR(reactant_1_idx(J)) * TSQ * Y(reactant_1_idx(J)) * actual_gas_density
       ! when the adhoc h2 formation is activated 1/2 of the adsorbed H are availables for grain reactions (other than h2 formation) and
       ! 1/2 for the formation of h2
@@ -1651,7 +1651,7 @@ else
   stick = stick_ice
 endif
 
-ACCRETION_RATES(reactant_1_idx(J)) = COND*STICK/SQRT(SPECIES_MASS(reactant_1_idx(J)))
+ACC_RATES_PREFACTOR(reactant_1_idx(J)) = COND*STICK/SQRT(SPECIES_MASS(reactant_1_idx(J)))
 
 end subroutine sticking_special_cases
 
