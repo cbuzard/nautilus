@@ -154,7 +154,7 @@ for reaction in range(nb_prod_reactions):
   plot(time, production_fraction[reaction], label="ID=%s" % reaction_prod_IDs[reaction])
 
 plot_prod.set_xlabel("Time [years]")
-plot_prod.set_ylabel("Destruction fraction [%]")
+plot_prod.set_ylabel("Production fraction [%]")
 plot_prod.grid(True)
 
 #~ timeFormat = FormatStrFormatter("%.3g")
