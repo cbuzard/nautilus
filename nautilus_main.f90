@@ -721,12 +721,11 @@ abundances(INDGRAIN,1:spatial_resolution) = 1.0 / GTODN ! TODO do we must divide
 ! Set the electron abundance via conservation===========
 ! And check at the same time that nls_init has the same elemental abundance
 ! as nls_control
-! Make comparison for the sum of abundances over 1D dimension
+! Make comparison for the sum of abundances for a 0D structure evolving with time
 if (spatial_resolution.eq.1) then
   call check_conservation(abundances(1:nb_species, 1))
-  ! Make a check only routine for 1D case were it is very complicated to modify any abundances since its spread throughout 1D points
 
-  ! 1D physical structure (nls_phys_1D)
+  ! physical structure evolving with time
   call get_structure_properties(time=current_time, & ! Inputs
                               Av=visual_extinction(1), density=H_number_density(1), & ! Outputs
                               gas_temperature=gas_temperature(1)) ! Outputs
