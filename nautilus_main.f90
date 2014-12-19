@@ -596,8 +596,9 @@ use global_variables
 implicit none
 
 ! Locals
-integer :: i ! For loops
+integer :: i,j ! For loops
 real(double_precision), dimension(:), allocatable :: temp_abundances !< Temporary variable to store abundances summed over all 1D points
+real(double_precision) :: CHASUM
 
 ! Initializing global time
 current_time = 0.d0
@@ -697,9 +698,10 @@ call get_gas_surface_species()
 ! Initialization of elemental/chemical quantities
 call index_datas()
 
-! Calculate the initial abundances for all elements that compose 
+! Calculate the initial abundances for all elements that compose the species
+! Here it is assumed that all the cells in 1D have the same elemental abundances
 allocate(temp_abundances(nb_species))
-temp_abundances(1:nb_species) = sum(abundances(1:nb_species,1:spatial_resolution), dim=2)
+temp_abundances(1:nb_species) = sum(abundances(1:nb_species,1:spatial_resolution), dim=2)/float(spatial_resolution)
 call get_elemental_abundance(all_abundances=temp_abundances(1:nb_species), el_abundances=INITIAL_ELEMENTAL_ABUNDANCE)
 
 ! Store initial elemental abundances
@@ -718,10 +720,24 @@ GTODN = (4.d0 * PI * GRAIN_DENSITY * grain_radius * grain_radius * grain_radius)
 
 abundances(INDGRAIN,1:spatial_resolution) = 1.0 / GTODN ! TODO do we must divide by spatial_resolution in the 1D case???
 
+!Compute the initial abundance of electrons
+! this is particularly needed for 1D simulations since the subroutine check_conservation is not done in 1D
+
+do j=1,spatial_resolution
+CHASUM=0.d0
+    do I=1,nb_species
+        if (I.NE.INDEL) CHASUM=CHASUM+SPECIES_CHARGE(I)*abundances(I,j)
+    enddo
+    if (CHASUM.LE.0.d0) CHASUM=MINIMUM_INITIAL_ABUNDANCE
+    abundances(INDEL,j)=CHASUM
+enddo
+
+
 ! Set the electron abundance via conservation===========
 ! And check at the same time that nls_init has the same elemental abundance
 ! as nls_control
-! Make comparison for the sum of abundances for a 0D structure evolving with time
+! Make comparison for the sum of abundances for a 0D structure evolving with time. Here the initial abundance of electrons was also computed
+
 if (spatial_resolution.eq.1) then
   call check_conservation(abundances(1:nb_species, 1))
 

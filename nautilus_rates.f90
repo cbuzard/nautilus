@@ -123,7 +123,7 @@ write(time_format, '(a,i0,a,i0,a)') '(',12*(MAX_COMPOUNDS-1),'(" "),a12,', nb_ou
 open(10, file='rates.out')
 ! all MAX_COMPOUNDS species involved ('XXX' if no species) ; Each column is the flux for several output times'
 ! The first line list time for each column of flux
-write(10, time_format) 'Time (year)', time(1:nb_outputs)
+write(10, time_format) 'Time (year)', time(1:nb_outputs)*3.17e-8
 do reaction=1, nb_reactions
   write(10,rate_format) REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, reaction), reaction_fluxes(1:nb_outputs, reaction), &
                         REACTION_ID(reaction), REACTION_TYPE(reaction)

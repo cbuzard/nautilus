@@ -524,7 +524,6 @@ do I=1,nb_reactions
       RATE = reaction_rates(I)*Y(reactant1_idx) * Y(reactant2_idx) * Y(reactant3_idx) * actual_gas_density * actual_gas_density
     endif
   endif
-
   YD2(product1_idx) = YD2(product1_idx) + RATE
   YD2(product2_idx) = YD2(product2_idx) + RATE
   YD2(product3_idx) = YD2(product3_idx) + RATE
@@ -537,6 +536,7 @@ do I=1,nb_reactions
 enddo   
 
 YDOT(1:nb_species) = YD2(1:nb_species)
+
 
 return
 end subroutine get_temporal_derivatives

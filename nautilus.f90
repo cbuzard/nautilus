@@ -224,9 +224,6 @@ do output_idx=1, NB_OUTPUTS
       actual_av = visual_extinction(x_i)
       actual_gas_density = H_number_density(x_i)
 
-!    write(*,*) x_i,actual_gas_temp
-
-!write(*,*) grid_cell_size
 
     if ((x_i.eq.1)) then
 
@@ -246,7 +243,6 @@ do output_idx=1, NB_OUTPUTS
       call integrate_chemical_scheme(delta_t=output_timestep, temp_abundances=abundances(1:nb_species, x_i),& ! Inputs
       itol=itol, atol=atol, itask=itask, iopt=iopt, mf=mf, & ! Inputs
       istate=istate) ! Output
-
 
       if (istate.eq.-3) stop
     enddo
@@ -376,6 +372,8 @@ subroutine integrate_chemical_scheme(delta_t,temp_abundances,itol,atol,itask,iop
 
     call dlsodes(get_temporal_derivatives,nb_species,temp_abundances,t,t_stop_step,itol,RELATIVE_TOLERANCE,&
     satol,itask,istate,iopt,rwork,lrw,iwork,liw,get_jacobian,mf)       
+
+
 
     ! Whenever the solver fails converging, print the reason.
     ! cf odpkdmain.f for translation
