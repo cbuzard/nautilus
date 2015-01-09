@@ -394,7 +394,10 @@ if (isDefined) then
       
       case('is_absorption', 'ISABS') ! The old name is kept for compatibility reasons
         read(value, '(i2)') IS_ABSORPTION
-      
+
+      case('is_photodesorb')
+      read(value, '(i2)') is_photodesorb
+
       case('grain_tunneling_diffusion', 'IGRQM') ! The old name is kept for compatibility reasons
         read(value, '(i2)') GRAIN_TUNNELING_DIFFUSION
       
@@ -589,6 +592,8 @@ use global_variables
   write(10,'(a,i0,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i0,a)') 'is_h2_adhoc_form = ', IS_H2_ADHOC_FORM, ' ! Ad hoc formation of H2 on grain surfaces (1=activated)'
   write(10,'(a,i0,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
+  write(10,'(a,i0,a)') 'is_photodesorb = ', is_photodesorb, &
+' ! Switch to turn on the photodesorption of ices (default yield is 1e-3)'
   write(10,'(a,i0,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
   ' ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest'
   write(10,'(a,i0,a)') 'modify_rate_flag = ', MODIFY_RATE_FLAG, ' ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only'

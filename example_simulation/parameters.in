@@ -22,6 +22,7 @@ grain_temperature_type = fixed ! fixed, gas, table or computed
 is_grain_reactions = 1 ! Accretion, grain surface reactions
 is_h2_adhoc_form = 0 ! Ad hoc formation of H2 on grain surfaces (1=activated)
 is_absorption = 1 ! H2 AND CO SELF-SHIELDING
+is_photodesorb = 0 ! Switch to turn on the photodesorption of ices (default yield is 1e-3)
 grain_tunneling_diffusion = 0 ! 0=thermal; For H,H2: 1=QM1; 2=QM2; 3=choose fastest
 modify_rate_flag = 1 ! 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 conservation_type = 0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc

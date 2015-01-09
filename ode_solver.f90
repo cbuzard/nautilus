@@ -1262,6 +1262,7 @@ end subroutine get_temporal_derivatives
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
            if(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
+           if (is_photodesorb.Eq.0) reaction_rates(J) = 0.D0
         enddo
     endif
 
@@ -1275,6 +1276,7 @@ end subroutine get_temporal_derivatives
 !---- If there is more than MLAY on the grain surface, then we take into account that only
 !     the upper layers can photodesorb: this is done by assigning a reducing factor to the rate coefficient
            if(SUMLAY.GE.MLAY) reaction_rates(J) = reaction_rates(J) * MLAY / SUMLAY
+           if (is_photodesorb.Eq.0) reaction_rates(J) = 0.D0
         enddo
     endif
 

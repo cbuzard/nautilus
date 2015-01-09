@@ -230,6 +230,7 @@ integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
 integer :: CONSERVATION_TYPE !< 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 integer :: MODIFY_RATE_FLAG !< Modify rates flag ; 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 integer :: IS_ABSORPTION !< H2 AND CO SELF-SHIELDING
+integer :: is_photodesorb !< photodesorption processes
 
 ! About IS_STRUCTURE_EVOLUTION, describing the evolution of the physical structure properties with time
 integer :: IS_STRUCTURE_EVOLUTION = 0 !< if 1, physical structure properties evolve with time. They come from structure_evolution.dat file, containing
