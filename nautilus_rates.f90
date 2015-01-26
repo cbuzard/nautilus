@@ -130,6 +130,17 @@ do reaction=1, nb_reactions
 enddo
 close(10)
 
+! We write ASCII output file
+open(10, file='rate_coefficients.out')
+! all MAX_COMPOUNDS species involved ('XXX' if no species) ; Each column is the flux for several output times'
+! The first line list time for each column of flux
+write(10, time_format) 'Time (year)', time(1:nb_outputs)*3.17e-8
+do reaction=1, nb_reactions
+write(10,rate_format) REACTION_COMPOUNDS_NAMES(1:MAX_COMPOUNDS, reaction), reaction_rates_out(1:nb_outputs, reaction), &
+REACTION_ID(reaction), REACTION_TYPE(reaction)
+enddo
+close(10)
+
 ! achar(13) is carriage return '\r'. Allow to go back to the beginning of the line
 write(*,'(a,a)') achar(13), 'Writing rates ASCII files... Done'
 
