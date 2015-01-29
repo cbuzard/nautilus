@@ -138,8 +138,8 @@ if (isDefined) then
   enddo
   close(10)
   
-  ! We convert time in million year to time in seconds
-  structure_time(1:structure_sample) = (1.d6 * YEAR) * structure_time(1:structure_sample)
+  ! We convert time in years to time in seconds
+  structure_time(1:structure_sample) = YEAR * structure_time(1:structure_sample)
   
   ! We get the space between all times for the structure evolution. This has some sense only if times are linearly and equally spaced.
   structure_sample_step = (structure_time(structure_sample) - structure_time(1)) / dfloat(structure_sample - 1)
@@ -155,13 +155,18 @@ end subroutine init_structure_evolution
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 !> @author 
 !> Christophe Cossou
+! V. Wakelam
 !
 !> @date 2014
+! !> @date 2015
 !
 ! DESCRIPTION: 
 !> @brief Routine to get properties of the structure (Av, temperature, density)
 !! in function of the time. We must launch 'init_structure_evolution' 
 !! beforehand to initialize arrays
+! The interpolation from Christophe has been removed and now the code
+! uses only the points provided in the input file. This is up to the 
+! user to check the time dependent structure that he/she is using.
 !
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 subroutine get_structure_properties_table(time, Av, density, gas_temperature)
@@ -178,42 +183,13 @@ subroutine get_structure_properties_table(time, Av, density, gas_temperature)
   
   ! Local
   integer :: closest_low_id ! the index of the first closest lower value of radius regarding the radius value given in parameter of the subroutine. 
-  real(double_precision) :: t1, t2, log_y1, log_y2
-  real(double_precision) :: interpolation_tmp ! Tmp value that contain a small part of the linear interpolation, to avoid computing it three times
   !------------------------------------------------------------------------------
 
-  if (time .lt. structure_time(structure_sample)) then
-    
-    ! in the range
-    closest_low_id = 1 + int((time - structure_time(1)) / structure_sample_step)
-    
-    ! We get the closest times (left and right) from the current one
-    t1 = structure_time(closest_low_id)
-    t2 = structure_time(closest_low_id + 1)
-    
-    interpolation_tmp = (time - t2) / (t1 - t2)
-    
-    ! For the density
-    log_y1 = structure_log_density(closest_low_id)
-    log_y2 = structure_log_density(closest_low_id + 1)
-    density = 10.0d0**(log_y2 + (log_y1 - log_y2) * interpolation_tmp)
-    
-    ! For the visual extinction
-    log_y1 = structure_log_Av(closest_low_id)
-    log_y2 = structure_log_Av(closest_low_id + 1)
-    Av = 10.0d0**(log_y2 + (log_y1 - log_y2) * interpolation_tmp)
-    
-    ! For the gas temperature
-    log_y1 = structure_log_gas_temperature(closest_low_id)
-    log_y2 = structure_log_gas_temperature(closest_low_id + 1)
-    gas_temperature = 10.0d0**(log_y2 + (log_y1 - log_y2) * interpolation_tmp)
-    
-  else if (time .ge. structure_time(structure_sample)) then
-    density = 10.0d0**(structure_log_density(structure_sample))
-    Av = 10.0d0**(structure_log_Av(structure_sample))
-    gas_temperature = 10.0d0**(structure_log_gas_temperature(structure_sample))
-  end if
-  
+    closest_low_id = minloc(abs(structure_time - time),1)
+    density = 10.0d0**(structure_log_density(closest_low_id))
+    Av = 10.0d0**(structure_log_Av(closest_low_id))
+    gas_temperature = 10.0d0**(structure_log_gas_temperature(closest_low_id))
+
   return
 end subroutine get_structure_properties_table
 

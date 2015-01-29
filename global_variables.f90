@@ -329,10 +329,10 @@ real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)
 
 logical :: first_step_done = .false. !< do we have currently done the first step of the integrator ?
 integer :: NB_OUTPUTS !< Total number of outputs in the simulation
-character(len=80) :: OUTPUT_TYPE !< Type of output times sampling. linear, log, table\n
+character(len=80) :: OUTPUT_TYPE !< Type of output times sampling. linear, log
 !! linear: Output times are linearly spaced\n 
 !! log   : Outputs times are log-spaced 
-!! table : Outputs times are read from time_evolution.dat'
+!! Ignored in the case of time evolving physical structure.
 
 
 ! Variables to be used by routines to access 'actual' values of differents physical properties. 

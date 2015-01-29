@@ -76,9 +76,8 @@ vib_to_dissip_freq_ratio =  1.000E-02 ! [no unit] The ratio of the surface-molec
 start_time =  1.000E+00 ! [yrs] first output time
 stop_time =  1.000E+06 ! [yrs] last output time
 nb_outputs = 3! Total number of outputs (used for linear or log spaced outputs)
-output_type = log ! linear, log, table
+output_type = log ! linear, log
 ! linear: Output times are linearly spaced
 ! log   : Outputs times are log-spaced
-! table : Outputs times are read from time_evolution.dat
 relative_tolerance =  1.000E-04 ! Relative tolerance of the solver
 minimum_initial_abundance =  1.000E-40 ! default minimum initial fraction abundance

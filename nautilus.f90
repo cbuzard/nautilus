@@ -140,6 +140,7 @@ call initialisation()
 
 call initialize_work_arrays()
 
+if (is_structure_evolution.eq.0) then
 select case(OUTPUT_TYPE)
   case('linear')! nb_output is used
     allocate(output_times(NB_OUTPUTS))
@@ -158,30 +159,31 @@ select case(OUTPUT_TYPE)
       output_times(i) = START_TIME * output_step ** (i - 1.d0)
     enddo
     output_times(NB_OUTPUTS) = STOP_TIME ! To ensure the exact same final value
-    
-  case('table')! nb_output is ignored. Only time_evolution.dat data set are used
-    ! We do not want 0 as first output time. 
-    if (structure_time(1).eq.0.d0) then
-      START_TIME = structure_time(2)
-      STOP_TIME = structure_time(structure_sample)
-      NB_OUTPUTS = structure_sample - 1
-      allocate(output_times(NB_OUTPUTS))
-      output_times(1:NB_OUTPUTS) = structure_time(2:structure_sample)
-    else
-      START_TIME = structure_time(1)
-      STOP_TIME = structure_time(structure_sample)
-      NB_OUTPUTS = structure_sample
-      allocate(output_times(NB_OUTPUTS))
-      output_times(1:NB_OUTPUTS) = structure_time(1:NB_OUTPUTS)
-    endif
-    
+
   case default
     write(error_unit,*) 'The OUTPUT_TYPE="', OUTPUT_TYPE,'" cannot be found.'
     write(error_unit,*) 'Values possible : linear, log, table'
     write(error_unit, '(a)') 'Error in nautilus: main program gasgrain' 
     call exit(12)
 end select
+endif
 
+    ! We do not want 0 as first output time.
+    if (is_structure_evolution.eq.1) then
+        if (structure_time(1).eq.0.d0) then
+            START_TIME = structure_time(2)
+            STOP_TIME = structure_time(structure_sample)
+            NB_OUTPUTS = structure_sample - 1
+            allocate(output_times(NB_OUTPUTS))
+            output_times(1:NB_OUTPUTS) = structure_time(2:structure_sample)
+        else
+            START_TIME = structure_time(1)
+            STOP_TIME = structure_time(structure_sample)
+            NB_OUTPUTS = structure_sample
+            allocate(output_times(NB_OUTPUTS))
+            output_times(1:NB_OUTPUTS) = structure_time(1:NB_OUTPUTS)
+        endif
+    endif
 
 current_time = 0.d0 ! In seconds
 call cpu_time(code_start_time)
@@ -196,7 +198,7 @@ do output_idx=1, NB_OUTPUTS
   ! Loop on sub-timesteps. If diffusion (1D) then sub-timesteps are constrained by diffusion timescale.
   !! Else, only one step is done equal to the output_timestep
   do while (current_time.lt.output_times(output_idx))
-    
+
     ! So far, structure read from ASCII file is not compatible with 1D. 
     !! If this changes, this call must be included in the loop on 1D sample
     !! We thus assume that everything is stored in the first element of the array, since this can't be valid for nb > 1
@@ -277,13 +279,16 @@ do output_idx=1, NB_OUTPUTS
     write(Output_Unit,'(a,en11.2e2,a,f5.1,a,f5.1,a)') 'T =',current_time/YEAR,&
     ' years [', 100.d0 * output_idx/NB_OUTPUTS, ' %] ; Estimated time remaining: ', remaining_time / 3600.d0, ' h'
   endif
-  
-  ! Output of the rates
-  call write_current_rates(index=output_idx)
-  
-  ! Output of the abundances
-  call write_current_output(index=output_idx)
-  
+
+    ! Output of the rates
+    call write_current_rates(index=output_idx)
+
+    ! Output of the abundances
+    call write_current_output(index=output_idx)
+
+
+
+
   first_step_done = .true.
 enddo
 
