@@ -226,6 +226,9 @@ do output_idx=1, NB_OUTPUTS
       actual_av = visual_extinction(x_i)
       actual_gas_density = H_number_density(x_i)
 
+      IF((actual_dust_temp.gt.15.0d+00).and.(is_er_cir.eq.1)) THEN
+        PRINT*, "Warning the temperature range is above the validity domain of the complex induced reaction mechanism..."
+      endif
 
     if ((x_i.eq.1)) then
 

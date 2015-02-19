@@ -913,7 +913,6 @@ end subroutine get_temporal_derivatives
   real(double_precision) :: abCO2   !< CO2 abundance on grains surface
   real(double_precision) :: abCH4   !< CH4 abundance on grains surface
   real(double_precision) :: abCH3OH !< CH3OH abundance on grains surface
-  real(double_precision) :: abH2CO  !< H2CO abundance on grains surface
   real(double_precision) :: abCO    !< CO abundance on grains surface
 
 
@@ -925,23 +924,20 @@ end subroutine get_temporal_derivatives
   ! Sum of all abundances on grain surfaces
   XNDTOT = sum(Y(nb_gaseous_species+1:nb_species))
 
+  abCO   = 0.0D+00
   abH2O  = 0.0D+00
   abNH3  = 0.0D+00
-  abCO2  = 0.0D+00
   abCH4  = 0.0D+00
   abCH3OH  = 0.0D+00
-  abH2CO  = 0.0D+00
-  abCO  = 0.0D+00
   DO J = nb_gaseous_species+1,nb_species
      IF(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
                                                     & "grain surface include gas-phase species"
+     IF(species_name(J).EQ.'JCO        ') abCO  = Y(J)
      IF(species_name(J).EQ.'JH2O       ') abH2O = Y(J)
      IF(species_name(J).EQ.'JNH3       ') abNH3 = Y(J)
      IF(species_name(J).EQ.'JCO2       ') abCO2 = Y(J)
      IF(species_name(J).EQ.'JCH4       ') abCH4 = Y(J)
      IF(species_name(J).EQ.'JCH3OH     ') abCH3OH = Y(J)
-     IF(species_name(J).EQ.'JH2CO      ') abH2CO = Y(J)
-     IF(species_name(J).EQ.'JCO        ') abCO = Y(J)
 ENDDO
 
   MLAY = 5.d0
@@ -1035,10 +1031,11 @@ ENDDO
       IF((IS_H2_ADHOC_FORM.eq.1).AND.(species_name(reactant_1_idx(J)).eq.YH)) THEN
          ACCRETION_RATES(reactant_1_idx(J)) = 0.5D+00 * ACCRETION_RATES(reactant_1_idx(J))
       ENDIF
+      ! When Eley-Rideal and complex induced reaction are activated we must be carreful on how accretions rate are computed
       IF(is_er_cir.ne.0) THEN
          IF(REACTION_COMPOUNDS_NAMES(1,J) == "C          " .AND.REACTION_COMPOUNDS_NAMES(4,J) == "JC         ") &
             ACCRETION_RATES(reactant_1_idx(J)) = ACCRETION_RATES(reactant_1_idx(J)) * &
-                                                (1.0D+00-(abH2O+abCO2+abNH3+abCH3OH+abCH4+abCO+abH2CO)/XNDTOT)
+                                                (1.0D+00-(abH2O+abCO2+abNH3+abCH3OH+abCH4)/XNDTOT)
          IF(REACTION_COMPOUNDS_NAMES(1,J) == "CH         " .AND.REACTION_COMPOUNDS_NAMES(4,J) == "JCH        ") &
             ACCRETION_RATES(reactant_1_idx(J)) = ACCRETION_RATES(reactant_1_idx(J)) * &
                                                  (1.0D+00-(abH2O+abNH3+abCH3OH)/XNDTOT)
