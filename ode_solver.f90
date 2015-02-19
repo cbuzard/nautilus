@@ -566,6 +566,8 @@ end subroutine get_temporal_derivatives
   integer :: k, j, w, m, n
   integer, dimension(10) :: indice
   real(double_precision), dimension(10) :: distmin, distmax
+  real(double_precision) :: activ
+  real(double_precision) :: barr
 
   T300 = actual_gas_temp / 300.d0
   TI = 1.0d00 / actual_gas_temp
@@ -827,6 +829,29 @@ end subroutine get_temporal_derivatives
       reaction_rates(J)=RATE_A(J)*(CR_IONISATION_RATE+X_IONISATION_RATE)
     enddo
 
+    ! ========= Rxn ITYPE 31
+    ! compute k for JC-X->JCX and JCH-X->JCHX
+    ! Choose fastest between thermal hooping and tunneling (0.4 < a < 0.5 Angstrom)
+    ! a is set to 1 Angtrom for the moment (ACM in nls_control.d)
+    ! ITYPE 31: JC-X->JCX and JCH-X->JCHX
+    IF(type_id_start(31).ne.0 .and. is_er_cir.ne.0) THEN
+       DO J=type_id_start(31),type_id_stop(31)
+          BARR=1.0d0
+          ! --------- Calculate activation energy barrier multiplier
+          if(ACTIVATION_ENERGY(J).GE.1.0D-40) then
+             ACTIV=ACTIVATION_ENERGY(J)/actual_dust_temp
+             ! ------------ Choose fastest of classical or tunnelling
+             if (ACTIV.GT.SURF_REACT_PROBA(J)) ACTIV=SURF_REACT_PROBA(J)
+             BARR=EXP(-ACTIV)
+          endif
+          IF(TUNNELING_RATE_TYPE_2(reactant_1_idx(J)).GT.THERMAL_HOPING_RATE(reactant_1_idx(J))) THEN
+             reaction_rates(J)=RATE_A(J)*branching_ratio(J)*TUNNELING_RATE_TYPE_2(reactant_1_idx(J))*BARR
+          ELSE
+             reaction_rates(J)=RATE_A(J)*branching_ratio(J)*THERMAL_HOPING_RATE(reactant_1_idx(J))*BARR
+          ENDIF
+       ENDDO
+    ENDIF
+
   endif
 
   ! When dust is turned off, zero all dust rates==========================
@@ -883,6 +908,15 @@ end subroutine get_temporal_derivatives
                                    !! The reference used is 1.3x10^-17 s-1
   REAL(double_precision) :: cond,stick
 
+  real(double_precision) :: abH2O   !< H2O abundance on grains surface
+  real(double_precision) :: abNH3   !< NH3 abundance on grains surface
+  real(double_precision) :: abCO2   !< CO2 abundance on grains surface
+  real(double_precision) :: abCH4   !< CH4 abundance on grains surface
+  real(double_precision) :: abCH3OH !< CH3OH abundance on grains surface
+  real(double_precision) :: abH2CO  !< H2CO abundance on grains surface
+  real(double_precision) :: abCO    !< CO abundance on grains surface
+
+
 
   T300=actual_gas_temp/300.d0
   TI=1.0d00/actual_gas_temp
@@ -890,6 +924,25 @@ end subroutine get_temporal_derivatives
 
   ! Sum of all abundances on grain surfaces
   XNDTOT = sum(Y(nb_gaseous_species+1:nb_species))
+
+  abH2O  = 0.0D+00
+  abNH3  = 0.0D+00
+  abCO2  = 0.0D+00
+  abCH4  = 0.0D+00
+  abCH3OH  = 0.0D+00
+  abH2CO  = 0.0D+00
+  abCO  = 0.0D+00
+  DO J = nb_gaseous_species+1,nb_species
+     IF(species_name(J)(:1).NE.'J          ') PRINT*, "Warning: sum of all the species present on ", &
+                                                    & "grain surface include gas-phase species"
+     IF(species_name(J).EQ.'JH2O       ') abH2O = Y(J)
+     IF(species_name(J).EQ.'JNH3       ') abNH3 = Y(J)
+     IF(species_name(J).EQ.'JCO2       ') abCO2 = Y(J)
+     IF(species_name(J).EQ.'JCH4       ') abCH4 = Y(J)
+     IF(species_name(J).EQ.'JCH3OH     ') abCH3OH = Y(J)
+     IF(species_name(J).EQ.'JH2CO      ') abH2CO = Y(J)
+     IF(species_name(J).EQ.'JCO        ') abCO = Y(J)
+ENDDO
 
   MLAY = 5.d0
   SUMLAY = XNDTOT*GTODN/nb_sites_per_grain
@@ -981,6 +1034,16 @@ end subroutine get_temporal_derivatives
       ! 1/2 for the formation of h2
       IF((IS_H2_ADHOC_FORM.eq.1).AND.(species_name(reactant_1_idx(J)).eq.YH)) THEN
          ACCRETION_RATES(reactant_1_idx(J)) = 0.5D+00 * ACCRETION_RATES(reactant_1_idx(J))
+      ENDIF
+      IF(is_er_cir.ne.0) THEN
+         IF(REACTION_COMPOUNDS_NAMES(1,J) == "C          " .AND.REACTION_COMPOUNDS_NAMES(4,J) == "JC         ") &
+            ACCRETION_RATES(reactant_1_idx(J)) = ACCRETION_RATES(reactant_1_idx(J)) * &
+                                                (1.0D+00-(abH2O+abCO2+abNH3+abCH3OH+abCH4+abCO+abH2CO)/XNDTOT)
+         IF(REACTION_COMPOUNDS_NAMES(1,J) == "CH         " .AND.REACTION_COMPOUNDS_NAMES(4,J) == "JCH        ") &
+            ACCRETION_RATES(reactant_1_idx(J)) = ACCRETION_RATES(reactant_1_idx(J)) * &
+                                                 (1.0D+00-(abH2O+abNH3+abCH3OH)/XNDTOT)
+         IF(REACTION_COMPOUNDS_NAMES(1,J) == "O          " .AND.REACTION_COMPOUNDS_NAMES(4,J) == "JO         ") &
+            ACCRETION_RATES(reactant_1_idx(J)) = ACCRETION_RATES(reactant_1_idx(J))*(1.0D+00-abCO/XNDTOT)
       ENDIF
       ACCRETION_RATES(reactant_2_idx(J)) = ACCRETION_RATES(reactant_1_idx(J))
       reaction_rates(J) = RATE_A(J) * branching_ratio(J) * ACCRETION_RATES(reactant_1_idx(J)) / Y(reactant_1_idx(J)) / GTODN
@@ -1246,6 +1309,16 @@ end subroutine get_temporal_derivatives
     do J=type_id_start(19),type_id_stop(20)
       reaction_rates(J) = RATE_A(J) * EXP(-RATE_C(J) * actual_av) * UV_FLUX
     enddo
+
+    ! ====== Rxn ITYPE 30
+    ! Direct formation process with the incoming atom/molecule
+    ! ITYPE 30: Direct formation process X + JY -> JXY
+    IF(type_id_start(30).ne.0 .and. is_er_cir.ne.0) THEN
+       DO J=type_id_start(30),type_id_stop(30)
+          reaction_rates(J)=RATE_A(J)*branching_ratio(J)*ACC_RATES_PREFACTOR(reactant_1_idx(J))*TSQ/GTODN/XNDTOT
+       ENDDO
+    ENDIF
+
 
 ! ============================================================
 ! Photodesorption, when used appears through ITYPES 66 and 67
