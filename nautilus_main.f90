@@ -1157,10 +1157,8 @@ end subroutine index_datas
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JH2O       " .AND. REACTION_COMPOUNDS_NAMES(5,J) == "CH         ") &
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
-            ELSE
-               PRINT*, "Bad definition of the branching ratios!"
+               PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
             ENDIF
-            PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
          ELSEIF (REACTION_COMPOUNDS_NAMES(1,J) == "JC-CH3OH   " .AND. REACTION_COMPOUNDS_NAMES(2,J) == "JH         ") THEN
             IF(is_er_cir==1) THEN
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JCH3OCH2   " .OR. REACTION_COMPOUNDS_NAMES(4,J) == "CH3OCH2    ") &
@@ -1169,10 +1167,8 @@ end subroutine index_datas
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JCH3OH     " .AND. REACTION_COMPOUNDS_NAMES(5,J) == "CH         ") &
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
-            ELSE
-               PRINT*, "Bad definition of the branching ratios!"
+               PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
             ENDIF
-            PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
          ELSEIF (REACTION_COMPOUNDS_NAMES(1,J) == "JC-CO2     " .AND. REACTION_COMPOUNDS_NAMES(2,J) == "JH         ") THEN
             IF(is_er_cir==1) THEN
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JHCOCO     " .OR. REACTION_COMPOUNDS_NAMES(4,J) == "HCOCO      ") &
@@ -1183,10 +1179,8 @@ end subroutine index_datas
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JCO2       " .AND. REACTION_COMPOUNDS_NAMES(5,J) == "CH         ") &
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
-            ELSE
-               PRINT*, "Bad definition of the branching ratios!"
+               PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
             ENDIF
-            PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
          ELSEIF (REACTION_COMPOUNDS_NAMES(1,J) == "JC-NH3     " .AND. REACTION_COMPOUNDS_NAMES(2,J) == "JH         ") THEN
             IF(is_er_cir==1) THEN
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JCH2NH2    " .OR. REACTION_COMPOUNDS_NAMES(4,J) == "CH2NH2     ") &
@@ -1195,10 +1189,8 @@ end subroutine index_datas
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JNH3       " .AND. REACTION_COMPOUNDS_NAMES(5,J) == "CH         ") &
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
-            ELSE
-               PRINT*, "Bad definition of the branching ratios!"
+               PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
             ENDIF
-            PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
          ELSEIF (REACTION_COMPOUNDS_NAMES(1,J) == "JH         " .AND. REACTION_COMPOUNDS_NAMES(2,J) == "JO-CO      ") THEN
             IF(is_er_cir==1) THEN
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JHOCO      " .OR. REACTION_COMPOUNDS_NAMES(4,J) == "HOCO       ") &
@@ -1209,10 +1201,8 @@ end subroutine index_datas
                   branching_ratio(J)=branching_ratio(J)*0.20d+00
                IF(REACTION_COMPOUNDS_NAMES(4,J) == "JCO        " .AND. REACTION_COMPOUNDS_NAMES(5,J) == "OH         ") &
                   branching_ratio(J)=branching_ratio(J)*0.01d+00
-            ELSE
-               PRINT*, "Bad definition of the branching ratios!"
+               PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
             ENDIF
-            PRINT*, REACTION_COMPOUNDS_NAMES(:,J), branching_ratio(J)*100, "%"
          ELSEIF (REACTION_COMPOUNDS_NAMES(1,J) == "JH         " .AND. REACTION_COMPOUNDS_NAMES(2,J) == "JHOCO      ") THEN
             IF(REACTION_COMPOUNDS_NAMES(4,J) == "JHCOOH     " .OR. REACTION_COMPOUNDS_NAMES(4,J) == "HCOOH      ") &
                branching_ratio(J)=branching_ratio(J)*0.10d+00
