@@ -398,6 +398,9 @@ if (isDefined) then
       case('is_photodesorb')
       read(value, '(i2)') is_photodesorb
 
+      case('is_crid')
+      read(value, '(i2)') is_crid
+
       case('is_er_cir')
       read(value, '(i2)') is_er_cir
 
@@ -597,6 +600,8 @@ use global_variables
   write(10,'(a,i0,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
   write(10,'(a,i0,a)') 'is_photodesorb = ', is_photodesorb, &
 ' ! Switch to turn on the photodesorption of ices (default yield is 1e-3)'
+  write(10,'(a,i0,a)') 'is_crid = ', is_crid, &
+' ! Switch to turn on the CRID (cosmic rays induced diffusion) mechanism'
   write(10,'(a,i0,a)') 'is_er_cir = ', is_er_cir, &
 ' ! Switch to turn on Eley-Rideal and Complex Induced Reaction mechanisms (default=0: desactivated)'
   write(10,'(a,i0,a)') 'grain_tunneling_diffusion = ', GRAIN_TUNNELING_DIFFUSION, &
