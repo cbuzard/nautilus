@@ -834,7 +834,7 @@ end subroutine get_temporal_derivatives
     ! Choose fastest between thermal hooping and tunneling (0.4 < a < 0.5 Angstrom)
     ! a is set to 1 Angtrom for the moment (ACM in nls_control.d)
     ! ITYPE 31: JC-X->JCX and JCH-X->JCHX
-    IF(type_id_start(31).ne.0 .and. is_er_cir.ne.0) THEN
+    IF(type_id_start(31).ne.0) THEN
        DO J=type_id_start(31),type_id_stop(31)
           BARR=1.0d0
           ! --------- Calculate activation energy barrier multiplier
@@ -849,6 +849,7 @@ end subroutine get_temporal_derivatives
           ELSE
              reaction_rates(J)=RATE_A(J)*branching_ratio(J)*THERMAL_HOPING_RATE(reactant_1_idx(J))*BARR
           ENDIF
+          IF(is_er_cir.eq.0) reaction_rates(J) = 0.0d+00
        ENDDO
     ENDIF
 
@@ -1297,6 +1298,7 @@ ENDDO
             reaction_rates(J) = (CR_IONISATION_RATE / 1.3D-17) * FE_IONISATION_RATE * CR_PEAK_DURATION * RATE_A(J) * &
                                 branching_ratio(J) * BARRCR * DIFFCR * GTODN / actual_gas_density
 
+            if (is_crid.Eq.0) reaction_rates(J) = 0.D0
        enddo
     endif
 
@@ -1310,9 +1312,10 @@ ENDDO
     ! ====== Rxn ITYPE 30
     ! Direct formation process with the incoming atom/molecule
     ! ITYPE 30: Direct formation process X + JY -> JXY
-    IF(type_id_start(30).ne.0 .and. is_er_cir.ne.0) THEN
+    IF(type_id_start(30).ne.0) THEN
        DO J=type_id_start(30),type_id_stop(30)
           reaction_rates(J)=RATE_A(J)*branching_ratio(J)*ACC_RATES_PREFACTOR(reactant_1_idx(J))*TSQ/GTODN/XNDTOT
+          IF(is_er_cir.eq.0) reaction_rates(J) = 0.0d+00
        ENDDO
     ENDIF
 
