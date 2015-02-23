@@ -1,6 +1,7 @@
 \documentclass[english,a4paper,twoside]{article}
 \usepackage{autiwa}
 \usepackage{aas_macros}
+\usepackage{slashbox}
 
 \title{Nautilus Documentation}
 \author{Christophe Cossou}
@@ -424,53 +425,74 @@ You have four ways of defining grain temperature in the code. The parameter \gra
 \end{itemize}
 
 \subsection{Switches}
-To activate (or not) accretion on dust grains and grain surface reactions:
-\begin{verbatim}
-is_grain_reactions = 1
-\end{verbatim}\index{parameter!is\_grain\_reaction}
-
-To activate (or not) the self-shielding of $\molecule{H_2}$ and $\molecule{CO}$, related to visual extinction: 
-\begin{verbatim}
-is_absorption = 1
-\end{verbatim}\index{parameter!is\_absorption}
-
-To activate (or not) grain tunneling diffusion and choose the type of grain tunneling diffusion: 
-\begin{verbatim}
-grain_tunneling_diffusion = 0
-\end{verbatim}\index{parameter!grain\_tunneling\_diffusion}
-
-Different types are:
 \begin{itemize}
-\item[0] : Thermal for H, \molecule{H_2}
-\item[1] : Quantum tunneling diffusion rate [\unit{s^{-1}}] \citep{1976RvMP...48..513W}
-\item[2] : Quantum tunneling diffusion rate [\unit{s^{-1}}] \citep{1992ApJS...82..167H}
-\item[3] : Choose fastest
-\end{itemize}
+   \item[$\bullet$] To activate (or not) accretion on dust grains and grain surface reactions:
+   \begin{verbatim}
+   is_grain_reactions = 1
+   \end{verbatim}\index{parameter!is\_grain\_reaction}
 
-To choose whether or not we can modify some rates:
-\begin{verbatim}
-modify_rate_flag = 1
-\end{verbatim}\index{parameter!modify\_rate\_flag}
+   \item[$\bullet$] To activate (or not) ad-hoc formation of $\molecule{H_2}$ on grain surface:
+   \begin{verbatim}
+   is_h2_adhoc_form = 1
+   \end{verbatim}\index{parameter!is\_h2\_adhoc\_form}
+   Note: The ad-hoc formation of $\molecule{H_2}$ on grain surface assume that each accretion events of two H atoms leads to the formation of $\molecule{H_2}$. In this prescription when the ad-hoc $\molecule{H_2}$ formation is activated 50\% of the adsorbed H are available for grain reactions (other than $\molecule{H_2}$ formation) and 50\% for the formation of $\molecule{H_2}$.
 
-Different types are:
-\begin{itemize}
-\item[-1] : H+H only
-\item[1] : modify H
-\item[2] : modify H,\molecule{H_2}
-\item[3] : modify all
-\end{itemize}
+   \item[$\bullet$] To activate (or not) the photodesorption of ices: 
+   \begin{verbatim}
+   is_photodesorb = 1
+   \end{verbatim}\index{parameter!is\_photodesorb}
+   Note:  Special treatment are considered for molecules such as $\molecule{CO_2}$, $\molecule{CO}$, $\molecule{H_2O}$, $\molecule{CH_3OH}$ and $\molecule{N_2}$ \citep{2009A&A...504..891O,2009ApJ...693.1209O,2009A&A...496..281O}. The default yield is $1\times10^{-3}$ for the others atoms/molecules.
 
-To choose whether or not we can modify some abundances (this doesn't work in 1D, because of diffusion !):
-\begin{verbatim}
-conservation_type = 0
-\end{verbatim}\index{parameter!conservation\_type}
+   \item[$\bullet$] To activate (or not) the CRID (Cosmic Rays Induced Diffusion) \citep{2014MNRAS.440.3557R}: 
+   \begin{verbatim}
+   is_crid = 1
+   \end{verbatim}\index{parameter!is\_crid}
 
-Different types are:
-\begin{itemize}
-\item[0] : Only electrons conserved
-\item[1] : element \#1 conserved
-\item[2] : element \#1 and \#2 conserved
-\item[n] : element \#1\dots\#n conserved
+   \item[$\bullet$] To activate (or not) the Eley-Rideal and complex induced reaction mechanisms \citep{2015MNRAS.447.4004R}: 
+   \begin{verbatim}
+   is_er_cir = 1
+   \end{verbatim}\index{parameter!is\_er\_cir}
+
+   \item[$\bullet$] To activate (or not) the self-shielding of $\molecule{H_2}$ and $\molecule{CO}$, related to visual extinction: 
+   \begin{verbatim}
+   is_absorption = 1
+   \end{verbatim}\index{parameter!is\_absorption}
+
+   \item[$\bullet$] To activate (or not) grain tunneling diffusion and choose the type of grain tunneling diffusion: 
+   \begin{verbatim}
+   grain_tunneling_diffusion = 0
+   \end{verbatim}\index{parameter!grain\_tunneling\_diffusion}
+   Different types are:
+   \begin{itemize}
+   \item[0] : Thermal for H, \molecule{H_2}
+   \item[1] : Quantum tunneling diffusion rate [\unit{s^{-1}}] \citep{1976RvMP...48..513W}
+   \item[2] : Quantum tunneling diffusion rate [\unit{s^{-1}}] \citep{1992ApJS...82..167H}
+   \item[3] : Choose fastest
+   \end{itemize}
+
+   \item[$\bullet$] To choose whether or not we can modify some rates:
+   \begin{verbatim}
+   modify_rate_flag = 1
+   \end{verbatim}\index{parameter!modify\_rate\_flag}
+   Different types are:
+   \begin{itemize}
+   \item[-1] : H+H only
+   \item[1] : modify H
+   \item[2] : modify H,\molecule{H_2}
+   \item[3] : modify all
+   \end{itemize}
+
+   \item[$\bullet$] To choose whether or not we can modify some abundances (this doesn't work in 1D, because of diffusion !):
+   \begin{verbatim}
+   conservation_type = 0
+   \end{verbatim}\index{parameter!conservation\_type}
+   Different types are:
+   \begin{itemize}
+   \item[0] : Only electrons conserved
+   \item[1] : element \#1 conserved
+   \item[2] : element \#1 and \#2 conserved
+   \item[n] : element \#1\dots\#n conserved
+   \end{itemize}
 \end{itemize}
 
 \subsection{Gas parameters}
