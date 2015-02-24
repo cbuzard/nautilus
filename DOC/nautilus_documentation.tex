@@ -435,13 +435,17 @@ You have four ways of defining grain temperature in the code. The parameter \gra
    \begin{verbatim}
    is_h2_adhoc_form = 1
    \end{verbatim}\index{parameter!is\_h2\_adhoc\_form}
-   Note: The ad-hoc formation of $\molecule{H_2}$ on grain surface assume that each accretion events of two H atoms leads to the formation of $\molecule{H_2}$. In this prescription when the ad-hoc $\molecule{H_2}$ formation is activated 50\% of the adsorbed H are available for grain reactions (other than $\molecule{H_2}$ formation) and 50\% for the formation of $\molecule{H_2}$.
+   \begin{remarque}
+   The ad-hoc formation of $\molecule{H_2}$ on grain surface assume that each accretion events of two H atoms leads to the formation of $\molecule{H_2}$. In this prescription when the ad-hoc $\molecule{H_2}$ formation is activated 50\% of the adsorbed H are available for grain reactions (other than $\molecule{H_2}$ formation) and 50\% for the formation of $\molecule{H_2}$.
+   \end{remarque}
 
    \item[$\bullet$] To activate (or not) the photodesorption of ices: 
    \begin{verbatim}
    is_photodesorb = 1
    \end{verbatim}\index{parameter!is\_photodesorb}
-   Note:  Special treatment are considered for molecules such as $\molecule{CO_2}$, $\molecule{CO}$, $\molecule{H_2O}$, $\molecule{CH_3OH}$ and $\molecule{N_2}$ \citep{2009A&A...504..891O,2009ApJ...693.1209O,2009A&A...496..281O}. The default yield is $1\times10^{-3}$ for the others atoms/molecules.
+   \begin{remarque}
+   Special treatment are considered for molecules such as $\molecule{CO_2}$, $\molecule{CO}$, $\molecule{H_2O}$, $\molecule{CH_3OH}$ and $\molecule{N_2}$ \citep{2009A&A...504..891O,2009ApJ...693.1209O,2009A&A...496..281O}. The default yield is $1\times10^{-3}$ for the others atoms/molecules.
+   \end{remarque}
 
    \item[$\bullet$] To activate (or not) the CRID (Cosmic Rays Induced Diffusion) \citep{2014MNRAS.440.3557R}: 
    \begin{verbatim}
