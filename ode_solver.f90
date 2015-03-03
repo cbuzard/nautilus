@@ -899,7 +899,7 @@ end subroutine get_temporal_derivatives
   real(double_precision) :: YMOD1, YMOD2
   integer :: IMOD1 !< modify rate flag for reactant 1
   integer :: IMOD2 !< modify rate flag for reactant 2 
-  integer :: j, l
+  integer :: j, l, m
   REAL(double_precision) :: XNDTOT !< Sum of all abundances on grain surfaces
                                    !! Used to compute the photodesorption by FUV photons
                                    !! proposed by Hassel,G and following Oberg mesurments
@@ -915,6 +915,8 @@ end subroutine get_temporal_derivatives
   real(double_precision) :: abCH4   !< CH4 abundance on grains surface
   real(double_precision) :: abCH3OH !< CH3OH abundance on grains surface
   real(double_precision) :: abCO    !< CO abundance on grains surface
+
+  real(double_precision) :: denom, interpol
 
 
 
@@ -981,36 +983,58 @@ ENDDO
       ! ====== Compute the CO self-shielding
       if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YCO) then
 
-        TETABIS1=1.D0
-        TETABIS2=1.D0
-        TETABIS3=1.D0
+         ! --- Self shielding of CO from Lee et al. (1996) ---
+         if(self_shield_prescription.eq.0) then
+           TETABIS1=1.D0
+           TETABIS2=1.D0
+           TETABIS3=1.D0
 
-        ! ======= Linear extrapolation of the three shileding factors
-        do L=1,NL2-1
-          if ((N2CO(L).LE.NCO).AND.(N2CO(L+1).GE.NCO))  &
-          TETABIS2=T2CO(L)+(NCO-N2CO(L))*(T2CO(L+1)-T2CO(L))&
-          /(N2CO(L+1)-N2CO(L))
-        enddo
+           ! ======= Linear extrapolation of the three shileding factors
+           do L=1,NL2-1
+             if ((N2CO(L).LE.NCO).AND.(N2CO(L+1).GE.NCO))  &
+             TETABIS2=T2CO(L)+(NCO-N2CO(L))*(T2CO(L+1)-T2CO(L))&
+             /(N2CO(L+1)-N2CO(L))
+           enddo
 
-        do L=1,NL3-1
-          if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) then
-            TETABIS1 = T2H2(L) + (NH2 - N2H2(L)) * (T2H2(L+1) - T2H2(L)) / (N2H2(L+1) - N2H2(L))
-          endif
-          if ((AV2(L).LE.actual_av).AND.(AV2(L+1).GE.actual_av)) then
-            TETABIS3 = T2AV(L) + (actual_av - AV2(L)) * (T2AV(L+1) - T2AV(L)) / (AV2(L+1) - AV2(L))
-          endif
-        enddo
+           do L=1,NL3-1
+             if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) then
+               TETABIS1 = T2H2(L) + (NH2 - N2H2(L)) * (T2H2(L+1) - T2H2(L)) / (N2H2(L+1) - N2H2(L))
+             endif
+             if ((AV2(L).LE.actual_av).AND.(AV2(L+1).GE.actual_av)) then
+               TETABIS3 = T2AV(L) + (actual_av - AV2(L)) * (T2AV(L+1) - T2AV(L)) / (AV2(L+1) - AV2(L))
+             endif
+           enddo
 
-        ! Saturate the rate coefficient if necessary (when density or Av are out of 
-        ! the shielding array, from the photodiss files)
+           ! Saturate the rate coefficient if necessary (when density or Av are out of
+           ! the shielding array, from the photodiss files)
 
-        if (NCO.GT.N2CO(NL2)) TETABIS2 = T2CO(NL2)
-        if (NH2.GT.N2H2(NL3)) TETABIS1 = T2H2(NL3)
-        if (actual_av.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
+           if (NCO.GT.N2CO(NL2)) TETABIS2 = T2CO(NL2)
+           if (NH2.GT.N2H2(NL3)) TETABIS1 = T2H2(NL3)
+           if (actual_av.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
 
-        reaction_rates(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
-        reaction_rates(J)=reaction_rates(J)*UV_FLUX
+           reaction_rates(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
 
+           reaction_rates(J)=reaction_rates(J)*UV_FLUX
+
+         ! --- Self shielding of CO from Visser et al. (2009) ---
+         elseif(self_shield_prescription.eq.1) then
+            interpol = 1.0d+00
+            DO l=1,46
+               IF((NCO_VISSER(l).le.NCO).AND.(NCO_VISSER(l+1).ge.NCO)) THEN
+                 DO m=1,42
+                    IF((NH2_VISSER(m).le.NH2).AND.(NH2_VISSER(m+1).ge.NH2)) THEN
+                      ! Bilinear interpolation of the CO shielding function
+                      denom = (NCO_VISSER(l+1)-NCO_VISSER(l)) * (NH2_VISSER(m+1)-NH2_VISSER(m))
+                      interpol = (SHIELDING_FUNCTION_CO_VISSER(m,l) * (NH2_VISSER(m+1) - NH2) * (NCO_VISSER(l+1)-NCO) + &
+                                  SHIELDING_FUNCTION_CO_VISSER(m+1,l) * (NH2 - NH2_VISSER(m)) * (NCO_VISSER(l+1)-NCO) + &
+                                  SHIELDING_FUNCTION_CO_VISSER(m,l+1) * (NH2_VISSER(m+1)-NH2) * (NCO - NCO_VISSER(l)) + &
+                                  SHIELDING_FUNCTION_CO_VISSER(m+1,l+1) * (NH2 - NH2_VISSER(m)) * (NCO - NCO_VISSER(l))) / denom
+                    ENDIF
+                 ENDDO
+               ENDIF
+            ENDDO
+            reaction_rates(J) = reaction_rates(J) * interpol
+         endif
       endif
 
     endif

@@ -230,6 +230,7 @@ integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
 integer :: CONSERVATION_TYPE !< 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 integer :: MODIFY_RATE_FLAG !< Modify rates flag ; 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
 integer :: IS_ABSORPTION !< H2 AND CO SELF-SHIELDING
+integer :: self_shield_prescription = 0 !< Prescription for the CO self-shielding (0:Lee et al. (1996) 1:Visser et al. (2009))
 integer :: is_photodesorb !< photodesorption processes flag (desactivated = 0)
 integer :: is_crid !< CRID (cosmic rays induced diffusion) mechanism flag (desactivated = 0)
 integer :: is_er_cir !< Eley-Rideal and complex induced reaction mechanisms flag (desactivated = 0)
