@@ -1,10 +1,9 @@
 \documentclass[english,a4paper,twoside]{article}
 \usepackage{autiwa}
 \usepackage{aas_macros}
-\usepackage{slashbox}
 
 \title{Nautilus Documentation}
-\author{Christophe Cossou}
+\author{Christophe Cossou, Maxime Ruaud, Valentine Wakelam}
 
 \newcommand{\raccourci}[1]{{\bfseries #1}}
 \newcommand{\molecule}[1]{\ensuremath{\mathrm{#1}}}
@@ -209,7 +208,7 @@ described in \refsec{sec:input-files}. This program will generate binary outputs
 \verb|nautilus_outputs| will read the binary outputs of \verb|nautilus_code| to generate the corresponding ASCII outputs. More 
 details on \refsec{sec:abundances}.
 
-Using the ASCII outputs of \verb|nautilus_outputs|, \verb|nautilus_rates| generates two data files. 'rates.out' contains the fluxes of all reactions (rate coefficients times densities of the reactants) at each time. 'rate_coefficients.out' contains the rate coefficients at each time. 
+Using the ASCII outputs of \verb|nautilus_outputs|, \verb|nautilus_rates| generates two data files. 'rates.out' contains the fluxes of all reactions (rate coefficients times densities of the reactants) at each time.  \verb|rate_coefficients.out| contains the rate coefficients at each time. 
 
 To have a user friendly interface to find the most crucial reactions depending on some parameters and a given species, use the 
 program \verb|nautilus_major_reactions|. More details on \refsec{sec:trace-species}.
@@ -296,7 +295,7 @@ The tests currently made are:
 \item Check that all index ranges associated with a reaction type join themselves to cover all the index range of all reactions.
 \end{itemize}
 
-\item For reaction with the same ID:
+For reaction with the same ID:
 \begin{itemize}
 \item Check that they have the same reactants and products
 \item Check that temperature ranges do not overlap. It does not check that the T ranges are complementary.
@@ -342,7 +341,7 @@ Default minimum initial fraction abundance applied to species whose abundance is
 \begin{verbatim}
 is_structure_evolution = 1
 \end{verbatim}\index{parameter!is\_structure\_evolution}
-If set to 1, the physical structure will evolve with time. This evolution will be read from the file \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} that must exist in the simulation folder. The times will not have to be regularly spaced. 
+If set to 1, the physical structure will evolve with time. This evolution will be read from the file \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} that must exist in the simulation folder. The times are read in this file by default and do not need to be regularly spaced. 
 
 This file will have the following format:
 \begin{verbatim}
