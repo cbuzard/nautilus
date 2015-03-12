@@ -15,9 +15,7 @@ JH         JC9H2                  -> JC9H3                                      
 JH         JCH4                   -> JCH3       JH2                                          5.94e+03   JChPhy 50,5076 (1969)
 JH         JCO                    -> JHCO                                                    2.50e+03   WOON priv commun -DPR
 JH         JCS                    -> JHCS                                                    1.00e+03      EH                
-JH         JH2CO                  -> JCH2OH                                                  5.40E+03   Ruaud et al. (2015) (WOON priv commun -DPR :2.50E+03)
-JH         JH2CO                  -> JCH3O                                                   2.20E+03   Ruaud et al. (2015)
-JH         JH2CO                  -> JHCO       JH2                                          1.74E+03   Ruaud et al. (2015) 
+JH         JH2CO                  -> JCH2OH                                                  2.50E+03   WOON priv commun -DPR 
 JH         JHOOH                  -> JH2O       JOH                                          1.40e+03   TH                   
 JH         JHOOH                  -> JO2H       JH2                                          1.90e+03   M84                  
 JH         JH2S                   -> JH2        JHS                                          8.60e+02   TH 8.60E+02 1.35E+03 
@@ -49,15 +47,8 @@ JH2        JCN                    -> JHCN       JH                              
 JH2        JNH2                   -> JNH3       JH                                           6.30e+03  M84                   
 JH2        JOH                    -> JH2O       JH                                           2.10e+03  JPhyChRefDat,13,1259  
 JO         JCO                    -> JCO2                                                    1.00e+03   d'Hendecourt etal    
-JOH        JCO                    -> JCO2       JH                                           1.50e+02  Ruaud et al. (2015) (Eric/Chun gas rates: 8.00E+01)
+JOH        JCO                    -> JCO2       JH                                           8.00e+01   Eric/Chun gas rates  
 JH         JCO                    -> JHOC                                                    1.00e+03      EH      eliminated
-JC-H2O                            -> JH2CO                                                   6.60e+03  Ruaud et al. (2015)
-JC-CH3OH                          -> JCH3OCH                                                 7.40e+03  Ruaud et al. (2015)
-JC-NH3                            -> JCH2NH                                                  1.43e+04  Ruaud et al. (2015)
-JCH-H2O                           -> JCH2OH                                                  4.00e+03  Ruaud et al. (2015)
-JCH-CH3OH                         -> JCH3OCH2                                                3.00e+03  Ruaud et al. (2015)
-JH         JH2CCO                 -> JCH3CO                                                  1.72e+03  Ruaud et al. (2015) (Michael et al. 1979)
-JOH        JCO                    -> JHOCO                                                   1.50e+02  Ruaud et al. (2015)
 
 !Activiation barrier below are not considered because doubtful (from previous verion of the code - 
 !should be checked)

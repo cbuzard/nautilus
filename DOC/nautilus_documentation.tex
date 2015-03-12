@@ -1,10 +1,9 @@
 \documentclass[english,a4paper,twoside]{article}
 \usepackage{autiwa}
 \usepackage{aas_macros}
-\usepackage{slashbox}
 
 \title{Nautilus Documentation}
-\author{Christophe Cossou}
+\author{Christophe Cossou, Maxime Ruaud, Valentine Wakelam}
 
 \newcommand{\raccourci}[1]{{\bfseries #1}}
 \newcommand{\molecule}[1]{\ensuremath{\mathrm{#1}}}
@@ -203,21 +202,20 @@ The various binaries available are:
 \item \gras[binary!nautilus\_major\_reactions]{nautilus\_major\_reactions}
 \end{itemize}
 
-\verb|nautilus_code| is the main program, the one computing the evolution of the chemical scheme. He need several input files 
-detailled in \refsec{sec:input-files}. This program will generate binary outputs that are not readable by default.
+\verb|nautilus_code| is the main program, the one computing the evolution of the chemical scheme. He needs several input files 
+described in \refsec{sec:input-files}. This program will generate binary outputs that are not readable by default.
 
 \verb|nautilus_outputs| will read the binary outputs of \verb|nautilus_code| to generate the corresponding ASCII outputs. More 
 details on \refsec{sec:abundances}.
 
-Using the ASCII outputs of \verb|nautilus_outputs|, \verb|nautilus_rates| generates a data file containing the reaction rates, 
-allowing the user to find what reactions are important in the code. This output is fitted to be read by chemist.
+Using the ASCII outputs of \verb|nautilus_outputs|, \verb|nautilus_rates| generates two data files. 'rates.out' contains the fluxes of all reactions (rate coefficients times densities of the reactants) at each time.  \verb|rate_coefficients.out| contains the rate coefficients at each time. 
 
 To have a user friendly interface to find the most crucial reactions depending on some parameters and a given species, use the 
 program \verb|nautilus_major_reactions|. More details on \refsec{sec:trace-species}.
 
 \begin{remarque}
 All the programs must be run in the directory of the nautilus simulation. First \gras[binary!nautilus\_code]{nautilus\_code}. 
-Then \gras[binary!nautilus\_outputs]{nautilus\_outputs}. And then the other two if you want.
+Then \gras[binary!nautilus\_outputs]{nautilus\_outputs}. And then the two others if you want.
 \end{remarque}
 
 
@@ -225,11 +223,11 @@ Then \gras[binary!nautilus\_outputs]{nautilus\_outputs}. And then the other two 
 \subsection{Input files}\label{sec:input-files}
 All input files have the same \textbf{*.in} extension. An example simulation, containing all necessary input files is provided in the sub-folder \textbf{example\_simulation}.
 
-The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
+The main parameter file is \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}). In this file, you set many switches for the surface processes and the physical parameters in 0D. 
 
-\gras[input file!abundances.in]{abundances.in} give initial abundances for a set of species. Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}).
+\gras[input file!abundances.in]{abundances.in} gives the initial abundances for a set of species that the user chooses. Default minimum values are applied to the species not present in this file (this value is set by the parameter \gras[parameter!minimum\_initial\_abundance]{minimum\_initial\_abundance} in \gras[input file!parameters.in]{parameters.in} (see \refsec{sec:parameters_in}). 
 
-\gras[input file!element.in]{element.in} gives information about prime elements (base elements used to construct molecules) existing in the simulation (name and mass in Atomic mass unit).
+\gras[input file!element.in]{element.in} gives information about prime elements (base elements used to construct molecules) existing in the simulation (name and mass in Atomic mass unit). 
 
 There are 2 parameter files listing all reactions in a given phase (gas or grain): 
 \begin{itemize}
@@ -243,16 +241,16 @@ and 2 parameter files for species present in a given phase (gas or grain) reacti
 \end{itemize}
 
 \begin{remarque}
-Species in \gras[input file!gas\_species.in]{gas\_species.in}, \gras[input file!grain\_species.in]{grain\_species.in} are not necessarily species from one phase. These are species \emph{involved} in a given phase reaction. But adsorption or desorption transform grain species into gas species, and vice versa. 
+\gras[input file!gas\_reactions.in]{gas\_reactions.in} is in the same format as the kida.uva gas-phase network and only contains gas-phase reactions while \gras[input file!grain\_reactions.in]{grain\_reactions.in} mostly contains reactions for grain surfaces (as well as adsorption and desorption reactions) + a few gas-phase reactions for species not included in kida.uva. 
 \end{remarque}
 
-\gras[input file!activation\_energies.in]{activation\_energies.in} provide activation energies for some endothermic reactions. 
+\gras[input file!activation\_energies.in]{activation\_energies.in} provides activation energies for some surface reactions. 
 
-\gras[input file!surface\_parameters.in]{surface\_parameters.in} provide information about various energies and parameters for diffusion and movements on the grain surface.
+\gras[input file!surface\_parameters.in]{surface\_parameters.in} provides parameters for species on the surfaces: masses, binding energies, etc. 
 
 \subsection{Usefull tools}
 \subsubsection{Cleaning a simulation folder}
-The script \gras{nautilus-clean.sh} helps you delete all output files to have a clean simulation folder, with input only
+The script \gras{nautilus-clean.sh} helps you delete all output files to have a clean simulation folder.
 
 To clean the current working directory, launch:
 \begin{verbatim}
@@ -281,25 +279,26 @@ preliminary_test = 1
 When set to 1, the parameter \gras[parameter!preliminary\_test]{preliminary\_test} will allow you to test thoroughly the chemical network and print information in the file \gras[output file!info.out]{info.out}. 
 
 \begin{remarque}
-This parameter should be set to 0 only in the case of intensive campaign of simulations using the very same network, to avoid wasting computation time doing the sames tests. But in any other cases, I advice you to leave it activated, because it only take around 1 second at the beginning of the simulation.
+This parameter should be set to 0 only in the case of intensive campaign of simulations using the very same network, to avoid wasting computation time doing the same tests. But in any other cases, it is recommended to leave it activated, because it only takes around 1 second at the beginning of the simulation.
 \end{remarque}
 
 The tests currently made are:
 \begin{itemize}
-\item Check that grain species judging from their indexes are indeed grain species
-\item Check that all species have production AND destruction reactions (error if none, warning if only one)
-\item Check that each reaction is balanced in prime element and in electric charge
-\item Display a warning for each reaction having alpha=0 (first parameter for reaction rate formula)
-\item Check that $T_\text{min} < T_\text{max}$ for each reaction
-\item For reaction with the same ID:
-\begin{itemize}
-\item Check that they have the same reactants and products
-\item Check that temperature ranges do not overlap.
-\end{itemize}
+\item Check that grain species judging from their indexes are indeed grain species. (CHECK WHAT IT MEANS)
+\item Check that all species have production AND destruction reactions (error if none, warning if only one).
+\item Check that each reaction is balanced in prime element and in charge.
+\item Display a warning for each reaction having alpha=0 (first parameter for reaction rate formula).
+\item Check that $T_\text{min} < T_\text{max}$ for each reaction.
 \item Check that each gas neutral species have a grain equivalent (excluding \textbf{GRAIN0} and \textbf{XH}).
 \item Check that each gas neutral species has an adsorption reaction (ITYPE=99) (excluding \textbf{GRAIN0} and \textbf{XH}).
 \item Check that each grain species has at least one reaction of each of the following types: 15, 16, 66, 67 (desorption reactions).
 \item Check that all index ranges associated with a reaction type join themselves to cover all the index range of all reactions.
+\end{itemize}
+
+For reaction with the same ID:
+\begin{itemize}
+\item Check that they have the same reactants and products
+\item Check that temperature ranges do not overlap. It does not check that the T ranges are complementary.
 \end{itemize}
 
 \subsection{Simulation parameters}
@@ -311,7 +310,7 @@ In years, the first output time of the simulation (all simulation starts from $T
 \begin{verbatim}
 stop_time =  1.000E+01
 \end{verbatim}\index{parameter!stop\_time}
-End of the simulation in years (and also the last output time)
+End of the simulation in years (and also the last output time).
 
 \begin{verbatim}
 nb_outputs =    3
@@ -331,24 +330,23 @@ Define the type of output you want. Possible values are \textbf{linear}, \textbf
 \begin{verbatim}
 relative_tolerance =  1.000E-04
 \end{verbatim}\index{parameter!relative\_tolerance}
-Relative tolerance of the solver
+Relative tolerance of the solver.
 
 \begin{verbatim}
 minimum_initial_abundance =  1.000E-40
 \end{verbatim}\index{parameter!minimum\_initial\_abundance}
-default minimum initial fraction abundance applied to species whose abundance is not specified in \gras[input file!abundances.in]{abundances.in}.
+Default minimum initial fraction abundance applied to species whose abundance is not specified in \gras[input file!abundances.in]{abundances.in}.
 
 \subsection{Time evolution of the physical structure}\index{parameter!is\_structure\_evolution}\label{sec:time_structure}
 \begin{verbatim}
 is_structure_evolution = 1
 \end{verbatim}\index{parameter!is\_structure\_evolution}
-
-If set, the physical structure we define will evolve with time. This evolution will be read from the file \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} that must exist in the simulation folder. 
+If set to 1, the physical structure will evolve with time. This evolution will be read from the file \gras[input file!structure\_evolution.dat]{structure\_evolution.dat} that must exist in the simulation folder. The times are read in this file by default and do not need to be regularly spaced. 
 
 This file will have the following format:
 \begin{verbatim}
 ! time    log(Av)    log(n)    log(T)
-! (Myr)   log(mag)  log(cm-3)  log(K)
+! (yr)   log(mag)  log(cm-3)  log(K)
 0.000e+00 -1.231e+00 1.813e+00 1.698e+00
 2.360e-01 -1.233e+00 1.758e+00 1.712e+00
 \end{verbatim}
@@ -357,7 +355,7 @@ We define respectively time, visual extinction, gas density and gas temperature.
 Optionally, one can add a 5-th column to define also grain temperature:
 \begin{verbatim}
 ! time    log(Av)    log(n)    log(Tg)     log(Td)
-! (Myr)   log(mag)  log(cm-3)  log(K)      log(K)
+! (yr)   log(mag)  log(cm-3)  log(K)      log(K)
 0.000e+00 -1.231e+00 1.813e+00 1.698e+00 1.500e+00
 2.360e-01 -1.233e+00 1.758e+00 1.712e+00 1.510e+00
 \end{verbatim}
@@ -365,6 +363,17 @@ If so, the parameter \gras[parameter!grain\_temperature\_type]{grain\_temperatur
 \begin{verbatim}
 grain_temperature_type = table
 \end{verbatim}\index{parameter!grain\_temperature\_table}
+The grain temperature can however be also set to the other cases (fixed, gas or computed).
+
+If one does not start the file with time = 0 yr, then the physical conditions of the first line are used at time = 0. While constructing your file  \gras[input file!structure\_evolution.dat]{structure\_evolution.dat}, one has to keep in mind that the physical parameters will be changed at the time indicated in the file while in the output the physical parameters indicated at a specific time are the ones used to compute the chemical composition. Lets assume the following case: 
+\begin{verbatim}
+! time    log(Av)    log(n)    log(T)     
+! (yr)   log(mag)  log(cm-3)  log(K)     
+1.000e+01  2.000e+00 4.300e+00 1.000e+00 
+1.000e+02  2.000e+00 5.000e+00 1.500e+00 
+\end{verbatim}
+
+At 100 yr, the model will change the physical conditions and will use log(n)=5 and log(T)=1.5 to compute the chemical composition. But in the output, the physical parameters that will be written at 100 yr will be log(n)=4.3 and log(T)=1.0 because those are the ones that have been used to compute the chemical composition. 
 
 \begin{attention}
 See \refsec{sec:1D} for incompatibilities
