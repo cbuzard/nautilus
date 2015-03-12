@@ -617,7 +617,29 @@ if (isDefined) then
   allocate(tmp_gas_temperature(nb_values))
   allocate(tmp_av(nb_values))
   allocate(tmp_kappa(nb_values))
-  
+
+  if (allocated(grid_sample)) then
+    deallocate(grid_sample)
+    deallocate(H_number_density)
+    deallocate(gas_temperature)
+    deallocate(visual_extinction)
+    deallocate(diffusion_coefficient)
+    deallocate(NH2_z)
+    deallocate(NCO_z)
+  end if
+  allocate(grid_sample(nb_values))
+  allocate(H_number_density(nb_values))
+  allocate(gas_temperature(nb_values))
+  allocate(visual_extinction(nb_values))
+  allocate(diffusion_coefficient(nb_values))
+  allocate(NH2_z(nb_values))
+  allocate(NCO_z(nb_values))
+
+  spatial_resolution = nb_values
+  NH2_z(1:nb_values) = 0.d0
+  NCO_z(1:nb_values) = 0.d0
+
+
   ! We get the values of the torque profile in the file
   open(10, file=filename, status='old')
   i = 0
@@ -634,65 +656,12 @@ if (isDefined) then
   ! Convert distances from AU to cm
   tmp_grid(1:nb_values) = tmp_grid(1:nb_values) * AU
 
-  grid_max_edge = tmp_grid(nb_values)
+  grid_sample(1:nb_values) = tmp_grid(1:nb_values)
+  H_number_density(1:nb_values) = tmp_density(1:nb_values)
+  gas_temperature(1:nb_values) = tmp_gas_temperature(1:nb_values)
+  visual_extinction(1:nb_values) = tmp_av(1:nb_values)
+  diffusion_coefficient(1:nb_values) = tmp_kappa(1:nb_values)
 
-    ! Initialize grid sample if needed. Values are in cm
-    if (spatial_resolution.gt.1) then
-        grid_cell_size = grid_max_edge / (dfloat(spatial_resolution - 1))
-        grid_sample(1) = 0.d0
-    do i=2,spatial_resolution
-        grid_sample(i) = grid_sample(i-1) + grid_cell_size
-    enddo
-    endif
-
-  ! We now want to interpolate the values from the input sampling to the desired 1D sampling that is 
-  !! defined solely by z_max and spatial_resolution
-  closest_low_id = 1
-  do i=1,spatial_resolution
-    
-    if ((grid_sample(i) .ge. tmp_grid(1)) .and. (grid_sample(i) .lt. tmp_grid(nb_values))) then
-      ! we do not initialize closest_low_id at each step, because the sample is sorted, 
-      ! so we know that the id will at least be the one of the previous timestep
-      do while (grid_sample(i).gt.tmp_grid(closest_low_id+1))
-        closest_low_id = closest_low_id + 1
-      end do
-      
-      x1 = tmp_grid(closest_low_id)
-      x2 = tmp_grid(closest_low_id + 1)
-      
-      ! density
-      y1 = tmp_density(closest_low_id)
-      y2 = tmp_density(closest_low_id + 1)
-      H_number_density(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
-      
-      ! Gas temperature
-      y1 = tmp_gas_temperature(closest_low_id)
-      y2 = tmp_gas_temperature(closest_low_id + 1)
-      gas_temperature(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
-      
-      ! Visual Extinction
-      y1 = tmp_av(closest_low_id)
-      y2 = tmp_av(closest_low_id + 1)
-      visual_extinction(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
-      
-      ! Diffusion coefficient
-      y1 = tmp_kappa(closest_low_id)
-      y2 = tmp_kappa(closest_low_id + 1)
-      diffusion_coefficient(i) = (y2 + (y1 - y2) * (grid_sample(i) - x2) / (x1 - x2))
-      
-    else if (grid_sample(i) .lt. tmp_grid(1)) then
-      H_number_density(i) = tmp_density(1)
-      gas_temperature(i) = tmp_gas_temperature(1)
-      visual_extinction(i) = tmp_av(1)
-      diffusion_coefficient(i) = tmp_kappa(1)
-    else if (grid_sample(i) .ge. tmp_grid(nb_values)) then
-      H_number_density(i) = tmp_density(nb_values)
-      gas_temperature(i) = tmp_gas_temperature(nb_values)
-      visual_extinction(i) = tmp_av(nb_values)
-      diffusion_coefficient(i) = tmp_kappa(nb_values)
-    end if
-  end do
-  
 else
   write (Error_Unit,*) 'Error: The file "',trim(filename),'" does not exist.'
   call exit(25)

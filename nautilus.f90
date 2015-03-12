@@ -210,10 +210,8 @@ do output_idx=1, NB_OUTPUTS
 
     ! Column densities of H2 and CO are set to zero before each time evolution computation.
 
-!    do i0 = 1,spatial_resolution
     NH2_z(1:spatial_resolution) = 0.d0
     NCO_z(1:spatial_resolution) = 0.d0
-!    enddo
 
     do x_i=1,spatial_resolution
 
@@ -230,20 +228,22 @@ do output_idx=1, NB_OUTPUTS
         PRINT*, "Warning the temperature range is above the validity domain of the complex induced reaction mechanism..."
       endif
 
-    if ((x_i.eq.1)) then
+      if ((x_i.eq.1)) then
 
-            NH2_z(x_i)= actual_av/AV_NH_ratio * abundances(indH2, x_i)
-            NCO_z(x_i)= actual_av/AV_NH_ratio * abundances(indCO, x_i)
+          NH2_z(x_i)= actual_av/AV_NH_ratio * abundances(indH2, x_i)
+          NCO_z(x_i)= actual_av/AV_NH_ratio * abundances(indCO, x_i)
 
-        else
+      else
 
-            NH2_z(x_i) = NH2_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indH2, x_i)
-            NCO_z(x_i) = NCO_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indCO, x_i)
+          grid_cell_size = grid_sample(x_i) - grid_sample(x_i-1)
 
-        endif
+          NH2_z(x_i) = NH2_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indH2, x_i)
+          NCO_z(x_i) = NCO_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indCO, x_i)
 
-        NH2 = NH2_z(x_i)
-        NCO = NCO_z(x_i)
+      endif
+
+      NH2 = NH2_z(x_i)
+      NCO = NCO_z(x_i)
 
       call integrate_chemical_scheme(delta_t=output_timestep, temp_abundances=abundances(1:nb_species, x_i),& ! Inputs
       itol=itol, atol=atol, itask=itask, iopt=iopt, mf=mf, & ! Inputs
