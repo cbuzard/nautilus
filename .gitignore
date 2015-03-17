@@ -13,7 +13,7 @@ nautilus_original/nautilus
 git_infos.f90
 profiling/
 nautilus_outputs
-nautilus_selected_outputs
+nautilus_select_outputs
 *.ab
 nautilus_rates
 archive/
