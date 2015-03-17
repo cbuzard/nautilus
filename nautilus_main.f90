@@ -893,6 +893,7 @@ do i=1,nb_species
   if (species_name(i).eq.YH) INDH=i
   if (species_name(i).eq.YCO) INDCO=i
   if (species_name(i).eq.YHE) INDHE=i
+  if (species_name(i).eq.YN2) INDN2=i
   if (species_name(i).eq.YGRAIN) INDGRAIN=i
 enddo
 

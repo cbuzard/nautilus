@@ -21,7 +21,9 @@ grain_temperature_type = fixed ! fixed, gas, table or computed
 ! computed: calculated from uv_flux and visual extinction by radiative equilibrium
 is_grain_reactions = 1 ! Accretion, grain surface reactions
 is_h2_adhoc_form = 0 ! Ad hoc formation of H2 on grain surfaces (1=activated)
-is_absorption = 1 ! H2 AND CO SELF-SHIELDING
+is_absorption_h2 = 1 ! H2 self-shielding from Lee & Herbst (1996) (1=activated)
+is_absorption_co = 2 ! CO self-shielding. (1: Lee & Herbst (1996), 2: Visser et al. (2009)
+is_absorption_n2 = 1 ! N2 self-shielding from Li et al. (2013) (1=activated)
 is_photodesorb = 0 ! Switch to turn on the photodesorption of ices (default yield is 1e-3)
 is_crid = 0 ! Switch to turn on the CRID (cosmic rays induced diffusion) mechanism
 is_er_cir = 0 ! Switch to turn on Eley-Rideal and Complex Induced Reaction mechanisms (default=0: desactivated)
@@ -35,7 +37,7 @@ conservation_type = 0 ! 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2
 !(diffusion is for species, not the structure)
 
 structure_type = 0D ! 0D, 1D_diff, 1D_no_diff
-spatial_resolution = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes
+spatial_resolution = 1 ! If 1, we are in 0D, else, we are in 1D, with diffusion between gas boxes. Number of lines in 1D.
 
 !*****************************
 !*    Gas phase parameters   *
@@ -77,7 +79,7 @@ vib_to_dissip_freq_ratio =  1.000E-02 ! [no unit] The ratio of the surface-molec
 
 start_time =  1.000E+00 ! [yrs] first output time
 stop_time =  1.000E+06 ! [yrs] last output time
-nb_outputs = 3! Total number of outputs (used for linear or log spaced outputs)
+nb_outputs = 64 ! Total number of outputs (used for linear or log spaced outputs)
 output_type = log ! linear, log
 ! linear: Output times are linearly spaced
 ! log   : Outputs times are log-spaced

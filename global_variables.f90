@@ -50,6 +50,7 @@ real(double_precision) :: RELATIVE_TOLERANCE !< relative tolerance parameter (sc
 
 ! Name of key species
 character(len=11) :: YH     = 'H          ' !< Gas phase Hydrogen
+character(len=11) :: YN2    = 'N2         ' !< Gas phase N2
 character(len=11) :: YJH    = 'JH         ' !< Hydrogen on grains
 character(len=11) :: YH2    = 'H2         ' !< Gas phase Dihydrogen
 character(len=11) :: YJH2   = 'JH2        ' !< Dihydrogen on grains
@@ -60,6 +61,7 @@ character(len=11) :: YGRAIN = 'GRAIN0     ' !< Grain
 character(len=11) :: YCO    = 'CO         ' !< Gas phase CO
 
 integer :: INDCO !< Index corresponding to CO in nb_species length arrays
+integer :: INDN2 !< Index corresponding to N2 in nb_species length arrays
 integer :: INDH2 !< Index corresponding to H2 in nb_species length arrays
 integer :: INDH  !< Index corresponding to H in nb_species length arrays
 integer :: INDHE !< Index corresponding to He in nb_species length arrays
@@ -193,8 +195,10 @@ real(double_precision), dimension(:), allocatable :: visual_extinction !< dim(sp
 real(double_precision), dimension(:), allocatable :: dust_temperature !< dim(spatial_resolution) current dust temperature [K]
 real(double_precision), dimension(:), allocatable :: H_number_density !< dim(spatial_resolution) [part/cm^3] Total H number density (both H and H2), representing the total gas density
 real(double_precision), dimension(:), allocatable :: diffusion_coefficient !< dim(spatial_resolution) [cm^2/s] Diffusion coefficient for a 1D case
+real(double_precision), dimension(:), allocatable :: NH_z !< dim(spatial_resolution) [cm^-2] H2 column density for a 1D case
 real(double_precision), dimension(:), allocatable :: NH2_z !< dim(spatial_resolution) [cm^-2] H2 column density for a 1D case
 real(double_precision), dimension(:), allocatable :: NCO_z !< dim(spatial_resolution) [cm^-2] CO column density for a 1D case
+real(double_precision), dimension(:), allocatable :: NN2_z !< dim(spatial_resolution) [cm^-2] H2 column density for a 1D case
 
 integer, parameter :: MAX_NUMBER_REACTION_TYPE=100 !< Max number of various reaction type
 ! The following arrays start at 0 because the index correspond to the reaction type as indexed elsewhere, and there is a type 0 for reactions.
@@ -229,8 +233,9 @@ integer :: IS_H2_ADHOC_FORM !< Ad hoc formation of H2 on grain surfaces (1=activ
 integer :: GRAIN_TUNNELING_DIFFUSION !< How grain tunneling diffusion is handled
 integer :: CONSERVATION_TYPE !< 0=only e- conserved; 1=elem #1 conserved, 2=elem #1 & #2, etc
 integer :: MODIFY_RATE_FLAG !< Modify rates flag ; 1=modify H; 2=modify H,H2, 3=modify all, -1=H+H only
-integer :: IS_ABSORPTION !< H2 AND CO SELF-SHIELDING
-integer :: self_shield_prescription = 0 !< Prescription for the CO self-shielding (0:Lee et al. (1996) 1:Visser et al. (2009))
+integer :: is_absorption_h2 !< H2 self-shielding from Lee & Herbst (1996) (1=activated)
+integer :: is_absorption_co !< CO self-shielding. (1: Lee & Herbst (1996), 2: Visser et al. (2009)
+integer :: is_absorption_n2 !< N2 self-shielding from Li et al. (2013) (1=activated)
 integer :: is_photodesorb !< photodesorption processes flag (desactivated = 0)
 integer :: is_crid !< CRID (cosmic rays induced diffusion) mechanism flag (desactivated = 0)
 integer :: is_er_cir !< Eley-Rideal and complex induced reaction mechanisms flag (desactivated = 0)
@@ -329,6 +334,8 @@ integer :: nb_nonzeros_values !< number of non-zeros values in the jacobian. Thi
 real(double_precision) :: X_IONISATION_RATE !< Ionisation rate due to X-rays [s-1]
 real(double_precision) :: NCO ! column density [cm-2] (for the self shielding)
 real(double_precision) :: NH2 ! column density [cm-2] (for the self shielding)
+real(double_precision) :: NH  ! column density [cm-2] (for the self shielding)
+real(double_precision) :: NN2 ! column density [cm-2] (for the self shielding)
 
 logical :: first_step_done = .false. !< do we have currently done the first step of the integrator ?
 integer :: NB_OUTPUTS !< Total number of outputs in the simulation
@@ -532,7 +539,13 @@ H_number_density(1:spatial_resolution) = 0.d0
 allocate(diffusion_coefficient(spatial_resolution))
 diffusion_coefficient(1:spatial_resolution) = 0.d0
 
+allocate(NH_z(spatial_resolution))
+NH_z(1:spatial_resolution) = 0.d0
+
 allocate(NH2_z(spatial_resolution))
+NH2_z(1:spatial_resolution) = 0.d0
+
+allocate(NN2_z(spatial_resolution))
 NH2_z(1:spatial_resolution) = 0.d0
 
 allocate(NCO_z(spatial_resolution))

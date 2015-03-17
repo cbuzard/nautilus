@@ -210,7 +210,9 @@ do output_idx=1, NB_OUTPUTS
 
     ! Column densities of H2 and CO are set to zero before each time evolution computation.
 
+    NH_z(1:spatial_resolution) = 0.d0
     NH2_z(1:spatial_resolution) = 0.d0
+    NN2_z(1:spatial_resolution) = 0.d0
     NCO_z(1:spatial_resolution) = 0.d0
 
     do x_i=1,spatial_resolution
@@ -230,19 +232,25 @@ do output_idx=1, NB_OUTPUTS
 
       if ((x_i.eq.1)) then
 
+          NH_z(x_i)= actual_av/AV_NH_ratio * abundances(indH, x_i)
           NH2_z(x_i)= actual_av/AV_NH_ratio * abundances(indH2, x_i)
+          NN2_z(x_i)= actual_av/AV_NH_ratio * abundances(indN2, x_i)
           NCO_z(x_i)= actual_av/AV_NH_ratio * abundances(indCO, x_i)
 
       else
 
           grid_cell_size = grid_sample(x_i) - grid_sample(x_i-1)
 
+          NH_z(x_i) = NH_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indH, x_i)
           NH2_z(x_i) = NH2_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indH2, x_i)
+          NN2_z(x_i) = NN2_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indN2, x_i)
           NCO_z(x_i) = NCO_z(x_i-1) + actual_gas_density * grid_cell_size * abundances(indCO, x_i)
 
       endif
 
+      NH = NH_z(x_i)
       NH2 = NH2_z(x_i)
+      NN2 = NN2_z(x_i)
       NCO = NCO_z(x_i)
 
       call integrate_chemical_scheme(delta_t=output_timestep, temp_abundances=abundances(1:nb_species, x_i),& ! Inputs

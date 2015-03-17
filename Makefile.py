@@ -504,6 +504,7 @@ isTest = False
 isManual = False # If true, we specifie a source file name to be compiled
 isNautilus = True
 isOutputs = True
+isOutputs_select = True
 isRates = True
 isMajor = True
 isTrace = True
@@ -557,6 +558,7 @@ for arg in sys.argv[1:]:
     isManual = True
     isNautilus = False
     isOutputs = False
+    isOutputs_select = False
     isRates = False
     isMajor = False
     isTrace = False
@@ -572,6 +574,7 @@ for arg in sys.argv[1:]:
   elif (key == 'nautilus'):
     isNautilus = True
     isOutputs = False
+    isOutputs_select = False
     isRates = False
     isMajor = False
     isTrace = False
@@ -580,6 +583,7 @@ for arg in sys.argv[1:]:
   elif (key == 'output'):
     isNautilus = False
     isOutputs = True
+    isOutputs_select = True
     isRates = False
     isMajor = False
     isTrace = False
@@ -596,6 +600,7 @@ for arg in sys.argv[1:]:
   elif (key == 'major'):
     isNautilus = False
     isOutputs = False
+    isOutputs_select = False
     isRates = False
     isMajor = True
     isTrace = False
@@ -669,7 +674,10 @@ if (isNautilus):
 
 if (isOutputs):
   compile_source(filename="nautilus_outputs.f90")
-  
+
+if (isOutputs_select):
+    compile_source(filename="nautilus_select_outputs.f90")
+
 if (isRates):
   compile_source(filename="nautilus_rates.f90")
 

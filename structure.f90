@@ -624,7 +624,9 @@ if (isDefined) then
     deallocate(gas_temperature)
     deallocate(visual_extinction)
     deallocate(diffusion_coefficient)
+    deallocate(NH_z)
     deallocate(NH2_z)
+    deallocate(NN2_z)
     deallocate(NCO_z)
   end if
   allocate(grid_sample(nb_values))
@@ -632,11 +634,15 @@ if (isDefined) then
   allocate(gas_temperature(nb_values))
   allocate(visual_extinction(nb_values))
   allocate(diffusion_coefficient(nb_values))
+  allocate(NH_z(nb_values))
   allocate(NH2_z(nb_values))
+  allocate(NN2_z(nb_values))
   allocate(NCO_z(nb_values))
 
   spatial_resolution = nb_values
+  NH_z(1:nb_values) = 0.d0
   NH2_z(1:nb_values) = 0.d0
+  NN2_z(1:nb_values) = 0.d0
   NCO_z(1:nb_values) = 0.d0
 
 
@@ -654,7 +660,7 @@ if (isDefined) then
   end do
   
   ! Convert distances from AU to cm
-  tmp_grid(1:nb_values) = tmp_grid(1:nb_values) * AU
+  tmp_grid(1:nb_values) = tmp_grid(1:nb_values) !* AU
 
   grid_sample(1:nb_values) = tmp_grid(1:nb_values)
   H_number_density(1:nb_values) = tmp_density(1:nb_values)

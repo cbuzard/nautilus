@@ -880,7 +880,7 @@ end subroutine get_temporal_derivatives
 !%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
   subroutine set_dependant_rates(Y)
 
-  use global_variables 
+  use global_variables
   
   implicit none
   
@@ -916,7 +916,15 @@ end subroutine get_temporal_derivatives
   real(double_precision) :: abCH3OH !< CH3OH abundance on grains surface
   real(double_precision) :: abCO    !< CO abundance on grains surface
 
-  real(double_precision) :: denom, interpol
+  ! For the bilinear interpolation of the shielding function of CO and N2
+  real(double_precision) :: int
+  real(double_precision) :: denom
+  real(double_precision) :: x1, x2
+  real(double_precision) :: xp, yp
+  real(double_precision) :: y1, y2
+  real(double_precision) :: r1, r2
+  real(double_precision) :: f11, f21, f12, f22
+
 
 
 
@@ -952,93 +960,150 @@ ENDDO
   ! VW 02/07 the treatment for the H2 and CO photodissociation was corrected
   ! for larger and smaller values of H2, CO column densities and Av not in the 
   ! data tables. I also added the choice of using this approximation in parameters.in
-  ! option is_absorption = 1
+  !
   !
   ! ====== Rxn ITYPE 3
   ! ITYPE 3: Gas phase photodissociations/ionisations by UV
   do J=type_id_start(3),type_id_stop(3)
     reaction_rates(J)=RATE_A(J)*EXP(-RATE_C(J)*actual_av)*UV_FLUX
 
-    ! MODIFY THE H2 AND CO PHOTODISSOCIATION if IS_ABSORPTION EQ 1
-    if (IS_ABSORPTION.EQ.1) then 
+    ! MODIFY THE H2, CO and N2 PHOTODISSOCIATION if flags are activated
 
-      ! ====== Compute the H2 self-shielding
-      if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YH2) then
-        TETABIS=1.D0
+    ! ====== H2 self-shielding
+    if ((REACTION_COMPOUNDS_NAMES(1,J).EQ.YH2).and.(is_absorption_h2.EQ.1)) then
+       TETABIS=1.D0
 
 
-        ! ======= Linear extrapolation of the shielding factors
-        do L=1,NL1-1
-          if ((N1H2(L).LE.NH2).AND.(N1H2(L+1).GE.NH2)) then
-            TETABIS=T1H2(L)+(NH2-N1H2(L))*(T1H2(L+1)-T1H2(L))/(N1H2(L+1)-N1H2(L))
-          endif
-        enddo
-        if (NH2.GT.N1H2(NL1)) TETABIS = T1H2(NL1)
-
-        reaction_rates(J)=2.54D-11*TETABIS
-
-        reaction_rates(J)=reaction_rates(J)*UV_FLUX
-      endif
-
-      ! ====== Compute the CO self-shielding
-      if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YCO) then
-
-         ! --- Self shielding of CO from Lee et al. (1996) ---
-         if(self_shield_prescription.eq.0) then
-           TETABIS1=1.D0
-           TETABIS2=1.D0
-           TETABIS3=1.D0
-
-           ! ======= Linear extrapolation of the three shileding factors
-           do L=1,NL2-1
-             if ((N2CO(L).LE.NCO).AND.(N2CO(L+1).GE.NCO))  &
-             TETABIS2=T2CO(L)+(NCO-N2CO(L))*(T2CO(L+1)-T2CO(L))&
-             /(N2CO(L+1)-N2CO(L))
-           enddo
-
-           do L=1,NL3-1
-             if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) then
-               TETABIS1 = T2H2(L) + (NH2 - N2H2(L)) * (T2H2(L+1) - T2H2(L)) / (N2H2(L+1) - N2H2(L))
-             endif
-             if ((AV2(L).LE.actual_av).AND.(AV2(L+1).GE.actual_av)) then
-               TETABIS3 = T2AV(L) + (actual_av - AV2(L)) * (T2AV(L+1) - T2AV(L)) / (AV2(L+1) - AV2(L))
-             endif
-           enddo
-
-           ! Saturate the rate coefficient if necessary (when density or Av are out of
-           ! the shielding array, from the photodiss files)
-
-           if (NCO.GT.N2CO(NL2)) TETABIS2 = T2CO(NL2)
-           if (NH2.GT.N2H2(NL3)) TETABIS1 = T2H2(NL3)
-           if (actual_av.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
-
-           reaction_rates(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
-
-           reaction_rates(J)=reaction_rates(J)*UV_FLUX
-
-         ! --- Self shielding of CO from Visser et al. (2009) ---
-         elseif(self_shield_prescription.eq.1) then
-            interpol = 1.0d+00
-            DO l=1,46
-               IF((NCO_VISSER(l).le.NCO).AND.(NCO_VISSER(l+1).ge.NCO)) THEN
-                 DO m=1,42
-                    IF((NH2_VISSER(m).le.NH2).AND.(NH2_VISSER(m+1).ge.NH2)) THEN
-                      ! Bilinear interpolation of the CO shielding function
-                      denom = (NCO_VISSER(l+1)-NCO_VISSER(l)) * (NH2_VISSER(m+1)-NH2_VISSER(m))
-                      interpol = (SHIELDING_FUNCTION_CO_VISSER(m,l) * (NH2_VISSER(m+1) - NH2) * (NCO_VISSER(l+1)-NCO) + &
-                                  SHIELDING_FUNCTION_CO_VISSER(m+1,l) * (NH2 - NH2_VISSER(m)) * (NCO_VISSER(l+1)-NCO) + &
-                                  SHIELDING_FUNCTION_CO_VISSER(m,l+1) * (NH2_VISSER(m+1)-NH2) * (NCO - NCO_VISSER(l)) + &
-                                  SHIELDING_FUNCTION_CO_VISSER(m+1,l+1) * (NH2 - NH2_VISSER(m)) * (NCO - NCO_VISSER(l))) / denom
-                    ENDIF
-                 ENDDO
-               ENDIF
-            ENDDO
-            reaction_rates(J) = reaction_rates(J) * interpol
+       ! ======= Linear extrapolation of the shielding factors
+       do L=1,NL1-1
+         if ((N1H2(L).LE.NH2).AND.(N1H2(L+1).GE.NH2)) then
+           TETABIS=T1H2(L)+(NH2-N1H2(L))*(T1H2(L+1)-T1H2(L))/(N1H2(L+1)-N1H2(L))
          endif
-      endif
+       enddo
+       if (NH2.GT.N1H2(NL1)) TETABIS = T1H2(NL1)
 
+       reaction_rates(J)=2.54D-11*TETABIS
+
+       reaction_rates(J)=reaction_rates(J)*UV_FLUX
     endif
 
+    ! ====== the CO self-shielding (2 prescription)
+    if (REACTION_COMPOUNDS_NAMES(1,J).EQ.YCO) then
+
+      ! --- Self shielding of CO from Lee et al. (1996) ---
+      if(is_absorption_co.eq.1) then
+
+        TETABIS1=1.D0
+        TETABIS2=1.D0
+        TETABIS3=1.D0
+
+        ! Linear extrapolation of the three shileding factors
+        do L=1,NL2-1
+          if ((N2CO(L).LE.NCO).AND.(N2CO(L+1).GE.NCO))  &
+          TETABIS2=T2CO(L)+(NCO-N2CO(L))*(T2CO(L+1)-T2CO(L))&
+          /(N2CO(L+1)-N2CO(L))
+        enddo
+
+        do L=1,NL3-1
+          if ((N2H2(L).LE.NH2).AND.(N2H2(L+1).GE.NH2)) then
+             TETABIS1 = T2H2(L) + (NH2 - N2H2(L)) * (T2H2(L+1) - T2H2(L)) / (N2H2(L+1) - N2H2(L))
+          endif
+          if ((AV2(L).LE.actual_av).AND.(AV2(L+1).GE.actual_av)) then
+             TETABIS3 = T2AV(L) + (actual_av - AV2(L)) * (T2AV(L+1) - T2AV(L)) / (AV2(L+1) - AV2(L))
+          endif
+        enddo
+
+        ! Saturate the rate coefficient if necessary (when density or Av are out of
+        ! the shielding array, from the photodiss files)
+
+        if (NCO.GT.N2CO(NL2)) TETABIS2 = T2CO(NL2)
+        if (NH2.GT.N2H2(NL3)) TETABIS1 = T2H2(NL3)
+        if (actual_av.GT.AV2(NL3))  TETABIS3 = T2AV(NL3)
+
+        reaction_rates(J)=1.03D-10*TETABIS1*TETABIS2*TETABIS3
+
+        reaction_rates(J)=reaction_rates(J)*UV_FLUX
+
+      ! --- Self shielding of CO from Visser et al. (2009) ---
+      elseif(is_absorption_co.eq.2) then
+         int = 1.0D+00
+         DO l=1,46
+            IF((nco_co(l).le.nco).AND.(nco_co(l+1).ge.nco)) THEN
+             DO m=1,41
+                IF((NH2_co(m).le.nh2).AND.(NH2_co(m+1).ge.nh2)) THEN
+
+                  ! Bilinear interpolation of the CO shielding function
+                  xp = nh2
+                  yp = nco
+
+                  x1 = nh2_co(m)
+                  x2 = nh2_co(m+1)
+
+                  y1 = nco_co(l)
+                  y2 = nco_co(l+1)
+
+                  f11 = shielding_function_co(m,l)
+                  f21 = shielding_function_co(m+1,l)
+                  f12 = shielding_function_co(m,l+1)
+                  f22 = shielding_function_co(m+1,l+1)
+
+                  denom = x2 - x1
+                  r1 = (x2 - xp) * f11 + (xp - x1) * f21
+                  r1 = r1 / denom
+                  r2 = (x2 - xp) * f12 + (xp - x1) * f22
+                  r2 = r2 / denom
+
+                  denom = y2 - y1
+                  int = (y2 - yp) * r1 + (yp - y1) * r2
+                  int = int / denom
+
+                ENDIF
+             ENDDO
+            ENDIF
+         ENDDO
+         reaction_rates(J) = reaction_rates(J) * int
+      endif
+    endif
+
+    ! ====== N2 self-shielding
+    if ((REACTION_COMPOUNDS_NAMES(1,J).EQ.YN2).and.(is_absorption_n2.eq.1)) then
+       int = 1.0D+00
+       DO l=1,45
+          IF((nn2_n2(l).le.nn2).AND.(nn2_n2(l+1).ge.nn2)) THEN
+           DO m=1,45
+              IF((nh2_n2(m).le.nh2).AND.(nh2_n2(m+1).ge.nh2)) THEN
+
+                ! Bilinear interpolation of the N2 shielding function
+                xp = nh2
+                yp = nn2
+
+                x1 = nh2_n2(m)
+                x2 = nh2_n2(m+1)
+
+                y1 = nn2_n2(l)
+                y2 = nn2_n2(l+1)
+
+                f11 = shielding_function_n2_nh1e20(m,l)
+                f21 = shielding_function_n2_nh1e20(m+1,l)
+                f12 = shielding_function_n2_nh1e20(m,l+1)
+                f22 = shielding_function_n2_nh1e20(m+1,l+1)
+
+                denom = x2 - x1
+                r1 = (x2 - xp) * f11 + (xp - x1) * f21
+                r1 = r1 / denom
+                r2 = (x2 - xp) * f12 + (xp - x1) * f22
+                r2 = r2 / denom
+
+                denom = y2 - y1
+                int = (y2 - yp) * r1 + (yp - y1) * r2
+                int = int / denom
+
+              ENDIF
+           ENDDO
+          ENDIF
+       ENDDO
+       reaction_rates(J) = reaction_rates(J) * int
+    endif
   enddo
 
   ! Continually time-dependent grain rates================================

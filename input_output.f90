@@ -392,8 +392,14 @@ if (isDefined) then
       case('preliminary_test')
         read(value, '(i2)') IS_TEST
       
-      case('is_absorption', 'ISABS') ! The old name is kept for compatibility reasons
-        read(value, '(i2)') IS_ABSORPTION
+      case('is_absorption_h2')
+        read(value, '(i2)') is_absorption_h2
+
+      case('is_absorption_co')
+        read(value, '(i2)') is_absorption_co
+
+      case('is_absorption_n2')
+        read(value, '(i2)') is_absorption_n2
 
       case('is_photodesorb')
       read(value, '(i2)') is_photodesorb
@@ -597,7 +603,10 @@ use global_variables
   write(10,'(a)') '! computed: calculated from uv_flux and visual extinction by radiative equilibrium'
   write(10,'(a,i0,a)') 'is_grain_reactions = ', IS_GRAIN_REACTIONS, ' ! Accretion, grain surface reactions'
   write(10,'(a,i0,a)') 'is_h2_adhoc_form = ', IS_H2_ADHOC_FORM, ' ! Ad hoc formation of H2 on grain surfaces (1=activated)'
-  write(10,'(a,i0,a)') 'is_absorption = ', IS_ABSORPTION, ' ! H2 AND CO SELF-SHIELDING'
+  write(10,'(a,i0,a)') 'is_absorption_h2 = ', is_absorption_h2, ' ! H2 self-shielding from Lee & Herbst (1996) (1=activated)'
+  write(10,'(a,i0,a)') 'is_absorption_co = ', is_absorption_co, ' ! CO self-shielding. (1: Lee & Herbst (1996), &
+                                                                  2: Visser et al. (2009)'
+  write(10,'(a,i0,a)') 'is_absorption_n2 = ', is_absorption_n2, ' ! N2 self-shielding from Li et al. (2013) (1=activated)'
   write(10,'(a,i0,a)') 'is_photodesorb = ', is_photodesorb, &
 ' ! Switch to turn on the photodesorption of ices (default yield is 1e-3)'
   write(10,'(a,i0,a)') 'is_crid = ', is_crid, &
@@ -1127,10 +1136,10 @@ write(filename_output, '(a,i0.6,a)') 'col_dens.',index,'.out'
 open(55, file=filename_output)
 
 ! Header
-write(55,'(50a)') 'H2 column density (cm-2)  CO column density (cm-2)'
+write(55,'(50a)') 'H column density (cm-2) H2 column density (cm-2)  CO column density (cm-2)  N2 column density (cm-2)'
 
 do i=1,spatial_resolution
-    write(55,*) NH2_z(i),NCO_z(i)
+    write(55,*) NH_z(i),NH2_z(i),NCO_z(i), NN2_z(i)
 enddo
 
 close(55)
