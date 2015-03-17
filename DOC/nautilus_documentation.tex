@@ -466,10 +466,34 @@ You have four ways of defining grain temperature in the code. The parameter \gra
    is_er_cir = 1
    \end{verbatim}\index{parameter!is\_er\_cir}
 
-   \item[$\bullet$] To activate (or not) the self-shielding of $\molecule{H_2}$ and $\molecule{CO}$, related to visual extinction: 
+   \item[$\bullet$] To activate (or not) the self-shielding of $\molecule{H_2}$, $\molecule{CO}$ and $\molecule{N_2}$ related to visual extinction: 
    \begin{verbatim}
-   is_absorption = 1
-   \end{verbatim}\index{parameter!is\_absorption}
+   is_absorption_h2 = 1
+   \end{verbatim}\index{parameter!is\_absorption\_h2}
+   Different types are:
+   \begin{itemize}
+   \item[0] : \molecule{H_2} self-shielding is disabled
+   \item[1] : \molecule{H_2} self-shielding from \citet{1996A&A...311..690L}
+   \end{itemize}
+   
+   \begin{verbatim}
+   is_absorption_co = 1
+   \end{verbatim}\index{parameter!is\_absorption\_co}
+   Different types are:
+   \begin{itemize}
+   \item[0] : \molecule{CO} self-shielding is disabled
+   \item[1] : \molecule{CO} self-shielding from \citet{1996A&A...311..690L}
+   \item[2] : \molecule{CO} self-shielding from \citet{2009A&A...503..323V}
+   \end{itemize}
+
+   \begin{verbatim}
+   is_absorption_n2 = 1
+   \end{verbatim}\index{parameter!is\_absorption\_n2}
+   Different types are:
+   \begin{itemize}
+   \item[0] : \molecule{N_2} self-shielding is disabled
+   \item[1] : \molecule{N_2} self-shielding from \citet{2013A&A...555A..14L}
+   \end{itemize}
 
    \item[$\bullet$] To activate (or not) grain tunneling diffusion and choose the type of grain tunneling diffusion: 
    \begin{verbatim}
