@@ -91,7 +91,7 @@ write(*,'(a)') 'No: 0   Yes: 1'
 read(*,*) ans
 
 if(ans .ne. 0) then
-  open (10,file="select_output.in",status='unknown')
+  open (10,file="selected_output.in",status='unknown')
   write(10,*) ans
 endif
 
